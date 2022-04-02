@@ -36,6 +36,44 @@ class Surface {
     }
     return column;
   }
+
+  public forLine(
+    sourceX: number,
+    sourceY: number,
+    targetX: number,
+    targetY: number,
+    fn: (tile: Tile) => void
+  ) {
+    // Determine the direction of the line
+    const xDiff = targetX - sourceX;
+    const yDiff = targetY - sourceY;
+
+    // Determine the step size so that every loop at least one direction changes by 1
+    let xStep = xDiff / (xDiff + yDiff);
+    let yStep = yDiff / (xDiff + yDiff);
+    const ratio = 1 + (xStep > yStep ? yStep / xStep : xStep / yStep);
+    xStep *= ratio * Math.sign(xDiff);
+    yStep *= ratio * Math.sign(yDiff);
+
+    while (true) {
+      const x = Math.round(sourceX);
+      const y = Math.round(sourceY);
+      const tile = this.getTile(x, y);
+
+      if (!tile) {
+        break;
+      }
+
+      fn(tile);
+
+      if (x === targetX && y === targetY) {
+        break;
+      }
+
+      sourceX += xStep;
+      sourceY += yStep;
+    }
+  }
 }
 
 export default Surface;

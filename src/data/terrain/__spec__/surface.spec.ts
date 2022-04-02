@@ -33,4 +33,78 @@ describe("surface", () => {
     expect(row.length).toEqual(5);
     row.forEach((tile) => expect(tile.getX()).toEqual(2));
   });
+
+  const table = [
+    {
+      case: "horizontal",
+      sourceX: 1,
+      sourceY: 1,
+      targetX: 4,
+      targetY: 1,
+      steps: [
+        [1, 1],
+        [2, 1],
+        [3, 1],
+        [4, 1],
+      ],
+    },
+    {
+      case: "vertical",
+      sourceX: 1,
+      sourceY: 4,
+      targetX: 1,
+      targetY: 1,
+      steps: [
+        [1, 4],
+        [1, 3],
+        [1, 2],
+        [1, 1],
+      ],
+    },
+    {
+      case: "diagonal",
+      sourceX: 0,
+      sourceY: 0,
+      targetX: 4,
+      targetY: 4,
+      steps: [
+        [0, 0],
+        [1, 1],
+        [2, 2],
+        [3, 3],
+        [4, 4],
+      ],
+    },
+
+    {
+      case: "complex",
+      sourceX: 7,
+      sourceY: 4,
+      targetX: 3,
+      targetY: 3,
+      steps: [
+        [7, 4],
+        [6, 4],
+        [5, 4],
+        [4, 3],
+        [3, 3],
+      ],
+    },
+  ];
+
+  it.each(table)(
+    "runs a function for every tile in a $case line from [$sourceX, $sourceY] to [$targetX, $targetY]",
+    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+      const fn = jest.fn();
+      surface.forLine(sourceX, sourceY, targetX, targetY, fn);
+
+      expect(fn).toHaveBeenCalledTimes(steps.length);
+      steps.forEach(([x, y], i) =>
+        expect(fn).toHaveBeenNthCalledWith(
+          i + 1,
+          expect.objectContaining({ x, y })
+        )
+      );
+    }
+  );
 });
