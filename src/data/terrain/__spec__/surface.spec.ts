@@ -75,7 +75,6 @@ describe("surface", () => {
         [4, 4],
       ],
     },
-
     {
       case: "complex",
       sourceX: 7,
@@ -88,6 +87,17 @@ describe("surface", () => {
         [5, 4],
         [4, 3],
         [3, 3],
+      ],
+    },
+    {
+      case: "out of bounds",
+      sourceX: 1,
+      sourceY: 1,
+      targetX: -5,
+      targetY: 2,
+      steps: [
+        [1, 1],
+        [0, 1],
       ],
     },
   ];
