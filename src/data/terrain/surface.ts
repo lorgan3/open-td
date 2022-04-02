@@ -17,6 +17,10 @@ class Surface {
   }
 
   public getTile(x: number, y: number) {
+    if (x >= this.width || x < 0 || y >= this.height || y < 0) {
+      return undefined;
+    }
+
     return this.map[y * this.width + x];
   }
 
@@ -26,9 +30,9 @@ class Surface {
   }
 
   public getColumn(x: number) {
-    const column = new Array(this.height);
+    const column: Tile[] = new Array(this.height);
     for (let i = 0; i < this.height; i++) {
-      column[i] = this.getTile(x, i);
+      column[i] = this.getTile(x, i)!;
     }
     return column;
   }
