@@ -74,6 +74,45 @@ class Surface {
       sourceY += yStep;
     }
   }
+
+  // TODO: constrain the coordinates to the surface dimensions to prevent useless loops?
+  // TODO: is it worth it to process the tiles in order instead of always going top left to bottom right?
+  public forRect(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    fn: (tile: Tile) => void
+  ) {
+    const runFn = (x: number, y: number) => {
+      const tile = this.getTile(x, y);
+      if (tile) {
+        fn(tile);
+      }
+    };
+
+    const horizontalLoop = (y: number) => {
+      if (x2 > x1) {
+        for (let x = x1; x <= x2; x++) {
+          runFn(x, y);
+        }
+      } else {
+        for (let x = x1; x >= x2; x--) {
+          runFn(x, y);
+        }
+      }
+    };
+
+    if (y2 > y1) {
+      for (let y = y1; y <= y2; y++) {
+        horizontalLoop(y);
+      }
+    } else {
+      for (let y = y1; y >= y2; y--) {
+        horizontalLoop(y);
+      }
+    }
+  }
 }
 
 export default Surface;

@@ -34,7 +34,7 @@ describe("surface", () => {
     row.forEach((tile) => expect(tile.getX()).toEqual(2));
   });
 
-  const table = [
+  const lineTable = [
     {
       case: "horizontal",
       sourceX: 1,
@@ -102,11 +102,71 @@ describe("surface", () => {
     },
   ];
 
-  it.each(table)(
+  it.each(lineTable)(
     "runs a function for every tile in a $case line from [$sourceX, $sourceY] to [$targetX, $targetY]",
     ({ sourceX, sourceY, targetX, targetY, steps }) => {
       const fn = jest.fn();
       surface.forLine(sourceX, sourceY, targetX, targetY, fn);
+
+      expect(fn).toHaveBeenCalledTimes(steps.length);
+      steps.forEach(([x, y], i) =>
+        expect(fn).toHaveBeenNthCalledWith(
+          i + 1,
+          expect.objectContaining({ x, y })
+        )
+      );
+    }
+  );
+
+  const rectTable = [
+    {
+      case: "regular",
+      sourceX: 1,
+      sourceY: 1,
+      targetX: 2,
+      targetY: 2,
+      steps: [
+        [1, 1],
+        [2, 1],
+        [1, 2],
+        [2, 2],
+      ],
+    },
+    {
+      case: "inverted",
+      sourceX: 3,
+      sourceY: 3,
+      targetX: 2,
+      targetY: 2,
+      steps: [
+        [3, 3],
+        [2, 3],
+        [3, 2],
+        [2, 2],
+      ],
+    },
+    {
+      case: "out of bounds",
+      sourceX: 7,
+      sourceY: 3,
+      targetX: 11,
+      targetY: 5,
+      steps: [
+        [7, 3],
+        [8, 3],
+        [9, 3],
+        [7, 4],
+        [8, 4],
+        [9, 4],
+      ],
+    },
+  ];
+
+  it.only.each(rectTable)(
+    "runs a function for every tile in a $case rectangle from [$sourceX, $sourceY] to [$targetX, $targetY]",
+    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+      const fn = jest.fn();
+      surface.forRect(sourceX, sourceY, targetX, targetY, fn);
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
