@@ -37,6 +37,14 @@ class Surface {
     return column;
   }
 
+  public getWidth() {
+    return this.width;
+  }
+
+  public getHeight() {
+    return this.height;
+  }
+
   public forLine(
     sourceX: number,
     sourceY: number,
@@ -110,6 +118,37 @@ class Surface {
     } else {
       for (let y = y1; y >= y2; y--) {
         horizontalLoop(y);
+      }
+    }
+  }
+
+  public forCircle(x: number, y: number, d: number, fn: (tile: Tile) => void) {
+    let r = d / 2;
+    const rSquared = r * r;
+
+    const runFn = (cx: number, cy: number, offset = 0) => {
+      const ocx = cx + offset;
+      const ocy = cy + offset;
+      if (ocx * ocx + ocy * ocy < rSquared) {
+        const tile = this.getTile(x + cx, y + cy);
+        if (tile) {
+          fn(tile);
+        }
+      }
+    };
+
+    if (d % 2 === 0) {
+      for (let cy = -r; cy < r; cy++) {
+        for (let cx = -r; cx < r; cx++) {
+          runFn(cx, cy, 0.5);
+        }
+      }
+    } else {
+      r = r | 0;
+      for (let cy = -r; cy < r + 1; cy++) {
+        for (let cx = -r; cx < r + 1; cx++) {
+          runFn(cx, cy);
+        }
       }
     }
   }

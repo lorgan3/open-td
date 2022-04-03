@@ -162,11 +162,82 @@ describe("surface", () => {
     },
   ];
 
-  it.only.each(rectTable)(
+  it.each(rectTable)(
     "runs a function for every tile in a $case rectangle from [$sourceX, $sourceY] to [$targetX, $targetY]",
     ({ sourceX, sourceY, targetX, targetY, steps }) => {
       const fn = jest.fn();
       surface.forRect(sourceX, sourceY, targetX, targetY, fn);
+
+      expect(fn).toHaveBeenCalledTimes(steps.length);
+      steps.forEach(([x, y], i) =>
+        expect(fn).toHaveBeenNthCalledWith(
+          i + 1,
+          expect.objectContaining({ x, y })
+        )
+      );
+    }
+  );
+
+  const circleTable = [
+    {
+      case: "tiny",
+      x: 4,
+      y: 2,
+      d: 1,
+      steps: [[4, 2]],
+    },
+    {
+      case: "small",
+      x: 4,
+      y: 2,
+      d: 2,
+      steps: [
+        [3, 1],
+        [4, 1],
+        [3, 2],
+        [4, 2],
+      ],
+    },
+    {
+      case: "medium",
+      x: 4,
+      y: 2,
+      d: 3,
+      steps: [
+        [3, 1],
+        [4, 1],
+        [5, 1],
+        [3, 2],
+        [4, 2],
+        [5, 2],
+        [3, 3],
+        [4, 3],
+        [5, 3],
+      ],
+    },
+    {
+      case: "big out of bounds",
+      x: 1,
+      y: 1,
+      d: 4,
+      steps: [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [0, 1],
+        [1, 1],
+        [2, 1],
+        [0, 2],
+        [1, 2],
+      ],
+    },
+  ];
+
+  it.each(circleTable)(
+    "runs a function for every tile in a $case circle at [$x, $y] with d $d",
+    ({ x, y, d, steps }) => {
+      const fn = jest.fn();
+      surface.forCircle(x, y, d, fn);
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
