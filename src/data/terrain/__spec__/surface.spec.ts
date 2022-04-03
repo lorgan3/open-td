@@ -184,6 +184,7 @@ describe("surface", () => {
       x: 4,
       y: 2,
       d: 1,
+      edgeOnly: false,
       steps: [[4, 2]],
     },
     {
@@ -191,6 +192,7 @@ describe("surface", () => {
       x: 4,
       y: 2,
       d: 2,
+      edgeOnly: false,
       steps: [
         [3, 1],
         [4, 1],
@@ -203,6 +205,7 @@ describe("surface", () => {
       x: 4,
       y: 2,
       d: 3,
+      edgeOnly: false,
       steps: [
         [3, 1],
         [4, 1],
@@ -220,6 +223,7 @@ describe("surface", () => {
       x: 1,
       y: 1,
       d: 4,
+      edgeOnly: false,
       steps: [
         [0, 0],
         [1, 0],
@@ -231,13 +235,34 @@ describe("surface", () => {
         [1, 2],
       ],
     },
+    {
+      case: "edges only",
+      x: 2,
+      y: 2,
+      d: 5,
+      edgeOnly: true,
+      steps: [
+        [1, 0],
+        [2, 0],
+        [3, 0],
+        [0, 1],
+        [4, 1],
+        [0, 2],
+        [4, 2],
+        [0, 3],
+        [4, 3],
+        [1, 4],
+        [2, 4],
+        [3, 4],
+      ],
+    },
   ];
 
   it.each(circleTable)(
     "runs a function for every tile in a $case circle at [$x, $y] with d $d",
-    ({ x, y, d, steps }) => {
+    ({ x, y, d, edgeOnly, steps }) => {
       const fn = jest.fn();
-      surface.forCircle(x, y, d, fn);
+      surface.forCircle(x, y, d, fn, edgeOnly);
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>

@@ -122,14 +122,22 @@ class Surface {
     }
   }
 
-  public forCircle(x: number, y: number, d: number, fn: (tile: Tile) => void) {
+  public forCircle(
+    x: number,
+    y: number,
+    d: number,
+    fn: (tile: Tile) => void,
+    edgeOnly = false
+  ) {
     let r = d / 2;
     const rSquared = r * r;
+    const innerRSquared = (r - 1) * (r - 1);
 
     const runFn = (cx: number, cy: number, offset = 0) => {
       const ocx = cx + offset;
       const ocy = cy + offset;
-      if (ocx * ocx + ocy * ocy < rSquared) {
+      const dist = ocx * ocx + ocy * ocy;
+      if (dist < rSquared && !(edgeOnly && dist < innerRSquared)) {
         const tile = this.getTile(x + cx, y + cy);
         if (tile) {
           fn(tile);
