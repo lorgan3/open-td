@@ -1,9 +1,14 @@
+import { Generator } from "./generator";
 import Tile from "./tile";
 
 class Surface {
   public map!: Tile[];
 
-  constructor(private width = 50, private height = 25) {
+  constructor(
+    private width = 50,
+    private height = 25,
+    private generate: Generator = (x, y) => new Tile(x, y)
+  ) {
     this.initialize();
   }
 
@@ -11,7 +16,7 @@ class Surface {
     this.map = new Array(this.width * this.height);
     for (let j = 0; j < this.height; j++) {
       for (let i = 0; i < this.width; i++) {
-        this.map[j * this.width + i] = new Tile(i, j);
+        this.map[j * this.width + i] = this.generate(i, j);
       }
     }
   }
