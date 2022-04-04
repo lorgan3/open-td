@@ -6,4 +6,10 @@ import Game from "./components/Game.vue";
   <Game />
 </template>
 
-<style></style>
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+</style>

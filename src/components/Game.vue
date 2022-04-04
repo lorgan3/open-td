@@ -11,8 +11,8 @@ const canvas = ref<HTMLDivElement | null>(null);
 onMounted(() => {
   const surface = new Surface(96, 54, generate);
 
-  const renderer = new Renderer();
-  renderer.render(canvas.value as HTMLDivElement, surface);
+  const renderer = new Renderer(surface);
+  renderer.render(canvas.value as HTMLDivElement);
 });
 </script>
 
