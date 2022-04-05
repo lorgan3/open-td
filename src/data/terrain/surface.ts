@@ -1,8 +1,12 @@
+import Entity, { Agent } from "../entity/entity";
 import { Generator } from "./generator";
 import Tile from "./tile";
 
 class Surface {
   public map!: Tile[];
+  public entities: Entity[] = [];
+
+  private dirty = true;
 
   constructor(
     private width = 50,
@@ -164,6 +168,35 @@ class Surface {
         }
       }
     }
+  }
+
+  public spawn(agent: Agent) {
+    this.entities.push(agent.entity);
+  }
+
+  public spawnStatic(agent: Agent) {
+    const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
+    tile!.setStaticEntity(agent.entity);
+    this.dirty = true;
+  }
+
+  public despawn(agent: Agent) {
+    const index = this.entities.indexOf(agent.entity);
+    if (index >= 0) {
+      this.entities.splice(index, 1);
+    }
+  }
+
+  public getEntities() {
+    return this.entities;
+  }
+
+  public markPristine() {
+    this.dirty = false;
+  }
+
+  public isDirty() {
+    return this.dirty;
   }
 }
 
