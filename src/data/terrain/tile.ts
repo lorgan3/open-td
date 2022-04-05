@@ -1,3 +1,5 @@
+import Entity from "../entity/entity";
+
 export enum TileType {
   Void = 0,
   Grass = 1,
@@ -6,6 +8,8 @@ export enum TileType {
 }
 
 class Tile {
+  private staticEntity: Entity | null = null;
+
   constructor(
     private x: number,
     private y: number,
@@ -22,6 +26,26 @@ class Tile {
 
   getType() {
     return this.type;
+  }
+
+  getStaticEntity() {
+    return this.staticEntity;
+  }
+
+  hasStaticEntity() {
+    return this.staticEntity !== null;
+  }
+
+  setStaticEntity(entity: Entity) {
+    if (this.staticEntity !== null) {
+      throw new Error("A tile can only have 1 static entity.");
+    }
+
+    this.staticEntity = entity;
+  }
+
+  clearStaticEntity() {
+    this.staticEntity = null;
   }
 }
 
