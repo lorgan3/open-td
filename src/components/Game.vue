@@ -12,7 +12,11 @@ onMounted(() => {
   const surface = new Surface(96, 54, generate);
 
   const renderer = new Renderer(surface);
-  renderer.render(canvas.value as HTMLDivElement);
+  renderer.mount(canvas.value as HTMLDivElement);
+
+  window.setInterval(() => {
+    renderer.rerender();
+  }, 100);
 });
 </script>
 

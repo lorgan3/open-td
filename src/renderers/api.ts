@@ -1,5 +1,7 @@
 import Surface from "../data/terrain/surface";
 
 export interface IRenderer {
-  render(target: HTMLDivElement, surface: Surface): void;
+  mount(target: HTMLDivElement): void;
+  unmount(): void;
+  rerender(): void;
 }
