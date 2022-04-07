@@ -47,7 +47,7 @@ class Renderer implements IRenderer {
       const htmlElement = this.getHtmlElement(entity);
       htmlElement.style.transform = `translate(${
         entity.getX() * this.xStep
-      }px, ${entity.getY() * this.yStep}px)`;
+      }px, ${entity.getY() * this.yStep}px) rotate(${entity.getRotation()}deg)`;
     }
   }
 

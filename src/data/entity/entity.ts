@@ -13,6 +13,7 @@ export enum EntityType {
 
 class Entity {
   private id: number;
+  private rotation = 0;
 
   constructor(private x: number, private y: number, private agent: Agent) {
     this.id = id++;
@@ -40,6 +41,14 @@ class Entity {
 
   setY(y: number) {
     this.y = y;
+  }
+
+  getRotation() {
+    return this.rotation;
+  }
+
+  setRotation(rotation: number) {
+    this.rotation = rotation;
   }
 }
 
