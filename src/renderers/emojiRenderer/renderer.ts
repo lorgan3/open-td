@@ -44,6 +44,10 @@ class Renderer implements IRenderer {
 
     const entities = this.surface.getEntities();
     for (let entity of entities) {
+      if ("animate" in entity.getAgent()) {
+        (entity.getAgent() as any).animate();
+      }
+
       const htmlElement = this.getHtmlElement(entity);
       htmlElement.style.transform = `translate(${
         entity.getX() * this.xStep
