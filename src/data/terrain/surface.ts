@@ -33,6 +33,11 @@ class Surface {
     return this.map[y * this.width + x];
   }
 
+  public setTile(tile: Tile) {
+    this.dirty = true;
+    this.map[tile.getY() * this.width + tile.getX()] = tile;
+  }
+
   public getRow(y: number) {
     const offset = y * this.width;
     return this.map.slice(offset, offset + this.width);
