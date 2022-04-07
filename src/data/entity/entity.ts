@@ -8,6 +8,7 @@ export interface Agent {
 export enum EntityType {
   Tower = 1,
   Slime = 2,
+  Base = 3,
 }
 
 class Entity {

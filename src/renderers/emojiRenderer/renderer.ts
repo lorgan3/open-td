@@ -72,7 +72,7 @@ class Renderer implements IRenderer {
 
     if (!htmlElement) {
       htmlElement = document.createElement("span");
-      htmlElement.textContent = "🪲";
+      htmlElement.textContent = this.getEntityEmoji(entity);
       htmlElement.style.position = "absolute";
       htmlElement.style.top = "0";
       htmlElement.style.left = "0";
@@ -114,6 +114,17 @@ class Renderer implements IRenderer {
         return "🟩";
       default:
         return "🌌";
+    }
+  }
+
+  private getEntityEmoji(entity: Entity) {
+    switch (entity.getAgent().getType()) {
+      case EntityType.Slime:
+        return "🪲";
+      case EntityType.Base:
+        return "⛺";
+      default:
+        return "";
     }
   }
 }
