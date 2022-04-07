@@ -13,7 +13,7 @@ const NEIGHBORS = [
   [0, 1],
 ];
 
-const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
+export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Grass]: 1,
   [TileType.Water]: 10,
   [TileType.Stone]: 2,
@@ -51,7 +51,7 @@ class PathFinder {
           current = path.get(current.getHash())!;
           realPath.push(current);
         }
-        return realPath;
+        return realPath.reverse();
       }
 
       const currentHash = current.getHash();
