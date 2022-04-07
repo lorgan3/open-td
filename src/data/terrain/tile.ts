@@ -47,6 +47,11 @@ class Tile {
   clearStaticEntity() {
     this.staticEntity = null;
   }
+
+  // @TODO instead of a string, just the index on the surface would be more efficient
+  getHash() {
+    return `[${this.x}, ${this.y}]`;
+  }
 }
 
 export default Tile;

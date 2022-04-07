@@ -8,10 +8,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "heap": "^0.2.7",
     "simplex-noise": "^3.0.1",
     "vue": "^3.2.31"
   },
   "devDependencies": {
+    "@types/heap": "^0.2.29",
     "@types/jest": "^27.4.1",
     "@vitejs/plugin-vue": "^2.0.0",
     "jest": "^27.5.1",
