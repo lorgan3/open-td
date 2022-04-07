@@ -5,11 +5,13 @@ export enum TileType {
   Grass = 1,
   Stone = 2,
   Water = 3,
+  Obstructed = 4,
 }
 
 class Tile {
   private staticEntity: Entity | null = null;
   private hash: string;
+  private actualType: TileType;
 
   constructor(
     private x: number,
@@ -17,6 +19,7 @@ class Tile {
     private type = TileType.Void
   ) {
     this.hash = `[${this.x}, ${this.y}]`;
+    this.actualType = type;
   }
 
   getX() {
@@ -27,8 +30,12 @@ class Tile {
     return this.y;
   }
 
-  getType() {
+  getBaseType() {
     return this.type;
+  }
+
+  getType() {
+    return this.actualType;
   }
 
   getStaticEntity() {
@@ -45,10 +52,12 @@ class Tile {
     }
 
     this.staticEntity = entity;
+    this.actualType = TileType.Obstructed;
   }
 
   clearStaticEntity() {
     this.staticEntity = null;
+    this.actualType = this.type;
   }
 
   // @TODO instead of a string, just the index on the surface would be more efficient

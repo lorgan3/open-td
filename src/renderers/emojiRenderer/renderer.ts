@@ -105,7 +105,7 @@ class Renderer implements IRenderer {
       }
     }
 
-    switch (tile.getType()) {
+    switch (tile.getBaseType()) {
       case TileType.Water:
         return "🟦";
       case TileType.Stone:
