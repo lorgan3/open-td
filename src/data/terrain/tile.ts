@@ -9,12 +9,15 @@ export enum TileType {
 
 class Tile {
   private staticEntity: Entity | null = null;
+  private hash: string;
 
   constructor(
     private x: number,
     private y: number,
     private type = TileType.Void
-  ) {}
+  ) {
+    this.hash = `[${this.x}, ${this.y}]`;
+  }
 
   getX() {
     return this.x;
@@ -50,7 +53,7 @@ class Tile {
 
   // @TODO instead of a string, just the index on the surface would be more efficient
   getHash() {
-    return `[${this.x}, ${this.y}]`;
+    return this.hash;
   }
 }
 
