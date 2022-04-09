@@ -5,6 +5,7 @@ import Tile from "./tile";
 class Surface {
   public map!: Tile[];
   public entities: Entity[] = [];
+  public deletedEntities: Entity[] = [];
 
   private dirty = true;
 
@@ -190,14 +191,21 @@ class Surface {
     if (index >= 0) {
       this.entities.splice(index, 1);
     }
+
+    this.deletedEntities.push(agent.entity);
   }
 
   public getEntities() {
     return this.entities;
   }
 
+  public getDeletedEntities() {
+    return this.deletedEntities;
+  }
+
   public markPristine() {
     this.dirty = false;
+    this.deletedEntities = [];
   }
 
   public isDirty() {

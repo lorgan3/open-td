@@ -50,6 +50,17 @@ class Renderer implements IRenderer {
         entity.getX() * this.xStep
       }px, ${entity.getY() * this.yStep}px) rotate(${entity.getRotation()}deg)`;
     }
+
+    const deletedEntities = this.surface.getDeletedEntities();
+    deletedEntities.forEach((entity) => {
+      let htmlElement = this.entityHtmlElements[entity.getId()];
+      if (htmlElement) {
+        delete this.entityHtmlElements[entity.getId()];
+        htmlElement.remove();
+      }
+    });
+
+    this.surface.markPristine();
   }
 
   private renderTiles() {

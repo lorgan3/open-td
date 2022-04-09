@@ -1,3 +1,4 @@
+import Manager from "../manager";
 import { DEFAULT_COSTS } from "../terrain/pathfinder";
 import Tile from "../terrain/tile";
 import Entity, { Agent, EntityType } from "./entity";
@@ -30,6 +31,8 @@ class Enemy implements Agent {
         this.entity.setX(to.getX());
         this.entity.setY(to.getY());
         this.path = [];
+
+        Manager.Instance.getSurface().despawn(this);
         return;
       }
 
