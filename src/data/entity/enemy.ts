@@ -37,7 +37,7 @@ class Enemy implements Agent {
       const from = this.path[start];
 
       let end =
-        (this.pathIndex + this.speed * (DEFAULT_COSTS[from.getType()] ?? 1)) |
+        (this.pathIndex + this.speed / (DEFAULT_COSTS[from.getType()] ?? 1)) |
         0;
       if (start === end) {
         end++;
@@ -55,7 +55,9 @@ class Enemy implements Agent {
 
       const xDiff = to.getX() - x;
       const yDiff = to.getY() - y;
-      this.entity.setRotation((Math.atan(yDiff / xDiff) * 180) / Math.PI + 90);
+      this.entity.setRotation(
+        (-Math.atan(xDiff / yDiff) * 180) / Math.PI + 180
+      );
 
       const speed =
         this.speed /
