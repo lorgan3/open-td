@@ -9,7 +9,7 @@ class Enemy implements Agent {
   private path: Tile[] = [];
   private pathIndex = 0;
 
-  public speed = 0.1;
+  public speed = 0.5;
 
   constructor(tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);

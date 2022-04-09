@@ -20,7 +20,7 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
 };
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
-class PathFinder {
+class Pathfinder {
   constructor(
     private surface: Surface,
     private costs: Partial<Record<TileType, number>> = DEFAULT_COSTS
@@ -128,4 +128,4 @@ class PathFinder {
   }
 }
 
-export default PathFinder;
+export default Pathfinder;

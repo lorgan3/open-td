@@ -11,14 +11,21 @@ const canvas = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
   const surface = new Surface(96, 54, generate);
-  const manager = new Manager([], surface.getTile(60, 50)!, surface);
+  const spawnTile = surface.getTile(5, 5)!;
+  const manager = new Manager(
+    [spawnTile, spawnTile, spawnTile, spawnTile],
+    surface.getTile(60, 50)!,
+    surface
+  );
 
   const renderer = new Renderer(manager.getSurface(), manager.getController());
   renderer.mount(canvas.value as HTMLDivElement);
 
   window.setInterval(() => {
+    manager.tick(50);
+
     renderer.rerender();
-  }, 10);
+  }, 50);
 });
 </script>
 
