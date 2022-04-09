@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import generate from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
-import Base from "../data/entity/base";
+import Manager from "../data/manager";
 
 // defineProps<{}>();
 
@@ -11,11 +11,9 @@ const canvas = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
   const surface = new Surface(96, 54, generate);
-  const tile = surface.getTile(60, 50)!;
-  const base = new Base(tile);
-  surface.spawn(base);
+  const manager = new Manager([], surface.getTile(60, 50)!, surface);
 
-  const renderer = new Renderer(surface);
+  const renderer = new Renderer(manager.getSurface(), manager.getController());
   renderer.mount(canvas.value as HTMLDivElement);
 
   window.setInterval(() => {

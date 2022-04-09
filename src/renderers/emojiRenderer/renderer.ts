@@ -12,10 +12,7 @@ class Renderer implements IRenderer {
   private target: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
 
-  constructor(
-    private surface: Surface,
-    private controller: Controller = new Controller(surface)
-  ) {}
+  constructor(private surface: Surface, private controller: Controller) {}
 
   mount(target: HTMLDivElement): void {
     this.target = target;
