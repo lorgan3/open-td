@@ -1,3 +1,5 @@
+import Tile from "../terrain/tile";
+
 let id = 1;
 
 export interface Agent {
@@ -49,6 +51,24 @@ class Entity {
 
   setRotation(rotation: number) {
     this.rotation = rotation;
+  }
+
+  /**
+   * @param t Number between [0, 1] that dictates where between `from` and `to` the entity is.
+   */
+  move(from: Tile, to: Tile, t: number) {
+    const x = (to.getX() - from.getX()) * t + from.getX();
+    const y = (to.getY() - from.getY()) * t + from.getY();
+
+    this.setX(x);
+    this.setY(y);
+
+    const xDiff = to.getX() - x;
+    const yDiff = to.getY() - y;
+
+    if (xDiff || yDiff) {
+      this.setRotation((-Math.atan(xDiff / yDiff) * 180) / Math.PI + 180);
+    }
   }
 }
 

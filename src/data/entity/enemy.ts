@@ -47,17 +47,7 @@ class Enemy implements Agent {
       }
 
       const to = this.path[end];
-      const x = (to.getX() - from.getX()) * step + from.getX();
-      const y = (to.getY() - from.getY()) * step + from.getY();
-
-      this.entity.setX(x);
-      this.entity.setY(y);
-
-      const xDiff = to.getX() - x;
-      const yDiff = to.getY() - y;
-      this.entity.setRotation(
-        (-Math.atan(xDiff / yDiff) * 180) / Math.PI + 180
-      );
+      this.entity.move(from, to, step);
 
       const speed =
         this.speed /
