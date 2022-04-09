@@ -14,9 +14,9 @@ const NEIGHBORS = [
 ];
 
 export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
-  [TileType.Grass]: 1,
-  [TileType.Water]: 10,
-  [TileType.Stone]: 2,
+  [TileType.Grass]: 3,
+  [TileType.Water]: 20,
+  [TileType.Stone]: 4,
 };
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
@@ -26,7 +26,11 @@ class PathFinder {
     private costs: Partial<Record<TileType, number>> = DEFAULT_COSTS
   ) {}
 
-  getPath(from: Tile, to: Tile) {
+  getPath(
+    from: Tile,
+    to: Tile,
+    costs?: Partial<Record<TileType, number>> | ((tile: Tile) => number | null)
+  ) {
     // Cheapest path from n to start
     const gScores = new Map<string, number>();
     gScores.set(from.getHash(), 0);
@@ -34,6 +38,13 @@ class PathFinder {
     // Cheapest path from n to end
     const fScores = new Map<string, number>();
     fScores.set(from.getHash(), this.heuristic(from, to));
+
+    const costFn =
+      typeof costs === "function"
+        ? costs
+        : costs !== undefined
+        ? (tile: Tile) => costs[tile.getType()]
+        : (tile: Tile) => this.costs[tile.getType()];
 
     const activeTiles = new Heap<Tile>(
       (a, b) =>
@@ -65,7 +76,7 @@ class PathFinder {
           return;
         }
 
-        const cost = this.costs[neighbor.getType()];
+        const cost = costFn(neighbor);
         if (!cost) {
           return;
         }
@@ -83,6 +94,30 @@ class PathFinder {
         }
       });
     }
+  }
+
+  getHivePath(tiles: Tile[], to: Tile) {
+    const visitedTiles: Record<string, number> = {};
+
+    const costFn = (tile: Tile) => {
+      const cost = this.costs[tile.getType()];
+      return cost ? cost * (visitedTiles[tile.getHash()] ?? 1) : null;
+    };
+
+    return tiles.reduce<Array<Tile[] | undefined>>((paths, from, i) => {
+      const path = this.getPath(from, to, costFn);
+      paths.push(path);
+
+      if (path && tiles.length > i - 1) {
+        path.forEach(
+          (tile) =>
+            (visitedTiles[tile.getHash()] =
+              visitedTiles[tile.getHash()] + 0.1 || 1.1)
+        );
+      }
+
+      return paths;
+    }, []);
   }
 
   // Just manhattan for now
