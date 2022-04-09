@@ -1,6 +1,7 @@
 import { DEFAULT_COSTS } from "../terrain/pathfinder";
 import Tile from "../terrain/tile";
 import Entity, { Agent, EntityType } from "./entity";
+import { getPathSection } from "./util";
 
 class Enemy implements Agent {
   public entity: Entity;
@@ -32,27 +33,17 @@ class Enemy implements Agent {
         return;
       }
 
-      const step = this.pathIndex % 1;
-      const start = this.pathIndex | 0;
-      const from = this.path[start];
-
-      let end =
-        (this.pathIndex + this.speed / (DEFAULT_COSTS[from.getType()] ?? 1)) |
-        0;
-      if (start === end) {
-        end++;
-      }
-      if (end >= this.path.length - 1) {
-        end = this.path.length - 1;
-      }
-
-      const to = this.path[end];
+      const { from, to, step } = getPathSection(
+        this.path,
+        this.pathIndex,
+        this.speed,
+        DEFAULT_COSTS
+      );
       this.entity.move(from, to, step);
 
-      const speed =
+      this.pathIndex +=
         this.speed /
         (DEFAULT_COSTS[step > 0.5 ? to.getType() : from.getType()] ?? 1);
-      this.pathIndex += speed;
     }
   }
 }
