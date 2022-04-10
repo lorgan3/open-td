@@ -29,20 +29,20 @@ class Renderer implements IRenderer {
     this.xStep = width / this.surface.getWidth();
     this.yStep = height / this.surface.getHeight();
 
-    this.rerender();
+    this.rerender(0);
 
     this.registerEventHandlers(target);
   }
 
-  rerender(): void {
+  rerender(dt: number): void {
     if (this.surface.isDirty()) {
       this.renderTiles();
     }
 
     const entities = this.surface.getEntities();
     for (let entity of entities) {
-      if ("animate" in entity.getAgent()) {
-        (entity.getAgent() as any).animate();
+      if (entity.getAgent().tick) {
+        entity.getAgent().tick!(dt);
       }
 
       const htmlElement = this.getHtmlElement(entity);
@@ -59,6 +59,13 @@ class Renderer implements IRenderer {
         htmlElement.remove();
       }
     });
+
+    const staticEntities = this.surface.getStaticEntities();
+    for (let entity of staticEntities) {
+      if (entity.getAgent().tick) {
+        entity.getAgent().tick!(dt);
+      }
+    }
 
     this.surface.markPristine();
   }
@@ -135,6 +142,8 @@ class Renderer implements IRenderer {
         return "🪲";
       case EntityType.Base:
         return "⛺";
+      case EntityType.Bullet:
+        return "▪";
       default:
         return "";
     }

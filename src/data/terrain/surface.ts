@@ -6,6 +6,7 @@ class Surface {
   public map!: Tile[];
   public entities: Entity[] = [];
   public deletedEntities: Entity[] = [];
+  public staticEntities: Entity[] = [];
 
   private dirty = true;
 
@@ -183,6 +184,7 @@ class Surface {
   public spawnStatic(agent: Agent) {
     const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
     tile!.setStaticEntity(agent.entity);
+    this.staticEntities.push(agent.entity);
     this.dirty = true;
   }
 
@@ -201,6 +203,10 @@ class Surface {
 
   public getDeletedEntities() {
     return this.deletedEntities;
+  }
+
+  public getStaticEntities() {
+    return this.staticEntities;
   }
 
   public markPristine() {

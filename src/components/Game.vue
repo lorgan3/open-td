@@ -24,7 +24,7 @@ onMounted(() => {
   window.setInterval(() => {
     manager.tick(50);
 
-    renderer.rerender();
+    renderer.rerender(50);
   }, 50);
 });
 </script>
