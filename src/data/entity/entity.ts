@@ -5,12 +5,14 @@ let id = 1;
 export interface Agent {
   entity: Entity;
   getType(): EntityType;
+  tick?: (dt: number) => void;
 }
 
 export enum EntityType {
   Tower = 1,
   Slime = 2,
   Base = 3,
+  Bullet = 4,
 }
 
 class Entity {

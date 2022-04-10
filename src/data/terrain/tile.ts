@@ -1,4 +1,5 @@
 import Entity from "../entity/entity";
+import { ITower } from "../entity/tower";
 
 export enum TileType {
   Void = 0,
@@ -12,6 +13,7 @@ class Tile {
   private staticEntity: Entity | null = null;
   private hash: string;
   private actualType: TileType;
+  private towers: ITower[] = [];
 
   constructor(
     private x: number,
@@ -58,6 +60,18 @@ class Tile {
   clearStaticEntity() {
     this.staticEntity = null;
     this.actualType = this.type;
+  }
+
+  addTower(tower: ITower) {
+    this.towers.push(tower);
+  }
+
+  removeTower(tower: ITower) {
+    this.towers.splice(this.towers.indexOf(tower), 1);
+  }
+
+  getAvailableTower() {
+    return this.towers.find((tower) => tower.getCooldown() === 0);
   }
 
   // @TODO instead of a string, just the index on the surface would be more efficient

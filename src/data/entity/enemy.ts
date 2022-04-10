@@ -24,7 +24,15 @@ class Enemy implements Agent {
     this.pathIndex = 0;
   }
 
-  animate() {
+  getPath() {
+    return this.path;
+  }
+
+  getPathIndex() {
+    return this.pathIndex;
+  }
+
+  tick(dt: number) {
     if (this.path.length) {
       if (this.pathIndex >= this.path.length - 1) {
         const to = this.path[this.path.length - 1];
