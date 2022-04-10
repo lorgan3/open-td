@@ -48,14 +48,15 @@ class Path {
 
   getFuturePosition(time: number) {
     let index = this.index;
+    let sectionIndex = this.sectionIndex;
     while (time > 0) {
-      const remaining = 1 - (index % 1);
-      const duration =
-        (remaining / this.speed) *
-        (this.speedMultipliers[this.tiles[index | 0].getType()] ?? 1);
+      const section = this.sections[sectionIndex];
+      const remaining = section.to - index;
+      const duration = (remaining / this.speed) * section.speedMultiplier;
 
       if (time > duration) {
         index += remaining;
+        sectionIndex++;
         time -= duration;
       } else {
         index += (remaining * time) / duration;

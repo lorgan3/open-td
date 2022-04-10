@@ -30,7 +30,7 @@ describe("path", () => {
     expect(clone).not.toBe(path);
   });
 
-  describe("getPathSection", () => {
+  describe("performStep", () => {
     const table = [
       {
         index: 0,
@@ -78,6 +78,14 @@ describe("path", () => {
   });
 
   describe("getFuturePosition", () => {
+    const tiles = [
+      new Tile(0, 0),
+      new Tile(1, 0, TileType.Grass),
+      new Tile(2, 0, TileType.Grass),
+      new Tile(3, 1),
+      new Tile(3, 2),
+    ];
+
     const table = [
       {
         index: 0,
@@ -94,13 +102,6 @@ describe("path", () => {
         expected: 1.25,
       },
       {
-        index: 2,
-        time: 2000,
-        speed: 0.001,
-        speedMultipliers: {},
-        expected: 3,
-      },
-      {
         index: 0,
         time: 2000,
         speed: 0.001,
@@ -113,6 +114,20 @@ describe("path", () => {
         speed: 0.001,
         speedMultipliers: { [TileType.Grass]: 2 },
         expected: 1.125,
+      },
+      {
+        index: 0,
+        time: 5500,
+        speed: 0.001,
+        speedMultipliers: { [TileType.Grass]: 2 },
+        expected: 3.5,
+      },
+      {
+        index: 0,
+        time: 10000,
+        speed: 0.001,
+        speedMultipliers: { [TileType.Grass]: 2 },
+        expected: 4,
       },
     ];
 
