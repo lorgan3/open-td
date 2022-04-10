@@ -141,4 +141,32 @@ describe("path", () => {
       }
     );
   });
+
+  describe("getCoordinates", () => {
+    const table = [
+      {
+        index: 0,
+        expected: { x: 0, y: 0 },
+      },
+      {
+        index: 0.5,
+        expected: { x: 0.5, y: 0 },
+      },
+      {
+        index: 2,
+        expected: { x: 2, y: 0 },
+      },
+      {
+        index: 10,
+        expected: { x: 3, y: 1 },
+      },
+    ];
+
+    it.each(table)(
+      "gets the actual position at index $index",
+      ({ index, expected }) => {
+        expect(path.getCoordinates(index)).toEqual(expected);
+      }
+    );
+  });
 });

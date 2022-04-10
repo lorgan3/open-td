@@ -95,6 +95,21 @@ class Path {
     return this.tiles[index | 0];
   }
 
+  getCoordinates(index = this.index) {
+    if (index >= this.tiles.length - 1) {
+      const tile = this.tiles[this.tiles.length - 1];
+      return { x: tile.getX(), y: tile.getY() };
+    }
+
+    const t = index % 1;
+    const from = this.tiles[index | 0];
+    const to = this.tiles[(index | 0) + 1];
+    return {
+      x: (to.getX() - from.getX()) * t + from.getX(),
+      y: (to.getY() - from.getY()) * t + from.getY(),
+    };
+  }
+
   getSpeed() {
     return this.speed;
   }
