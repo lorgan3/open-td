@@ -8,6 +8,7 @@ interface Section {
 
 class Path {
   private index = 0;
+  private sectionIndex = 0;
 
   private constructor(
     private tiles: Tile[],
@@ -15,6 +16,26 @@ class Path {
     private speed: number,
     private speedMultipliers: Partial<Record<TileType, number>>
   ) {}
+
+  clone() {
+    return new Path(
+      this.tiles,
+      this.sections,
+      this.speed,
+      this.speedMultipliers
+    );
+  }
+
+  setIndex(index: number) {
+    this.index = Math.max(Math.min(index, this.tiles.length - 1), 0);
+    this.sectionIndex = this.sections.findIndex(
+      ({ from, to }) => this.index >= from && this.index < to
+    );
+  }
+
+  getIndex() {
+    return this.index;
+  }
 
   static fromTiles(
     tiles: Tile[],
