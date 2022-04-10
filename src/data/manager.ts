@@ -1,7 +1,8 @@
 import Controller from "./controller";
 import Base from "./entity/base";
 import Enemy from "./entity/enemy";
-import Pathfinder from "./terrain/pathfinder";
+import Path from "./terrain/path";
+import Pathfinder, { DEFAULT_COSTS } from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile from "./terrain/tile";
 
@@ -12,7 +13,7 @@ class Manager {
   private pathfinder: Pathfinder;
   private base: Base;
 
-  private paths: Tile[][];
+  private paths: Path[];
   private time = 0;
   private lastSpawnTime = 0;
 
@@ -32,7 +33,8 @@ class Manager {
 
     this.paths = this.pathfinder
       .getHivePath(spawnPoints, basePoint)
-      .filter((path): path is Tile[] => !!path);
+      .filter((tiles): tiles is Tile[] => !!tiles)
+      .map((tiles) => Path.fromTiles(tiles, 0.01, DEFAULT_COSTS));
   }
 
   tick(dt: number) {
@@ -43,8 +45,7 @@ class Manager {
       const path = this.paths[(Math.random() * this.paths.length) | 0];
 
       if (path) {
-        const enemy = new Enemy(path[0]);
-        enemy.setPath(path);
+        const enemy = new Enemy(path.getTile(0), path.clone());
         this.surface.spawn(enemy);
       }
     }

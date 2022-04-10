@@ -1,5 +1,5 @@
 import Tile from "../../terrain/tile";
-import Enemy from "../enemy";
+import Base from "../base";
 
 describe("entity", () => {
   describe("move", () => {
@@ -7,7 +7,7 @@ describe("entity", () => {
     const to = new Tile(1, 1);
 
     it("is at the start tile when t is 0", () => {
-      const agent = new Enemy(from);
+      const agent = new Base(from);
       agent.entity.move(from, to, 0);
       expect(agent.entity.getX()).toEqual(from.getX());
       expect(agent.entity.getY()).toEqual(from.getY());
@@ -15,7 +15,7 @@ describe("entity", () => {
     });
 
     it("is at the end tile when t is 1", () => {
-      const agent = new Enemy(from);
+      const agent = new Base(from);
       agent.entity.move(from, to, 1);
       expect(agent.entity.getX()).toEqual(to.getX());
       expect(agent.entity.getY()).toEqual(to.getY());
@@ -23,7 +23,7 @@ describe("entity", () => {
     });
 
     it("is between 2 tiles when t is 0.3", () => {
-      const agent = new Enemy(from);
+      const agent = new Base(from);
       agent.entity.move(from, to, 0.3);
       expect(agent.entity.getX()).toEqual(0.3);
       expect(agent.entity.getY()).toEqual(0.3);

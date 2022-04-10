@@ -3,7 +3,6 @@ import { DEFAULT_COSTS } from "../terrain/pathfinder";
 import Tile from "../terrain/tile";
 import { IEnemy } from "./enemy";
 import Entity, { Agent, EntityType } from "./entity";
-import { getFuturePosition } from "./util";
 
 const SPEED = 0.015;
 
@@ -27,16 +26,10 @@ class Bullet implements Agent {
     const dist = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     this.travelTime = dist / SPEED;
 
-    const index = getFuturePosition(
-      target.getPath(),
-      target.getPathIndex(),
-      this.travelTime,
-      target.speed,
-      DEFAULT_COSTS
-    );
+    const index = this.target.getPath().getFuturePosition(this.travelTime);
 
     // @TODO: rounding the destination to 1 tile looks bad
-    this.destination = target.getPath()[index | 0];
+    this.destination = target.getPath().getTile(index);
   }
 
   tick(dt: number) {

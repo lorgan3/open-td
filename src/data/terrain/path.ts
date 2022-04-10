@@ -91,6 +91,18 @@ class Path {
     return this.index;
   }
 
+  getTile(index = this.index) {
+    return this.tiles[index | 0];
+  }
+
+  getSpeed() {
+    return this.speed;
+  }
+
+  isDone() {
+    return this.index === this.tiles.length - 1;
+  }
+
   static fromTiles(
     tiles: Tile[],
     speed: number,
