@@ -8,7 +8,8 @@ const SPEED = 0.015;
 
 class Bullet implements Agent {
   public entity: Entity;
-  private destination: Tile;
+  private targetX: number;
+  private targetY: number;
 
   private time = 0;
   private travelTime: number;
@@ -28,8 +29,9 @@ class Bullet implements Agent {
 
     const index = this.target.getPath().getFuturePosition(this.travelTime);
 
-    // @TODO: rounding the destination to 1 tile looks bad
-    this.destination = target.getPath().getTile(index);
+    const { x, y } = target.getPath().getCoordinates(index);
+    this.targetX = x;
+    this.targetY = y;
   }
 
   tick(dt: number) {
@@ -38,8 +40,10 @@ class Bullet implements Agent {
       this.target.hit(this.damage);
     }
 
-    this.time += dt;
-    this.entity.move(this.tile, this.destination, this.time / this.travelTime);
+    this.time = Math.min(this.time + dt, this.travelTime);
+    const t = this.time / this.travelTime;
+    this.entity.setX((this.targetX - this.tile.getX()) * t + this.tile.getX());
+    this.entity.setY((this.targetY - this.tile.getY()) * t + this.tile.getY());
   }
 
   getType(): EntityType {
