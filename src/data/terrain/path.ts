@@ -17,6 +17,59 @@ class Path {
     private speedMultipliers: Partial<Record<TileType, number>>
   ) {}
 
+  performStep(dt: number) {
+    const step = this.index % 1;
+    const start = this.index | 0;
+    const from = this.tiles[start];
+
+    const speed =
+      (this.speed * dt) / (this.speedMultipliers[from.getType()] ?? 1);
+    let end = (this.index + speed) | 0;
+    if (start === end) {
+      end++;
+    }
+    if (end >= this.tiles.length - 1) {
+      end = this.tiles.length - 1;
+    }
+    const to = this.tiles[end];
+
+    const multiplier =
+      this.speedMultipliers[step > 0.5 ? to.getType() : from.getType()] ?? 1;
+    this.index = Math.min(
+      this.index + (this.speed * dt) / multiplier,
+      this.tiles.length - 1
+    );
+    while (this.index > this.sections[this.sectionIndex].to) {
+      this.sectionIndex++;
+    }
+
+    return { from, to, step };
+  }
+
+  getFuturePosition(time: number) {
+    let index = this.index;
+    while (time > 0) {
+      const remaining = 1 - (index % 1);
+      const duration =
+        (remaining / this.speed) *
+        (this.speedMultipliers[this.tiles[index | 0].getType()] ?? 1);
+
+      if (time > duration) {
+        index += remaining;
+        time -= duration;
+      } else {
+        index += (remaining * time) / duration;
+        time = 0;
+      }
+
+      if (index >= this.tiles.length - 1) {
+        return this.tiles.length - 1;
+      }
+    }
+
+    return index;
+  }
+
   clone() {
     return new Path(
       this.tiles,
