@@ -5,7 +5,7 @@ import Tile, { TileType } from "../tile";
 describe("pathfinder", () => {
   const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
   surface.forLine(2, 0, 2, 3, (tile) =>
-    surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Water))
+    surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Void))
   );
 
   const pathfinder = new PathFinder(surface);
@@ -18,11 +18,11 @@ describe("pathfinder", () => {
       targetX: 4,
       targetY: 4,
       steps: [
-        [4, 4],
-        [3, 4],
-        [2, 4],
-        [1, 4],
         [0, 4],
+        [1, 4],
+        [2, 4],
+        [3, 4],
+        [4, 4],
       ],
     },
     {
@@ -32,15 +32,15 @@ describe("pathfinder", () => {
       targetX: 4,
       targetY: 0,
       steps: [
-        [4, 0],
-        [4, 1],
-        [4, 2],
-        [3, 3],
-        [2, 4],
-        [1, 3],
-        [1, 2],
-        [1, 1],
         [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 3],
+        [2, 4],
+        [3, 3],
+        [3, 2],
+        [3, 1],
+        [4, 0],
       ],
     },
   ];
