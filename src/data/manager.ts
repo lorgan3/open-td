@@ -13,9 +13,12 @@ class Manager {
   private pathfinder: Pathfinder;
   private base: Base;
 
-  private paths: Path[];
+  private paths: Path[] = [];
   private time = 0;
   private lastSpawnTime = 0;
+
+  private wave = 0;
+  private started = false;
 
   constructor(
     private spawnPoints: Tile[],
@@ -30,11 +33,6 @@ class Manager {
 
     this.base = new Base(basePoint);
     surface.spawn(this.base);
-
-    this.paths = this.pathfinder
-      .getHivePath(spawnPoints, basePoint)
-      .filter((tiles): tiles is Tile[] => !!tiles)
-      .map((tiles) => Path.fromTiles(tiles, 0.01, DEFAULT_COSTS));
   }
 
   tick(dt: number) {
@@ -50,6 +48,10 @@ class Manager {
       if (entity.getAgent().tick) {
         entity.getAgent().tick!(dt);
       }
+    }
+
+    if (!this.started) {
+      return;
     }
 
     this.time += dt;
@@ -75,6 +77,29 @@ class Manager {
 
   getBase() {
     return this.base;
+  }
+
+  getWave() {
+    return this.wave;
+  }
+
+  getIsStarted() {
+    return this.started;
+  }
+
+  start() {
+    if (this.started) {
+      throw new Error("Wave already in progress!");
+    }
+
+    this.paths = this.pathfinder
+      .getHivePath(this.spawnPoints, this.base.getTile())
+      .filter((tiles): tiles is Tile[] => !!tiles)
+      .map((tiles) => Path.fromTiles(tiles, 0.01, DEFAULT_COSTS));
+
+    this.started = true;
+    this.time = 0;
+    this.wave++;
   }
 
   static get Instance() {
