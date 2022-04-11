@@ -1,18 +1,41 @@
 import Controller from "../../data/controller";
 import Entity, { EntityType } from "../../data/entity/entity";
+import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { TileType } from "../../data/terrain/tile";
 import { IRenderer } from "../api";
 
 class Renderer implements IRenderer {
-  private entityHtmlElements: Record<number, HTMLSpanElement> = {};
+  private pool: Pool<Entity, HTMLSpanElement>;
   private xStep: number = 0;
   private yStep: number = 0;
 
   private target: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
 
-  constructor(private surface: Surface, private controller: Controller) {}
+  constructor(private surface: Surface, private controller: Controller) {
+    this.pool = new Pool(
+      (active, original, entity) => {
+        if (original) {
+          original.style.display = "block";
+          original.textContent = this.getEntityEmoji(entity!);
+          return original;
+        }
+
+        const htmlElement = document.createElement("span");
+        htmlElement.textContent = entity ? this.getEntityEmoji(entity!) : "";
+        htmlElement.style.position = "absolute";
+        htmlElement.style.top = "0";
+        htmlElement.style.left = "0";
+        htmlElement.style.display = active ? "block" : "none";
+        this.target!.appendChild(htmlElement);
+
+        return htmlElement;
+      },
+      PoolType.Growing,
+      0
+    );
+  }
 
   mount(target: HTMLDivElement): void {
     this.target = target;
@@ -45,7 +68,8 @@ class Renderer implements IRenderer {
         entity.getAgent().tick!(dt);
       }
 
-      const htmlElement = this.getHtmlElement(entity);
+      // const htmlElement = this.getHtmlElement(entity);
+      const htmlElement = this.pool.get(entity);
       htmlElement.style.transform = `translate(${
         entity.getX() * this.xStep
       }px, ${entity.getY() * this.yStep}px) rotate(${entity.getRotation()}deg)`;
@@ -53,10 +77,9 @@ class Renderer implements IRenderer {
 
     const deletedEntities = this.surface.getDeletedEntities();
     deletedEntities.forEach((entity) => {
-      let htmlElement = this.entityHtmlElements[entity.getId()];
+      const htmlElement = this.pool.free(entity);
       if (htmlElement) {
-        delete this.entityHtmlElements[entity.getId()];
-        htmlElement.remove();
+        htmlElement.style.display = "none";
       }
     });
 
@@ -84,23 +107,6 @@ class Renderer implements IRenderer {
       const content = this.surface.getRow(i).map(this.getEmoji).join("");
       row.textContent = content;
     }
-  }
-
-  private getHtmlElement(entity: Entity) {
-    let htmlElement = this.entityHtmlElements[entity.getId()];
-
-    if (!htmlElement) {
-      htmlElement = document.createElement("span");
-      htmlElement.textContent = this.getEntityEmoji(entity);
-      htmlElement.style.position = "absolute";
-      htmlElement.style.top = "0";
-      htmlElement.style.left = "0";
-
-      this.entityHtmlElements[entity.getId()] = htmlElement;
-      this.target!.appendChild(htmlElement);
-    }
-
-    return htmlElement;
   }
 
   unmount(): void {
