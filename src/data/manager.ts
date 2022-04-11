@@ -38,6 +38,20 @@ class Manager {
   }
 
   tick(dt: number) {
+    const entities = this.surface.getEntities();
+    for (let entity of entities) {
+      if (entity.getAgent().tick) {
+        entity.getAgent().tick!(dt);
+      }
+    }
+
+    const staticEntities = this.surface.getStaticEntities();
+    for (let entity of staticEntities) {
+      if (entity.getAgent().tick) {
+        entity.getAgent().tick!(dt);
+      }
+    }
+
     this.time += dt;
 
     if (this.time - this.lastSpawnTime > 1000) {

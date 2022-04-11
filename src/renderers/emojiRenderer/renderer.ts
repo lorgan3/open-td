@@ -64,11 +64,6 @@ class Renderer implements IRenderer {
 
     const entities = this.surface.getEntities();
     for (let entity of entities) {
-      if (entity.getAgent().tick) {
-        entity.getAgent().tick!(dt);
-      }
-
-      // const htmlElement = this.getHtmlElement(entity);
       const htmlElement = this.pool.get(entity);
       htmlElement.style.transform = `translate(${
         entity.getX() * this.xStep
@@ -82,13 +77,6 @@ class Renderer implements IRenderer {
         htmlElement.style.display = "none";
       }
     });
-
-    const staticEntities = this.surface.getStaticEntities();
-    for (let entity of staticEntities) {
-      if (entity.getAgent().tick) {
-        entity.getAgent().tick!(dt);
-      }
-    }
 
     this.surface.markPristine();
   }
