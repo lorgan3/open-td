@@ -1,6 +1,7 @@
 import Surface from "./surface";
 import Tile, { TileType } from "./tile";
 import Heap from "heap";
+import Path from "./path";
 
 const NEIGHBORS = [
   [0, -1],
@@ -17,6 +18,7 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Grass]: 3,
   [TileType.Water]: 20,
   [TileType.Stone]: 4,
+  [TileType.Wall]: 100,
 };
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
@@ -31,20 +33,21 @@ class Pathfinder {
     to: Tile,
     costs?: Partial<Record<TileType, number>> | ((tile: Tile) => number | null)
   ) {
-    // Cheapest path from n to start
-    const gScores = new Map<string, number>();
-    gScores.set(from.getHash(), 0);
-
-    // Cheapest path from n to end
-    const fScores = new Map<string, number>();
-    fScores.set(from.getHash(), this.heuristic(from, to));
-
     const costFn =
       typeof costs === "function"
         ? costs
         : costs !== undefined
         ? (tile: Tile) => costs[tile.getType()]
         : (tile: Tile) => this.costs[tile.getType()];
+
+    // Cheapest path from n to start
+    const score = costFn(from) ?? 1;
+    const gScores = new Map<string, number>();
+    gScores.set(from.getHash(), score);
+
+    // Cheapest path from n to end
+    const fScores = new Map<string, number>();
+    fScores.set(from.getHash(), score + this.heuristic(from, to));
 
     const activeTiles = new Heap<Tile>(
       (a, b) =>
@@ -57,12 +60,7 @@ class Pathfinder {
     while (!activeTiles.empty()) {
       let current = activeTiles.pop()!;
       if (to === current) {
-        const realPath = [current];
-        while (current !== from) {
-          current = path.get(current.getHash())!;
-          realPath.push(current);
-        }
-        return realPath.reverse();
+        return Path.fromMapAndCosts(from, to, path, gScores);
       }
 
       const currentHash = current.getHash();
@@ -127,16 +125,18 @@ class Pathfinder {
       return cost ? cost * (visitedTiles[tile.getHash()] ?? 1) : null;
     };
 
-    return tiles.reduce<Array<Tile[] | undefined>>((paths, from, i) => {
+    return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {
       const path = this.getPath(from, to, costFn);
       paths.push(path);
 
       if (path && tiles.length > i - 1) {
-        path.forEach(
-          (tile) =>
-            (visitedTiles[tile.getHash()] =
-              visitedTiles[tile.getHash()] + 0.1 || 1.1)
-        );
+        path
+          .getTiles()
+          .forEach(
+            (tile) =>
+              (visitedTiles[tile.getHash()] =
+                visitedTiles[tile.getHash()] + 0.1 || 1.1)
+          );
       }
 
       return paths;

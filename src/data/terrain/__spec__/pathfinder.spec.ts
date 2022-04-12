@@ -50,10 +50,12 @@ describe("pathfinder", () => {
   it.each(table)(
     "finds a $case path from [$sourceX, $sourceY] to [$targetX, $targetY]",
     ({ sourceX, sourceY, targetX, targetY, steps }) => {
-      const path = pathfinder.getPath(
-        surface.getTile(sourceX, sourceY)!,
-        surface.getTile(targetX, targetY)!
-      )!;
+      const path = pathfinder
+        .getPath(
+          surface.getTile(sourceX, sourceY)!,
+          surface.getTile(targetX, targetY)!
+        )!
+        .getTiles();
 
       expect(path).toHaveLength(steps.length);
       steps.forEach(([x, y], i) =>

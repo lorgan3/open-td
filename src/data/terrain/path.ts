@@ -3,7 +3,7 @@ import Tile, { TileType } from "./tile";
 interface Section {
   from: number;
   to: number;
-  speedMultiplier: number;
+  cost: number;
 }
 
 class Path {
@@ -14,7 +14,7 @@ class Path {
     private tiles: Tile[],
     private sections: Section[],
     private speed: number,
-    private speedMultipliers: Partial<Record<TileType, number>>
+    private costs: number[]
   ) {}
 
   performStep(dt: number) {
@@ -52,7 +52,7 @@ class Path {
     while (time > 0) {
       const section = this.sections[sectionIndex];
       const remaining = section.to - index;
-      const duration = (remaining / this.speed) * section.speedMultiplier;
+      const duration = (remaining / this.speed) * section.cost;
 
       if (time > duration) {
         index += remaining;
@@ -72,12 +72,7 @@ class Path {
   }
 
   clone() {
-    return new Path(
-      this.tiles,
-      this.sections,
-      this.speed,
-      this.speedMultipliers
-    );
+    return new Path(this.tiles, this.sections, this.speed, this.costs);
   }
 
   setIndex(index: number) {
@@ -93,6 +88,10 @@ class Path {
 
   getTile(index = this.index) {
     return this.tiles[index | 0];
+  }
+
+  getTiles() {
+    return this.tiles;
   }
 
   getCoordinates(index = this.index) {
@@ -114,8 +113,41 @@ class Path {
     return this.speed;
   }
 
+  setSpeed(speed: number) {
+    this.speed = speed;
+  }
+
   isDone() {
     return this.index === this.tiles.length - 1;
+  }
+
+  private static calculateSections(tiles: Tile[], costs: number[]) {
+    return tiles.reduce<Section[]>((arr, tile, index) => {
+      const section = arr[arr.length - 1];
+      const cost = costs[index];
+
+      if (!section) {
+        return [
+          {
+            from: index,
+            to: index + 1,
+            cost,
+          },
+        ];
+      }
+
+      if (section.cost === cost) {
+        section.to++;
+      } else {
+        arr.push({
+          from: index,
+          to: index + 1,
+          cost,
+        });
+      }
+
+      return arr;
+    }, []);
   }
 
   static fromTiles(
@@ -123,34 +155,35 @@ class Path {
     speed: number,
     speedMultipliers: Partial<Record<TileType, number>> = {}
   ) {
-    const sections = tiles.reduce<Section[]>((arr, tile, index) => {
-      const section = arr[arr.length - 1];
-      const speedMultiplier = speedMultipliers[tile.getType()] ?? 1;
+    const costs = tiles.map((tile) => speedMultipliers[tile.getType()] ?? 1);
+    const sections = this.calculateSections(tiles, costs);
 
-      if (!section) {
-        return [
-          {
-            from: index,
-            to: index + 1,
-            speedMultiplier,
-          },
-        ];
-      }
+    return new Path(tiles, sections, speed, costs);
+  }
 
-      if (section.speedMultiplier === speedMultiplier) {
-        section.to++;
-      } else {
-        arr.push({
-          from: index,
-          to: index + 1,
-          speedMultiplier,
-        });
-      }
+  static fromMapAndCosts(
+    from: Tile,
+    to: Tile,
+    map: Map<string, Tile>,
+    scores: Map<string, number>
+  ) {
+    let current = to;
+    const tiles = [current];
+    const costs = [scores.get(current.getHash())!];
 
-      return arr;
-    }, []);
+    while (current !== from) {
+      current = map.get(current.getHash())!;
 
-    return new Path(tiles, sections, speed, speedMultipliers);
+      const score = scores.get(current.getHash())!;
+      costs[tiles.length - 1] -= score;
+
+      costs.push(score);
+      tiles.push(current);
+    }
+
+    const sections = this.calculateSections(tiles.reverse(), costs.reverse());
+
+    return new Path(tiles, sections, 1, costs);
   }
 }
 

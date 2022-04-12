@@ -94,8 +94,11 @@ class Manager {
 
     this.paths = this.pathfinder
       .getHivePath(this.spawnPoints, this.base.getTile())
-      .filter((tiles): tiles is Tile[] => !!tiles)
-      .map((tiles) => Path.fromTiles(tiles, 0.01, DEFAULT_COSTS));
+      .filter((path): path is Path => !!path)
+      .map((path) => {
+        path.setSpeed(0.01);
+        return path;
+      });
 
     this.started = true;
     this.time = 0;

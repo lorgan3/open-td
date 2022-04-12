@@ -16,9 +16,9 @@ describe("path", () => {
     expect(path).toEqual(
       expect.objectContaining({
         sections: [
-          { from: 0, to: 1, speedMultiplier: 1 },
-          { from: 1, to: 3, speedMultiplier: 2 },
-          { from: 3, to: 4, speedMultiplier: 1 },
+          { from: 0, to: 1, cost: 1 },
+          { from: 1, to: 3, cost: 2 },
+          { from: 3, to: 4, cost: 1 },
         ],
       })
     );
