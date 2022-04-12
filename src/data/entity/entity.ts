@@ -64,12 +64,15 @@ class Entity {
 
     this.setX(x);
     this.setY(y);
+    this.lookAt(to);
+  }
 
-    const xDiff = to.getX() - x;
-    const yDiff = to.getY() - y;
+  lookAt(target: Tile) {
+    const xDiff = target.getX() - this.x;
+    const yDiff = target.getY() - this.y;
 
     if (xDiff || yDiff) {
-      this.setRotation((-Math.atan(xDiff / yDiff) * 180) / Math.PI + 180);
+      this.setRotation((Math.atan2(yDiff, xDiff) * 180) / Math.PI + 90);
     }
   }
 }

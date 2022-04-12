@@ -30,4 +30,51 @@ describe("entity", () => {
       expect(agent.entity.getRotation()).toEqual(135);
     });
   });
+
+  describe("lookAt", () => {
+    const agent = new Base(new Tile(5, 5));
+    const table = [
+      {
+        target: new Tile(4, 5),
+        expected: 270,
+      },
+      {
+        target: new Tile(4, 4),
+        expected: -45,
+      },
+      {
+        target: new Tile(5, 4),
+        expected: 0,
+      },
+      {
+        target: new Tile(6, 4),
+        expected: 45,
+      },
+      {
+        target: new Tile(6, 5),
+        expected: 90,
+      },
+      {
+        target: new Tile(6, 6),
+        expected: 135,
+      },
+      {
+        target: new Tile(5, 6),
+        expected: 180,
+      },
+      {
+        target: new Tile(4, 6),
+        expected: 225,
+      },
+      {
+        target: new Tile(8, 9),
+        expected: 143.13010235415598,
+      },
+    ];
+
+    it.each(table)("Looks at the target $#", ({ target, expected }) => {
+      agent.entity.lookAt(target);
+      expect(agent.entity.getRotation()).toEqual(expected);
+    });
+  });
 });
