@@ -62,7 +62,7 @@ describe("surface", () => {
       ],
     },
     {
-      case: "diagonal",
+      case: "diagonal left",
       sourceX: 0,
       sourceY: 0,
       targetX: 4,
@@ -73,6 +73,20 @@ describe("surface", () => {
         [2, 2],
         [3, 3],
         [4, 4],
+      ],
+    },
+    {
+      case: "diagonal right",
+      sourceX: 4,
+      sourceY: 0,
+      targetX: 0,
+      targetY: 4,
+      steps: [
+        [4, 0],
+        [3, 1],
+        [2, 2],
+        [1, 3],
+        [0, 4],
       ],
     },
     {

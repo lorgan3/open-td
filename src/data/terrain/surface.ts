@@ -73,9 +73,11 @@ class Surface {
     const yDiff = targetY - sourceY;
 
     // Determine the step size so that every loop at least one direction changes by 1
-    let xStep = xDiff / (xDiff + yDiff);
-    let yStep = yDiff / (xDiff + yDiff);
-    const ratio = 1 + (xStep > yStep ? yStep / xStep : xStep / yStep);
+    const sum = Math.abs(xDiff) + Math.abs(yDiff);
+    let xStep = Math.abs(xDiff / sum);
+    let yStep = Math.abs(yDiff / sum);
+
+    let ratio = 1 + (xStep > yStep ? yStep / xStep : xStep / yStep);
     xStep *= ratio * Math.sign(xDiff);
     yStep *= ratio * Math.sign(yDiff);
 
