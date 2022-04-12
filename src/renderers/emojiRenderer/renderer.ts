@@ -45,6 +45,7 @@ class Renderer implements IRenderer {
     target.style.display = "inline-flex";
     target.style.flexDirection = "column";
     target.style.cursor = "crosshair";
+    target.style.userSelect = "none";
 
     this.renderTiles();
 
@@ -102,11 +103,18 @@ class Renderer implements IRenderer {
   }
 
   private registerEventHandlers(target: HTMLDivElement) {
-    target.addEventListener("click", (event: MouseEvent) => {
+    target.addEventListener("mousedown", (event: MouseEvent) => {
       const x = Math.floor(event.pageX / this.xStep);
       const y = Math.floor(event.pageY / this.yStep);
 
-      this.controller.click(x, y);
+      this.controller.mouseDown(x, y);
+    });
+
+    target.addEventListener("mouseup", (event: MouseEvent) => {
+      const x = Math.floor(event.pageX / this.xStep);
+      const y = Math.floor(event.pageY / this.yStep);
+
+      this.controller.mouseUp(x, y, event.shiftKey);
     });
   }
 
@@ -125,6 +133,8 @@ class Renderer implements IRenderer {
         return "⬜";
       case TileType.Grass:
         return "🟩";
+      case TileType.Wall:
+        return "🚧";
       default:
         return "🌌";
     }

@@ -7,6 +7,7 @@ export enum TileType {
   Stone = 2,
   Water = 3,
   Obstructed = 4,
+  Wall = 5,
 }
 
 class Tile {
