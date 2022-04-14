@@ -4,6 +4,7 @@ import generate from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
+import TowerMenu from "./TowerMenu.vue";
 
 // defineProps<{}>();
 
@@ -36,8 +37,18 @@ function start() {
 </script>
 
 <template>
-  <div ref="canvas"></div>
+  <div class="wrapper">
+    <div ref="canvas"></div>
+    <TowerMenu :controller="manager.getController()" />
+  </div>
+
   <button @click="start()" :disabled="isStarted">Start wave</button>
 </template>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  position: relative;
+  width: fit-content;
+  overflow: hidden;
+}
+</style>
