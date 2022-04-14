@@ -21,30 +21,26 @@ class Path {
     const step = this.index % 1;
     const start = this.index | 0;
     const from = this.tiles[start];
-    let isDone = false;
-    while (dt > 0 && !isDone) {
-      const section = this.sections[this.sectionIndex];
-      const remaining = section.to - this.index;
-      const duration = (remaining / this.speed) * section.cost;
 
-      if (dt > duration) {
-        this.index += remaining;
-        this.sectionIndex++;
-        dt -= duration;
-      } else {
-        this.index += (remaining * dt) / duration;
-        dt = 0;
-      }
+    const speed = (this.speed * dt) / (this.costs[start] ?? 1);
+    let end = (this.index + speed) | 0;
+    if (start === end) {
+      end++;
+    }
+    if (end >= this.tiles.length - 1) {
+      end = this.tiles.length - 1;
+    }
+    const to = this.tiles[end];
 
-      if (this.index >= this.tiles.length - 1) {
-        this.index = this.tiles.length - 1;
-        isDone = true;
-      }
+    const multiplier = this.costs[end] ?? 1;
+    this.index = Math.min(
+      this.index + (this.speed * dt) / multiplier,
+      this.tiles.length - 1
+    );
+    while (this.index > this.sections[this.sectionIndex].to) {
+      this.sectionIndex++;
     }
 
-    const end = this.index | 0;
-    const to =
-      start !== end || isDone ? this.tiles[end] : this.tiles[start + 1];
     return { from, to, step };
   }
 
