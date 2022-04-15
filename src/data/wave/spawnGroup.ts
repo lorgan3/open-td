@@ -1,4 +1,6 @@
 import Path from "../terrain/path";
+import Pathfinder from "../terrain/pathfinder";
+import Tile from "../terrain/tile";
 
 export enum SpawnGroupType {
   Teleport = 0,
@@ -23,6 +25,18 @@ class SpawnGroup {
 
   getType() {
     return this.type;
+  }
+
+  static fromTiles(spawnPoints: Tile[], target: Tile, pathfinder: Pathfinder) {
+    return new SpawnGroup(
+      pathfinder
+        .getHivePath(spawnPoints, target)
+        .filter((path): path is Path => !!path)
+        .map((path) => {
+          path.setSpeed(0.01);
+          return path;
+        })
+    );
   }
 }
 

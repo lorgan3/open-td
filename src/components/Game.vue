@@ -5,6 +5,8 @@ import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
 import TowerMenu from "./TowerMenu.vue";
+import SpawnGroup from "../data/wave/SpawnGroup";
+import Pathfinder from "../data/terrain/pathfinder";
 
 // defineProps<{}>();
 
@@ -12,10 +14,18 @@ const canvas = ref<HTMLDivElement | null>(null);
 const isStarted = ref(false);
 
 const surface = new Surface(96, 54, generate);
+const pathfinder = new Pathfinder(surface);
 const spawnTile = surface.getTile(5, 5)!;
+const targetTile = surface.getTile(60, 50)!;
 const manager = new Manager(
-  [spawnTile, spawnTile, spawnTile, spawnTile],
-  surface.getTile(60, 50)!,
+  [
+    SpawnGroup.fromTiles(
+      [spawnTile, spawnTile, spawnTile, spawnTile],
+      targetTile,
+      pathfinder
+    ),
+  ],
+  targetTile,
   surface
 );
 
