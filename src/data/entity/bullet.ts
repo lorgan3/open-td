@@ -1,13 +1,14 @@
 import Manager from "../manager";
-import { DEFAULT_COSTS } from "../terrain/pathfinder";
 import Tile from "../terrain/tile";
 import { IEnemy } from "./enemy";
-import Entity, { Agent, EntityType } from "./entity";
+import Entity, { Agent, AgentCategory, EntityType } from "./entity";
 
 const SPEED = 0.015;
 
 class Bullet implements Agent {
   public entity: Entity;
+  public category = AgentCategory.Unknown;
+
   private targetX: number;
   private targetY: number;
 

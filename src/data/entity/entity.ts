@@ -2,10 +2,17 @@ import Tile from "../terrain/tile";
 
 let id = 1;
 
+export enum AgentCategory {
+  Unknown = 0,
+  Player = 1,
+  Enemy = 2,
+}
+
 export interface Agent {
   entity: Entity;
   getType(): EntityType;
   tick?: (dt: number) => void;
+  category: AgentCategory;
 }
 
 export enum EntityType {

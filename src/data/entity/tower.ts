@@ -2,7 +2,7 @@ import Manager from "../manager";
 import Tile from "../terrain/tile";
 import Bullet from "./bullet";
 import { IEnemy } from "./enemy";
-import Entity, { Agent, EntityType } from "./entity";
+import Entity, { Agent, AgentCategory, EntityType } from "./entity";
 
 const RANGE = 10;
 const COOLDOWN = 500;
@@ -15,6 +15,7 @@ export interface ITower extends Agent {
 
 class Tower implements ITower {
   public entity: Entity;
+  public category = AgentCategory.Player;
   private cooldown = 0;
 
   constructor(private tile: Tile) {

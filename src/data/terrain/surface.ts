@@ -1,4 +1,4 @@
-import Entity, { Agent } from "../entity/entity";
+import Entity, { Agent, AgentCategory } from "../entity/entity";
 import { Generator } from "./generator";
 import Tile from "./tile";
 
@@ -7,6 +7,7 @@ class Surface {
   public entities: Entity[] = [];
   public deletedEntities: Entity[] = [];
   public staticEntities: Entity[] = [];
+  private entitiesMap = new Map<AgentCategory, Set<Entity>>();
 
   private dirty = true;
 
@@ -25,6 +26,15 @@ class Surface {
         this.map[j * this.width + i] = this.generate(i, j);
       }
     }
+
+    this.entities = [];
+    this.deletedEntities = [];
+    this.staticEntities = [];
+    this.entitiesMap.clear();
+
+    Object.values(AgentCategory)
+      .filter((value): value is AgentCategory => typeof value !== "string")
+      .forEach((category) => this.entitiesMap.set(category, new Set()));
   }
 
   public getTile(x: number, y: number) {
@@ -181,12 +191,14 @@ class Surface {
 
   public spawn(agent: Agent) {
     this.entities.push(agent.entity);
+    this.entitiesMap.get(agent.category)!.add(agent.entity);
   }
 
   public spawnStatic(agent: Agent) {
     const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
     tile!.setStaticEntity(agent.entity);
     this.staticEntities.push(agent.entity);
+    this.entitiesMap.get(agent.category)!.add(agent.entity);
     this.dirty = true;
   }
 
@@ -196,11 +208,16 @@ class Surface {
       this.entities.splice(index, 1);
     }
 
+    this.entitiesMap.get(agent.category)!.delete(agent.entity);
     this.deletedEntities.push(agent.entity);
   }
 
   public getEntities() {
     return this.entities;
+  }
+
+  public getEntitiesForCategory(category: AgentCategory) {
+    return this.entitiesMap.get(category)!;
   }
 
   public getDeletedEntities() {

@@ -1,8 +1,7 @@
 import Manager from "../manager";
 import Path from "../terrain/path";
 import Tile from "../terrain/tile";
-import Entity, { Agent, EntityType } from "./entity";
-import { ITower } from "./tower";
+import Entity, { Agent, AgentCategory, EntityType } from "./entity";
 
 export interface IEnemy extends Agent {
   hit(damage: number): void;
@@ -12,6 +11,7 @@ export interface IEnemy extends Agent {
 
 class Enemy implements Agent {
   public entity: Entity;
+  public category = AgentCategory.Enemy;
 
   public hp = 100;
   private predictedHp = this.hp;
