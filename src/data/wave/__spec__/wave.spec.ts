@@ -28,23 +28,35 @@ describe("wave", () => {
     },
     {
       level: 4,
-      expectedSpawnGroups: [spawnGroup2],
+      expectedSpawnGroups: [spawnGroup1],
     },
     {
       level: 5,
-      expectedSpawnGroups: [spawnGroup1, spawnGroup2],
+      expectedSpawnGroups: [spawnGroup2],
     },
     {
       level: 6,
-      expectedSpawnGroups: [spawnGroup3],
+      expectedSpawnGroups: [spawnGroup1, spawnGroup2],
     },
     {
       level: 7,
-      expectedSpawnGroups: [spawnGroup1, spawnGroup3],
+      expectedSpawnGroups: [spawnGroup3],
     },
     {
       level: 8,
+      expectedSpawnGroups: [spawnGroup1, spawnGroup3],
+    },
+    {
+      level: 9,
       expectedSpawnGroups: [spawnGroup2, spawnGroup3],
+    },
+    {
+      level: 10,
+      expectedSpawnGroups: [spawnGroup1, spawnGroup2, spawnGroup3],
+    },
+    {
+      level: 11,
+      expectedSpawnGroups: [spawnGroup1, spawnGroup2],
     },
   ];
 

@@ -48,7 +48,10 @@ class Wave {
       return new Wave([spawnGroups[level]], enemyAmount);
     }
 
-    const value = level - spawnGroups.length + 1;
+    let value = level - spawnGroups.length;
+    if (!(value & ((1 << spawnGroups.length) - 1))) {
+      value = (value % spawnGroups.length) + 1;
+    }
     const spawnGroupsThisWave: SpawnGroup[] = [];
 
     // Use binary to determine which spawnGroups become active, eg: value = 5 => 101b => spawnGroups[0] and [3] become active
