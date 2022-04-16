@@ -1,6 +1,7 @@
 import Manager from "../manager";
 import Enemy from "../entity/enemy";
 import SpawnGroup from "./SpawnGroup";
+import { AgentCategory } from "../entity/entity";
 
 const SPAWN_INTERVAL = 400;
 
@@ -11,7 +12,11 @@ class Wave {
   constructor(private spawnGroups: SpawnGroup[], private intensity: number) {}
 
   isDone() {
-    return this.intensity === 0;
+    return (
+      this.intensity === 0 &&
+      Manager.Instance.getSurface().getEntitiesForCategory(AgentCategory.Enemy)
+        .size === 0
+    );
   }
 
   getSpawnGroups() {
@@ -30,7 +35,7 @@ class Wave {
   tick(dt: number) {
     this.time += dt;
 
-    if (this.isDone()) {
+    if (this.intensity === 0) {
       return;
     }
 
