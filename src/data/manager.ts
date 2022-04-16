@@ -1,5 +1,6 @@
 import Controller from "./controller";
 import Base from "./entity/base";
+import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile from "./terrain/tile";
 import SpawnGroup from "./wave/SpawnGroup";
@@ -9,13 +10,14 @@ class Manager {
   private static instance: Manager;
 
   private controller: Controller;
+  private pathfinder: Pathfinder;
   private base: Base;
 
   private level = 0;
   private wave: Wave | undefined;
 
   constructor(
-    private spawnGroups: SpawnGroup[],
+    private spawnGroups: Tile[][],
     basePoint: Tile,
     private surface: Surface,
     controller?: Controller
@@ -23,6 +25,7 @@ class Manager {
     Manager.instance = this;
 
     this.controller = controller ?? new Controller(surface);
+    this.pathfinder = new Pathfinder(surface);
 
     this.base = new Base(basePoint);
     surface.spawn(this.base);
@@ -75,7 +78,12 @@ class Manager {
       throw new Error("Wave already in progress!");
     }
 
-    this.wave = Wave.fromLevel(this.level, this.spawnGroups);
+    this.wave = Wave.fromLevel(
+      this.level,
+      this.spawnGroups.map((tiles) =>
+        SpawnGroup.fromTiles(tiles, this.base.getTile(), this.pathfinder)
+      )
+    );
     this.level++;
   }
 

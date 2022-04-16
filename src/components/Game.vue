@@ -18,13 +18,7 @@ const pathfinder = new Pathfinder(surface);
 const spawnTile = surface.getTile(5, 5)!;
 const targetTile = surface.getTile(60, 50)!;
 const manager = new Manager(
-  [
-    SpawnGroup.fromTiles(
-      [spawnTile, spawnTile, spawnTile, spawnTile],
-      targetTile,
-      pathfinder
-    ),
-  ],
+  [[spawnTile, spawnTile, spawnTile, spawnTile]],
   targetTile,
   surface
 );
@@ -42,7 +36,7 @@ onMounted(() => {
 
 function start() {
   manager.start();
-  isStarted.value = manager.getIsStarted();
+  // isStarted.value = manager.getIsStarted();
 }
 </script>
 
