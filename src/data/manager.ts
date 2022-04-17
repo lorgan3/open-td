@@ -1,5 +1,6 @@
 import Controller from "./controller";
 import Base from "./entity/base";
+import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile from "./terrain/tile";
@@ -9,6 +10,7 @@ import Wave from "./wave/wave";
 class Manager {
   private static instance: Manager;
 
+  private eventHandlers: Map<GameEvent, Set<EventHandler<any>>>;
   private controller: Controller;
   private pathfinder: Pathfinder;
   private base: Base;
@@ -24,6 +26,7 @@ class Manager {
   ) {
     Manager.instance = this;
 
+    this.eventHandlers = new Map();
     this.controller = controller ?? new Controller(surface);
     this.pathfinder = new Pathfinder(surface);
 
@@ -85,6 +88,31 @@ class Manager {
       )
     );
     this.level++;
+  }
+
+  addEventListener<E extends keyof EventParamsMap>(
+    event: E,
+    fn: EventHandler<E>
+  ) {
+    if (this.eventHandlers.has(event)) {
+      this.eventHandlers.get(event)!.add(fn);
+    } else {
+      this.eventHandlers.set(event, new Set([fn]));
+    }
+  }
+
+  removeEventListener<E extends keyof EventParamsMap>(
+    event: E,
+    fn: EventHandler<E>
+  ) {
+    this.eventHandlers.get(event)?.delete(fn);
+  }
+
+  triggerEvent<E extends keyof EventParamsMap>(
+    event: E,
+    ...params: EventParamsMap[E]
+  ) {
+    this.eventHandlers.get(event)?.forEach((fn) => fn(...params));
   }
 
   static get Instance() {
