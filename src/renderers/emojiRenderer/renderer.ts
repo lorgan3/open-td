@@ -7,8 +7,10 @@ import { IRenderer } from "../api";
 
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
-  private xStep: number = 0;
-  private yStep: number = 0;
+  private xStep = 0;
+  private yStep = 0;
+  private offsetX = 0;
+  private offsetY = 0;
 
   private target: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
@@ -49,9 +51,11 @@ class Renderer implements IRenderer {
 
     this.renderTiles();
 
-    const { width, height } = target.getBoundingClientRect();
+    const { width, height, x, y } = target.getBoundingClientRect();
     this.xStep = width / this.surface.getWidth();
     this.yStep = height / this.surface.getHeight();
+    this.offsetX = x;
+    this.offsetY = y;
 
     this.rerender(0);
 
@@ -104,15 +108,15 @@ class Renderer implements IRenderer {
 
   private registerEventHandlers(target: HTMLDivElement) {
     target.addEventListener("mousedown", (event: MouseEvent) => {
-      const x = Math.floor(event.pageX / this.xStep);
-      const y = Math.floor(event.pageY / this.yStep);
+      const x = Math.floor((event.pageX - this.offsetX) / this.xStep);
+      const y = Math.floor((event.pageY - this.offsetY) / this.yStep);
 
       this.controller.mouseDown(x, y);
     });
 
     target.addEventListener("mouseup", (event: MouseEvent) => {
-      const x = Math.floor(event.pageX / this.xStep);
-      const y = Math.floor(event.pageY / this.yStep);
+      const x = Math.floor((event.pageX - this.offsetX) / this.xStep);
+      const y = Math.floor((event.pageY - this.offsetY) / this.yStep);
 
       this.controller.mouseUp(x, y, event.shiftKey);
     });

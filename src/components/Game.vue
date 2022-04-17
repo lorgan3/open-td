@@ -37,7 +37,8 @@ onMounted(() => {
 <template>
   <div class="wrapper">
     <GameStats />
-    <div class="canvas" ref="canvas">
+    <div class="canvas">
+      <div ref="canvas"></div>
       <TowerMenu :controller="manager.getController()" />
     </div>
   </div>
