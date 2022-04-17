@@ -43,20 +43,19 @@ function selectTower(tower: Placeable) {
       >
         <button @click="selectTower(tower)">
           <h3>{{ tower.name }}</h3>
-          <p>{{ tower.cost }} G</p>
+          <p>🪙 {{ tower.cost }}</p>
           <div class="graphic" v-html="tower.htmlElement"></div>
         </button>
       </li>
     </ul>
   </div>
-  <!-- <button @click="start()" :disabled="isStarted">Start wave</button> -->
 </template>
 
 <style lang="scss" scoped>
 .menu-wrapper {
   display: flex;
   position: absolute;
-  top: 0;
+  top: -1px;
   bottom: 0;
   right: 0;
   transition: transform 0.3s;
@@ -83,10 +82,10 @@ function selectTower(tower: Placeable) {
       display: flex;
       flex-direction: column;
 
-      &.selected {
+      &.selected button {
         border: 2px solid #66f;
         background-color: #aaf;
-        margin: -2px;
+        margin: -2px 0;
       }
 
       button {

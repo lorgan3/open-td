@@ -5,13 +5,12 @@ import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
 import TowerMenu from "./TowerMenu.vue";
-import SpawnGroup from "../data/wave/SpawnGroup";
 import Pathfinder from "../data/terrain/pathfinder";
+import GameStats from "./GameStats.vue";
 
 // defineProps<{}>();
 
 const canvas = ref<HTMLDivElement | null>(null);
-const isStarted = ref(false);
 
 const surface = new Surface(96, 54, generate);
 const pathfinder = new Pathfinder(surface);
@@ -33,26 +32,25 @@ onMounted(() => {
     renderer.rerender(50);
   }, 50);
 });
-
-function start() {
-  manager.start();
-  // isStarted.value = manager.getIsStarted();
-}
 </script>
 
 <template>
   <div class="wrapper">
-    <div ref="canvas"></div>
-    <TowerMenu :controller="manager.getController()" />
+    <GameStats />
+    <div class="canvas" ref="canvas">
+      <TowerMenu :controller="manager.getController()" />
+    </div>
   </div>
-
-  <button @click="start()" :disabled="isStarted">Start wave</button>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .wrapper {
   position: relative;
   width: fit-content;
   overflow: hidden;
+
+  .canvas {
+    position: relative;
+  }
 }
 </style>

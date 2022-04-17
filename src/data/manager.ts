@@ -1,5 +1,6 @@
 import Controller from "./controller";
 import Base from "./entity/base";
+import { AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
@@ -17,6 +18,8 @@ class Manager {
 
   private level = 0;
   private wave: Wave | undefined;
+  private integrity = 10;
+  private money = 0;
 
   constructor(
     private spawnGroups: Tile[][],
@@ -54,6 +57,18 @@ class Manager {
     }
 
     this.wave.tick(dt);
+
+    const remainingEnemies = this.getSurface().getEntitiesForCategory(
+      AgentCategory.Enemy
+    ).size;
+    this.triggerEvent(GameEvent.StatUpdate, {
+      integrity: this.integrity,
+      level: this.level,
+      money: this.money,
+      remainingEnemies,
+      totalEnemies: this.wave.getInitialIntensity(),
+      inProgress: remainingEnemies !== 0,
+    });
   }
 
   getSurface() {
@@ -70,6 +85,14 @@ class Manager {
 
   getWave() {
     return this.wave;
+  }
+
+  getIntegrity() {
+    return this.integrity;
+  }
+
+  getMoney() {
+    return this.money;
   }
 
   getIsStarted() {

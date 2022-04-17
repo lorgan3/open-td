@@ -16,4 +16,5 @@ export interface StatUpdate {
   integrity: number;
   totalEnemies: number;
   remainingEnemies: number;
+  inProgress: boolean;
 }

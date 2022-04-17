@@ -8,8 +8,14 @@ const SPAWN_INTERVAL = 400;
 class Wave {
   private time = 0;
   private lastActivation = 0;
+  private intensity: number;
 
-  constructor(private spawnGroups: SpawnGroup[], private intensity: number) {}
+  constructor(
+    private spawnGroups: SpawnGroup[],
+    private initialIntensity: number
+  ) {
+    this.intensity = initialIntensity;
+  }
 
   isDone() {
     return (
@@ -21,6 +27,10 @@ class Wave {
 
   getSpawnGroups() {
     return this.spawnGroups;
+  }
+
+  getInitialIntensity() {
+    return this.initialIntensity;
   }
 
   private getNextUnitToSpawn() {
