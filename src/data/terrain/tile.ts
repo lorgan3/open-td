@@ -10,6 +10,8 @@ export enum TileType {
   Wall = 5,
 }
 
+export const FREE_TILES = new Set([TileType.Grass, TileType.Stone]);
+
 class Tile {
   private staticEntity: Entity | null = null;
   private hash: string;

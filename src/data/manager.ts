@@ -2,6 +2,7 @@ import Controller from "./controller";
 import Base from "./entity/base";
 import { AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
+import { Placeable } from "./placeables";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile from "./terrain/tile";
@@ -19,7 +20,7 @@ class Manager {
   private level = 0;
   private wave: Wave | undefined;
   private integrity = 10;
-  private money = 0;
+  private money = 100;
 
   constructor(
     private spawnGroups: Tile[][],
@@ -97,6 +98,17 @@ class Manager {
 
   getIsStarted() {
     return !!this.wave && !this.wave.isDone();
+  }
+
+  buy(placeable: Placeable, amount = 1) {
+    const cost = placeable.cost * amount;
+    if (cost > this.money) {
+      return false;
+    }
+
+    this.money -= cost;
+    console.log(cost, this.money);
+    return true;
   }
 
   start() {
