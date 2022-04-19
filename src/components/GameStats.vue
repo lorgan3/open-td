@@ -19,6 +19,7 @@ const eventHandler = (stats: StatUpdate) => {
 
 onMounted(() => {
   Manager.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
+  Manager.Instance.triggerStatUpdate();
 });
 
 onUnmounted(() => {

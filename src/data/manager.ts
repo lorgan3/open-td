@@ -59,26 +59,31 @@ class Manager {
     }
 
     this.wave.tick(dt);
+  }
 
+  triggerStatUpdate() {
     const remainingEnemies = this.getSurface().getEntitiesForCategory(
       AgentCategory.Enemy
     ).size;
+
     this.triggerEvent(GameEvent.StatUpdate, {
       integrity: this.integrity,
       level: this.level,
       money: this.money,
       remainingEnemies,
-      totalEnemies: this.wave.getInitialIntensity(),
+      totalEnemies: this.wave ? this.wave.getInitialIntensity() : 0,
       inProgress: remainingEnemies !== 0,
     });
   }
 
   spawnEnemy(enemy: Enemy) {
     this.surface.spawn(enemy);
+    this.triggerStatUpdate();
   }
 
   despawnEnemy(enemy: Enemy) {
     this.surface.despawn(enemy);
+    this.triggerStatUpdate();
   }
 
   getSurface() {
@@ -116,12 +121,13 @@ class Manager {
     }
 
     this.money -= cost;
-    console.log(cost, this.money);
+    this.triggerStatUpdate();
     return true;
   }
 
   addMoney(amount: number) {
     this.money += amount;
+    this.triggerStatUpdate();
   }
 
   start() {
@@ -136,6 +142,7 @@ class Manager {
       )
     );
     this.level++;
+    this.triggerStatUpdate();
   }
 
   addEventListener<E extends keyof EventParamsMap>(
