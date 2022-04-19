@@ -1,4 +1,5 @@
 import { AgentClass, EntityType } from "./entity/entity";
+import Mortar from "./entity/mortar";
 import Tower from "./entity/tower";
 import Wall from "./entity/wall";
 import { TileType } from "./terrain/tile";
@@ -39,6 +40,13 @@ const placeables: Placeable[] = [
     entity: Tower,
     entityType: EntityType.Tower,
     htmlElement: createEmojiSvg("🗼"),
+  },
+  {
+    name: "Mortar",
+    cost: 30,
+    entity: Mortar,
+    entityType: EntityType.Mortar,
+    htmlElement: createEmojiSvg("🛰"),
   },
   {
     name: "Demolish",

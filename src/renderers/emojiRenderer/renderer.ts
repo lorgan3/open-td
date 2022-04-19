@@ -135,6 +135,8 @@ class Renderer implements IRenderer {
           return "🗼";
         case EntityType.Wall:
           return "🚧";
+        case EntityType.Mortar:
+          return "🛰";
       }
     }
 

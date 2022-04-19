@@ -1,19 +1,15 @@
 import Manager from "../manager";
 import Tile from "../terrain/tile";
-import Bullet from "./bullet";
 import { IEnemy } from "./enemy";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Entity, { AgentCategory, EntityType } from "./entity";
+import Rocket from "./rocket";
+import { ITower } from "./tower";
 
-const RANGE = 9;
-const COOLDOWN = 500;
-const DAMAGE = 10;
+const RANGE = 30;
+const COOLDOWN = 5000;
+const DAMAGE = 100;
 
-export interface ITower extends Agent {
-  getCooldown(): number;
-  fire(target: IEnemy): number;
-}
-
-class Tower implements ITower {
+class Mortar implements ITower {
   public entity: Entity;
   public category = AgentCategory.Player;
   private cooldown = 0;
@@ -35,10 +31,10 @@ class Tower implements ITower {
 
   fire(target: IEnemy) {
     this.cooldown = COOLDOWN;
-    const bullet = new Bullet(this.tile, target, DAMAGE);
-    Manager.Instance.getSurface().spawn(bullet);
+    const projectile = new Rocket(this.tile, target, DAMAGE);
+    Manager.Instance.getSurface().spawn(projectile);
 
-    return DAMAGE;
+    return 0; // This tower cannot guarantee the projectile will hit.
   }
 
   getCooldown() {
@@ -46,8 +42,8 @@ class Tower implements ITower {
   }
 
   getType(): EntityType {
-    return EntityType.Tower;
+    return EntityType.Mortar;
   }
 }
 
-export default Tower;
+export default Mortar;

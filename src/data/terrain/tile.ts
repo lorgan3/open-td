@@ -17,6 +17,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
 > = {
   [EntityType.Tower]: TileType.Obstructed,
   [EntityType.Wall]: TileType.Wall,
+  [EntityType.Mortar]: TileType.Obstructed,
 };
 
 class Tile {
@@ -75,6 +76,10 @@ class Tile {
 
   addTower(tower: ITower) {
     this.towers.push(tower);
+  }
+
+  isCoveredByTower() {
+    return this.towers.length > 0;
   }
 
   removeTower(tower: ITower) {
