@@ -52,7 +52,7 @@ class Wave {
     if (this.time >= this.lastActivation + SPAWN_INTERVAL) {
       this.lastActivation = this.time;
       const enemy = this.getNextUnitToSpawn();
-      Manager.Instance.getSurface().spawn(enemy);
+      Manager.Instance.spawnEnemy(enemy);
     }
   }
 

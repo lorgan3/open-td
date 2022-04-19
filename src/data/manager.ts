@@ -1,5 +1,6 @@
 import Controller from "./controller";
 import Base from "./entity/base";
+import Enemy from "./entity/enemy";
 import { AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import { Placeable } from "./placeables";
@@ -70,6 +71,14 @@ class Manager {
       totalEnemies: this.wave.getInitialIntensity(),
       inProgress: remainingEnemies !== 0,
     });
+  }
+
+  spawnEnemy(enemy: Enemy) {
+    this.surface.spawn(enemy);
+  }
+
+  despawnEnemy(enemy: Enemy) {
+    this.surface.despawn(enemy);
   }
 
   getSurface() {

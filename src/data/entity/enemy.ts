@@ -34,7 +34,7 @@ class Enemy implements Agent {
       this.entity.setX(to.getX());
       this.entity.setY(to.getY());
 
-      Manager.Instance.getSurface().despawn(this);
+      Manager.Instance.despawnEnemy(this);
       return;
     }
 
@@ -52,7 +52,7 @@ class Enemy implements Agent {
     this.hp -= damage;
 
     if (this.hp <= 0) {
-      Manager.Instance.getSurface().despawn(this);
+      Manager.Instance.despawnEnemy(this);
     }
   }
 }
