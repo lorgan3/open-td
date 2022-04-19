@@ -19,6 +19,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Tower]: TileType.Obstructed,
   [EntityType.Wall]: TileType.Wall,
   [EntityType.Mortar]: TileType.Obstructed,
+  [EntityType.Flamethrower]: TileType.Obstructed,
 };
 
 class Tile {

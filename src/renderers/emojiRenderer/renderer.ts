@@ -141,6 +141,8 @@ class Renderer implements IRenderer {
           return "🚧";
         case EntityType.Mortar:
           return "🛰";
+        case EntityType.Flamethrower:
+          return "🧯";
       }
     }
 

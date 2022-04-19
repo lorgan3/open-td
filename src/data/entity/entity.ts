@@ -25,6 +25,7 @@ export enum EntityType {
   Bullet = 4,
   Wall = 5,
   Mortar = 6,
+  Flamethrower = 7,
 }
 
 class Entity {
