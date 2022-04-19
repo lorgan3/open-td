@@ -1,5 +1,5 @@
 import Manager from "./manager";
-import { isPlaceableTile, Placeable } from "./placeables";
+import placeables, { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
 import Tile, { FREE_TILES, TileType } from "./terrain/tile";
 
@@ -41,18 +41,30 @@ class Controller {
     this.surface.forLine(this.mouseDownX, this.mouseDownY, x, y, (tile) =>
       tiles.push(tile)
     );
-    tiles = tiles.filter((tile) => FREE_TILES.has(tile.getType()));
 
-    if (Manager.Instance.buy(this.selectedPlacable, tiles.length)) {
+    if (this.selectedPlacable.cost === 0) {
       tiles.forEach((tile) => {
-        if (isPlaceableTile(this.selectedPlacable!)) {
-          this.surface.setTile(
-            new Tile(tile.getX(), tile.getY(), TileType.Wall)
+        if (tile.hasStaticEntity()) {
+          const entity = tile.getStaticEntity()!;
+          const placeable = placeables.find(
+            (placeable) => placeable.entityType === entity.getAgent().getType()
           );
-        } else {
-          this.surface.spawnStatic(new this.selectedPlacable!.entity(tile));
+
+          if (placeable) {
+            Manager.Instance.addMoney(placeable?.cost);
+            this.surface.despawnStatic(entity.getAgent());
+          }
         }
       });
+    } else {
+      tiles = tiles.filter((tile) => FREE_TILES.has(tile.getType()));
+      if (Manager.Instance.buy(this.selectedPlacable, tiles.length)) {
+        tiles.forEach((tile) => {
+          if (this.selectedPlacable?.entity) {
+            this.surface.spawnStatic(new this.selectedPlacable.entity(tile));
+          }
+        });
+      }
     }
   }
 }

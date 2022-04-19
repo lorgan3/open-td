@@ -15,6 +15,8 @@ export interface Agent {
   category: AgentCategory;
 }
 
+export type AgentClass = new (tile: Tile) => Agent;
+
 export enum EntityType {
   None = 0,
   Tower = 1,

@@ -111,6 +111,10 @@ class Manager {
     return true;
   }
 
+  addMoney(amount: number) {
+    this.money += amount;
+  }
+
   start() {
     if (this.getIsStarted()) {
       throw new Error("Wave already in progress!");

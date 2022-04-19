@@ -1,35 +1,15 @@
-import { Agent, EntityType } from "./entity/entity";
+import { AgentClass, EntityType } from "./entity/entity";
 import Tower from "./entity/tower";
 import Wall from "./entity/wall";
+import { TileType } from "./terrain/tile";
 
-interface _placable {
+export interface Placeable {
   name: string;
   cost: number;
   htmlElement: string;
-}
-
-interface PlaceableTile extends _placable {
-  tileType: TileType;
-}
-
-interface PlaceableEntity extends _placable {
-  entity: new (tile: Tile) => Agent;
+  entity?: AgentClass;
   entityType: EntityType;
 }
-
-export type Placeable = PlaceableTile | PlaceableEntity;
-
-export const isPlaceableTile = (
-  placeable: Placeable
-): placeable is PlaceableTile => {
-  return "tileType" in placeable;
-};
-
-export const isPlaceableEntity = (
-  placeable: Placeable
-): placeable is PlaceableEntity => {
-  return "entityType" in placeable;
-};
 
 const createEmojiSvg = (emoji: string) => {
   const svg = document.createElement("svg");
@@ -59,6 +39,12 @@ const placeables: Placeable[] = [
     entity: Tower,
     entityType: EntityType.Tower,
     htmlElement: createEmojiSvg("🗼"),
+  },
+  {
+    name: "Demolish",
+    cost: 0,
+    entityType: EntityType.None,
+    htmlElement: createEmojiSvg("❌"),
   },
 ];
 
