@@ -1,6 +1,6 @@
 import { Agent, EntityType } from "./entity/entity";
 import Tower from "./entity/tower";
-import Tile, { TileType } from "./terrain/tile";
+import Wall from "./entity/wall";
 
 interface _placable {
   name: string;
@@ -49,7 +49,8 @@ const placeables: Placeable[] = [
   {
     name: "Wall",
     cost: 1,
-    tileType: TileType.Wall,
+    entity: Wall,
+    entityType: EntityType.Wall,
     htmlElement: createEmojiSvg("🚧"),
   },
   {

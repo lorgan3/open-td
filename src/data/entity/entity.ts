@@ -16,10 +16,12 @@ export interface Agent {
 }
 
 export enum EntityType {
+  None = 0,
   Tower = 1,
   Slime = 2,
   Base = 3,
   Bullet = 4,
+  Wall = 5,
 }
 
 class Entity {

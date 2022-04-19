@@ -1,4 +1,4 @@
-import Entity from "../entity/entity";
+import Entity, { EntityType } from "../entity/entity";
 import { ITower } from "../entity/tower";
 
 export enum TileType {
@@ -11,6 +11,13 @@ export enum TileType {
 }
 
 export const FREE_TILES = new Set([TileType.Grass, TileType.Stone]);
+
+export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
+  Record<EntityType, TileType>
+> = {
+  [EntityType.Tower]: TileType.Obstructed,
+  [EntityType.Wall]: TileType.Wall,
+};
 
 class Tile {
   private staticEntity: Entity | null = null;
@@ -57,7 +64,8 @@ class Tile {
     }
 
     this.staticEntity = entity;
-    this.actualType = TileType.Obstructed;
+    this.actualType =
+      STATIC_ENTITY_GROUND_TILE_MAP[entity.getAgent().getType()] || this.type;
   }
 
   clearStaticEntity() {
