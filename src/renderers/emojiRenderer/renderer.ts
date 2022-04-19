@@ -151,6 +151,8 @@ class Renderer implements IRenderer {
         return "⬜";
       case TileType.Grass:
         return "🟩";
+      case TileType.Spore:
+        return "🟪";
       default:
         return "🌌";
     }

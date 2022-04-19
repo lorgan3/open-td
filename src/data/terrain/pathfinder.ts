@@ -19,6 +19,7 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Water]: 20,
   [TileType.Stone]: 4,
   [TileType.Wall]: 100,
+  [TileType.Spore]: 2,
 };
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm

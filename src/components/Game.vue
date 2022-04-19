@@ -7,6 +7,7 @@ import Manager from "../data/manager";
 import TowerMenu from "./TowerMenu.vue";
 import Pathfinder from "../data/terrain/pathfinder";
 import GameStats from "./GameStats.vue";
+import Tile, { TileType } from "../data/terrain/tile";
 
 // defineProps<{}>();
 
@@ -16,6 +17,9 @@ const surface = new Surface(96, 54, generate);
 const pathfinder = new Pathfinder(surface);
 const spawnTile = surface.getTile(5, 5)!;
 const targetTile = surface.getTile(60, 50)!;
+surface.forCircle(spawnTile.getX(), spawnTile.getY(), 5, (tile) =>
+  surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Spore))
+);
 const manager = new Manager(
   [[spawnTile, spawnTile, spawnTile, spawnTile]],
   targetTile,
