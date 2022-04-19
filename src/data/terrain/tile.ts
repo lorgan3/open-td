@@ -1,5 +1,5 @@
 import Entity, { EntityType } from "../entity/entity";
-import { ITower } from "../entity/tower";
+import { ITower } from "../entity/towers";
 
 export enum TileType {
   Void = 0,

@@ -1,5 +1,5 @@
 import Manager from "../manager";
-import Enemy from "../entity/enemy";
+import Enemy from "../entity/enemies/enemy";
 import SpawnGroup from "./SpawnGroup";
 import { AgentCategory } from "../entity/entity";
 

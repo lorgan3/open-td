@@ -1,6 +1,6 @@
 import Manager from "../manager";
 import Tile from "../terrain/tile";
-import { IEnemy } from "./enemy";
+import { IEnemy } from "./enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "./entity";
 
 const SPEED = 0.015;

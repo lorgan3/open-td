@@ -1,17 +1,13 @@
-import Manager from "../manager";
-import Tile from "../terrain/tile";
-import Bullet from "./bullet";
-import { IEnemy } from "./enemy";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import { ITower } from ".";
+import Manager from "../../manager";
+import Tile from "../../terrain/tile";
+import Bullet from "../bullet";
+import { IEnemy } from "../enemies";
+import Entity, { AgentCategory, EntityType } from "../entity";
 
 const RANGE = 9;
 const COOLDOWN = 500;
 const DAMAGE = 10;
-
-export interface ITower extends Agent {
-  getCooldown(): number;
-  fire(target: IEnemy): number;
-}
 
 class Tower implements ITower {
   public entity: Entity;

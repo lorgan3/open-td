@@ -1,13 +1,7 @@
-import Manager from "../manager";
-import Path from "../terrain/path";
-import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
-
-export interface IEnemy extends Agent {
-  hit(damage: number): void;
-  getPath(): Path;
-  hp: number;
-}
+import Manager from "../../manager";
+import Path from "../../terrain/path";
+import Tile from "../../terrain/tile";
+import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 
 class Enemy implements Agent {
   public entity: Entity;

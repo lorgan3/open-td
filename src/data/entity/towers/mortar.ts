@@ -1,9 +1,9 @@
-import Manager from "../manager";
-import Tile from "../terrain/tile";
-import { IEnemy } from "./enemy";
-import Entity, { AgentCategory, EntityType } from "./entity";
-import Rocket from "./rocket";
-import { ITower } from "./tower";
+import Manager from "../../manager";
+import Tile from "../../terrain/tile";
+import Entity, { AgentCategory, EntityType } from "../entity";
+import Rocket from "../rocket";
+import { ITower } from ".";
+import { IEnemy } from "../enemies";
 
 const RANGE = 30;
 const COOLDOWN = 5000;

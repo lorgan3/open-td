@@ -1,6 +1,6 @@
 import Controller from "./controller";
 import Base from "./entity/base";
-import Enemy from "./entity/enemy";
+import Enemy from "./entity/enemies/enemy";
 import { AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import { Placeable } from "./placeables";

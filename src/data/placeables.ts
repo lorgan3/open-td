@@ -1,8 +1,7 @@
 import { AgentClass, EntityType } from "./entity/entity";
-import Mortar from "./entity/mortar";
-import Tower from "./entity/tower";
+import Mortar from "./entity/towers/mortar";
+import Tower from "./entity/towers/tower";
 import Wall from "./entity/wall";
-import { TileType } from "./terrain/tile";
 
 export interface Placeable {
   name: string;
