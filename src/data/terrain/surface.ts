@@ -197,8 +197,7 @@ class Surface {
   public spawnStatic(agent: Agent) {
     const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
     tile!.setStaticEntity(agent.entity);
-    this.staticEntities.push(agent.entity);
-    this.entitiesMap.get(agent.category)!.add(agent.entity);
+    this.spawn(agent);
     this.dirty = true;
   }
 
@@ -210,6 +209,13 @@ class Surface {
 
     this.entitiesMap.get(agent.category)!.delete(agent.entity);
     this.deletedEntities.push(agent.entity);
+  }
+
+  public despawnStatic(agent: Agent) {
+    const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
+    tile!.clearStaticEntity();
+    this.despawn(agent);
+    this.dirty = true;
   }
 
   public getEntities() {
