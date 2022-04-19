@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import generate from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
@@ -22,16 +22,29 @@ const manager = new Manager(
   surface
 );
 
+let mounted = false;
+let oldTimestamp = 0;
+
 onMounted(() => {
+  mounted = true;
   const renderer = new Renderer(manager.getSurface(), manager.getController());
   renderer.mount(canvas.value as HTMLDivElement);
 
-  window.setInterval(() => {
-    manager.tick(50);
+  const render = (timestamp: number) => {
+    const dt = timestamp - oldTimestamp;
+    manager.tick(dt);
+    renderer.rerender(dt);
+    oldTimestamp = timestamp;
 
-    renderer.rerender(50);
-  }, 50);
+    if (mounted) {
+      window.requestAnimationFrame(render);
+    }
+  };
+
+  window.requestAnimationFrame(render);
 });
+
+onUnmounted(() => (mounted = false));
 </script>
 
 <template>
