@@ -30,6 +30,7 @@ class Renderer implements IRenderer {
         htmlElement.style.top = "0";
         htmlElement.style.left = "0";
         htmlElement.style.display = active ? "block" : "none";
+        htmlElement.style.willChange = "transform";
         this.target!.appendChild(htmlElement);
 
         return htmlElement;
@@ -107,6 +108,11 @@ class Renderer implements IRenderer {
   }
 
   private registerEventHandlers(target: HTMLDivElement) {
+    target.addEventListener("contextmenu", (event: Event) => {
+      event.preventDefault();
+      return false;
+    });
+
     target.addEventListener("mousedown", (event: MouseEvent) => {
       const x = Math.floor((event.pageX - this.offsetX) / this.xStep);
       const y = Math.floor((event.pageY - this.offsetY) / this.yStep);
@@ -127,6 +133,8 @@ class Renderer implements IRenderer {
       switch (tile.getStaticEntity()!.getAgent().getType()) {
         case EntityType.Tower:
           return "🗼";
+        case EntityType.Wall:
+          return "🚧";
       }
     }
 
@@ -137,8 +145,6 @@ class Renderer implements IRenderer {
         return "⬜";
       case TileType.Grass:
         return "🟩";
-      case TileType.Wall:
-        return "🚧";
       default:
         return "🌌";
     }
