@@ -2,17 +2,7 @@ import Surface from "./surface";
 import Tile, { TileType } from "./tile";
 import Heap from "heap";
 import Path from "./path";
-
-const NEIGHBORS = [
-  [0, -1],
-  [-1, 0],
-  [1, 0],
-  [0, 1],
-  [-1, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1],
-];
+import { getRandomNeighbors } from "./neighbours";
 
 export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Grass]: 3,
@@ -66,7 +56,7 @@ class Pathfinder {
 
       const currentHash = current.getHash();
 
-      const neighbors = NEIGHBORS.map(([x, y]) =>
+      const neighbors = getRandomNeighbors().map(([x, y]) =>
         this.surface.getTile(x + current.getX(), y + current.getY())
       );
 
