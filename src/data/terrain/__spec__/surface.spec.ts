@@ -1,4 +1,5 @@
 import Surface from "../surface";
+import Tile from "../tile";
 
 describe("surface", () => {
   const surface = new Surface(10, 5);
@@ -121,6 +122,27 @@ describe("surface", () => {
     ({ sourceX, sourceY, targetX, targetY, steps }) => {
       const fn = jest.fn();
       surface.forLine(sourceX, sourceY, targetX, targetY, fn);
+
+      expect(fn).toHaveBeenCalledTimes(steps.length);
+      steps.forEach(([x, y], i) =>
+        expect(fn).toHaveBeenNthCalledWith(
+          i + 1,
+          expect.objectContaining({ x, y })
+        )
+      );
+    }
+  );
+
+  it.each(lineTable)(
+    "runs a function for every tile in a $case ray from [$sourceX, $sourceY] with direction [$targetX, $targetY]",
+    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+      const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
+
+      // Abort the ray when the target has been reached
+      const fn = jest.fn(
+        (tile: Tile) => tile.getX() !== targetX || tile.getY() !== targetY
+      );
+      surface.forRay(sourceX, sourceY, direction, fn);
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>

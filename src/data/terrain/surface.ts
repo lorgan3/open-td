@@ -111,6 +111,43 @@ class Surface {
     }
   }
 
+  public forRay(
+    sourceX: number,
+    sourceY: number,
+    direction: number,
+    fn: (tile: Tile) => boolean
+  ) {
+    // Determine the direction of the line
+    const xDiff = Math.cos(direction);
+    const yDiff = Math.sin(direction);
+
+    // Determine the step size so that every loop at least one direction changes by 1
+    const sum = Math.abs(xDiff) + Math.abs(yDiff);
+    let xStep = Math.abs(xDiff / sum);
+    let yStep = Math.abs(yDiff / sum);
+
+    let ratio = 1 + (xStep > yStep ? yStep / xStep : xStep / yStep);
+    xStep *= ratio * Math.sign(xDiff);
+    yStep *= ratio * Math.sign(yDiff);
+
+    while (true) {
+      const x = Math.round(sourceX);
+      const y = Math.round(sourceY);
+      const tile = this.getTile(x, y);
+
+      if (!tile) {
+        break;
+      }
+
+      if (!fn(tile)) {
+        break;
+      }
+
+      sourceX += xStep;
+      sourceY += yStep;
+    }
+  }
+
   // TODO: constrain the coordinates to the surface dimensions to prevent useless loops?
   // TODO: is it worth it to process the tiles in order instead of always going top left to bottom right?
   public forRect(
