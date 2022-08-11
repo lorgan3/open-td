@@ -37,7 +37,7 @@ onMounted(() => {
   const render = (timestamp: number) => {
     const dt = timestamp - oldTimestamp;
     manager.tick(dt);
-    renderer.rerender(dt);
+    renderer.rerender();
     oldTimestamp = timestamp;
 
     if (mounted) {

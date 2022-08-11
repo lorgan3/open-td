@@ -4,11 +4,12 @@ import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { TileType } from "../../data/terrain/tile";
 import { IRenderer } from "../api";
+import { OVERRIDES } from "./overrides";
 
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
-  private xStep = 0;
-  private yStep = 0;
+  public xStep = 0;
+  public yStep = 0;
   private offsetX = 0;
   private offsetY = 0;
 
@@ -58,12 +59,12 @@ class Renderer implements IRenderer {
     this.offsetX = x;
     this.offsetY = y;
 
-    this.rerender(0);
+    this.rerender();
 
     this.registerEventHandlers(target);
   }
 
-  rerender(dt: number): void {
+  rerender(): void {
     if (this.surface.isDirty()) {
       this.renderTiles();
     }
@@ -75,9 +76,19 @@ class Renderer implements IRenderer {
       }
 
       const htmlElement = this.pool.get(entity);
-      htmlElement.style.transform = `translate(${
-        entity.getX() * this.xStep
-      }px, ${entity.getY() * this.yStep}px) rotate(${entity.getRotation()}deg)`;
+      htmlElement.style.opacity = "1";
+      htmlElement.style.transformOrigin = "50% 50%";
+
+      const fn = OVERRIDES[entity.getAgent().getType()];
+      if (fn) {
+        fn(this, entity.getAgent(), htmlElement);
+      } else {
+        htmlElement.style.transform = `translate(${
+          entity.getX() * this.xStep
+        }px, ${
+          entity.getY() * this.yStep
+        }px) rotate(${entity.getRotation()}deg)`;
+      }
     }
 
     const deletedEntities = this.surface.getDeletedEntities();
