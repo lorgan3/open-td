@@ -9,4 +9,5 @@ export type RenderFn<T extends Agent> = (
 ) => void;
 
 export const OVERRIDES: Partial<Record<EntityType, RenderFn<any>>> = {
+  [EntityType.Rail]: renderRail,
 };

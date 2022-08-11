@@ -154,6 +154,8 @@ class Renderer implements IRenderer {
           return "🛰";
         case EntityType.Flamethrower:
           return "🧯";
+        case EntityType.Railgun:
+          return "🌡";
       }
     }
 
@@ -179,6 +181,8 @@ class Renderer implements IRenderer {
         return "⛺";
       case EntityType.Bullet:
         return "▪";
+      case EntityType.Rail:
+        return "〰";
       default:
         return "";
     }
