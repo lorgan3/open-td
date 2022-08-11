@@ -21,6 +21,16 @@ describe("surface", () => {
     expect(surface.getTile(0, 10)).toBeUndefined();
   });
 
+  it("can get tiles out of bounds if the clamp option is enabled", () => {
+    const tile1 = surface.getTile(-1, 4, true)!;
+    expect(tile1.getX()).toEqual(0);
+    expect(tile1.getY()).toEqual(4);
+
+    const tile2 = surface.getTile(10, 10, true)!;
+    expect(tile2.getX()).toEqual(9);
+    expect(tile2.getY()).toEqual(4);
+  });
+
   it("can get a row", () => {
     const row = surface.getRow(2);
 
@@ -422,6 +432,27 @@ describe("surface", () => {
         [1, 4],
         [2, 4],
         [3, 4],
+      ],
+    },
+    {
+      case: "edges only out of bounds",
+      x: 1,
+      y: 1,
+      d: 5,
+      edgeOnly: true,
+      steps: [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [0, 0],
+        [3, 0],
+        [0, 1],
+        [3, 1],
+        [0, 2],
+        [3, 2],
+        [0, 3],
+        [1, 3],
+        [2, 3],
       ],
     },
   ];

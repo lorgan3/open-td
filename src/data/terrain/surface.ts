@@ -37,8 +37,15 @@ class Surface {
       .forEach((category) => this.entitiesMap.set(category, new Set()));
   }
 
-  public getTile(x: number, y: number) {
+  public getTile(x: number, y: number, clamp = false): Tile | undefined {
     if (x >= this.width || x < 0 || y >= this.height || y < 0) {
+      if (clamp) {
+        return this.getTile(
+          Math.max(Math.min(x, this.width - 1), 0),
+          Math.max(Math.min(y, this.height - 1), 0)
+        );
+      }
+
       return undefined;
     }
 
@@ -207,7 +214,9 @@ class Surface {
       const ocy = cy + offset;
       const dist = ocx * ocx + ocy * ocy;
       if (dist < rSquared && !(edgeOnly && dist < innerRSquared)) {
-        const tile = this.getTile(x + cx, y + cy);
+        // @TODO: it is possible this calls the function for the same tile multiple times out of bounds in edgeOnly mode
+        // edgeOnly mode might also behave unexpectedly when the center is out of bounds
+        const tile = this.getTile(x + cx, y + cy, edgeOnly);
         if (tile) {
           fn(tile);
         }
