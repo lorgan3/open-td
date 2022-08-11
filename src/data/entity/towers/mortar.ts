@@ -13,10 +13,11 @@ class Mortar implements ITower {
   public entity: Entity;
   public category = AgentCategory.Player;
   private cooldown = 0;
+  private cleanupEventListener: () => void;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-    coverTilesWithTowerSightLines(this, RANGE);
+    this.cleanupEventListener = coverTilesWithTowerSightLines(this, RANGE);
   }
 
   tick(dt: number) {
@@ -29,6 +30,10 @@ class Mortar implements ITower {
     Manager.Instance.getSurface().spawn(projectile);
 
     return 0; // This tower cannot guarantee the projectile will hit.
+  }
+
+  despawn() {
+    this.cleanupEventListener();
   }
 
   getCooldown() {

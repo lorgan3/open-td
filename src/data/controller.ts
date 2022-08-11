@@ -1,7 +1,8 @@
+import { GameEvent } from "./events";
 import Manager from "./manager";
 import placeables, { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
-import Tile, { FREE_TILES, TileType } from "./terrain/tile";
+import Tile, { FREE_TILES } from "./terrain/tile";
 
 class Controller {
   private mouseDownX = 0;
@@ -66,6 +67,10 @@ class Controller {
         });
       }
     }
+
+    Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
+      affectedTiles: tiles,
+    });
   }
 }
 
