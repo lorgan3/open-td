@@ -1,9 +1,10 @@
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
 import Entity, { AgentCategory, EntityType } from "../entity";
-import { ITower } from ".";
+import { coverTilesWithTowerSightLines, ITower } from ".";
 import { IEnemy } from "../enemies";
 import Rail from "../rail";
+import { isSolid } from "../../terrain/collision";
 
 const RANGE = 30;
 const COOLDOWN = 5000;
@@ -16,13 +17,7 @@ class Railgun implements ITower {
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-
-    Manager.Instance.getSurface().forCircle(
-      tile.getX(),
-      tile.getY(),
-      RANGE,
-      (tile) => tile.addTower(this)
-    );
+    coverTilesWithTowerSightLines(this, RANGE, isSolid);
   }
 
   tick(dt: number) {

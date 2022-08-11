@@ -1,4 +1,5 @@
 import Manager from "../manager";
+import { isSolid } from "../terrain/collision";
 import Tile from "../terrain/tile";
 import { getRayDistance } from "../util/distance";
 import { IEnemy } from "./enemies";
@@ -29,9 +30,11 @@ class Rail implements Agent {
       tile.getY(),
       direction,
       (tile) => {
-        // @TOOD: do not penetrate solid tiles
-        this.steps.push(tile);
+        if (isSolid(tile)) {
+          return false;
+        }
 
+        this.steps.push(tile);
         return true;
       }
     );

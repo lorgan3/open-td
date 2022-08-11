@@ -1,5 +1,5 @@
-import { ITower } from ".";
-import Manager from "../../manager";
+import { coverTilesWithTowerSightLines, ITower } from ".";
+import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
 import Entity, { AgentCategory, EntityType } from "../entity";
@@ -15,13 +15,7 @@ class Flamethrower implements ITower {
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-
-    Manager.Instance.getSurface().forCircle(
-      tile.getX(),
-      tile.getY(),
-      RANGE,
-      (tile) => tile.addTower(this)
-    );
+    coverTilesWithTowerSightLines(this, RANGE, isSolid);
   }
 
   tick(dt: number) {

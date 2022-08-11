@@ -20,6 +20,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Wall]: TileType.Wall,
   [EntityType.Mortar]: TileType.Obstructed,
   [EntityType.Flamethrower]: TileType.Obstructed,
+  [EntityType.Railgun]: TileType.Obstructed,
 };
 
 class Tile {
@@ -77,7 +78,9 @@ class Tile {
   }
 
   addTower(tower: ITower) {
-    this.towers.push(tower);
+    if (!this.towers.includes(tower)) {
+      this.towers.push(tower);
+    }
   }
 
   isCoveredByTower() {

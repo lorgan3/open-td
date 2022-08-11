@@ -2,7 +2,7 @@ import Manager from "../../manager";
 import Tile from "../../terrain/tile";
 import Entity, { AgentCategory, EntityType } from "../entity";
 import Rocket from "../rocket";
-import { ITower } from ".";
+import { coverTilesWithTowerSightLines, ITower } from ".";
 import { IEnemy } from "../enemies";
 
 const RANGE = 30;
@@ -16,13 +16,7 @@ class Mortar implements ITower {
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-
-    Manager.Instance.getSurface().forCircle(
-      tile.getX(),
-      tile.getY(),
-      RANGE,
-      (tile) => tile.addTower(this)
-    );
+    coverTilesWithTowerSightLines(this, RANGE);
   }
 
   tick(dt: number) {
