@@ -76,21 +76,28 @@ class Surface {
     sourceY: number,
     targetX: number,
     targetY: number,
-    fn: (tile: Tile) => void
+    fn: (tile: Tile, index: number) => void | boolean,
+    connected = false
   ) {
     const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
-    return this.forRay(sourceX, sourceY, direction, (tile: Tile) => {
-      fn(tile);
-
-      return !(tile.getX() === targetX && tile.getY() === targetY);
-    });
+    return this.forRay(
+      sourceX,
+      sourceY,
+      direction,
+      (tile: Tile, index: number) => {
+        const done = fn(tile, index) === false;
+        return !done && !(tile.getX() === targetX && tile.getY() === targetY);
+      },
+      connected
+    );
   }
 
   public forRay(
     sourceX: number,
     sourceY: number,
     direction: number,
-    fn: (tile: Tile) => boolean
+    fn: (tile: Tile, index: number) => boolean,
+    connected = false
   ) {
     // Determine the direction of the line
     const xDiff = Math.cos(direction);
@@ -105,21 +112,43 @@ class Surface {
     xStep *= ratio * Math.sign(xDiff);
     yStep *= ratio * Math.sign(yDiff);
 
+    let prevX: number | undefined;
+    let prevY: number | undefined;
+
+    let i = 0;
     while (true) {
+      let skip = false;
       const x = Math.round(sourceX);
-      const y = Math.round(sourceY);
+      let y = Math.round(sourceY);
+
+      if (
+        connected &&
+        prevX !== undefined &&
+        Math.round(prevX) !== x &&
+        Math.round(prevY!) !== y
+      ) {
+        y = Math.round(prevY!);
+        skip = true;
+      }
+
       const tile = this.getTile(x, y);
 
       if (!tile) {
         break;
       }
 
-      if (!fn(tile)) {
+      if (!fn(tile, i)) {
         break;
       }
 
-      sourceX += xStep;
-      sourceY += yStep;
+      if (!skip) {
+        sourceX += xStep;
+        sourceY += yStep;
+      }
+
+      prevX = x;
+      prevY = y;
+      i++;
     }
   }
 
