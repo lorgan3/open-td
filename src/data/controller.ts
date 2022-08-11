@@ -38,9 +38,9 @@ class Controller {
     }
 
     let tiles: Tile[] = [];
-    this.surface.forLine(this.mouseDownX, this.mouseDownY, x, y, (tile) =>
-      tiles.push(tile)
-    );
+    this.surface.forLine(this.mouseDownX, this.mouseDownY, x, y, (tile) => {
+      tiles.push(tile);
+    });
 
     if (this.selectedPlacable.cost === 0) {
       tiles.forEach((tile) => {
