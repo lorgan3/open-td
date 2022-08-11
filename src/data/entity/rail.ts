@@ -29,8 +29,8 @@ class Rail implements Agent {
       tile.getX(),
       tile.getY(),
       direction,
-      (tile) => {
-        if (isSolid(tile)) {
+      (tile, i) => {
+        if (i > 0 && isSolid(tile)) {
           return false;
         }
 
