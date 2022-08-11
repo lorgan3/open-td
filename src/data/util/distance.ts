@@ -10,7 +10,7 @@ export const getRayDistance = (
   pointY: number
 ) => {
   // Only consider points that are 'in front' of the ray
-  const direction = Math.atan2(pointY - rayY, pointX - pointX);
+  const direction = Math.atan2(pointY - rayY, pointX - rayX);
   let diff = mod(direction - rayDirection + Math.PI, Math.PI * 2) - Math.PI;
   if (Math.abs(diff) >= Math.PI) {
     return Number.POSITIVE_INFINITY;

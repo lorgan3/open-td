@@ -58,14 +58,30 @@ describe("distance", () => {
       pointY: 0,
       result: Number.POSITIVE_INFINITY,
     },
+    {
+      rayX: 5,
+      rayY: 1,
+      rayDirection: Math.PI,
+      pointX: 7,
+      pointY: 1,
+      result: Number.POSITIVE_INFINITY,
+    },
+    {
+      rayX: 5,
+      rayY: 1,
+      rayDirection: Math.PI,
+      pointX: 3,
+      pointY: 2,
+      result: 1,
+    },
   ];
 
   it.each(table)(
     "returns the distance for line [$rayX, $rayY, $rayDirection] to point [$pointX, $pointY]",
     ({ rayX, rayY, rayDirection, pointX, pointY, result }) => {
-      expect(getRayDistance(rayX, rayY, rayDirection, pointX, pointY)).toEqual(
-        result
-      );
+      expect(
+        getRayDistance(rayX, rayY, rayDirection, pointX, pointY)
+      ).toApproximate(result);
     }
   );
 });
