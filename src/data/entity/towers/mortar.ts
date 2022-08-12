@@ -1,7 +1,7 @@
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
 import Entity, { AgentCategory, EntityType } from "../entity";
-import Rocket from "../rocket";
+import Rocket from "../projectiles/rocket";
 import { coverTilesWithTowerSightLines, ITower } from ".";
 import { IEnemy } from "../enemies";
 

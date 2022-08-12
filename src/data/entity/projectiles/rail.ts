@@ -1,9 +1,9 @@
-import Manager from "../manager";
-import { isSolid } from "../terrain/collision";
-import Tile from "../terrain/tile";
-import { getRayDistance } from "../util/distance";
-import { IEnemy } from "./enemies";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Manager from "../../manager";
+import { isSolid } from "../../terrain/collision";
+import Tile from "../../terrain/tile";
+import { getRayDistance } from "../../util/distance";
+import { IEnemy } from "../enemies";
+import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 
 export const LIFETIME = 1500;
 

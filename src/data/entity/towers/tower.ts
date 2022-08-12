@@ -2,7 +2,7 @@ import { coverTilesWithTowerSightLines, ITower } from ".";
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
-import Bullet from "../bullet";
+import Bullet from "../projectiles/bullet";
 import { IEnemy } from "../enemies";
 import Entity, { AgentCategory, EntityType } from "../entity";
 

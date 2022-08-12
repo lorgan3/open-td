@@ -3,7 +3,7 @@ import Tile from "../../terrain/tile";
 import Entity, { AgentCategory, EntityType } from "../entity";
 import { coverTilesWithTowerSightLines, ITower } from ".";
 import { IEnemy } from "../enemies";
-import Rail from "../rail";
+import Rail from "../projectiles/rail";
 import { isSolid } from "../../terrain/collision";
 
 const RANGE = 30;

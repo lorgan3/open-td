@@ -1,5 +1,5 @@
 import { RenderFn } from ".";
-import Rail, { LIFETIME } from "../../../data/entity/rail";
+import Rail, { LIFETIME } from "../../../data/entity/projectiles/rail";
 
 const render: RenderFn<Rail> = (renderer, rail, htmlElement) => {
   const entity = rail.entity;
