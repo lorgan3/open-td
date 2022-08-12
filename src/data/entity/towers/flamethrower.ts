@@ -1,8 +1,10 @@
 import { coverTilesWithTowerSightLines, ITower } from ".";
+import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
 import Entity, { AgentCategory, EntityType } from "../entity";
+import Flame from "../projectiles/flame";
 
 const RANGE = 3;
 const COOLDOWN = 1;
@@ -13,6 +15,7 @@ class Flamethrower implements ITower {
   public category = AgentCategory.Player;
   private cooldown = 0;
   private cleanupEventListener: () => void;
+  private flame?: Flame;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -29,7 +32,13 @@ class Flamethrower implements ITower {
 
   fire(target: IEnemy) {
     this.cooldown = COOLDOWN;
-    target.hit(DAMAGE);
+
+    if (!this.flame) {
+      this.flame = new Flame(this.tile, DAMAGE);
+      Manager.Instance.getSurface().spawn(this.flame);
+    }
+
+    this.flame.hit(target);
 
     return DAMAGE;
   }

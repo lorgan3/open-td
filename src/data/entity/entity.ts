@@ -26,8 +26,9 @@ export enum EntityType {
   Wall = 5,
   Mortar = 6,
   Flamethrower = 7,
-  Railgun = 8,
-  Rail = 9,
+  Flame = 8,
+  Railgun = 9,
+  Rail = 10,
 }
 
 class Entity {
@@ -42,8 +43,16 @@ class Entity {
     return this.x;
   }
 
+  getAlignedX() {
+    return Math.floor(this.x);
+  }
+
   getY() {
     return this.y;
+  }
+
+  getAlignedY() {
+    return Math.floor(this.y);
   }
 
   getAgent() {
