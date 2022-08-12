@@ -91,8 +91,8 @@ class Tile {
     this.towers.splice(this.towers.indexOf(tower), 1);
   }
 
-  getAvailableTower() {
-    return this.towers.find((tower) => tower.getCooldown() === 0);
+  getAvailableTowers() {
+    return this.towers.filter((tower) => tower.getCooldown() === 0);
   }
 
   // @TODO instead of a string, just the index on the surface would be more efficient

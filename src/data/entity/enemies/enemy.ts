@@ -35,10 +35,14 @@ class Enemy implements Agent {
     const { from, to, step } = this.path.performStep(dt);
     this.entity.move(from, to, step);
 
-    let tower = from.getAvailableTower();
-    while (!!tower && this.predictedHp > 0) {
-      this.predictedHp -= tower.fire(this);
-      tower = from.getAvailableTower();
+    if (this.predictedHp >= 0) {
+      for (let tower of from.getAvailableTowers()) {
+        this.predictedHp -= tower.fire(this);
+
+        if (this.predictedHp <= 0) {
+          break;
+        }
+      }
     }
   }
 
