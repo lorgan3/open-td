@@ -22,14 +22,34 @@ class Pathfinder {
   getPath(
     from: Tile,
     to: Tile,
+    costMultiplier?: (tile: Tile) => number,
     costs?: Partial<Record<TileType, number>> | ((tile: Tile) => number | null)
   ) {
-    const costFn =
-      typeof costs === "function"
-        ? costs
-        : costs !== undefined
-        ? (tile: Tile) => costs[tile.getType()]
-        : (tile: Tile) => this.costs[tile.getType()];
+    let costFn: (tile: Tile) => number | null | undefined;
+    if (!costMultiplier) {
+      costFn =
+        typeof costs === "function"
+          ? costs
+          : costs !== undefined
+          ? (tile: Tile) => costs[tile.getType()]
+          : (tile: Tile) => this.costs[tile.getType()];
+    } else {
+      costFn =
+        typeof costs === "function"
+          ? (tile: Tile) => {
+              const cost = costs(tile);
+              return cost ? cost * costMultiplier(tile) : cost;
+            }
+          : costs !== undefined
+          ? (tile: Tile) => {
+              const cost = costs[tile.getType()];
+              return cost ? cost * costMultiplier(tile) : cost;
+            }
+          : (tile: Tile) => {
+              const cost = this.costs[tile.getType()];
+              return cost ? cost * costMultiplier(tile) : cost;
+            };
+    }
 
     // Cheapest path from n to start
     const score = costFn(from) ?? 1;
@@ -111,13 +131,12 @@ class Pathfinder {
   getHivePath(tiles: Tile[], to: Tile) {
     const visitedTiles: Record<string, number> = {};
 
-    const costFn = (tile: Tile) => {
-      const cost = this.costs[tile.getType()];
-      return cost ? cost * (visitedTiles[tile.getHash()] ?? 1) : null;
+    const multiplierFn = (tile: Tile) => {
+      return visitedTiles[tile.getHash()] ?? 1;
     };
 
     return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {
-      const path = this.getPath(from, to, costFn);
+      const path = this.getPath(from, to, multiplierFn);
       paths.push(path);
 
       if (path && tiles.length > i - 1) {
