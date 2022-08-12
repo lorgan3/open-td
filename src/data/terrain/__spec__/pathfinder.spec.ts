@@ -64,4 +64,27 @@ describe("pathfinder", () => {
       );
     }
   );
+
+  xit("finds a path around tiles with a higher multiplier", () => {
+    // Avoid tile [4, 2] even though the movement cost is the same
+    const multiplierFn = (tile: Tile) =>
+      tile.getX() === 4 && tile.getY() === 2 ? 100 : 1;
+
+    const path = pathfinder
+      .getPath(surface.getTile(4, 0)!, surface.getTile(4, 4)!, multiplierFn)!
+      .getTiles();
+
+    const steps = [
+      [4, 0],
+      [4, 1],
+      [3, 2],
+      [3, 3],
+      [4, 4],
+    ];
+
+    expect(path).toHaveLength(steps.length);
+    steps.forEach(([x, y], i) =>
+      expect(path[i]).toEqual(expect.objectContaining({ x, y }))
+    );
+  });
 });
