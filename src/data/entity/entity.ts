@@ -13,6 +13,7 @@ export interface Agent {
   getType(): EntityType;
   tick?: (dt: number) => void;
   category: AgentCategory;
+  despawn?: () => void;
 }
 
 export type AgentClass = new (tile: Tile) => Agent;

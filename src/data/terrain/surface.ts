@@ -260,8 +260,8 @@ class Surface {
     this.entitiesMap.get(agent.category)!.delete(agent.entity);
     this.deletedEntities.push(agent.entity);
 
-    if ("despawn" in agent) {
-      (agent as Agent & { despawn: () => void }).despawn();
+    if (agent.despawn) {
+      agent.despawn();
     }
   }
 
