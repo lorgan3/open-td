@@ -9,6 +9,7 @@ export enum TileType {
   Obstructed = 4,
   Wall = 5,
   Spore = 6,
+  ElectricFence = 7,
 }
 
 export const FREE_TILES = new Set([TileType.Grass, TileType.Stone]);
@@ -21,6 +22,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Mortar]: TileType.Obstructed,
   [EntityType.Flamethrower]: TileType.Obstructed,
   [EntityType.Railgun]: TileType.Obstructed,
+  [EntityType.ElectricFence]: TileType.ElectricFence,
 };
 
 class Tile {

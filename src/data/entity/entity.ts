@@ -30,6 +30,7 @@ export enum EntityType {
   Flame = 8,
   Railgun = 9,
   Rail = 10,
+  ElectricFence = 11,
 }
 
 class Entity {

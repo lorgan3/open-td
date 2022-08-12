@@ -1,3 +1,4 @@
+import ElectricFence from "./entity/electricFence";
 import { AgentClass, EntityType } from "./entity/entity";
 import Flamethrower from "./entity/towers/flamethrower";
 import Mortar from "./entity/towers/mortar";
@@ -34,6 +35,13 @@ const placeables: Placeable[] = [
     entity: Wall,
     entityType: EntityType.Wall,
     htmlElement: createEmojiSvg("🚧"),
+  },
+  {
+    name: "Electric fence",
+    cost: 3,
+    entity: ElectricFence,
+    entityType: EntityType.ElectricFence,
+    htmlElement: createEmojiSvg("🥅"),
   },
   {
     name: "Tower",

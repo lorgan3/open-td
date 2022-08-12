@@ -156,6 +156,8 @@ class Renderer implements IRenderer {
           return "🧯";
         case EntityType.Railgun:
           return "🌡";
+        case EntityType.ElectricFence:
+          return "🥅";
       }
     }
 
@@ -183,6 +185,8 @@ class Renderer implements IRenderer {
         return "▪";
       case EntityType.Rail:
         return "〰";
+      case EntityType.Flame:
+        return "🔥";
       default:
         return "";
     }
