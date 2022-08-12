@@ -1,11 +1,11 @@
-const STRAIGHT_NEIGHBORS = [
+export const STRAIGHT_NEIGHBORS = [
   [0, -1],
   [-1, 0],
   [1, 0],
   [0, 1],
 ];
 
-const DIAGONAL_NEIGHBORS = [
+export const DIAGONAL_NEIGHBORS = [
   [-1, -1],
   [1, -1],
   [-1, 1],

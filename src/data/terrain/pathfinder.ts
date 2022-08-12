@@ -12,6 +12,9 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Spore]: 2,
 };
 
+export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
+};
+
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class Pathfinder {
   constructor(
@@ -22,37 +25,23 @@ class Pathfinder {
   getPath(
     from: Tile,
     to: Tile,
-    costMultiplier?: (tile: Tile) => number,
+    costMultiplier = (tile: Tile) => DEFAULT_MULTIPLIERS[tile.getType()] ?? 1,
     costs?: Partial<Record<TileType, number>> | ((tile: Tile) => number | null)
   ) {
-    let costFn: (tile: Tile) => number | null | undefined;
-    if (!costMultiplier) {
-      costFn =
-        typeof costs === "function"
-          ? costs
-          : costs !== undefined
-          ? (tile: Tile) => costs[tile.getType()]
-          : (tile: Tile) => this.costs[tile.getType()];
-    } else {
-      costFn =
-        typeof costs === "function"
-          ? (tile: Tile) => {
-              const cost = costs(tile);
-              return cost ? cost * costMultiplier(tile) : cost;
-            }
-          : costs !== undefined
-          ? (tile: Tile) => {
-              const cost = costs[tile.getType()];
-              return cost ? cost * costMultiplier(tile) : cost;
-            }
-          : (tile: Tile) => {
-              const cost = this.costs[tile.getType()];
-              return cost ? cost * costMultiplier(tile) : cost;
-            };
-    }
+    const costFn =
+      typeof costs === "function"
+        ? costs
+        : costs !== undefined
+        ? (tile: Tile) => costs[tile.getType()]
+        : (tile: Tile) => this.costs[tile.getType()];
 
     // Cheapest path from n to start
-    const score = costFn(from) ?? 1;
+    const movementScore = costFn(from) ?? 1;
+    const score = movementScore * costMultiplier(from);
+
+    const movementScores = new Map<string, number>();
+    movementScores.set(from.getHash(), score);
+
     const gScores = new Map<string, number>();
     gScores.set(from.getHash(), score);
 
@@ -71,7 +60,7 @@ class Pathfinder {
     while (!activeTiles.empty()) {
       let current = activeTiles.pop()!;
       if (to === current) {
-        return Path.fromMapAndCosts(from, to, path, gScores);
+        return Path.fromMapAndCosts(from, to, path, movementScores);
       }
 
       const currentHash = current.getHash();
@@ -114,9 +103,13 @@ class Pathfinder {
         }
 
         const neighborHash = neighbor.getHash();
-        const score = gScores.get(currentHash)! + cost;
+        const score =
+          gScores.get(currentHash)! + cost * costMultiplier(neighbor);
 
         if (score < (gScores.get(neighborHash) ?? Infinity)) {
+          const movementScore = movementScores.get(currentHash)! + cost;
+          movementScores.set(neighborHash, movementScore);
+
           path.set(neighborHash, current);
           gScores.set(neighborHash, score);
           fScores.set(neighborHash, score + this.heuristic(neighbor, to));
@@ -132,7 +125,10 @@ class Pathfinder {
     const visitedTiles: Record<string, number> = {};
 
     const multiplierFn = (tile: Tile) => {
-      return visitedTiles[tile.getHash()] ?? 1;
+      return (
+        (visitedTiles[tile.getHash()] ?? 1) *
+        (DEFAULT_MULTIPLIERS[tile.getType()] ?? 1)
+      );
     };
 
     return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {
