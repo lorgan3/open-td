@@ -1,5 +1,6 @@
 import ElectricFence from "./entity/electricFence";
 import { AgentClass, EntityType } from "./entity/entity";
+import Fence from "./entity/fence";
 import Flamethrower from "./entity/towers/flamethrower";
 import Mortar from "./entity/towers/mortar";
 import Railgun from "./entity/towers/railgun";
@@ -30,18 +31,25 @@ const createEmojiSvg = (emoji: string) => {
 
 const placeables: Placeable[] = [
   {
-    name: "Wall",
+    name: "Fence",
     cost: 1,
+    entity: Fence,
+    entityType: EntityType.Fence,
+    htmlElement: createEmojiSvg("🥅"),
+  },
+  {
+    name: "Wall",
+    cost: 3,
     entity: Wall,
     entityType: EntityType.Wall,
     htmlElement: createEmojiSvg("🚧"),
   },
   {
     name: "Electric fence",
-    cost: 3,
+    cost: 9,
     entity: ElectricFence,
     entityType: EntityType.ElectricFence,
-    htmlElement: createEmojiSvg("🥅"),
+    htmlElement: createEmojiSvg("⚡"),
   },
   {
     name: "Tower",

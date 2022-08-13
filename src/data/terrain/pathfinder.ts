@@ -8,9 +8,10 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Grass]: 3,
   [TileType.Water]: 20,
   [TileType.Stone]: 4,
-  [TileType.Wall]: 100,
+  [TileType.Wall]: 200,
   [TileType.Spore]: 2,
   [TileType.ElectricFence]: 10,
+  [TileType.Fence]: 100,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {

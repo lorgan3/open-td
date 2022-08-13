@@ -157,6 +157,8 @@ class Renderer implements IRenderer {
         case EntityType.Railgun:
           return "🌡";
         case EntityType.ElectricFence:
+          return "⚡";
+        case EntityType.Fence:
           return "🥅";
       }
     }
