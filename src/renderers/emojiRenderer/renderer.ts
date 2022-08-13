@@ -160,6 +160,8 @@ class Renderer implements IRenderer {
           return "⚡";
         case EntityType.Fence:
           return "🥅";
+        case EntityType.Freezer:
+          return "❄️";
       }
     }
 

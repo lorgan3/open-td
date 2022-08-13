@@ -12,10 +12,12 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Spore]: 2,
   [TileType.ElectricFence]: 10,
   [TileType.Fence]: 100,
+  [TileType.Freezer]: 6,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
   [TileType.ElectricFence]: 20,
+  [TileType.Freezer]: 0.5,
 };
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
