@@ -25,27 +25,26 @@ describe("pathfinder", () => {
         [4, 4],
       ],
     },
-    // Disable flaky test, possible due to the heap implementation?
-    // {
-    //   case: "curved",
-    //   sourceX: 0,
-    //   sourceY: 0,
-    //   targetX: 4,
-    //   targetY: 0,
-    //   steps: [
-    //     [0, 0],
-    //     [0, 1],
-    //     [0, 2],
-    //     [0, 3],
-    //     [1, 4],
-    //     [2, 4],
-    //     [3, 4],
-    //     [3, 3],
-    //     [3, 2],
-    //     [3, 1],
-    //     [4, 0],
-    //   ],
-    // },
+    {
+      case: "curved",
+      sourceX: 0,
+      sourceY: 0,
+      targetX: 4,
+      targetY: 0,
+      steps: [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [0, 3],
+        [1, 4],
+        [2, 4],
+        [3, 4],
+        [3, 3],
+        [3, 2],
+        [3, 1],
+        [4, 0],
+      ],
+    },
   ];
 
   it.each(table)(
@@ -65,7 +64,7 @@ describe("pathfinder", () => {
     }
   );
 
-  xit("finds a path around tiles with a higher multiplier", () => {
+  it("finds a path around tiles with a higher multiplier", () => {
     // Avoid tile [4, 2] even though the movement cost is the same
     const multiplierFn = (tile: Tile) =>
       tile.getX() === 4 && tile.getY() === 2 ? 100 : 1;
