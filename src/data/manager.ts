@@ -36,7 +36,7 @@ class Manager {
     this.pathfinder = new Pathfinder(surface);
 
     this.base = new Base(basePoint);
-    surface.spawn(this.base);
+    surface.spawnStatic(this.base);
   }
 
   tick(dt: number) {

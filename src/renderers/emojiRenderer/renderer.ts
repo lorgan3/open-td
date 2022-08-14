@@ -162,6 +162,8 @@ class Renderer implements IRenderer {
           return "🥅";
         case EntityType.Freezer:
           return "❄️";
+        case EntityType.Base:
+          return "⛺";
       }
     }
 
@@ -183,8 +185,6 @@ class Renderer implements IRenderer {
     switch (entity.getAgent().getType()) {
       case EntityType.Slime:
         return "🪲";
-      case EntityType.Base:
-        return "⛺";
       case EntityType.Bullet:
         return "▪";
       case EntityType.Rail:
