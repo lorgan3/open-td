@@ -1,3 +1,4 @@
+import { getStaticEntityCheckpoints } from "../terrain/checkpoint/staticEntity";
 import Path from "../terrain/path";
 import Pathfinder from "../terrain/pathfinder";
 import Tile from "../terrain/tile";
@@ -34,6 +35,7 @@ class SpawnGroup {
         .filter((path): path is Path => !!path)
         .map((path) => {
           path.setSpeed(0.01);
+          path.setCheckpoints(getStaticEntityCheckpoints(path.getTiles()));
           return path;
         })
     );

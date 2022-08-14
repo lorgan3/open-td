@@ -1,3 +1,4 @@
+import { IEnemy } from ".";
 import Manager from "../../manager";
 import Path from "../../terrain/path";
 import Tile from "../../terrain/tile";
@@ -6,11 +7,11 @@ import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 export const COOLDOWN = 600;
 const DAMAGE = 10;
 
-class Enemy implements Agent {
+class Enemy implements IEnemy {
   public entity: Entity;
   public category = AgentCategory.Enemy;
 
-  public hp = 1000;
+  public hp = 100;
   private predictedHp = this.hp;
 
   private cooldown = 0;
@@ -35,10 +36,9 @@ class Enemy implements Agent {
       this.entity.setX(to.getX());
       this.entity.setY(to.getY());
 
-      const target = this.path.getNextCheckpoint().getStaticEntity();
-      if (target?.getAgent().hit && this.cooldown === 0) {
-        target.getAgent().hit!(DAMAGE);
-        this.cooldown = COOLDOWN;
+      const checkpoint = this.path.getNextCheckpoint();
+      if (checkpoint) {
+        checkpoint.process(this, dt);
       }
     }
 
@@ -48,6 +48,13 @@ class Enemy implements Agent {
       const { from, to, step } = this.path.performStep(dt);
       this.entity.move(from, to, step);
       this.getTargeted(from);
+    }
+  }
+
+  attack(target: Agent) {
+    if (target.hit && this.cooldown === 0) {
+      target.hit!(DAMAGE);
+      this.cooldown = COOLDOWN;
     }
   }
 
