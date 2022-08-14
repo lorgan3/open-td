@@ -30,20 +30,30 @@ class Enemy implements Agent {
   tick(dt: number) {
     this.cooldown = Math.max(0, this.cooldown - dt);
 
-    if (this.path.isDone()) {
+    if (this.path.isPaused()) {
       const to = this.path.getTile();
       this.entity.setX(to.getX());
       this.entity.setY(to.getY());
 
-      Manager.Instance.despawnEnemy(this);
-      return;
+      const target = this.path.getNextCheckpoint().getStaticEntity();
+      if (target?.getAgent().hit && this.cooldown === 0) {
+        target.getAgent().hit!(DAMAGE);
+        this.cooldown = COOLDOWN;
+      }
     }
 
-    const { from, to, step } = this.path.performStep(dt);
-    this.entity.move(from, to, step);
+    if (this.isAttacking()) {
+      this.getTargeted(this.path.getCurrentTile());
+    } else {
+      const { from, to, step } = this.path.performStep(dt);
+      this.entity.move(from, to, step);
+      this.getTargeted(from);
+    }
+  }
 
+  private getTargeted(tile: Tile) {
     if (this.predictedHp >= 0) {
-      for (let tower of from.getAvailableTowers()) {
+      for (let tower of tile.getAvailableTowers()) {
         this.predictedHp -= tower.fire(this);
 
         if (this.predictedHp <= 0) {
