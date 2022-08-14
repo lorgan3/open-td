@@ -12,6 +12,7 @@ class Renderer implements IRenderer {
   public yStep = 0;
   private offsetX = 0;
   private offsetY = 0;
+  private time = 0;
 
   private target: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
@@ -59,12 +60,14 @@ class Renderer implements IRenderer {
     this.offsetX = x;
     this.offsetY = y;
 
-    this.rerender();
+    this.rerender(0);
 
     this.registerEventHandlers(target);
   }
 
-  rerender(): void {
+  rerender(dt: number): void {
+    this.time += dt;
+
     if (this.surface.isDirty()) {
       this.renderTiles();
     }
@@ -120,6 +123,10 @@ class Renderer implements IRenderer {
 
   unmount(): void {
     throw new Error("Method not implemented.");
+  }
+
+  getTime() {
+    return this.time;
   }
 
   private registerEventHandlers(target: HTMLDivElement) {
