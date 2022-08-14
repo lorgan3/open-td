@@ -15,6 +15,7 @@ class Tower implements ITower {
   public category = AgentCategory.Player;
   private cooldown = 0;
   private cleanupEventListener: () => void;
+  private hp = 50;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -47,6 +48,14 @@ class Tower implements ITower {
 
   getType(): EntityType {
     return EntityType.Tower;
+  }
+
+  hit(damage: number) {
+    this.hp -= damage;
+
+    if (this.hp <= 0) {
+      Manager.Instance.getSurface().despawnStatic(this);
+    }
   }
 }
 

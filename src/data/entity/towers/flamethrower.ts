@@ -16,6 +16,7 @@ class Flamethrower implements ITower {
   private cooldown = 0;
   private cleanupEventListener: () => void;
   private flame?: Flame;
+  private hp = 200;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -53,6 +54,14 @@ class Flamethrower implements ITower {
 
   getType(): EntityType {
     return EntityType.Flamethrower;
+  }
+
+  hit(damage: number) {
+    this.hp -= damage;
+
+    if (this.hp <= 0) {
+      Manager.Instance.getSurface().despawnStatic(this);
+    }
   }
 }
 

@@ -15,6 +15,7 @@ class Railgun implements ITower {
   public category = AgentCategory.Player;
   private cooldown = 0;
   private cleanupEventListener: () => void;
+  private hp = 100;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -47,6 +48,14 @@ class Railgun implements ITower {
 
   getType(): EntityType {
     return EntityType.Railgun;
+  }
+
+  hit(damage: number) {
+    this.hp -= damage;
+
+    if (this.hp <= 0) {
+      Manager.Instance.getSurface().despawnStatic(this);
+    }
   }
 }
 
