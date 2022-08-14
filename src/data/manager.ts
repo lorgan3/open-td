@@ -67,7 +67,7 @@ class Manager {
     ).size;
 
     this.triggerEvent(GameEvent.StatUpdate, {
-      integrity: this.integrity,
+      integrity: this.getIntegrity(),
       level: this.level,
       money: this.money,
       remainingEnemies,
@@ -103,7 +103,7 @@ class Manager {
   }
 
   getIntegrity() {
-    return this.integrity;
+    return this.base.getHp();
   }
 
   getMoney() {

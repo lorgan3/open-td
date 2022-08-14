@@ -35,7 +35,8 @@ function start() {
   <div class="top-bar">
     <ul class="stats">
       <li>
-        <span>🪙 {{ money }}</span> <span>🛡️ {{ integrity }}</span>
+        <span>🪙 {{ money }}</span>
+        <span>🛡️ {{ integrity }}</span>
       </li>
       <li>
         <span>Wave {{ level }}</span>

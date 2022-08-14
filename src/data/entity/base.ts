@@ -31,6 +31,8 @@ class Base implements Agent {
 
       alert("You lose!");
     }
+
+    Manager.Instance.triggerStatUpdate();
   }
 }
 
