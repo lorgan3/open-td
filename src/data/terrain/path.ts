@@ -144,7 +144,11 @@ class Path {
   }
 
   isPaused() {
-    return this.checkpoints[0] === this.index + 1 || this.isDone();
+    return (
+      (this.checkpoints[0] === this.index + 1 &&
+        this.getNextCheckpoint().hasStaticEntity()) ||
+      this.isDone()
+    );
   }
 
   getNextCheckpoint() {
