@@ -38,7 +38,7 @@ class Flamethrower implements ITower {
       Manager.Instance.getSurface().spawn(this.flame);
     }
 
-    this.flame.hit(target);
+    this.flame.dealDamage(target);
 
     return DAMAGE;
   }

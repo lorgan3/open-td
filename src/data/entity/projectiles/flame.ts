@@ -14,7 +14,7 @@ class Flame implements Agent {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
   }
 
-  hit(enemy: IEnemy) {
+  dealDamage(enemy: IEnemy) {
     if (this.time > LIFETIME) {
       Manager.Instance.getSurface().spawn(this);
     }
