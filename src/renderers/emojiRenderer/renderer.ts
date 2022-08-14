@@ -106,7 +106,6 @@ class Renderer implements IRenderer {
   }
 
   private renderTiles() {
-    this.surface.markPristine();
     const rows = this.surface.getHeight();
     for (let i = 0; i < rows; i++) {
       let row = this.rows[i];
