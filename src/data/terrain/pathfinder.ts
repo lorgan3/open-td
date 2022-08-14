@@ -157,13 +157,14 @@ class Pathfinder {
       paths.push(path);
 
       if (path && tiles.length > i - 1) {
-        path
-          .getTiles()
-          .forEach(
-            (tile) =>
-              (visitedTiles[tile.getHash()] =
-                visitedTiles[tile.getHash()] + 0.1 || 1.1)
-          );
+        path.getTiles().forEach((tile) => {
+          if (tile.hasStaticEntity()) {
+            visitedTiles[tile.getHash()] = 0.85;
+          }
+
+          visitedTiles[tile.getHash()] =
+            visitedTiles[tile.getHash()] + 0.1 || 1.1;
+        });
       }
 
       return paths;
