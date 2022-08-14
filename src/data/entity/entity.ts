@@ -14,6 +14,7 @@ export interface Agent {
   tick?: (dt: number) => void;
   category: AgentCategory;
   despawn?: () => void;
+  hit?: (damage: number) => void;
 }
 
 export type AgentClass = new (tile: Tile) => Agent;
