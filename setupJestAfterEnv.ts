@@ -1,5 +1,3 @@
-jest.mock("./src/data/terrain/neighbours");
-
 expect.extend({
   toApproximate(expected: number, actual: number) {
     return {
