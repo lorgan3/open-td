@@ -36,6 +36,14 @@ export enum EntityType {
   Freezer = 13,
 }
 
+export const DESTRUCTIBLE_ENTITIES = new Set([
+  EntityType.Tower,
+  EntityType.Mortar,
+  EntityType.Flamethrower,
+  EntityType.Railgun,
+  EntityType.Base,
+]);
+
 class Entity {
   private id: number;
   private rotation = 0;

@@ -1,3 +1,4 @@
+import Base from "../../entity/base";
 import Path from "../path";
 import Tile, { TileType } from "../tile";
 
@@ -168,5 +169,22 @@ describe("path", () => {
         expect(path.getCoordinates(index)).toEqual(expected);
       }
     );
+  });
+
+  it("Creates checkpoints for all destructible entities", () => {
+    const firstBase = new Tile(1, 0, TileType.Grass);
+    firstBase.setStaticEntity(new Base(firstBase).entity);
+    const secondBase = new Tile(3, 1, TileType.Grass);
+    secondBase.setStaticEntity(new Base(secondBase).entity);
+
+    const tiles = [
+      new Tile(0, 0, TileType.Grass),
+      firstBase,
+      new Tile(2, 0, TileType.Grass),
+      secondBase,
+    ];
+    const obstructedPath = Path.fromTiles(tiles, speed, speedMultipliers);
+
+    expect(obstructedPath.getCheckpoints()).toEqual([firstBase, secondBase]);
   });
 });

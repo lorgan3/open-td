@@ -1,3 +1,4 @@
+import { DESTRUCTIBLE_ENTITIES } from "../entity/entity";
 import Tile, { TileType } from "./tile";
 
 interface Section {
@@ -14,7 +15,8 @@ class Path {
     private tiles: Tile[],
     private sections: Section[],
     private speed: number,
-    private costs: number[]
+    private costs: number[],
+    private checkpoints: number[]
   ) {}
 
   performStep(dt: number) {
@@ -31,6 +33,22 @@ class Path {
       end = this.tiles.length - 1;
     }
     const to = this.tiles[end];
+
+    // Stop at checkpoints if they're still valid
+    while (this.checkpoints.length > 0) {
+      const checkpoint = this.checkpoints[0];
+      if (checkpoint && end >= checkpoint) {
+        const tile = this.getNextCheckpoint();
+        if (!tile.hasStaticEntity()) {
+          this.checkpoints.shift();
+        } else {
+          this.index = end - 1;
+          return { from: this.tiles[this.index], to, step: 0 };
+        }
+      } else {
+        break;
+      }
+    }
 
     const multiplier = this.costs[end] ?? 1;
     this.index = Math.min(
@@ -70,7 +88,13 @@ class Path {
   }
 
   clone() {
-    return new Path(this.tiles, this.sections, this.speed, this.costs);
+    return new Path(
+      this.tiles,
+      this.sections,
+      this.speed,
+      this.costs,
+      this.checkpoints
+    );
   }
 
   setIndex(index: number) {
@@ -119,6 +143,22 @@ class Path {
     return this.index === this.tiles.length - 1;
   }
 
+  isPaused() {
+    return this.checkpoints[0] === this.index + 1 || this.isDone();
+  }
+
+  getNextCheckpoint() {
+    return this.tiles[this.checkpoints[0]] || this.tiles[this.tiles.length - 1];
+  }
+
+  getCheckpoints() {
+    return this.checkpoints.map((index) => this.tiles[index]);
+  }
+
+  getCurrentTile() {
+    return this.tiles[this.index | 0];
+  }
+
   private static calculateSections(tiles: Tile[], costs: number[]) {
     return tiles.reduce<Section[]>((arr, tile, index) => {
       const section = arr[arr.length - 1];
@@ -156,7 +196,20 @@ class Path {
     const costs = tiles.map((tile) => speedMultipliers[tile.getType()] ?? 1);
     const sections = this.calculateSections(tiles, costs);
 
-    return new Path(tiles, sections, speed, costs);
+    const checkpoints: number[] = [];
+    tiles.forEach((tile, index) => {
+      if (tile.hasStaticEntity()) {
+        if (
+          DESTRUCTIBLE_ENTITIES.has(
+            tile.getStaticEntity()!.getAgent().getType()
+          )
+        ) {
+          checkpoints.push(index);
+        }
+      }
+    });
+
+    return new Path(tiles, sections, speed, costs, checkpoints);
   }
 
   static fromMapAndCosts(
@@ -181,7 +234,20 @@ class Path {
 
     const sections = this.calculateSections(tiles.reverse(), costs.reverse());
 
-    return new Path(tiles, sections, 1, costs);
+    const checkpoints: number[] = [];
+    tiles.forEach((tile, index) => {
+      if (tile.hasStaticEntity()) {
+        if (
+          DESTRUCTIBLE_ENTITIES.has(
+            tile.getStaticEntity()!.getAgent().getType()
+          )
+        ) {
+          checkpoints.push(index);
+        }
+      }
+    });
+
+    return new Path(tiles, sections, 1, costs, checkpoints);
   }
 }
 
