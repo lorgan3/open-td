@@ -14,6 +14,10 @@ export const NEIGHBORS = [
   [1, 1],
 ];
 
+// If the sum of the costs of the 2 diagonal tiles is higher than this amount it means diagonal moves are not possible.
+// This is to prevent just going between a diagonal wall.
+export const MAX_DIAGONAL_COST = 150;
+
 export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Grass]: 3,
   [TileType.Water]: 20,
@@ -177,6 +181,11 @@ class Pathfinder {
     diagonalCosts = 0
   ) => {
     const cost = costFn(tile);
+
+    if (diagonalCosts > MAX_DIAGONAL_COST) {
+      return null;
+    }
+
     if (!cost) {
       return null;
     }
