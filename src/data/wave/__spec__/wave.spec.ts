@@ -1,12 +1,21 @@
 import Path from "../../terrain/path";
+import Pathfinder from "../../terrain/pathfinder";
+import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
 import SpawnGroup from "../SpawnGroup";
 import Wave from "../wave";
 
 describe("wave", () => {
-  const spawnGroup1 = new SpawnGroup([Path.fromTiles([new Tile(0, 0)], 1)]);
-  const spawnGroup2 = new SpawnGroup([Path.fromTiles([new Tile(1, 1)], 2)]);
-  const spawnGroup3 = new SpawnGroup([Path.fromTiles([new Tile(2, 2)], 3)]);
+  const pathfinder = new Pathfinder(new Surface());
+  const spawnGroup1 = new SpawnGroup(pathfinder, [
+    Path.fromTiles([new Tile(0, 0)], 1),
+  ]);
+  const spawnGroup2 = new SpawnGroup(pathfinder, [
+    Path.fromTiles([new Tile(1, 1)], 2),
+  ]);
+  const spawnGroup3 = new SpawnGroup(pathfinder, [
+    Path.fromTiles([new Tile(2, 2)], 3),
+  ]);
   const spawnGroups = [spawnGroup1, spawnGroup2, spawnGroup3];
 
   const table = [

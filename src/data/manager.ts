@@ -135,12 +135,17 @@ class Manager {
       throw new Error("Wave already in progress!");
     }
 
+    if (this.wave) {
+      this.wave.cleanup();
+    }
+
     this.wave = Wave.fromLevel(
       this.level,
       this.spawnGroups.map((tiles) =>
         SpawnGroup.fromTiles(tiles, this.base.getTile(), this.pathfinder)
       )
     );
+
     this.level++;
     this.triggerStatUpdate();
   }
