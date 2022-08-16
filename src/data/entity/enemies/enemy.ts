@@ -16,6 +16,8 @@ class Enemy implements IEnemy {
 
   private cooldown = 0;
 
+  private callback?: () => void;
+
   constructor(tile: Tile, private path: Path) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
   }
@@ -29,9 +31,14 @@ class Enemy implements IEnemy {
   }
 
   tick(dt: number) {
+    if (this.cooldown < dt && this.callback) {
+      this.callback();
+      this.callback = undefined;
+    }
+
     this.cooldown = Math.max(0, this.cooldown - dt);
 
-    if (this.path.isPaused(this)) {
+    if (this.path.isPaused(this) && !this.isBusy()) {
       const to = this.path.getTile();
       this.entity.setX(to.getX());
       this.entity.setY(to.getY());
@@ -42,7 +49,7 @@ class Enemy implements IEnemy {
       }
     }
 
-    if (this.isAttacking()) {
+    if (this.isBusy()) {
       this.getTargeted(this.path.getCurrentTile());
     } else {
       const { from, to, step } = this.path.performStep(this, dt);
@@ -55,6 +62,14 @@ class Enemy implements IEnemy {
     if (target.hit && this.cooldown === 0) {
       target.hit!(DAMAGE);
       this.cooldown = COOLDOWN;
+    }
+  }
+
+  interact(callback?: () => void, cooldown = COOLDOWN) {
+    this.callback = callback;
+
+    if (this.cooldown === 0) {
+      this.cooldown = cooldown;
     }
   }
 
@@ -78,7 +93,7 @@ class Enemy implements IEnemy {
     }
   }
 
-  isAttacking() {
+  isBusy() {
     return this.cooldown !== 0;
   }
 }

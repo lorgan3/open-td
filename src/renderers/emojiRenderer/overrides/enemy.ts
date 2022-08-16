@@ -10,7 +10,7 @@ const render: RenderFn<Enemy> = (renderer, enemy, htmlElement) => {
   const yOffset = ((entity.getId() + 5) % 17) / 34 - ONE_FOURTH;
 
   let rotation = entity.getRotation();
-  if (enemy.isAttacking()) {
+  if (enemy.isBusy()) {
     rotation += Math.sin(((renderer.getTime() % COOLDOWN) / COOLDOWN) * 5) * 20;
   }
 
