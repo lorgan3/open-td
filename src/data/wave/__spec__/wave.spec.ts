@@ -7,13 +7,13 @@ import Wave from "../wave";
 
 describe("wave", () => {
   const pathfinder = new Pathfinder(new Surface());
-  const spawnGroup1 = new SpawnGroup(pathfinder, [
+  const spawnGroup1 = new SpawnGroup([
     Path.fromTiles(pathfinder, [new Tile(0, 0)], 1),
   ]);
-  const spawnGroup2 = new SpawnGroup(pathfinder, [
+  const spawnGroup2 = new SpawnGroup([
     Path.fromTiles(pathfinder, [new Tile(1, 1)], 2),
   ]);
-  const spawnGroup3 = new SpawnGroup(pathfinder, [
+  const spawnGroup3 = new SpawnGroup([
     Path.fromTiles(pathfinder, [new Tile(2, 2)], 3),
   ]);
   const spawnGroups = [spawnGroup1, spawnGroup2, spawnGroup3];

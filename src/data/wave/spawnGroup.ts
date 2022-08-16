@@ -14,7 +14,6 @@ export enum SpawnGroupType {
 class SpawnGroup {
   private index = 0;
   constructor(
-    private pathfinder: Pathfinder,
     private spawnPoints: Path[],
     private type = SpawnGroupType.Teleport
   ) {
@@ -60,7 +59,6 @@ class SpawnGroup {
 
   static fromTiles(spawnPoints: Tile[], target: Tile, pathfinder: Pathfinder) {
     return new SpawnGroup(
-      pathfinder,
       pathfinder
         .getHivePath(spawnPoints, target)
         .filter((path): path is Path => !!path)

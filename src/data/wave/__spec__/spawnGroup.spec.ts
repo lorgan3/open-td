@@ -12,7 +12,7 @@ describe("spawnGroup", () => {
     const path2 = Path.fromTiles(pathfinder, [new Tile(1, 1)], 2);
     const path3 = Path.fromTiles(pathfinder, [new Tile(2, 2)], 3);
 
-    const spawnGroup = new SpawnGroup(pathfinder, [path1, path2, path3]);
+    const spawnGroup = new SpawnGroup([path1, path2, path3]);
 
     expect(spawnGroup.getNextSpawnPoint()).toEqual(path1);
     expect(spawnGroup.getNextSpawnPoint()).toEqual(path2);
