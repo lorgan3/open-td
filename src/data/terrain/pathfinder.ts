@@ -14,7 +14,7 @@ export const NEIGHBORS = [
   [1, 1],
 ];
 
-// If the sum of the costs of the 2 diagonal tiles is higher than this amount it means diagonal moves are not possible.
+// If the sum of the scores of the 2 diagonal tiles is higher than this amount it means diagonal moves are not possible.
 // This is to prevent just going between a diagonal wall.
 export const MAX_DIAGONAL_COST = 150;
 
@@ -99,41 +99,56 @@ class Pathfinder {
       );
 
       // Unrolled for performance I guess
-      const costs: Array<number | null | undefined> = [];
-      costs[0] = neighbors[0] ? this.costFn(neighbors[0]) : null;
-      costs[1] = neighbors[1] ? this.costFn(neighbors[1]) : null;
-      costs[2] = neighbors[2] ? this.costFn(neighbors[2]) : null;
-      costs[3] = neighbors[3] ? this.costFn(neighbors[3]) : null;
-      costs[4] =
-        neighbors[4] && costs[0] && costs[1]
-          ? this.getDiagonalCost(this.costFn(neighbors[4]), costs[0] + costs[1])
-          : null;
-      costs[5] =
-        neighbors[5] && costs[0] && costs[2]
-          ? this.getDiagonalCost(this.costFn(neighbors[5]), costs[0] + costs[2])
-          : null;
-      costs[6] =
-        neighbors[6] && costs[1] && costs[3]
-          ? this.getDiagonalCost(this.costFn(neighbors[6]), costs[1] + costs[3])
-          : null;
-      costs[7] =
-        neighbors[7] && costs[2] && costs[3]
-          ? this.getDiagonalCost(this.costFn(neighbors[7]), costs[2] + costs[3])
-          : null;
+      const data: Array<number | undefined> = [];
+      this.setCostAndMultiplier(0, data, costMultiplier, neighbors[0]);
+      this.setCostAndMultiplier(1, data, costMultiplier, neighbors[1]);
+      this.setCostAndMultiplier(2, data, costMultiplier, neighbors[2]);
+      this.setCostAndMultiplier(3, data, costMultiplier, neighbors[3]);
+      this.setDiagonalCostAndMultiplier(
+        4,
+        0,
+        1,
+        data,
+        costMultiplier,
+        neighbors[4]
+      );
+      this.setDiagonalCostAndMultiplier(
+        5,
+        0,
+        2,
+        data,
+        costMultiplier,
+        neighbors[5]
+      );
+      this.setDiagonalCostAndMultiplier(
+        6,
+        1,
+        3,
+        data,
+        costMultiplier,
+        neighbors[6]
+      );
+      this.setDiagonalCostAndMultiplier(
+        7,
+        2,
+        3,
+        data,
+        costMultiplier,
+        neighbors[7]
+      );
 
       neighbors.forEach((neighbor, index) => {
         if (!neighbor) {
           return;
         }
 
-        const cost = costs[index];
+        const cost = data[index * 2];
         if (!cost) {
           return;
         }
 
         const neighborHash = neighbor.getHash();
-        const score =
-          gScores.get(currentHash)! + cost * costMultiplier(neighbor);
+        const score = gScores.get(currentHash)! + data[index * 2 + 1]!;
 
         if (score < (gScores.get(neighborHash) ?? Infinity)) {
           const movementScore = movementScores.get(currentHash)! + cost;
@@ -200,10 +215,12 @@ class Pathfinder {
       return cost;
     }
 
-    return this.getDiagonalCost(
-      cost,
-      this.costFn(this.surface.getTile(from.getX(), to.getY())!)! +
-        this.costFn(this.surface.getTile(to.getX(), from.getY())!)!
+    // calculate the penalty for moving diagonally
+    return (
+      cost +
+      (this.costFn(this.surface.getTile(from.getX(), to.getY())!)! +
+        this.costFn(this.surface.getTile(to.getX(), from.getY())!)!) /
+        4
     );
   }
 
@@ -218,17 +235,49 @@ class Pathfinder {
     );
   }
 
-  private getDiagonalCost = (cost: number | null, diagonalCosts = 0) => {
-    if (isNaN(diagonalCosts) || diagonalCosts > MAX_DIAGONAL_COST) {
-      return null;
+  private setCostAndMultiplier(
+    index: number,
+    data: Array<number | undefined>,
+    costMultiplier: (tile: Tile) => number,
+    tile?: Tile
+  ) {
+    if (!tile) {
+      return;
     }
 
-    if (!cost) {
-      return null;
+    const cost = this.costFn(tile);
+
+    if (cost) {
+      data[index * 2] = cost;
+      data[index * 2 + 1] = cost * costMultiplier(tile);
+    }
+  }
+
+  private setDiagonalCostAndMultiplier(
+    index: number,
+    d1: number,
+    d2: number,
+    data: Array<number | undefined>,
+    costMultiplier: (tile: Tile) => number,
+    tile?: Tile
+  ) {
+    if (!tile || !data[d1 * 2] || !data[d2 * 2]) {
+      return;
     }
 
-    return cost + diagonalCosts / 4;
-  };
+    const diagonalMultipliedCost = data[d1 * 2 + 1]! + data[d2 * 2 + 1]!;
+    if (diagonalMultipliedCost > MAX_DIAGONAL_COST) {
+      return;
+    }
+
+    const cost = this.costFn(tile);
+
+    if (cost) {
+      data[index * 2] = cost + (data[d1 * 2]! + data[d2 * 2]!) / 4;
+      data[index * 2 + 1] =
+        cost * costMultiplier(tile) + diagonalMultipliedCost / 4;
+    }
+  }
 }
 
 export default Pathfinder;
