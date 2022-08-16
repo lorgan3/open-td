@@ -3,15 +3,18 @@ import { IEnemy } from "../../entity/enemies";
 import { Agent, DESTRUCTIBLE_ENTITIES } from "../../entity/entity";
 import Tile from "../tile";
 
-class StaticEntityCheckpoint implements Checkpoint {
-  constructor(public index: number, public tile: Tile) {}
+export class StaticEntityCheckpoint implements Checkpoint {
+  constructor(public index: number) {}
 
-  isCleared(): boolean {
-    return !this.tile.hasStaticEntity();
+  isCleared(tiles: Tile[]): boolean {
+    return !tiles[this.index].hasStaticEntity();
   }
 
-  process(agent: Agent, dt: number): void {
-    (agent as IEnemy).attack(this.tile.getStaticEntity()!.getAgent(), dt);
+  process(tiles: Tile[], agent: Agent, dt: number): void {
+    (agent as IEnemy).attack(
+      tiles[this.index].getStaticEntity()!.getAgent(),
+      dt
+    );
   }
 }
 
@@ -22,7 +25,7 @@ export const getStaticEntityCheckpoints: CheckpointFn = (tiles) => {
       if (
         DESTRUCTIBLE_ENTITIES.has(tile.getStaticEntity()!.getAgent().getType())
       ) {
-        checkpoints.push(new StaticEntityCheckpoint(index, tile));
+        checkpoints.push(new StaticEntityCheckpoint(index));
       }
     }
   });

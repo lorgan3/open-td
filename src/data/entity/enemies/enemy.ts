@@ -31,21 +31,21 @@ class Enemy implements IEnemy {
   tick(dt: number) {
     this.cooldown = Math.max(0, this.cooldown - dt);
 
-    if (this.path.isPaused()) {
+    if (this.path.isPaused(this)) {
       const to = this.path.getTile();
       this.entity.setX(to.getX());
       this.entity.setY(to.getY());
 
       const checkpoint = this.path.getNextCheckpoint();
       if (checkpoint) {
-        checkpoint.process(this, dt);
+        checkpoint.process(this.path.getTiles(), this, dt);
       }
     }
 
     if (this.isAttacking()) {
       this.getTargeted(this.path.getCurrentTile());
     } else {
-      const { from, to, step } = this.path.performStep(dt);
+      const { from, to, step } = this.path.performStep(this, dt);
       this.entity.move(from, to, step);
       this.getTargeted(from);
     }

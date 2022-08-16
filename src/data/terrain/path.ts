@@ -1,4 +1,4 @@
-import { DESTRUCTIBLE_ENTITIES } from "../entity/entity";
+import { Agent, DESTRUCTIBLE_ENTITIES } from "../entity/entity";
 import { Checkpoint } from "./checkpoint";
 import Tile, { TileType } from "./tile";
 
@@ -20,7 +20,7 @@ class Path {
     private checkpoints: Checkpoint[] = []
   ) {}
 
-  performStep(dt: number) {
+  performStep(agent: Agent, dt: number) {
     const step = this.index % 1;
     const start = this.index | 0;
     const from = this.tiles[start];
@@ -39,8 +39,7 @@ class Path {
     while (this.checkpoints.length > 0) {
       const checkpoint = this.checkpoints[0];
       if (checkpoint && end >= checkpoint.index) {
-        const tile = this.getNextCheckpoint();
-        if (checkpoint.isCleared()) {
+        if (checkpoint.isCleared(this.tiles, agent)) {
           this.checkpoints.shift();
         } else {
           this.index = end - 1;
@@ -89,13 +88,9 @@ class Path {
   }
 
   clone() {
-    return new Path(
-      this.tiles,
-      this.sections,
-      this.speed,
-      this.costs,
-      this.checkpoints
-    );
+    return new Path(this.tiles, this.sections, this.speed, this.costs, [
+      ...this.checkpoints,
+    ]);
   }
 
   setIndex(index: number) {
@@ -144,7 +139,7 @@ class Path {
     return this.index === this.tiles.length - 1;
   }
 
-  isPaused() {
+  isPaused(agent: Agent) {
     if (this.isDone()) {
       return true;
     }
@@ -153,7 +148,7 @@ class Path {
     return (
       nextCheckpoint &&
       nextCheckpoint.index === this.index + 1 &&
-      !nextCheckpoint.isCleared()
+      !nextCheckpoint.isCleared(this.tiles, agent)
     );
   }
 
@@ -166,10 +161,6 @@ class Path {
   }
 
   setCheckpoints(checkpoints: Checkpoint[]) {
-    if (this.checkpoints.length) {
-      throw new Error("Path already has checkpoints!");
-    }
-
     this.checkpoints = checkpoints;
   }
 
@@ -213,19 +204,6 @@ class Path {
   ) {
     const costs = tiles.map((tile) => speedMultipliers[tile.getType()] ?? 1);
     const sections = this.calculateSections(tiles, costs);
-
-    const checkpoints: number[] = [];
-    tiles.forEach((tile, index) => {
-      if (tile.hasStaticEntity()) {
-        if (
-          DESTRUCTIBLE_ENTITIES.has(
-            tile.getStaticEntity()!.getAgent().getType()
-          )
-        ) {
-          checkpoints.push(index);
-        }
-      }
-    });
 
     return new Path(tiles, sections, speed, costs);
   }

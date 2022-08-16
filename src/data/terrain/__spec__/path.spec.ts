@@ -1,4 +1,9 @@
 import Base from "../../entity/base";
+import Enemy from "../../entity/enemies/enemy";
+import {
+  getStaticEntityCheckpoints,
+  StaticEntityCheckpoint,
+} from "../checkpoint/staticEntity";
 import Path from "../path";
 import Tile, { TileType } from "../tile";
 
@@ -70,8 +75,9 @@ describe("path", () => {
       ({ index, speed, expectedSection, expectedIndex }) => {
         const path = Path.fromTiles(tiles, speed);
         path.setIndex(index);
+        const agent = new Enemy(tiles[0], path);
 
-        const section = path.performStep(1);
+        const section = path.performStep(agent, 1);
         expect(section).toEqual(expectedSection);
         expect(path.getIndex()).toEqual(expectedIndex);
       }
@@ -171,7 +177,7 @@ describe("path", () => {
     );
   });
 
-  it("Creates checkpoints for all destructible entities", () => {
+  it("creates checkpoints for all destructible entities", () => {
     const firstBase = new Tile(1, 0, TileType.Grass);
     firstBase.setStaticEntity(new Base(firstBase).entity);
     const secondBase = new Tile(3, 1, TileType.Grass);
@@ -184,7 +190,15 @@ describe("path", () => {
       secondBase,
     ];
     const obstructedPath = Path.fromTiles(tiles, speed, speedMultipliers);
+    obstructedPath.setCheckpoints(
+      getStaticEntityCheckpoints(obstructedPath.getTiles())
+    );
 
-    expect(obstructedPath.getCheckpoints()).toEqual([firstBase, secondBase]);
+    const expectedCheckpoints = [
+      new StaticEntityCheckpoint(1),
+      new StaticEntityCheckpoint(3),
+    ];
+
+    expect(obstructedPath.getCheckpoints()).toEqual(expectedCheckpoints);
   });
 });
