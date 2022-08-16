@@ -182,6 +182,8 @@ class Renderer implements IRenderer {
         return "🟩";
       case TileType.Spore:
         return "🟪";
+      case TileType.Bridge:
+        return "📜";
       default:
         return "🌌";
     }
