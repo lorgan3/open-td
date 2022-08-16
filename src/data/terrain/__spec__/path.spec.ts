@@ -5,25 +5,34 @@ import {
   StaticEntityCheckpoint,
 } from "../checkpoint/staticEntity";
 import Path from "../path";
+import Pathfinder from "../pathfinder";
+import Surface from "../surface";
 import Tile, { TileType } from "../tile";
 
 describe("path", () => {
   const speed = 1;
-  const speedMultipliers = { [TileType.Grass]: 2 };
+  const costs = { [TileType.Grass]: 2, [TileType.Stone]: 1 };
+  const surface = new Surface(
+    5,
+    5,
+    (x, y) =>
+      new Tile(x, y, x === 1 || x === 2 ? TileType.Grass : TileType.Void)
+  );
+  const pathfinder = new Pathfinder(surface, () => 1, costs);
   const tiles = [
-    new Tile(0, 0),
-    new Tile(1, 0, TileType.Grass),
-    new Tile(2, 0, TileType.Grass),
-    new Tile(3, 1),
+    surface.getTile(0, 0)!,
+    surface.getTile(1, 0)!,
+    surface.getTile(2, 0)!,
+    surface.getTile(3, 1)!,
   ];
-  const path = Path.fromTiles(tiles, speed, speedMultipliers);
+  const path = Path.fromTiles(pathfinder, tiles, speed);
 
   it("constructs from an array of tiles", () => {
     expect(path).toEqual(
       expect.objectContaining({
         sections: [
-          { from: 0, to: 1, cost: 1 },
-          { from: 1, to: 3, cost: 2 },
+          { from: 0, to: 2, cost: 1 },
+          { from: 2, to: 3, cost: 2 },
           { from: 3, to: 4, cost: 1 },
         ],
       })
@@ -73,7 +82,7 @@ describe("path", () => {
     it.each(table)(
       "gets a section of a path at $index with speed $speed",
       ({ index, speed, expectedSection, expectedIndex }) => {
-        const path = Path.fromTiles(tiles, speed);
+        const path = Path.fromTiles(pathfinder, tiles, speed);
         path.setIndex(index);
         const agent = new Enemy(tiles[0], path);
 
@@ -113,18 +122,18 @@ describe("path", () => {
         time: 2000,
         speed: 0.001,
         speedMultipliers: { [TileType.Grass]: 2 },
-        expected: 1.5,
+        expected: 2,
       },
       {
         index: 0.5,
         time: 750,
         speed: 0.001,
         speedMultipliers: { [TileType.Grass]: 2 },
-        expected: 1.125,
+        expected: 1.25,
       },
       {
         index: 0,
-        time: 5500,
+        time: 4500,
         speed: 0.001,
         speedMultipliers: { [TileType.Grass]: 2 },
         expected: 3.5,
@@ -141,7 +150,8 @@ describe("path", () => {
     it.each(table)(
       "gets the future position after $time ms with starting position $index and speed $speed",
       ({ index, time, speed, speedMultipliers, expected }) => {
-        const path = Path.fromTiles(tiles, speed, speedMultipliers);
+        const pathfinder = new Pathfinder(surface, () => 1, speedMultipliers);
+        const path = Path.fromTiles(pathfinder, tiles, speed);
         path.setIndex(index);
 
         expect(path.getFuturePosition(time)).toEqual(expected);
@@ -178,18 +188,22 @@ describe("path", () => {
   });
 
   it("creates checkpoints for all destructible entities", () => {
-    const firstBase = new Tile(1, 0, TileType.Grass);
+    const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
+    const firstBase = surface.getTile(1, 0)!;
+
     firstBase.setStaticEntity(new Base(firstBase).entity);
-    const secondBase = new Tile(3, 1, TileType.Grass);
+    const secondBase = surface.getTile(3, 1)!;
     secondBase.setStaticEntity(new Base(secondBase).entity);
 
+    const pathfinder = new Pathfinder(surface, () => 1, costs);
     const tiles = [
-      new Tile(0, 0, TileType.Grass),
+      surface.getTile(0, 0)!,
       firstBase,
-      new Tile(2, 0, TileType.Grass),
+      surface.getTile(2, 0)!,
       secondBase,
     ];
-    const obstructedPath = Path.fromTiles(tiles, speed, speedMultipliers);
+
+    const obstructedPath = Path.fromTiles(pathfinder, tiles, speed);
     obstructedPath.setCheckpoints(
       getStaticEntityCheckpoints(obstructedPath.getTiles())
     );
@@ -200,5 +214,31 @@ describe("path", () => {
     ];
 
     expect(obstructedPath.getCheckpoints()).toEqual(expectedCheckpoints);
+  });
+
+  it("recomputes a path", () => {
+    const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
+    const pathfinder = new Pathfinder(surface, () => 1, costs);
+    const tiles = [
+      surface.getTile(1, 0)!,
+      surface.getTile(2, 0)!,
+      surface.getTile(3, 0)!,
+    ];
+    const path = Path.fromTiles(pathfinder, tiles, speed);
+
+    const newTile = new Tile(2, 0, TileType.Stone);
+    surface.setTile(newTile);
+
+    path.recompute();
+
+    expect(path.getTile(1)).toEqual(newTile);
+    expect(path).toEqual(
+      expect.objectContaining({
+        sections: [
+          { from: 0, to: 1, cost: 2 },
+          { from: 1, to: 3, cost: 1.5 },
+        ],
+      })
+    );
   });
 });

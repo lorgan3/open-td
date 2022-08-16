@@ -1,5 +1,6 @@
-import { Agent, DESTRUCTIBLE_ENTITIES } from "../entity/entity";
+import { Agent } from "../entity/entity";
 import { Checkpoint } from "./checkpoint";
+import Pathfinder from "./pathfinder";
 import Tile, { TileType } from "./tile";
 
 interface Section {
@@ -13,6 +14,7 @@ class Path {
   private sectionIndex = 0;
 
   private constructor(
+    private pathfinder: Pathfinder,
     private tiles: Tile[],
     private sections: Section[],
     private speed: number,
@@ -88,9 +90,14 @@ class Path {
   }
 
   clone() {
-    return new Path(this.tiles, this.sections, this.speed, this.costs, [
-      ...this.checkpoints,
-    ]);
+    return new Path(
+      this.pathfinder,
+      this.tiles,
+      this.sections,
+      this.speed,
+      this.costs,
+      [...this.checkpoints]
+    );
   }
 
   setIndex(index: number) {
@@ -168,6 +175,21 @@ class Path {
     return this.tiles[this.index | 0];
   }
 
+  recompute() {
+    const surface = this.pathfinder.getSurface();
+
+    let fromTile: Tile | undefined;
+    for (let i = 0; i < this.tiles.length; i++) {
+      const tile = this.tiles[i];
+      const toTile = surface.getTile(tile.getX(), tile.getY())!;
+      this.tiles[i] = toTile;
+      this.costs[i] = this.pathfinder.getCost(toTile, fromTile) ?? 1;
+      fromTile = toTile;
+    }
+
+    this.sections = Path.calculateSections(this.tiles, this.costs);
+  }
+
   private static calculateSections(tiles: Tile[], costs: number[]) {
     return tiles.reduce<Section[]>((arr, tile, index) => {
       const section = arr[arr.length - 1];
@@ -197,40 +219,28 @@ class Path {
     }, []);
   }
 
-  static fromTiles(
-    tiles: Tile[],
-    speed: number,
-    speedMultipliers: Partial<Record<TileType, number>> = {}
-  ) {
-    const costs = tiles.map((tile) => speedMultipliers[tile.getType()] ?? 1);
-    const sections = this.calculateSections(tiles, costs);
+  static fromTiles(pathfinder: Pathfinder, tiles: Tile[], speed = 1) {
+    const path = new Path(pathfinder, tiles, [], speed, []);
+    path.recompute();
 
-    return new Path(tiles, sections, speed, costs);
+    return path;
   }
 
   static fromMapAndCosts(
+    pathfinder: Pathfinder,
     from: Tile,
     to: Tile,
     map: Map<string, Tile>,
-    scores: Map<string, number>
+    speed = 1
   ) {
     let current = to;
     const tiles = [current];
-    const costs = [scores.get(current.getHash())!];
-
     while (current !== from) {
       current = map.get(current.getHash())!;
-
-      const score = scores.get(current.getHash())!;
-      costs[tiles.length - 1] -= score;
-
-      costs.push(score);
       tiles.push(current);
     }
 
-    const sections = this.calculateSections(tiles.reverse(), costs.reverse());
-
-    return new Path(tiles, sections, 1, costs);
+    return this.fromTiles(pathfinder, tiles.reverse(), speed);
   }
 }
 

@@ -28,6 +28,7 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Fence]: 100,
   [TileType.Freezer]: 6,
   [TileType.Obstructed]: 3,
+  [TileType.Bridge]: 5,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
@@ -36,28 +37,35 @@ export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
   [TileType.Obstructed]: 500,
 };
 
+export const defaultCostMultiplier = (tile: Tile) =>
+  DEFAULT_MULTIPLIERS[tile.getType()] ?? 1;
+
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class Pathfinder {
+  private costFn: (tile: Tile) => number | null;
+
   constructor(
     private surface: Surface,
-    private costs: Partial<Record<TileType, number>> = DEFAULT_COSTS
-  ) {}
+    private costMultiplier = defaultCostMultiplier,
+    costs:
+      | Partial<Record<TileType, number>>
+      | ((tile: Tile) => number | null) = DEFAULT_COSTS
+  ) {
+    this.costFn =
+      typeof costs === "function"
+        ? costs
+        : (tile: Tile) => costs[tile.getType()] ?? null;
+  }
 
   getPath(
     from: Tile,
     to: Tile,
-    costMultiplier = (tile: Tile) => DEFAULT_MULTIPLIERS[tile.getType()] ?? 1,
-    costs?: Partial<Record<TileType, number>> | ((tile: Tile) => number | null)
+    costMultiplierOverride?: (tile: Tile) => number
   ) {
-    const costFn =
-      typeof costs === "function"
-        ? costs
-        : costs !== undefined
-        ? (tile: Tile) => costs[tile.getType()]
-        : (tile: Tile) => this.costs[tile.getType()];
+    const costMultiplier = costMultiplierOverride ?? this.costMultiplier;
 
     // Cheapest path from n to start
-    const movementScore = costFn(from) ?? 1;
+    const movementScore = this.costFn(from) ?? 1;
     const score = movementScore * costMultiplier(from);
 
     const movementScores = new Map<string, number>();
@@ -81,7 +89,7 @@ class Pathfinder {
     while (!activeTiles.empty()) {
       let current = activeTiles.pop()!;
       if (to === current) {
-        return Path.fromMapAndCosts(from, to, path, movementScores);
+        return Path.fromMapAndCosts(this, from, to, path);
       }
 
       const currentHash = current.getHash();
@@ -92,25 +100,25 @@ class Pathfinder {
 
       // Unrolled for performance I guess
       const costs: Array<number | null | undefined> = [];
-      costs[0] = neighbors[0] ? costFn(neighbors[0]) : null;
-      costs[1] = neighbors[1] ? costFn(neighbors[1]) : null;
-      costs[2] = neighbors[2] ? costFn(neighbors[2]) : null;
-      costs[3] = neighbors[3] ? costFn(neighbors[3]) : null;
+      costs[0] = neighbors[0] ? this.costFn(neighbors[0]) : null;
+      costs[1] = neighbors[1] ? this.costFn(neighbors[1]) : null;
+      costs[2] = neighbors[2] ? this.costFn(neighbors[2]) : null;
+      costs[3] = neighbors[3] ? this.costFn(neighbors[3]) : null;
       costs[4] =
         neighbors[4] && costs[0] && costs[1]
-          ? this.getCost(costFn, neighbors[4], costs[0] + costs[1])
+          ? this.getDiagonalCost(this.costFn(neighbors[4]), costs[0] + costs[1])
           : null;
       costs[5] =
         neighbors[5] && costs[0] && costs[2]
-          ? this.getCost(costFn, neighbors[5], costs[0] + costs[2])
+          ? this.getDiagonalCost(this.costFn(neighbors[5]), costs[0] + costs[2])
           : null;
       costs[6] =
         neighbors[6] && costs[1] && costs[3]
-          ? this.getCost(costFn, neighbors[6], costs[1] + costs[3])
+          ? this.getDiagonalCost(this.costFn(neighbors[6]), costs[1] + costs[3])
           : null;
       costs[7] =
         neighbors[7] && costs[2] && costs[3]
-          ? this.getCost(costFn, neighbors[7], costs[2] + costs[3])
+          ? this.getDiagonalCost(this.costFn(neighbors[7]), costs[2] + costs[3])
           : null;
 
       neighbors.forEach((neighbor, index) => {
@@ -171,13 +179,36 @@ class Pathfinder {
     }, []);
   }
 
-  recomputePath(path: Path) {
-    const tiles = path.getTiles();
-    for (let i = 0; i < tiles.length; i++) {
-      const tile = tiles[i];
-      const newTile = this.surface.getTile(tile.getX(), tile.getY())!;
-      tiles[i] = newTile;
+  // From and to should be 1 tile apart
+  getCost(from: Tile, to?: Tile) {
+    if (!to) {
+      return this.costFn(from);
     }
+
+    const fromCost = this.costFn(from);
+    const toCost = this.costFn(to);
+    if (!fromCost || !toCost) {
+      return null;
+    }
+    const cost = (fromCost + toCost) / 2;
+    if (
+      !fromCost ||
+      !toCost ||
+      from.getX() === to.getX() ||
+      from.getY() == to.getY()
+    ) {
+      return cost;
+    }
+
+    return this.getDiagonalCost(
+      cost,
+      this.costFn(this.surface.getTile(from.getX(), to.getY())!)! +
+        this.costFn(this.surface.getTile(to.getX(), from.getY())!)!
+    );
+  }
+
+  getSurface() {
+    return this.surface;
   }
 
   // Just manhattan for now
@@ -187,14 +218,8 @@ class Pathfinder {
     );
   }
 
-  private getCost = (
-    costFn: (tile: Tile) => number | null | undefined,
-    tile: Tile,
-    diagonalCosts = 0
-  ) => {
-    const cost = costFn(tile);
-
-    if (diagonalCosts > MAX_DIAGONAL_COST) {
+  private getDiagonalCost = (cost: number | null, diagonalCosts = 0) => {
+    if (isNaN(diagonalCosts) || diagonalCosts > MAX_DIAGONAL_COST) {
       return null;
     }
 

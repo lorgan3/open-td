@@ -86,4 +86,52 @@ describe("pathfinder", () => {
       expect(path[i]).toEqual(expect.objectContaining({ x, y }))
     );
   });
+
+  describe("getCost", () => {
+    const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
+    surface.forLine(2, 0, 2, 3, (tile) =>
+      surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Stone))
+    );
+
+    const pathfinder = new PathFinder(surface, () => 1, {
+      [TileType.Grass]: 1,
+      [TileType.Stone]: 2,
+    });
+
+    const table = [
+      {
+        from: surface.getTile(2, 0)!,
+        to: undefined,
+        cost: 2,
+      },
+      {
+        from: surface.getTile(2, 0)!,
+        to: surface.getTile(3, 0)!,
+        cost: 1.5,
+      },
+      {
+        from: surface.getTile(1, 0)!,
+        to: surface.getTile(2, 0)!,
+        cost: 1.5,
+      },
+      {
+        from: surface.getTile(2, 0)!,
+        to: surface.getTile(3, 1)!,
+        cost: 2.25,
+      },
+
+      {
+        from: surface.getTile(0, 0)!,
+        to: surface.getTile(1, 1)!,
+        cost: 1.5,
+      },
+    ];
+
+    it.each(table)(
+      "gets the cost when moving from $from to $to",
+      ({ from, to, cost }) => {
+        expect(pathfinder.getCost(from, to)).toEqual(cost);
+      }
+    );
+  });
 });

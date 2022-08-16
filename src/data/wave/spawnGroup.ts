@@ -47,8 +47,7 @@ class SpawnGroup {
 
   private updatePathCosts = () => {
     this.spawnPoints.forEach((path) => {
-      this.pathfinder.recomputePath(path);
-
+      path.recompute();
       path.setCheckpoints(
         combineCheckpoints(
           path.getTiles(),
