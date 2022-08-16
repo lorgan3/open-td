@@ -171,6 +171,15 @@ class Pathfinder {
     }, []);
   }
 
+  recomputePath(path: Path) {
+    const tiles = path.getTiles();
+    for (let i = 0; i < tiles.length; i++) {
+      const tile = tiles[i];
+      const newTile = this.surface.getTile(tile.getX(), tile.getY())!;
+      tiles[i] = newTile;
+    }
+  }
+
   // Just manhattan for now
   private heuristic(from: Tile, to: Tile) {
     return (
