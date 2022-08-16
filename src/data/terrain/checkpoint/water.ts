@@ -1,50 +1,82 @@
 import { Checkpoint, CheckpointFn } from ".";
-import { Agent } from "../../entity/entity";
+import Enemy from "../../entity/enemies/enemy";
 import Manager from "../../manager";
 import Tile, { TileType } from "../tile";
 
 export class WaterCheckpoint implements Checkpoint {
   constructor(public index: number) {}
 
-  isCleared(tiles: Tile[]): boolean {
-    return tiles[this.index].getType() !== TileType.Water;
+  isCleared(tiles: Tile[], agent: Enemy): boolean {
+    return !this.getTiles(tiles[this.index], agent).length;
   }
 
-  process(tiles: Tile[], agent: Agent, dt: number): void {
+  process(tiles: Tile[], agent: Enemy, dt: number): void {
     const surface = Manager.Instance.getSurface();
     const tile = tiles[this.index];
-    const newTiles = [new Tile(tile.getX(), tile.getY(), TileType.Bridge)];
+    const targets = this.getTiles(tile, agent);
 
-    if (
-      agent.entity.getAlignedX() !== tile.getX() &&
-      agent.entity.getAlignedY() !== tile.getY()
-    ) {
-      [
-        [1, 0],
-        [0, 1],
-        [-1, 0],
-        [0, -1],
-      ].forEach(([x, y]) => {
-        const neighbor = surface.getTile(tile.getX() + x, tile.getY() + y);
-        if (neighbor?.getType() === TileType.Water) {
-          newTiles.push(
-            new Tile(neighbor.getX(), neighbor.getY(), TileType.Bridge)
+    if (targets.length > 0) {
+      const target = targets[0];
+      agent.entity.lookAt(target);
+      agent.interact(() => {
+        if (
+          surface.getTile(target.getX(), target.getY())!.getType() ===
+          TileType.Water
+        ) {
+          surface.setTile(
+            new Tile(target.getX(), target.getY(), TileType.Bridge)
           );
         }
       });
     }
+  }
 
-    surface.setTiles(newTiles);
+  private getTiles(middleTile: Tile, agent: Enemy) {
+    const surface = Manager.Instance.getSurface();
+    const tiles: Tile[] = [];
+
+    if (!agent.canBuild) {
+      return tiles;
+    }
+
+    if (middleTile.getType() === TileType.Water) {
+      tiles.push(middleTile);
+    }
+
+    if (
+      agent.entity.getAlignedX() !== middleTile.getX() &&
+      agent.entity.getAlignedY() !== middleTile.getY()
+    ) {
+      [
+        [agent.entity.getAlignedX(), middleTile.getY()],
+        [middleTile.getX(), agent.entity.getAlignedY()],
+      ].forEach(([x, y]) => {
+        const neighbor = surface.getTile(x, y);
+        if (neighbor?.getType() === TileType.Water) {
+          tiles.push(neighbor);
+        }
+      });
+    }
+
+    return tiles;
   }
 }
 
 export const getWaterCheckpoints: CheckpointFn = (tiles) => {
   const checkpoints: WaterCheckpoint[] = [];
-  tiles.forEach((tile, index) => {
-    if (tile.getType() === TileType.Water) {
-      checkpoints.push(new WaterCheckpoint(index));
+
+  for (let i = 0; i < tiles.length; i++) {
+    if (tiles[i].getType() === TileType.Water) {
+      checkpoints.push(new WaterCheckpoint(i));
+
+      // Also checkpoint the next tile to complete the edges of the bridge if necessary
+      if (i < tiles.length && tiles[i + 1].getType() !== TileType.Water) {
+        checkpoints.push(new WaterCheckpoint(i + 1));
+      }
     }
-  });
+  }
+
+  tiles.forEach((tile, index) => {});
 
   return checkpoints;
 };
