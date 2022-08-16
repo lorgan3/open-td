@@ -1,6 +1,8 @@
 import Entity, { Agent, AgentCategory } from "../entity/entity";
+import Manager from "../manager";
 import { Generator } from "./generator";
 import Tile from "./tile";
+import { GameEvent } from "../events";
 
 class Surface {
   public map!: Tile[];
@@ -9,7 +11,7 @@ class Surface {
   public staticEntities: Entity[] = [];
   private entitiesMap = new Map<AgentCategory, Set<Entity>>();
 
-  private dirty = true;
+  private dirty = false;
 
   constructor(
     private width = 50,
@@ -54,7 +56,27 @@ class Surface {
 
   public setTile(tile: Tile) {
     this.dirty = true;
+    const originalTile = this.setTileInternal(tile);
+
+    Manager.Instance?.triggerEvent(GameEvent.SurfaceChange, {
+      affectedTiles: [originalTile],
+    });
+  }
+
+  public setTiles(tiles: Tile[]) {
+    this.dirty = true;
+    const originalTiles = tiles.map((tile) => this.setTileInternal(tile));
+
+    Manager.Instance?.triggerEvent(GameEvent.SurfaceChange, {
+      affectedTiles: originalTiles,
+    });
+  }
+
+  private setTileInternal(tile: Tile) {
+    const originalTile = this.map[tile.getY() * this.width + tile.getX()];
     this.map[tile.getY() * this.width + tile.getX()] = tile;
+
+    return originalTile;
   }
 
   public getRow(y: number) {

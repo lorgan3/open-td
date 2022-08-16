@@ -1,5 +1,5 @@
 import Surface from "../surface";
-import Tile from "../tile";
+import Tile, { TileType } from "../tile";
 
 describe("surface", () => {
   const surface = new Surface(10, 5);
@@ -43,6 +43,42 @@ describe("surface", () => {
 
     expect(row.length).toEqual(5);
     row.forEach((tile) => expect(tile.getX()).toEqual(2));
+  });
+
+  it("can update a tile", () => {
+    const surface = new Surface(
+      10,
+      5,
+      (x, y) => new Tile(x, y, TileType.Grass)
+    );
+
+    expect(surface.isDirty()).toBeFalsy();
+    surface.setTile(new Tile(1, 1, TileType.Stone));
+
+    expect(surface.isDirty()).toBeTruthy();
+
+    const tile = surface.getTile(1, 1)!;
+    expect(tile.getX()).toEqual(1);
+    expect(tile.getY()).toEqual(1);
+    expect(tile.getType()).toEqual(TileType.Stone);
+  });
+
+  it("can update tiles", () => {
+    const surface = new Surface(
+      10,
+      5,
+      (x, y) => new Tile(x, y, TileType.Grass)
+    );
+
+    expect(surface.isDirty()).toBeFalsy();
+    surface.setTiles([new Tile(1, 1, TileType.Stone)]);
+
+    expect(surface.isDirty()).toBeTruthy();
+
+    const tile = surface.getTile(1, 1)!;
+    expect(tile.getX()).toEqual(1);
+    expect(tile.getY()).toEqual(1);
+    expect(tile.getType()).toEqual(TileType.Stone);
   });
 
   const lineTable = [
