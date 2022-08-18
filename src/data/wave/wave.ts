@@ -5,6 +5,7 @@ import { AgentCategory } from "../entity/entity";
 import { combineCheckpoints, maybe } from "../terrain/checkpoint";
 import { getStaticEntityCheckpoints } from "../terrain/checkpoint/staticEntity";
 import { getWaterCheckpoints } from "../terrain/checkpoint/water";
+import { getDirtCheckpoints } from "../terrain/checkpoint/dirt";
 
 const SPAWN_INTERVAL = 400;
 
@@ -46,6 +47,7 @@ class Wave {
       combineCheckpoints(
         path.getTiles(),
         getStaticEntityCheckpoints,
+        maybe(0.5, getDirtCheckpoints),
         maybe(0.1, getWaterCheckpoints)
       )
     );

@@ -29,6 +29,7 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Freezer]: 6,
   [TileType.Obstructed]: 3,
   [TileType.Bridge]: 5,
+  [TileType.Dirt]: 2.5,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {

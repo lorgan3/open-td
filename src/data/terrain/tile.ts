@@ -13,6 +13,7 @@ export enum TileType {
   Fence = 8,
   Freezer = 9,
   Bridge = 10,
+  Dirt = 11,
 }
 
 export const FREE_TILES = new Set([TileType.Grass, TileType.Stone]);

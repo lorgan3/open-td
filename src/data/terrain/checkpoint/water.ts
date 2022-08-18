@@ -72,7 +72,5 @@ export const getWaterCheckpoints: CheckpointFn = (tiles) => {
     }
   }
 
-  tiles.forEach((tile, index) => {});
-
   return checkpoints;
 };
