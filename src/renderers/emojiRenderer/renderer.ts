@@ -14,8 +14,13 @@ class Renderer implements IRenderer {
   private offsetY = 0;
   private time = 0;
 
+  private _showCoverage = false;
+
   private target: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
+
+  private coverageMap: HTMLDivElement | null = null;
+  private coverageRows: HTMLDivElement[] = [];
 
   constructor(private surface: Surface, private controller: Controller) {
     this.pool = new Pool(
@@ -51,6 +56,7 @@ class Renderer implements IRenderer {
     target.style.flexDirection = "column";
     target.style.cursor = "crosshair";
     target.style.userSelect = "none";
+    target.style.position = "relative";
 
     this.renderTiles();
 
@@ -105,6 +111,16 @@ class Renderer implements IRenderer {
     this.surface.markPristine();
   }
 
+  showCoverage(): void {
+    this._showCoverage = true;
+    this.renderTiles();
+  }
+
+  hideCoverage(): void {
+    this._showCoverage = false;
+    this.renderTiles();
+  }
+
   private renderTiles() {
     const rows = this.surface.getHeight();
     for (let i = 0; i < rows; i++) {
@@ -117,6 +133,42 @@ class Renderer implements IRenderer {
 
       const content = this.surface.getRow(i).map(this.getEmoji).join("");
       row.textContent = content;
+    }
+
+    this.renderCoverage();
+  }
+
+  private renderCoverage() {
+    if (!this.coverageMap) {
+      this.coverageMap = document.createElement("div");
+      this.coverageMap.style.wordSpacing = "12px";
+      this.coverageMap.style.opacity = "0.5";
+      this.coverageMap.style.position = "absolute";
+      this.coverageMap.style.top = "0";
+      this.coverageMap.style.left = "0";
+      this.target!.appendChild(this.coverageMap);
+    }
+
+    if (this._showCoverage) {
+      this.coverageMap.style.display = "block";
+    } else {
+      this.coverageMap.style.display = "none";
+    }
+
+    const rows = this.surface.getHeight();
+    for (let i = 0; i < rows; i++) {
+      let row = this.coverageRows[i];
+      if (!row) {
+        row = document.createElement("div");
+        this.coverageRows[i] = row;
+        this.coverageMap.appendChild(row);
+      }
+
+      const content = this.surface
+        .getRow(i)
+        .map((tile) => (tile.isCoveredByTower() ? "🟥" : "&nbsp;"))
+        .join("");
+      row.innerHTML = content;
     }
   }
 
