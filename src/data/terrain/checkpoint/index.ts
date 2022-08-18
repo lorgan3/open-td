@@ -9,10 +9,21 @@ export interface Checkpoint {
 
 export type CheckpointFn = (tiles: Tile[]) => Checkpoint[];
 
-export const combineCheckpoints = (tiles: Tile[], ...fns: CheckpointFn[]) => {
+export const combineCheckpoints = (
+  tiles: Tile[],
+  ...fns: Array<CheckpointFn | undefined>
+) => {
   const total: Checkpoint[] = [];
-  fns.forEach((fn) => total.push(...fn(tiles)));
+  fns.filter(Boolean).forEach((fn) => total.push(...fn!(tiles)));
   total.sort((a, b) => a.index - b.index);
 
   return total;
+};
+
+export const maybe = (odds: number, fn: CheckpointFn) => {
+  if (odds > Math.random()) {
+    return fn;
+  }
+
+  return undefined;
 };

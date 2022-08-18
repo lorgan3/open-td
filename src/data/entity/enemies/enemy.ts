@@ -18,12 +18,8 @@ class Enemy implements IEnemy {
 
   private callback?: () => void;
 
-  // @TODO: refactor this to something more general or abstract
-  public canBuild: boolean;
-
   constructor(tile: Tile, private path: Path) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-    this.canBuild = Math.random() > 0.9;
   }
 
   getType(): EntityType {

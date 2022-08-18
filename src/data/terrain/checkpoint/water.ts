@@ -35,10 +35,6 @@ export class WaterCheckpoint implements Checkpoint {
     const surface = Manager.Instance.getSurface();
     const tiles: Tile[] = [];
 
-    if (!agent.canBuild) {
-      return tiles;
-    }
-
     if (middleTile.getType() === TileType.Water) {
       tiles.push(middleTile);
     }

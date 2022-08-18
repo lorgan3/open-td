@@ -1,8 +1,5 @@
 import { GameEvent } from "../events";
 import Manager from "../manager";
-import { combineCheckpoints } from "../terrain/checkpoint";
-import { getStaticEntityCheckpoints } from "../terrain/checkpoint/staticEntity";
-import { getWaterCheckpoints } from "../terrain/checkpoint/water";
 import Path from "../terrain/path";
 import Pathfinder from "../terrain/pathfinder";
 import Tile from "../terrain/tile";
@@ -57,13 +54,7 @@ class SpawnGroup {
         .filter((path): path is Path => !!path)
         .map((path) => {
           path.setSpeed(0.01);
-          path.setCheckpoints(
-            combineCheckpoints(
-              path.getTiles(),
-              getStaticEntityCheckpoints,
-              getWaterCheckpoints
-            )
-          );
+
           return path;
         })
     );
