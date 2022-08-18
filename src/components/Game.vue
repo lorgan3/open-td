@@ -25,13 +25,13 @@ const manager = new Manager(
   targetTile,
   surface
 );
+const renderer = new Renderer(manager.getSurface(), manager.getController());
 
 let mounted = false;
 let oldTimestamp = 0;
 
 onMounted(() => {
   mounted = true;
-  const renderer = new Renderer(manager.getSurface(), manager.getController());
   renderer.mount(canvas.value as HTMLDivElement);
 
   const render = (timestamp: number) => {
@@ -53,7 +53,7 @@ onUnmounted(() => (mounted = false));
 
 <template>
   <div class="wrapper">
-    <GameStats />
+    <GameStats :renderer="renderer" />
     <div class="canvas">
       <div ref="canvas"></div>
       <TowerMenu :controller="manager.getController()" />

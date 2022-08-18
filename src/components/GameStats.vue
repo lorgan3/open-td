@@ -2,12 +2,18 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { GameEvent, StatUpdate } from "../data/events";
 import Manager from "../data/manager";
+import { IRenderer } from "../renderers/api";
+
+const props = defineProps<{
+  renderer: IRenderer;
+}>();
 
 const money = ref(0);
 const level = ref(0);
 const remainingEnemies = ref(0);
 const inProgress = ref(false);
 const integrity = ref(0);
+const showCoverage = ref(false);
 
 const eventHandler = (stats: StatUpdate) => {
   money.value = stats.money;
@@ -29,6 +35,14 @@ onUnmounted(() => {
 function start() {
   Manager.Instance.start();
 }
+
+function toggleCoverage() {
+  showCoverage.value
+    ? props.renderer.hideCoverage()
+    : props.renderer.showCoverage();
+
+  showCoverage.value = !showCoverage.value;
+}
 </script>
 
 <template>
@@ -40,7 +54,12 @@ function start() {
       </li>
       <li>
         <span>Wave {{ level }}</span>
-        <button @click="start()" :disabled="inProgress">Start wave</button>
+        <span class="buttons">
+          <button @click="start()" :disabled="inProgress">Start wave</button>
+          <button @click="toggleCoverage()">
+            {{ showCoverage ? "Hide coverage" : "Show coverage" }}
+          </button>
+        </span>
       </li>
       <li>👾 {{ remainingEnemies }}</li>
     </ul>
@@ -60,6 +79,11 @@ function start() {
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 6px;
     }
   }
 }
