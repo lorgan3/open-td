@@ -47,13 +47,6 @@ class SpawnGroup {
   private updatePathCosts = () => {
     this.spawnPoints.forEach((path) => {
       path.recompute();
-      path.setCheckpoints(
-        combineCheckpoints(
-          path.getTiles(),
-          getStaticEntityCheckpoints,
-          getWaterCheckpoints
-        )
-      );
     });
   };
 
