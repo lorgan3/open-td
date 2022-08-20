@@ -14,9 +14,18 @@ export enum TileType {
   Freezer = 9,
   Bridge = 10,
   Dirt = 11,
+  Snow = 12,
+  Sand = 13,
+  Ice = 14,
 }
 
-export const FREE_TILES = new Set([TileType.Grass, TileType.Stone]);
+export const FREE_TILES = new Set([
+  TileType.Grass,
+  TileType.Stone,
+  TileType.Dirt,
+  TileType.Sand,
+  TileType.Snow,
+]);
 
 export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   Record<EntityType, TileType>

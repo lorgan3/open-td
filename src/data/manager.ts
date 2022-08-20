@@ -35,6 +35,10 @@ class Manager {
     this.controller = controller ?? new Controller(surface);
     this.pathfinder = new Pathfinder(surface);
 
+    if (basePoint.hasStaticEntity()) {
+      basePoint.clearStaticEntity();
+    }
+
     this.base = new Base(basePoint);
     surface.spawnStatic(this.base);
   }

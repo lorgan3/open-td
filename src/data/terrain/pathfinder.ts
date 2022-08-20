@@ -30,6 +30,9 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Obstructed]: 3,
   [TileType.Bridge]: 5,
   [TileType.Dirt]: 2.5,
+  [TileType.Sand]: 3.5,
+  [TileType.Snow]: 3.5,
+  [TileType.Ice]: 10,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {

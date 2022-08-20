@@ -222,6 +222,10 @@ class Renderer implements IRenderer {
           return "❄️";
         case EntityType.Base:
           return "⛺";
+        case EntityType.Tree:
+          return "🌲";
+        case EntityType.Rock:
+          return "🪨";
       }
     }
 
@@ -236,8 +240,14 @@ class Renderer implements IRenderer {
         return "🟪";
       case TileType.Bridge:
         return "📜";
-      case TileType.Dirt:
+      case TileType.Sand:
         return "🏼";
+      case TileType.Snow:
+        return "🌫";
+      case TileType.Dirt:
+        return "🏽";
+      case TileType.Ice:
+        return "🧊";
       default:
         return "🌌";
     }

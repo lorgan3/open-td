@@ -34,6 +34,8 @@ export enum EntityType {
   ElectricFence = 11,
   Fence = 12,
   Freezer = 13,
+  Tree = 14,
+  Rock = 15,
 }
 
 export const DESTRUCTIBLE_ENTITIES = new Set([
@@ -42,6 +44,8 @@ export const DESTRUCTIBLE_ENTITIES = new Set([
   EntityType.Flamethrower,
   EntityType.Railgun,
   EntityType.Base,
+  EntityType.Tree,
+  EntityType.Rock,
 ]);
 
 class Entity {
