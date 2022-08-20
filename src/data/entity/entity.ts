@@ -13,6 +13,7 @@ export interface Agent {
   getType(): EntityType;
   tick?: (dt: number) => void;
   category: AgentCategory;
+  spawn?: () => void;
   despawn?: () => void;
   hit?: (damage: number) => void;
 }

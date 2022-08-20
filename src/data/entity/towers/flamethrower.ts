@@ -14,17 +14,12 @@ class Flamethrower implements ITower {
   public entity: Entity;
   public category = AgentCategory.Player;
   private cooldown = 0;
-  private cleanupEventListener: () => void;
+  private cleanupEventListener?: () => void;
   private flame?: Flame;
   private hp = 200;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-    this.cleanupEventListener = coverTilesWithTowerSightLines(
-      this,
-      RANGE,
-      isSolid
-    );
   }
 
   tick(dt: number) {
@@ -44,8 +39,16 @@ class Flamethrower implements ITower {
     return DAMAGE;
   }
 
+  spawn() {
+    this.cleanupEventListener = coverTilesWithTowerSightLines(
+      this,
+      RANGE,
+      isSolid
+    );
+  }
+
   despawn() {
-    this.cleanupEventListener();
+    this.cleanupEventListener?.();
   }
 
   getCooldown() {

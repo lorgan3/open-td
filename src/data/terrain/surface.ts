@@ -264,6 +264,10 @@ class Surface {
   public spawn(agent: Agent) {
     this.entities.push(agent.entity);
     this.entitiesMap.get(agent.category)!.add(agent.entity);
+
+    if (agent.spawn) {
+      agent.spawn();
+    }
   }
 
   public spawnStatic(agent: Agent) {
