@@ -8,6 +8,14 @@ import { OVERRIDES } from "./overrides";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 
+let DEBUG = false;
+
+declare global {
+  interface Window {
+    debug: () => void;
+  }
+}
+
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
   public xStep = 0;
@@ -47,6 +55,11 @@ class Renderer implements IRenderer {
       PoolType.Growing,
       0
     );
+
+    window.debug = () => {
+      DEBUG = !DEBUG;
+      this.renderTiles();
+    };
   }
 
   mount(target: HTMLDivElement): void {
@@ -91,9 +104,8 @@ class Renderer implements IRenderer {
       const htmlElement = this.pool.get(entity);
       htmlElement.style.opacity = "1";
       htmlElement.style.transformOrigin = "50% 50%";
-      htmlElement.style.display = entity.getAgent().isVisible()
-        ? "block"
-        : "none";
+      htmlElement.style.display =
+        entity.getAgent().isVisible() || DEBUG ? "block" : "none";
 
       const fn = OVERRIDES[entity.getAgent().getType()];
       if (fn) {
@@ -152,7 +164,6 @@ class Renderer implements IRenderer {
   private renderCoverage() {
     if (!this.coverageMap) {
       this.coverageMap = document.createElement("div");
-      this.coverageMap.style.wordSpacing = "12px";
       this.coverageMap.style.opacity = "0.5";
       this.coverageMap.style.position = "absolute";
       this.coverageMap.style.top = "0";
@@ -213,7 +224,7 @@ class Renderer implements IRenderer {
   }
 
   private getEmoji(tile: Tile) {
-    if (!tile.isDiscovered()) {
+    if (!tile.isDiscovered() && !DEBUG) {
       return "🌌";
     }
 
