@@ -72,9 +72,9 @@ describe("wave", () => {
   it.each(table)(
     "it creates a wave for level $level",
     ({ level, expectedSpawnGroups }) => {
-      expect(Wave.fromLevel(level, spawnGroups).getSpawnGroups()).toEqual(
-        expectedSpawnGroups
-      );
+      expect(
+        Wave.fromStaticSpawnGroups(level, spawnGroups).getSpawnGroups()
+      ).toEqual(expectedSpawnGroups);
     }
   );
 });

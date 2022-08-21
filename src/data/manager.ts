@@ -149,7 +149,7 @@ class Manager {
       this.wave.cleanup();
     }
 
-    this.wave = Wave.fromLevel(
+    this.wave = Wave.fromStaticSpawnGroups(
       this.level,
       this.spawnGroups.map((tiles) =>
         SpawnGroup.fromTiles(tiles, this.base.getTile(), this.pathfinder)

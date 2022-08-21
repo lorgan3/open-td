@@ -73,7 +73,7 @@ class Wave {
     this.spawnGroups.forEach((spawnGroup) => spawnGroup.cleanup());
   }
 
-  static fromLevel(level: number, spawnGroups: SpawnGroup[]) {
+  static fromStaticSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
     const enemyAmount = 5 + 2 ** level;
 
     if (level < spawnGroups.length) {
