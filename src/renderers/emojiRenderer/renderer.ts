@@ -241,6 +241,8 @@ class Renderer implements IRenderer {
           return "🌲";
         case EntityType.Rock:
           return "🪨";
+        case EntityType.Radar:
+          return "📡";
       }
     }
 

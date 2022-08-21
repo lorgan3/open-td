@@ -38,6 +38,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.ElectricFence]: TileType.ElectricFence,
   [EntityType.Fence]: TileType.Fence,
   [EntityType.Freezer]: TileType.Freezer,
+  [EntityType.Radar]: TileType.Obstructed,
 };
 
 class Tile {
