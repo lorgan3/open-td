@@ -34,6 +34,10 @@ class Base implements Agent {
 
     Manager.Instance.triggerStatUpdate();
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Base;

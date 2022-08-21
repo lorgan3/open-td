@@ -45,6 +45,10 @@ class Flame implements Agent {
   getTile() {
     return this.tile;
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Flame;

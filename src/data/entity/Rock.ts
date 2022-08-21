@@ -27,6 +27,9 @@ class Rock implements Agent {
     }
   }
 
+  isVisible() {
+    return this.tile.isDiscovered();
+  }
 }
 
 export default Rock;

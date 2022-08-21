@@ -54,6 +54,10 @@ class Bullet implements Agent {
   getTile() {
     return this.tile;
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Bullet;

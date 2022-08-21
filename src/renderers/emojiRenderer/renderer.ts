@@ -91,6 +91,9 @@ class Renderer implements IRenderer {
       const htmlElement = this.pool.get(entity);
       htmlElement.style.opacity = "1";
       htmlElement.style.transformOrigin = "50% 50%";
+      htmlElement.style.display = entity.getAgent().isVisible()
+        ? "block"
+        : "none";
 
       const fn = OVERRIDES[entity.getAgent().getType()];
       if (fn) {
@@ -210,6 +213,10 @@ class Renderer implements IRenderer {
   }
 
   private getEmoji(tile: Tile) {
+    if (!tile.isDiscovered()) {
+      return "🌌";
+    }
+
     if (tile.hasStaticEntity()) {
       switch (tile.getStaticEntity()!.getAgent().getType()) {
         case EntityType.Tower:

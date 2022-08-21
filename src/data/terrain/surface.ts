@@ -74,6 +74,9 @@ class Surface {
 
   private setTileInternal(tile: Tile) {
     const originalTile = this.map[tile.getY() * this.width + tile.getX()];
+
+    tile["towers"] = originalTile["towers"];
+    tile["discovered"] = originalTile["discovered"];
     this.map[tile.getY() * this.width + tile.getX()] = tile;
 
     return originalTile;

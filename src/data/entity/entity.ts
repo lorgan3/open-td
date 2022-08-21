@@ -16,6 +16,7 @@ export interface Agent {
   spawn?: () => void;
   despawn?: () => void;
   hit?: (damage: number) => void;
+  isVisible: () => boolean;
 }
 
 export type AgentClass = new (tile: Tile) => Agent;

@@ -66,6 +66,10 @@ class Flamethrower implements ITower {
       Manager.Instance.getSurface().despawnStatic(this);
     }
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Flamethrower;

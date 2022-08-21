@@ -45,6 +45,7 @@ class Tile {
   private hash: string;
   private actualType: TileType;
   private towers: ITower[] = [];
+  private discovered = false;
 
   constructor(
     private x: number,
@@ -98,6 +99,14 @@ class Tile {
     if (!this.towers.includes(tower)) {
       this.towers.push(tower);
     }
+  }
+
+  setIsDiscovered(discovered = true) {
+    this.discovered = discovered;
+  }
+
+  isDiscovered() {
+    return this.discovered;
   }
 
   isCoveredByTower() {

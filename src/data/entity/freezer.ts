@@ -16,6 +16,10 @@ class Freezer implements Agent {
   getTile() {
     return this.tile;
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Freezer;

@@ -16,6 +16,10 @@ class Wall implements Agent {
   getTile() {
     return this.tile;
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Wall;

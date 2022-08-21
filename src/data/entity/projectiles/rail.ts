@@ -75,6 +75,10 @@ class Rail implements Agent {
   getTile() {
     return this.tile;
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default Rail;

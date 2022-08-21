@@ -35,6 +35,10 @@ class ElectricFence implements ITower {
   getTile() {
     return this.tile;
   }
+
+  isVisible() {
+    return true;
+  }
 }
 
 export default ElectricFence;

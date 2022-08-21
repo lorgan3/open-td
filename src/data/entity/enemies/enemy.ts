@@ -96,6 +96,10 @@ class Enemy implements IEnemy {
   isBusy() {
     return this.cooldown !== 0;
   }
+
+  isVisible() {
+    return this.path.getTile().isDiscovered();
+  }
 }
 
 export default Enemy;
