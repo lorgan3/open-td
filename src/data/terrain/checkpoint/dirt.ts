@@ -9,12 +9,12 @@ export class DirtCheckpoint implements Checkpoint {
   constructor(public index: number) {}
 
   isCleared(tiles: Tile[], agent: Enemy): boolean {
-    return !CONVERTIBLE_TILES.has(tiles[this.index].getType());
+    return !CONVERTIBLE_TILES.has(tiles[this.index - 1].getType());
   }
 
   process(tiles: Tile[], agent: Enemy, dt: number): void {
     const surface = Manager.Instance.getSurface();
-    const tile = tiles[this.index];
+    const tile = tiles[this.index - 1];
 
     if (CONVERTIBLE_TILES.has(tile.getType())) {
       surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Dirt));
@@ -39,7 +39,7 @@ export const getDirtCheckpoints: CheckpointFn = (tiles) => {
       Math.floor(Math.random() * candidates.length),
       1
     )[0];
-    checkpoints.push(new DirtCheckpoint(tiles.indexOf(tile)));
+    checkpoints.push(new DirtCheckpoint(tiles.indexOf(tile) + 1));
   }
 
   return checkpoints;
