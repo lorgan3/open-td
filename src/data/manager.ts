@@ -6,6 +6,7 @@ import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import { Placeable } from "./placeables";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
+import Tile, { FREE_TILES, TileType } from "./terrain/tile";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave from "./wave/wave";
@@ -18,14 +19,13 @@ class Manager {
   private visibilityController: VisibilityController;
   private pathfinder: Pathfinder;
   private base: Base;
+  private spawnGroups: SpawnGroup[] = [];
 
   private level = 0;
   private wave: Wave | undefined;
-  private integrity = 10;
-  private money = 100;
+  private money = 1000;
 
   constructor(
-    private spawnGroups: Tile[][],
     basePoint: Tile,
     private surface: Surface,
     controller?: Controller
@@ -43,6 +43,8 @@ class Manager {
 
     this.base = new Base(basePoint);
     surface.spawnStatic(this.base);
+
+    console.log(this);
   }
 
   tick(dt: number) {
@@ -149,12 +151,66 @@ class Manager {
       this.wave.cleanup();
     }
 
-    this.wave = Wave.fromStaticSpawnGroups(
-      this.level,
-      this.spawnGroups.map((tiles) =>
-        SpawnGroup.fromTiles(tiles, this.base.getTile(), this.pathfinder)
-      )
-    );
+    for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
+      const spawnGroup = this.spawnGroups[i];
+
+      if (spawnGroup.isExposed()) {
+        // Clean up exposed spawn locations
+        this.spawnGroups.splice(i, 1);
+      } else {
+        // ...and make the others stronger
+        spawnGroup.grow();
+      }
+    }
+
+    // Add a new spawn location every wave
+    let direction = Math.random() * Math.PI * 2;
+    let spawned = false;
+    let backOff = 3;
+    for (let i = 0; i < 20; i++) {
+      this.surface.forRay(
+        this.base.getTile().getX(),
+        this.base.getTile().getY(),
+        direction,
+        (tile) => {
+          if (tile.isDiscovered()) {
+            backOff = 3;
+            return true;
+          }
+
+          backOff--;
+
+          if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
+            return true;
+          }
+
+          this.spawnGroups.push(
+            SpawnGroup.fromTiles(
+              [tile, tile, tile, tile],
+              this.base.getTile(),
+              this.pathfinder
+            )
+          );
+          this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
+            if (FREE_TILES.has(tile.getType())) {
+              this.surface.setTile(
+                new Tile(tile.getX(), tile.getY(), TileType.Spore)
+              );
+            }
+          });
+          spawned = true;
+          return false;
+        }
+      );
+
+      if (!spawned) {
+        direction += direction + Math.PI / 10;
+      } else {
+        break;
+      }
+    }
+
+    this.wave = Wave.fromDynamicSpawnGroups(this.level, this.spawnGroups);
 
     this.level++;
     this.triggerStatUpdate();

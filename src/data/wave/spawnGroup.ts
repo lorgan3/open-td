@@ -10,15 +10,12 @@ export enum SpawnGroupType {
 
 class SpawnGroup {
   private index = 0;
+
   constructor(
     private spawnPoints: Path[],
-    private type = SpawnGroupType.Teleport
-  ) {
-    Manager.Instance?.addEventListener(
-      GameEvent.SurfaceChange,
-      this.updatePathCosts
-    );
-  }
+    private type = SpawnGroupType.Teleport,
+    private strength = 1
+  ) {}
 
   getSpawnPoints() {
     return this.spawnPoints;
@@ -34,11 +31,36 @@ class SpawnGroup {
     return this.type;
   }
 
+  initialize() {
+    Manager.Instance?.addEventListener(
+      GameEvent.SurfaceChange,
+      this.updatePathCosts
+    );
+  }
+
   cleanup() {
     Manager.Instance.removeEventListener(
       GameEvent.SurfaceChange,
       this.updatePathCosts
     );
+  }
+
+  grow() {
+    this.strength++;
+  }
+
+  getStrength() {
+    return this.strength;
+  }
+
+  // Returns a number [0, 1] based on how many of its tiles are already discovered
+  isExposed() {
+    const exposedTiles = this.spawnPoints.reduce(
+      (sum, path) => (path.getTile(0).isDiscovered() ? sum + 1 : sum),
+      0
+    );
+
+    return exposedTiles / this.spawnPoints.length;
   }
 
   private updatePathCosts = () => {

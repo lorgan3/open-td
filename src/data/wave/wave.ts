@@ -7,7 +7,8 @@ import { getStaticEntityCheckpoints } from "../terrain/checkpoint/staticEntity";
 import { getWaterCheckpoints } from "../terrain/checkpoint/water";
 import { getDirtCheckpoints } from "../terrain/checkpoint/dirt";
 
-const SPAWN_INTERVAL = 400;
+const MIN_SPAWN_INTERVAL = 50;
+const SPAWN_INTERVAL = 350;
 
 class Wave {
   private time = 0;
@@ -19,6 +20,7 @@ class Wave {
     private initialIntensity: number
   ) {
     this.intensity = initialIntensity;
+    spawnGroups.forEach((spawnGroup) => spawnGroup.initialize());
   }
 
   isDone() {
@@ -41,7 +43,13 @@ class Wave {
     const spawnGroup =
       this.spawnGroups[this.intensity % this.spawnGroups.length];
     const path = spawnGroup.getNextSpawnPoint().clone();
-    this.intensity--;
+
+    if (
+      Math.random() * Math.min((spawnGroup.getStrength() - 1) / 5, 1.5) <
+      0.75
+    ) {
+      this.intensity--;
+    }
 
     path.setCheckpoints(
       combineCheckpoints(
@@ -62,7 +70,12 @@ class Wave {
       return;
     }
 
-    if (this.time >= this.lastActivation + SPAWN_INTERVAL) {
+    if (
+      this.time >=
+      this.lastActivation +
+        MIN_SPAWN_INTERVAL +
+        SPAWN_INTERVAL / this.spawnGroups.length
+    ) {
       this.lastActivation = this.time;
       const enemy = this.getNextUnitToSpawn();
       Manager.Instance.spawnEnemy(enemy);
@@ -94,6 +107,12 @@ class Wave {
     });
 
     return new Wave(spawnGroupsThisWave, enemyAmount);
+  }
+
+  static fromDynamicSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
+    const enemyAmount = 5 + 2 ** level;
+
+    return new Wave(spawnGroups, enemyAmount);
   }
 }
 
