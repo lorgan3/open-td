@@ -52,7 +52,10 @@ class Enemy implements IEnemy {
     if (this.isBusy()) {
       this.getTargeted(this.path.getCurrentTile());
     } else {
-      const { from, to, step } = this.path.performStep(this, dt);
+      const { from, to, step } = this.path.performStep(
+        this,
+        this.isVisible() ? dt : dt * 10
+      );
       this.entity.move(from, to, step);
       this.getTargeted(from);
     }
