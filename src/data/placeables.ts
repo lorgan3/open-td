@@ -16,82 +16,68 @@ export interface Placeable {
   entityType: EntityType;
 }
 
-const createEmojiSvg = (emoji: string) => {
-  const svg = document.createElement("svg");
-  svg.setAttribute("viewBox", "0 0 12 14");
-  svg.setAttribute("width", "100");
-  svg.setAttribute("height", "100");
-
-  const text = document.createElement("text");
-  text.setAttribute("y", "12");
-  text.textContent = emoji;
-
-  svg.appendChild(text);
-  return svg.outerHTML;
-};
-
 const placeables: Placeable[] = [
   {
     name: "Fence",
     cost: 1,
     entity: Fence,
     entityType: EntityType.Fence,
-    htmlElement: createEmojiSvg("🥅"),
+    htmlElement: "🥅",
   },
   {
     name: "Wall",
     cost: 3,
     entity: Wall,
     entityType: EntityType.Wall,
-    htmlElement: createEmojiSvg("🚧"),
+    htmlElement: "🚧",
   },
   {
     name: "Electric fence",
     cost: 9,
     entity: ElectricFence,
     entityType: EntityType.ElectricFence,
-    htmlElement: createEmojiSvg("⚡"),
+    htmlElement: "⚡",
   },
   {
     name: "Freezer",
     cost: 4,
     entity: Freezer,
     entityType: EntityType.Freezer,
-    htmlElement: createEmojiSvg("❄️"),
+    htmlElement: "❄️",
   },
   {
     name: "Tower",
     cost: 10,
     entity: Tower,
     entityType: EntityType.Tower,
-    htmlElement: createEmojiSvg("🗼"),
+    htmlElement: "🗼",
   },
   {
     name: "Mortar",
     cost: 30,
     entity: Mortar,
     entityType: EntityType.Mortar,
-    htmlElement: createEmojiSvg("🛰"),
+    htmlElement: "🛰️",
   },
   {
     name: "Flamethrower",
     cost: 15,
     entity: Flamethrower,
     entityType: EntityType.Flamethrower,
-    htmlElement: createEmojiSvg("🧯"),
+    htmlElement: "🧯",
   },
   {
     name: "Railgun",
     cost: 50,
     entity: Railgun,
     entityType: EntityType.Railgun,
-    htmlElement: createEmojiSvg("🌡"),
+    htmlElement: "🌡️",
   },
   {
     name: "Demolish",
     cost: 0,
     entityType: EntityType.None,
-    htmlElement: createEmojiSvg("❌"),
+    htmlElement: "❌",
   },
 ];
 

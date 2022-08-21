@@ -97,6 +97,7 @@ function selectTower(tower: Placeable) {
         .graphic {
           display: flex;
           justify-content: center;
+          font-size: 5em;
         }
       }
     }

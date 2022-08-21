@@ -6,6 +6,8 @@ import Tile, { TileType } from "../../data/terrain/tile";
 import { IRenderer } from "../api";
 import { OVERRIDES } from "./overrides";
 
+const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
+
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
   public xStep = 0;
@@ -57,6 +59,8 @@ class Renderer implements IRenderer {
     target.style.cursor = "crosshair";
     target.style.userSelect = "none";
     target.style.position = "relative";
+    target.style.fontFamily =
+      '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Android Emoji","EmojiOne Mozilla","Twemoji Mozilla","Noto Emoji","Segoe UI Symbol",EmojiSymbols';
 
     this.renderTiles();
 
@@ -127,6 +131,10 @@ class Renderer implements IRenderer {
       let row = this.rows[i];
       if (!row) {
         row = document.createElement("div");
+        if (IS_WINDOWS) {
+          row.style.letterSpacing = "-0.7ch";
+        }
+
         this.rows[i] = row;
         this.target!.appendChild(row);
       }
@@ -207,13 +215,13 @@ class Renderer implements IRenderer {
         case EntityType.Tower:
           return "🗼";
         case EntityType.Wall:
-          return "🚧";
+          return "🧱";
         case EntityType.Mortar:
-          return "🛰";
+          return "🛰️";
         case EntityType.Flamethrower:
           return "🧯";
         case EntityType.Railgun:
-          return "🌡";
+          return "🌡️";
         case EntityType.ElectricFence:
           return "⚡";
         case EntityType.Fence:
@@ -241,11 +249,11 @@ class Renderer implements IRenderer {
       case TileType.Bridge:
         return "📜";
       case TileType.Sand:
-        return "🏼";
+        return "🟨";
       case TileType.Snow:
-        return "🌫";
+        return "🌫️";
       case TileType.Dirt:
-        return "🏽";
+        return "🟫";
       case TileType.Ice:
         return "🧊";
       default:
@@ -256,7 +264,7 @@ class Renderer implements IRenderer {
   private getEntityEmoji(entity: Entity) {
     switch (entity.getAgent().getType()) {
       case EntityType.Slime:
-        return "🪲";
+        return "🐞";
       case EntityType.Bullet:
         return "▪";
       case EntityType.Rail:
