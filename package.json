@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "heap": "^0.2.7",
-    "simplex-noise": "^3.0.1",
+    "simplex-noise": "^4.0.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

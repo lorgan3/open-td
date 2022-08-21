@@ -1,11 +1,11 @@
 import Tile, { TileType } from "./tile";
-import SimplexNoise from "simplex-noise";
+import { createNoise2D } from "simplex-noise";
 import Tree from "../entity/Tree";
 import Rock from "../entity/Rock";
 
 export type Generator = (x: number, y: number) => Tile;
 
-const simplex = new SimplexNoise(0);
+const noise2D = createNoise2D();
 
 const SCALE = 0.048;
 const MOISTURE_SCALE = 0.0077;
@@ -15,17 +15,14 @@ const HEIGHT_SCALE = 0.0194;
 const RIVER_THRESHOLD = 0.95; // Smaller numbers mean wider rivers connecting the lakes
 
 const generate: Generator = (x, y) => {
-  const biome = simplex.noise2D(x * SCALE, y * SCALE);
-  const temperature = simplex.noise2D(
-    x * TEMPERATURE_SCALE,
-    y * TEMPERATURE_SCALE
-  );
+  const biome = noise2D(x * SCALE, y * SCALE);
+  const temperature = noise2D(x * TEMPERATURE_SCALE, y * TEMPERATURE_SCALE);
   const absTemperature = Math.abs(temperature);
 
-  const moisture = simplex.noise2D(x * MOISTURE_SCALE, y * MOISTURE_SCALE);
+  const moisture = noise2D(x * MOISTURE_SCALE, y * MOISTURE_SCALE);
   const river = 1.0 - Math.abs(moisture);
 
-  const height = simplex.noise2D(x * HEIGHT_SCALE, y * HEIGHT_SCALE);
+  const height = noise2D(x * HEIGHT_SCALE, y * HEIGHT_SCALE);
   const absHeight = Math.abs(height);
 
   const biassedTemperature = (temperature + height / 3) * 0.83;
