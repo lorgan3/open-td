@@ -9,8 +9,8 @@ import GameStats from "./GameStats.vue";
 
 const canvas = ref<HTMLDivElement | null>(null);
 
-const surface = new Surface(96, 54, generate);
-const targetTile = surface.getTile(60, 50)!;
+const surface = new Surface(400, 400, generate);
+const targetTile = surface.getTile(200, 200)!;
 const manager = new Manager(targetTile, surface);
 const renderer = new Renderer(manager.getSurface(), manager.getController());
 
@@ -42,7 +42,7 @@ onUnmounted(() => (mounted = false));
   <div class="wrapper">
     <GameStats :renderer="renderer" />
     <div class="canvas">
-      <div ref="canvas"></div>
+      <div class="render-target" ref="canvas"></div>
       <TowerMenu :controller="manager.getController()" />
     </div>
   </div>
@@ -56,6 +56,18 @@ onUnmounted(() => (mounted = false));
 
   .canvas {
     position: relative;
+
+    .render-target {
+      width: 1280px;
+      height: 900px;
+      overflow: auto;
+
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
   }
 }
 </style>

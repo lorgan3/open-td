@@ -78,8 +78,8 @@ class VisibilityController {
 
   getBBox() {
     return [
-      [this.minX, this.minY],
-      [this.maxX, this.maxY],
+      [this.minX!, this.minY!],
+      [this.maxX!, this.maxY!],
     ];
   }
 
@@ -102,10 +102,10 @@ class VisibilityController {
       this.minY = y - range / 2;
     }
     if (!this.maxX || x + range / 2 > this.maxX) {
-      this.maxX = x - range / 2;
+      this.maxX = x + range / 2;
     }
     if (!this.maxY || y + range / 2 > this.maxY) {
-      this.maxY = y - range / 2;
+      this.maxY = y + range / 2;
     }
 
     this.surface.forCircle(x, y, range, (tile) => tile.setIsDiscovered());

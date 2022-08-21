@@ -1,5 +1,6 @@
 import Controller from "../../data/controller";
 import Entity, { EntityType } from "../../data/entity/entity";
+import Manager from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { TileType } from "../../data/terrain/tile";
@@ -78,10 +79,17 @@ class Renderer implements IRenderer {
     this.renderTiles();
 
     const { width, height, x, y } = target.getBoundingClientRect();
-    this.xStep = width / this.surface.getWidth();
-    this.yStep = height / this.surface.getHeight();
-    this.offsetX = x;
-    this.offsetY = y;
+    const totalWidth = target.scrollWidth;
+    const totalHeight = target.scrollHeight;
+
+    this.xStep = totalWidth / this.surface.getWidth();
+    this.yStep = totalHeight / this.surface.getHeight();
+    this.offsetX = x - target.scrollLeft;
+    this.offsetY = y - target.scrollTop;
+
+    const center = Manager.Instance.getBase().getTile();
+    target.scrollLeft = center.getX() * this.xStep - width / 2;
+    target.scrollTop = center.getY() * this.yStep - height / 2;
 
     this.rerender(0);
 
@@ -104,8 +112,9 @@ class Renderer implements IRenderer {
       const htmlElement = this.pool.get(entity);
       htmlElement.style.opacity = "1";
       htmlElement.style.transformOrigin = "50% 50%";
-      htmlElement.style.display =
-        entity.getAgent().isVisible() || DEBUG ? "block" : "none";
+      htmlElement.style.display = entity.getAgent().isVisible()
+        ? "block"
+        : "none";
 
       const fn = OVERRIDES[entity.getAgent().getType()];
       if (fn) {
@@ -208,16 +217,59 @@ class Renderer implements IRenderer {
       return false;
     });
 
+    const preventMovement = (deltaX: number, deltaY: number, event: Event) => {
+      const bbox = this.getBBox();
+      const constraints = Manager.Instance.getVisibilityController().getBBox();
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX < 0 && bbox[0][0] <= constraints[0][0]) {
+          event.preventDefault();
+          return;
+        }
+
+        if (deltaX > 0 && bbox[1][0] >= constraints[1][0]) {
+          event.preventDefault();
+          return;
+        }
+      } else {
+        if (deltaY < 0 && bbox[0][1] <= constraints[0][1]) {
+          event.preventDefault();
+          return;
+        }
+
+        if (deltaY > 0 && bbox[1][1] >= constraints[1][1]) {
+          event.preventDefault();
+          return;
+        }
+      }
+    };
+
+    target.addEventListener(
+      "wheel",
+      (event: WheelEvent) => {
+        preventMovement(event.deltaX, event.deltaY, event);
+      },
+      { passive: false }
+    );
+
     target.addEventListener("mousedown", (event: MouseEvent) => {
-      const x = Math.floor((event.pageX - this.offsetX) / this.xStep);
-      const y = Math.floor((event.pageY - this.offsetY) / this.yStep);
+      const x = Math.floor(
+        (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
+      );
+      const y = Math.floor(
+        (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
+      );
 
       this.controller.mouseDown(x, y);
     });
 
     target.addEventListener("mouseup", (event: MouseEvent) => {
-      const x = Math.floor((event.pageX - this.offsetX) / this.xStep);
-      const y = Math.floor((event.pageY - this.offsetY) / this.yStep);
+      const x = Math.floor(
+        (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
+      );
+      const y = Math.floor(
+        (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
+      );
 
       this.controller.mouseUp(x, y, event.shiftKey);
     });
@@ -294,6 +346,18 @@ class Renderer implements IRenderer {
       default:
         return "";
     }
+  }
+
+  private getBBox() {
+    const scrollTop = this.target!.scrollTop / this.yStep;
+    const scrollLeft = this.target!.scrollLeft / this.xStep;
+    const height = this.target!.clientHeight / this.yStep;
+    const width = this.target!.clientWidth / this.xStep;
+
+    return [
+      [scrollLeft, scrollTop],
+      [scrollLeft + width, scrollTop + height],
+    ];
   }
 }
 export default Renderer;
