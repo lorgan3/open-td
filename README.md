@@ -1,11 +1,29 @@
-# Vue 3 + Typescript + Vite
+# Open TD
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## What
 
-## Recommended IDE Setup
+Some sort of tower defense game ever so slightly inspired by [Rogue Tower](https://store.steampowered.com/app/1843760/Rogue_Tower/).
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+## Why
 
-## Type Support For `.vue` Imports in TS
+I've just thrown together everything that I find really intriguing such as procedural generation and path finding. I've also sprinkled some vue on top to try it out and finally a random idea to render a game with just emojis. Trying to turn this simulation into a game is basically just an afterthought, what could possibly go wrong?
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+## Running
+
+You need to have Node & Yarn installed. Simply run the following commands to start the game.
+
+```
+yarn
+yarn dev
+```
+
+The server will start on [http://localhost:3000/](http://localhost:3000/)
+
+## Dev
+
+I've developed this with [VS Code](https://code.visualstudio.com/) and the following plugins
+
+- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+Check `package.json`, there are also commands available to run tests and check the types.
