@@ -9,8 +9,8 @@ import GameStats from "./GameStats.vue";
 
 const canvas = ref<HTMLDivElement | null>(null);
 
-const surface = new Surface(400, 400, generate);
-const targetTile = surface.getTile(200, 200)!;
+const surface = new Surface(300, 300, generate);
+const targetTile = surface.getTile(150, 150)!;
 const manager = new Manager(targetTile, surface);
 const renderer = new Renderer(manager.getSurface(), manager.getController());
 

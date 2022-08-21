@@ -73,6 +73,7 @@ class Renderer implements IRenderer {
     target.style.cursor = "crosshair";
     target.style.userSelect = "none";
     target.style.position = "relative";
+    target.style.fontSize = "20px";
     target.style.fontFamily =
       '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Android Emoji","EmojiOne Mozilla","Twemoji Mozilla","Noto Emoji","Segoe UI Symbol",EmojiSymbols';
 
