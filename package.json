@@ -11,7 +11,7 @@
   "dependencies": {
     "heap": "^0.2.7",
     "simplex-noise": "^3.0.1",
-    "vue": "^3.2.31"
+    "vue": "^3.2.37"
   },
   "devDependencies": {
     "@types/heap": "^0.2.29",
@@ -23,6 +23,6 @@
     "ts-jest": "^28.0.8",
     "typescript": "^4.4.4",
     "vite": "^3.0.9",
-    "vue-tsc": "^0.29.8"
+    "vue-tsc": "^0.40.1"
   }
 }
