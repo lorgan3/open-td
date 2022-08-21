@@ -23,6 +23,14 @@ class Base implements Agent {
     return this.hp;
   }
 
+  spawn() {
+    Manager.Instance.getVisibilityController().registerAgent(this);
+  }
+
+  despawn() {
+    Manager.Instance.getVisibilityController().removeAgent(this);
+  }
+
   hit(damage: number) {
     this.hp -= damage;
 

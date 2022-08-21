@@ -6,7 +6,7 @@ import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import { Placeable } from "./placeables";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
-import Tile from "./terrain/tile";
+import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave from "./wave/wave";
 
@@ -15,6 +15,7 @@ class Manager {
 
   private eventHandlers: Map<GameEvent, Set<EventHandler<any>>>;
   private controller: Controller;
+  private visibilityController: VisibilityController;
   private pathfinder: Pathfinder;
   private base: Base;
 
@@ -33,6 +34,7 @@ class Manager {
 
     this.eventHandlers = new Map();
     this.controller = controller ?? new Controller(surface);
+    this.visibilityController = new VisibilityController(surface);
     this.pathfinder = new Pathfinder(surface);
 
     if (basePoint.hasStaticEntity()) {
@@ -96,6 +98,10 @@ class Manager {
 
   getController() {
     return this.controller;
+  }
+
+  getVisibilityController() {
+    return this.visibilityController;
   }
 
   getBase() {
