@@ -218,6 +218,10 @@ class Renderer implements IRenderer {
     });
 
     const preventMovement = (deltaX: number, deltaY: number, event: Event) => {
+      if (DEBUG) {
+        return;
+      }
+
       const bbox = this.getBBox();
       const constraints = Manager.Instance.getVisibilityController().getBBox();
 
