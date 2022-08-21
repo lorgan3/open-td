@@ -75,6 +75,10 @@ class Surface {
   private setTileInternal(tile: Tile) {
     const originalTile = this.map[tile.getY() * this.width + tile.getX()];
 
+    if (originalTile.hasStaticEntity()) {
+      this.despawnStatic(originalTile.getStaticEntity()!.getAgent());
+    }
+
     tile["towers"] = originalTile["towers"];
     tile["discovered"] = originalTile["discovered"];
     this.map[tile.getY() * this.width + tile.getX()] = tile;
