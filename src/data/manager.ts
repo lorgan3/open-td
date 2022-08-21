@@ -6,7 +6,11 @@ import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import { Placeable } from "./placeables";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
-import Tile, { FREE_TILES, TileType } from "./terrain/tile";
+import Tile, {
+  FREE_TILES,
+  FREE_TILES_INCLUDING_WATER,
+  TileType,
+} from "./terrain/tile";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave from "./wave/wave";
@@ -46,7 +50,10 @@ class Manager {
 
     const tilesToUpdate: Tile[] = [];
     this.surface.forCircle(basePoint.getX(), basePoint.getY(), 5, (tile) => {
-      if (tile !== basePoint && FREE_TILES.has(tile.getType())) {
+      if (
+        tile !== basePoint &&
+        FREE_TILES_INCLUDING_WATER.has(tile.getType())
+      ) {
         tilesToUpdate.push(new Tile(tile.getX(), tile.getY(), TileType.Stone));
       }
     });

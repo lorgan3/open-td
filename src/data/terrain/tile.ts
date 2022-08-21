@@ -27,6 +27,12 @@ export const FREE_TILES = new Set([
   TileType.Snow,
 ]);
 
+export const FREE_TILES_INCLUDING_WATER = new Set([
+  ...FREE_TILES,
+  TileType.Water,
+  TileType.Ice,
+]);
+
 export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   Record<EntityType, TileType>
 > = {
