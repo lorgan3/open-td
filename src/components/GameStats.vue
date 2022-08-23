@@ -14,6 +14,9 @@ const remainingEnemies = ref(0);
 const inProgress = ref(false);
 const integrity = ref(0);
 const showCoverage = ref(false);
+const power = ref(0);
+const lastProduction = ref(0);
+const lastConsumption = ref(0);
 
 const eventHandler = (stats: StatUpdate) => {
   money.value = stats.money;
@@ -21,6 +24,9 @@ const eventHandler = (stats: StatUpdate) => {
   remainingEnemies.value = stats.remainingEnemies;
   inProgress.value = stats.inProgress;
   integrity.value = stats.integrity;
+  power.value = stats.power;
+  lastProduction.value = stats.production;
+  lastConsumption.value = stats.consumption;
 };
 
 onMounted(() => {
@@ -50,7 +56,11 @@ function toggleCoverage() {
     <ul class="stats">
       <li>
         <span>🪙 {{ money }}</span>
-        <span>🛡️ {{ integrity }}</span>
+        <span
+          >🔋 {{ power }} (<span class="positive">+{{ lastProduction }}</span
+          >/<span class="negative">-{{ lastConsumption }}</span
+          >)</span
+        >
       </li>
       <li>
         <span>Wave {{ level }}</span>
@@ -61,7 +71,10 @@ function toggleCoverage() {
           </button>
         </span>
       </li>
-      <li>👾 {{ remainingEnemies }}</li>
+      <li>
+        <span>🛡️ {{ integrity }}</span>
+        <span>👾 {{ remainingEnemies }}</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -74,11 +87,27 @@ function toggleCoverage() {
     padding: 12px;
     border: 2px solid #66f;
 
+    .positive {
+      color: green;
+    }
+
+    .negative {
+      color: red;
+    }
+
     li {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
+      &:first-of-type {
+        align-items: flex-start;
+      }
+
+      &:last-of-type {
+        align-items: flex-end;
+      }
     }
 
     .buttons {
