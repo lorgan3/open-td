@@ -185,7 +185,7 @@ class Renderer implements IRenderer {
       this.coverageMap.style.opacity = "0.5";
       this.coverageMap.style.position = "absolute";
       this.coverageMap.style.top = "0";
-      this.coverageMap.style.left = "-2px";
+      this.coverageMap.style.left = IS_WINDOWS ? "-2px" : "0";
       if (IS_WINDOWS) {
         this.coverageMap.style.letterSpacing = "-0.7ch";
         this.coverageMap.style.wordSpacing = "22px";
