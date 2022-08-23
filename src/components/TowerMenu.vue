@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import Controller from "../data/controller";
+import { TOWER_PRICES } from "../data/moneyController";
 import placeables, { Placeable } from "../data/placeables";
 
 const props = defineProps<{
@@ -43,7 +44,7 @@ function selectTower(tower: Placeable) {
       >
         <button @click="selectTower(tower)">
           <h3>{{ tower.name }}</h3>
-          <p>🪙 {{ tower.cost }}</p>
+          <p>🪙 {{ TOWER_PRICES[tower.entityType] }}</p>
           <div class="graphic" v-html="tower.htmlElement"></div>
         </button>
       </li>

@@ -1,6 +1,19 @@
 import { IEnemy } from "./entity/enemies";
 import { EntityType } from "./entity/entity";
 
+export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
+  [EntityType.Fence]: 1,
+  [EntityType.Wall]: 3,
+  [EntityType.ElectricFence]: 9,
+  [EntityType.Freezer]: 4,
+  [EntityType.Tower]: 10,
+  [EntityType.Flamethrower]: 15,
+  [EntityType.Mortar]: 30,
+  [EntityType.Railgun]: 50,
+  [EntityType.Radar]: 50,
+  [EntityType.PowerPlant]: 20,
+};
+
 class MoneyController {
   constructor(private money = 0) {}
 

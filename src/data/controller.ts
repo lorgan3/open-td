@@ -1,5 +1,7 @@
+import { EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
 import Manager from "./manager";
+import { TOWER_PRICES } from "./moneyController";
 import placeables, { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
 import Tile, { FREE_TILES } from "./terrain/tile";
@@ -45,7 +47,7 @@ class Controller {
       }
     });
 
-    if (this.selectedPlacable.cost === 0) {
+    if (this.selectedPlacable.entityType === EntityType.None) {
       tiles.forEach((tile) => {
         if (tile.hasStaticEntity()) {
           const entity = tile.getStaticEntity()!;
@@ -54,7 +56,7 @@ class Controller {
           );
 
           if (placeable) {
-            Manager.Instance.addMoney(placeable?.cost);
+            Manager.Instance.addMoney(TOWER_PRICES[placeable.entityType] ?? 0);
             this.surface.despawnStatic(entity.getAgent());
           }
         }
