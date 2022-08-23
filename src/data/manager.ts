@@ -3,6 +3,7 @@ import Base from "./entity/base";
 import Enemy from "./entity/enemies/enemy";
 import { AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
+import MoneyController from "./moneyController";
 import { Placeable } from "./placeables";
 import PowerController from "./powerController";
 import Pathfinder from "./terrain/pathfinder";
@@ -23,13 +24,13 @@ class Manager {
   private controller: Controller;
   private visibilityController: VisibilityController;
   private powerController: PowerController;
+  private moneyController: MoneyController;
   private pathfinder: Pathfinder;
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
 
   private level = 0;
   private wave: Wave | undefined;
-  private money = 1000;
 
   constructor(
     basePoint: Tile,
@@ -42,6 +43,7 @@ class Manager {
     this.controller = controller ?? new Controller(surface);
     this.visibilityController = new VisibilityController(surface);
     this.powerController = new PowerController();
+    this.moneyController = new MoneyController(1000);
     this.pathfinder = new Pathfinder(surface);
 
     if (basePoint.hasStaticEntity()) {
@@ -95,7 +97,7 @@ class Manager {
     this.triggerEvent(GameEvent.StatUpdate, {
       integrity: this.getIntegrity(),
       level: this.level,
-      money: this.money,
+      money: this.moneyController.getMoney(),
       production: this.powerController.getLastProduction(),
       consumption: this.powerController.getLastConsumption(),
       power: this.powerController.getPower(),
@@ -112,6 +114,8 @@ class Manager {
 
   despawnEnemy(enemy: Enemy) {
     if (this.surface.despawn(enemy)) {
+      this.moneyController.registerEnemyKill(enemy);
+
       const remainingEnemies = this.getSurface().getEntitiesForCategory(
         AgentCategory.Enemy
       ).size;
@@ -153,7 +157,7 @@ class Manager {
   }
 
   getMoney() {
-    return this.money;
+    return this.moneyController.getMoney();
   }
 
   getIsStarted() {
@@ -162,17 +166,17 @@ class Manager {
 
   buy(placeable: Placeable, amount = 1) {
     const cost = placeable.cost * amount;
-    if (cost > this.money) {
+    if (cost > this.moneyController.getMoney()) {
       return false;
     }
 
-    this.money -= cost;
+    this.moneyController.removeMoney(cost);
     this.triggerStatUpdate();
     return true;
   }
 
   addMoney(amount: number) {
-    this.money += amount;
+    this.moneyController.addMoney(amount);
     this.triggerStatUpdate();
   }
 
