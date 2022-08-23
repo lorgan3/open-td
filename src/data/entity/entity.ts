@@ -39,6 +39,7 @@ export enum EntityType {
   Tree = 14,
   Rock = 15,
   Radar = 16,
+  PowerPlant = 17,
 }
 
 export const DESTRUCTIBLE_ENTITIES = new Set([

@@ -18,6 +18,9 @@ export interface StatUpdate {
   level: number;
   money: number;
   integrity: number;
+  power: number;
+  production: number;
+  consumption: number;
   totalEnemies: number;
   remainingEnemies: number;
   inProgress: boolean;

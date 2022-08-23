@@ -324,6 +324,8 @@ class Renderer implements IRenderer {
           return "🪨";
         case EntityType.Radar:
           return "📡";
+        case EntityType.PowerPlant:
+          return "🏭";
       }
     }
 

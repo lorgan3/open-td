@@ -4,6 +4,7 @@ import Enemy from "./entity/enemies/enemy";
 import { AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import { Placeable } from "./placeables";
+import PowerController from "./powerController";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile, {
@@ -21,6 +22,7 @@ class Manager {
   private eventHandlers: Map<GameEvent, Set<EventHandler<any>>>;
   private controller: Controller;
   private visibilityController: VisibilityController;
+  private powerController: PowerController;
   private pathfinder: Pathfinder;
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
@@ -39,6 +41,7 @@ class Manager {
     this.eventHandlers = new Map();
     this.controller = controller ?? new Controller(surface);
     this.visibilityController = new VisibilityController(surface);
+    this.powerController = new PowerController();
     this.pathfinder = new Pathfinder(surface);
 
     if (basePoint.hasStaticEntity()) {
@@ -93,6 +96,9 @@ class Manager {
       integrity: this.getIntegrity(),
       level: this.level,
       money: this.money,
+      production: this.powerController.getLastProduction(),
+      consumption: this.powerController.getLastConsumption(),
+      power: this.powerController.getPower(),
       remainingEnemies,
       totalEnemies: this.wave ? this.wave.getInitialIntensity() : 0,
       inProgress: remainingEnemies !== 0,
@@ -105,8 +111,17 @@ class Manager {
   }
 
   despawnEnemy(enemy: Enemy) {
-    this.surface.despawn(enemy);
-    this.triggerStatUpdate();
+    if (this.surface.despawn(enemy)) {
+      const remainingEnemies = this.getSurface().getEntitiesForCategory(
+        AgentCategory.Enemy
+      ).size;
+
+      if (remainingEnemies === 0) {
+        this.end();
+      }
+
+      this.triggerStatUpdate();
+    }
   }
 
   getSurface() {
@@ -119,6 +134,10 @@ class Manager {
 
   getVisibilityController() {
     return this.visibilityController;
+  }
+
+  getPowerController() {
+    return this.powerController;
   }
 
   getBase() {
@@ -231,6 +250,10 @@ class Manager {
 
     this.level++;
     this.triggerStatUpdate();
+  }
+
+  private end() {
+    this.powerController.processPower();
   }
 
   addEventListener<E extends keyof EventParamsMap>(

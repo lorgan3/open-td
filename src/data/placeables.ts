@@ -2,6 +2,7 @@ import ElectricFence from "./entity/electricFence";
 import { AgentClass, EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
 import Freezer from "./entity/freezer";
+import PowerPlant from "./entity/powerPlant";
 import Radar from "./entity/radar";
 import Flamethrower from "./entity/towers/flamethrower";
 import Mortar from "./entity/towers/mortar";
@@ -86,6 +87,13 @@ const placeables: Placeable[] = [
     entity: Radar,
     entityType: EntityType.Radar,
     htmlElement: "📡",
+  },
+  {
+    name: "Power plant",
+    cost: 20,
+    entity: PowerPlant,
+    entityType: EntityType.PowerPlant,
+    htmlElement: "🏭",
   },
 ];
 

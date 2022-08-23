@@ -290,12 +290,14 @@ class Surface {
       this.entities.splice(index, 1);
     }
 
-    this.entitiesMap.get(agent.category)!.delete(agent.entity);
+    const result = this.entitiesMap.get(agent.category)!.delete(agent.entity);
     this.deletedEntities.push(agent.entity);
 
     if (agent.despawn) {
       agent.despawn();
     }
+
+    return result;
   }
 
   public despawnStatic(agent: Agent) {
