@@ -38,17 +38,25 @@ class Renderer implements IRenderer {
       (active, original, entity) => {
         if (original) {
           original.style.display = "block";
-          original.textContent = this.getEntityEmoji(entity!);
+          original.children[0].textContent = this.getEntityEmoji(entity!);
           return original;
         }
 
         const htmlElement = document.createElement("span");
-        htmlElement.textContent = entity ? this.getEntityEmoji(entity!) : "";
+        htmlElement.appendChild(document.createElement("span"));
+        if (IS_WINDOWS) {
+          (htmlElement.children[0] as HTMLElement).style.margin = "-0.35ch";
+        }
+
+        htmlElement.children[0].textContent = entity
+          ? this.getEntityEmoji(entity!)
+          : "";
         htmlElement.style.position = "absolute";
         htmlElement.style.top = "0";
         htmlElement.style.left = "0";
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
+
         this.target!.appendChild(htmlElement);
 
         return htmlElement;
@@ -177,7 +185,12 @@ class Renderer implements IRenderer {
       this.coverageMap.style.opacity = "0.5";
       this.coverageMap.style.position = "absolute";
       this.coverageMap.style.top = "0";
-      this.coverageMap.style.left = "0";
+      this.coverageMap.style.left = "-2px";
+      if (IS_WINDOWS) {
+        this.coverageMap.style.letterSpacing = "-0.7ch";
+        this.coverageMap.style.wordSpacing = "22px";
+      }
+
       this.target!.appendChild(this.coverageMap);
     }
 
