@@ -50,6 +50,8 @@ export const DESTRUCTIBLE_ENTITIES = new Set([
   EntityType.Base,
   EntityType.Tree,
   EntityType.Rock,
+  EntityType.Radar,
+  EntityType.PowerPlant,
 ]);
 
 class Entity {

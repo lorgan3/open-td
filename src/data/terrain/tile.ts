@@ -17,6 +17,7 @@ export enum TileType {
   Snow = 12,
   Sand = 13,
   Ice = 14,
+  PlayerBuilding = 15,
 }
 
 export const FREE_TILES = new Set([
@@ -44,7 +45,8 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.ElectricFence]: TileType.ElectricFence,
   [EntityType.Fence]: TileType.Fence,
   [EntityType.Freezer]: TileType.Freezer,
-  [EntityType.Radar]: TileType.Obstructed,
+  [EntityType.Radar]: TileType.PlayerBuilding,
+  [EntityType.PowerPlant]: TileType.PlayerBuilding,
 };
 
 class Tile {

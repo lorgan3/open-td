@@ -33,12 +33,14 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Sand]: 3.5,
   [TileType.Snow]: 3.5,
   [TileType.Ice]: 10,
+  [TileType.PlayerBuilding]: 3,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
   [TileType.ElectricFence]: 20,
   [TileType.Freezer]: 0.5,
   [TileType.Obstructed]: 500,
+  [TileType.PlayerBuilding]: -10,
 };
 
 export const defaultCostMultiplier = (tile: Tile) =>
@@ -67,6 +69,8 @@ class Pathfinder {
     costMultiplierOverride?: (tile: Tile) => number
   ) {
     const costMultiplier = costMultiplierOverride ?? this.costMultiplier;
+
+    const visitedTiles = new Set<Tile>();
 
     // Cheapest path from n to start
     const movementScore = this.costFn(from) ?? 1;
@@ -147,7 +151,7 @@ class Pathfinder {
         }
 
         const cost = data[index * 2];
-        if (!cost) {
+        if (!cost || visitedTiles.has(neighbor)) {
           return;
         }
 
@@ -162,8 +166,8 @@ class Pathfinder {
           gScores.set(neighborHash, score);
           fScores.set(neighborHash, score + this.heuristic(neighbor, to));
 
-          // TODO: check if neighbor is not already in the active tiles?
           activeTiles.push(neighbor);
+          visitedTiles.add(current);
         }
       });
     }
