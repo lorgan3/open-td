@@ -39,8 +39,8 @@ class Rocket implements Agent {
   tick(dt: number) {
     if (this.time >= this.travelTime) {
       Manager.Instance.getSurface().despawn(this);
-      this.target.hit(this.damage);
 
+      let hitTarget = false;
       [
         ...Manager.Instance.getSurface().getEntitiesForCategory(
           AgentCategory.Enemy
@@ -51,7 +51,16 @@ class Rocket implements Agent {
           const diffY = enemy.getY() - this.entity.getY();
           return diffX * diffX + diffY * diffY < RANGE_SQUARED;
         })
-        .forEach((enemy) => (enemy.getAgent() as IEnemy).hit(this.damage));
+        .forEach((enemy) => {
+          (enemy.getAgent() as IEnemy).hit(this.damage);
+          if (enemy.getAgent() === this.target) {
+            hitTarget = true;
+          }
+        });
+
+      if (!hitTarget) {
+        this.target.miss(this.damage);
+      }
     }
 
     this.time = Math.min(this.time + dt, this.travelTime);

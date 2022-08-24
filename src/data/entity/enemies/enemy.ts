@@ -77,7 +77,7 @@ class Enemy implements IEnemy {
   }
 
   private getTargeted(tile: Tile) {
-    if (this.predictedHp >= 0) {
+    if (this.predictedHp > 0) {
       for (let tower of tile.getAvailableTowers()) {
         this.predictedHp -= tower.fire(this);
 
@@ -96,6 +96,11 @@ class Enemy implements IEnemy {
     }
   }
 
+  miss(damage: number) {
+    console.log("missed");
+    this.predictedHp += damage;
+  }
+
   isBusy() {
     return this.cooldown !== 0;
   }
@@ -105,11 +110,11 @@ class Enemy implements IEnemy {
   }
 
   getFuturePosition(time: number) {
-    if (this.isBusy()) {
+    if (this.cooldown > time) {
       return this.path.getIndex();
     }
 
-    return this.path.getFuturePosition(time);
+    return this.path.getFuturePosition(time - this.cooldown);
   }
 }
 

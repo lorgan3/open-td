@@ -29,7 +29,7 @@ class Mortar implements ITower {
     const projectile = new Rocket(this.tile, target, DAMAGE);
     Manager.Instance.getSurface().spawn(projectile);
 
-    return 0; // This tower cannot guarantee the projectile will hit.
+    return DAMAGE;
   }
 
   spawn() {
