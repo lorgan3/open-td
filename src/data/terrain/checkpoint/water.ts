@@ -66,7 +66,7 @@ export const getWaterCheckpoints: CheckpointFn = (tiles) => {
       checkpoints.push(new WaterCheckpoint(i));
 
       // Also checkpoint the next tile to complete the edges of the bridge if necessary
-      if (i < tiles.length && tiles[i + 1].getType() !== TileType.Water) {
+      if (i + 1 < tiles.length && tiles[i + 1].getType() !== TileType.Water) {
         checkpoints.push(new WaterCheckpoint(i + 1));
       }
     }
