@@ -1,5 +1,15 @@
 import { Agent, EntityType } from "./entity/entity";
 
+export const RECURRING_POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> =
+  {
+    [EntityType.ElectricFence]: 0.2,
+  };
+
+export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
+  [EntityType.ElectricFence]: 0,
+  [EntityType.Railgun]: 1,
+};
+
 class PowerController {
   private generators = new Set<Agent>();
   private consumers = new Set<Agent>();
@@ -18,10 +28,17 @@ class PowerController {
   }
 
   registerConsumer(agent: Agent) {
+    const consumption = this.getPowerConsumption(agent);
+    if (consumption > this.power) {
+      throw new Error("Not enough power!");
+    }
+
+    this.power -= consumption;
     this.consumers.add(agent);
   }
 
   removeConsumer(agent: Agent) {
+    // No refunds!
     this.consumers.delete(agent);
   }
 
@@ -41,7 +58,7 @@ class PowerController {
   getConsumption() {
     let sum = 0;
     this.consumers.forEach(
-      (consumer) => (sum += this.getPowerConsumption(consumer))
+      (consumer) => (sum += this.getRecurringPowerConsumption(consumer))
     );
 
     return sum;
@@ -73,10 +90,19 @@ class PowerController {
   }
 
   private getPowerConsumption(agent: Agent): number {
-    switch (agent.getType()) {
-      default:
-        throw new Error("Entity is not a consumer");
+    if (agent.getType() in POWER_CONSUMPTIONS) {
+      return POWER_CONSUMPTIONS[agent.getType()]!;
     }
+
+    throw new Error("Entity is not a consumer");
+  }
+
+  private getRecurringPowerConsumption(agent: Agent): number {
+    if (agent.getType() in RECURRING_POWER_CONSUMPTIONS) {
+      return RECURRING_POWER_CONSUMPTIONS[agent.getType()]!;
+    }
+
+    return 0;
   }
 }
 

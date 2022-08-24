@@ -34,6 +34,7 @@ class Railgun implements ITower {
   }
 
   spawn() {
+    Manager.Instance.getPowerController().registerConsumer(this);
     this.cleanupEventListener = coverTilesWithTowerSightLines(
       this,
       RANGE,
@@ -42,6 +43,7 @@ class Railgun implements ITower {
   }
 
   despawn() {
+    Manager.Instance.getPowerController().removeConsumer(this);
     this.cleanupEventListener?.();
   }
 

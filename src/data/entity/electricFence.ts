@@ -1,3 +1,4 @@
+import Manager from "../manager";
 import Tile from "../terrain/tile";
 import { IEnemy } from "./enemies";
 import Entity, { AgentCategory, EntityType } from "./entity";
@@ -24,7 +25,12 @@ class ElectricFence implements ITower {
     return DAMAGE;
   }
 
+  spawn() {
+    Manager.Instance.getPowerController().registerConsumer(this);
+  }
+
   despawn() {
+    Manager.Instance.getPowerController().removeConsumer(this);
     this.tile.removeTower(this);
   }
 
