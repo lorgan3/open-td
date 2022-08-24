@@ -59,6 +59,10 @@ class Mortar implements ITower {
   isVisible() {
     return true;
   }
+
+  getTile() {
+    return this.tile;
+  }
 }
 
 export default Mortar;

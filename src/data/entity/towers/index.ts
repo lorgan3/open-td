@@ -7,6 +7,7 @@ import { Agent } from "../entity";
 export interface ITower extends Agent {
   getCooldown(): number;
   fire(target: IEnemy): number;
+  getTile(): Tile;
 }
 
 export const coverTilesWithTowerSightLines = (

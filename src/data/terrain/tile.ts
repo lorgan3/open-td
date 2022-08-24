@@ -127,7 +127,9 @@ class Tile {
   }
 
   getAvailableTowers() {
-    return this.towers.filter((tower) => tower.getCooldown() === 0);
+    return this.towers.filter(
+      (tower) => tower.getCooldown() === 0 && tower.getTile().isDiscovered()
+    );
   }
 
   // @TODO instead of a string, just the index on the surface would be more efficient

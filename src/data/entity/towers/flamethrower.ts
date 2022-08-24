@@ -70,6 +70,10 @@ class Flamethrower implements ITower {
   isVisible() {
     return true;
   }
+
+  getTile() {
+    return this.tile;
+  }
 }
 
 export default Flamethrower;

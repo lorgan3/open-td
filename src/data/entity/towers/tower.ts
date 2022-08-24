@@ -64,6 +64,10 @@ class Tower implements ITower {
   isVisible() {
     return true;
   }
+
+  getTile() {
+    return this.tile;
+  }
 }
 
 export default Tower;
