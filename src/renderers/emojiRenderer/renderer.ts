@@ -294,11 +294,11 @@ class Renderer implements IRenderer {
   }
 
   private getEmoji(tile: Tile) {
-    if (!tile.isDiscovered() && !DEBUG) {
-      return "🌌";
-    }
-
     if (tile.hasStaticEntity()) {
+      if (!tile.getStaticEntity()!.getAgent().isVisible()) {
+        return "🌌";
+      }
+
       switch (tile.getStaticEntity()!.getAgent().getType()) {
         case EntityType.Tower:
           return "🗼";
@@ -327,6 +327,10 @@ class Renderer implements IRenderer {
         case EntityType.PowerPlant:
           return "🏭";
       }
+    }
+
+    if (!tile.isDiscovered() && !DEBUG) {
+      return "🌌";
     }
 
     switch (tile.getBaseType()) {
