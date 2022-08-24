@@ -103,6 +103,14 @@ class Enemy implements IEnemy {
   isVisible() {
     return this.path.getTile().isDiscovered();
   }
+
+  getFuturePosition(time: number) {
+    if (this.isBusy()) {
+      return this.path.getIndex();
+    }
+
+    return this.path.getFuturePosition(time);
+  }
 }
 
 export default Enemy;

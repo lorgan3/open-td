@@ -6,4 +6,5 @@ export interface IEnemy extends Agent {
   getPath(): Path;
   attack(target: Agent, dt: number): void;
   hp: number;
+  getFuturePosition(time: number): number;
 }

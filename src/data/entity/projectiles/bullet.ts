@@ -28,7 +28,7 @@ class Bullet implements Agent {
     const dist = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     this.travelTime = dist / SPEED;
 
-    const index = this.target.getPath().getFuturePosition(this.travelTime);
+    const index = this.target.getFuturePosition(this.travelTime);
 
     const { x, y } = target.getPath().getCoordinates(index);
     this.targetX = x;
