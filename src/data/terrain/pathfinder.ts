@@ -34,6 +34,7 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Snow]: 3.5,
   [TileType.Ice]: 10,
   [TileType.PlayerBuilding]: 3,
+  [TileType.NaturalFeature]: 5,
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
