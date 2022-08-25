@@ -8,6 +8,8 @@ import Tile, { FREE_TILES } from "./terrain/tile";
 
 enum Keys {
   Shift = "Shift",
+  Control = "Control",
+  Meta = "Meta",
 }
 
 function isKey(key: string): key is Keys {
@@ -52,6 +54,17 @@ class Controller {
 
     let x = this.mouseX;
     let y = this.mouseY;
+
+    if (this.pressedKeys[Keys.Control] || this.pressedKeys[Keys.Meta]) {
+      let tiles: Tile[] = [];
+      this.surface.forRect(this.mouseDownX, this.mouseDownY, x, y, (tile) => {
+        if (tile.isDiscovered()) {
+          tiles.push(tile);
+        }
+      });
+
+      return tiles;
+    }
 
     if (this.pressedKeys[Keys.Shift]) {
       if (Math.abs(x - this.mouseDownX) > Math.abs(y - this.mouseDownY)) {
