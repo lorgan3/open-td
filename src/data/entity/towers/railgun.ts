@@ -16,12 +16,17 @@ class Railgun implements ITower {
   private cooldown = 0;
   private cleanupEventListener?: () => void;
   private hp = 100;
+  private isEnabled = true;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
   }
 
   tick(dt: number) {
+    if (!this.isEnabled) {
+      return;
+    }
+
     this.cooldown = Math.max(0, this.cooldown - dt);
   }
 
@@ -69,6 +74,15 @@ class Railgun implements ITower {
 
   getTile() {
     return this.tile;
+  }
+
+  enable() {
+    this.isEnabled = true;
+  }
+
+  disable() {
+    this.cooldown = COOLDOWN;
+    this.isEnabled = false;
   }
 }
 

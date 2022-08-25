@@ -9,6 +9,7 @@ const DAMAGE = 2;
 class ElectricFence implements ITower {
   public entity: Entity;
   public category = AgentCategory.Player;
+  private isEnabled = true;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -16,7 +17,7 @@ class ElectricFence implements ITower {
   }
 
   getCooldown(): number {
-    return 0;
+    return this.isEnabled ? 0 : 1;
   }
 
   fire(target: IEnemy) {
@@ -40,6 +41,14 @@ class ElectricFence implements ITower {
 
   getTile() {
     return this.tile;
+  }
+
+  enable() {
+    this.isEnabled = true;
+  }
+
+  disable() {
+    this.isEnabled = false;
   }
 
   isVisible() {

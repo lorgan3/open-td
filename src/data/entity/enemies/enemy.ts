@@ -97,7 +97,6 @@ class Enemy implements IEnemy {
   }
 
   miss(damage: number) {
-    console.log("missed");
     this.predictedHp += damage;
   }
 

@@ -8,6 +8,12 @@ export interface ITower extends Agent {
   getCooldown(): number;
   fire(target: IEnemy): number;
   getTile(): Tile;
+  enable(): void;
+  disable(): void;
+}
+
+export function isTower(agent: Agent): agent is ITower {
+  return "getCooldown" in agent;
 }
 
 export const coverTilesWithTowerSightLines = (

@@ -1,13 +1,15 @@
 import { Agent, EntityType } from "./entity/entity";
+import { isTower } from "./entity/towers";
+import { GameEvent } from "./events";
+import Manager from "./manager";
 
-export const RECURRING_POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> =
-  {
-    [EntityType.ElectricFence]: 0.2,
-  };
+export const POWER_PRODUCTIONS: Partial<Record<EntityType, number>> = {
+  [EntityType.PowerPlant]: 5,
+};
 
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
-  [EntityType.ElectricFence]: 0,
-  [EntityType.Railgun]: 1,
+  [EntityType.ElectricFence]: 1,
+  [EntityType.Railgun]: 5,
 };
 
 class PowerController {
@@ -58,7 +60,7 @@ class PowerController {
   getConsumption() {
     let sum = 0;
     this.consumers.forEach(
-      (consumer) => (sum += this.getRecurringPowerConsumption(consumer))
+      (consumer) => (sum += this.getPowerConsumption(consumer))
     );
 
     return sum;
@@ -70,10 +72,25 @@ class PowerController {
 
   processPower() {
     this.lastProduction = this.getProduction();
-    this.power += this.lastProduction;
-
     this.lastConsumption = this.getConsumption();
-    this.power -= this.lastConsumption;
+
+    this.power = this.power + this.lastProduction - this.lastConsumption;
+
+    let fn: "enable" | "disable" = "enable";
+    if (this.power < 0) {
+      this.power = 0;
+      fn = "disable";
+
+      Manager.Instance.triggerEvent(GameEvent.BlackOut, {
+        affectedConsumers: [...this.consumers],
+      });
+    }
+
+    this.consumers.forEach((consumer) => {
+      if (isTower(consumer)) {
+        consumer[fn]();
+      }
+    });
   }
 
   getPower() {
@@ -81,12 +98,11 @@ class PowerController {
   }
 
   private getPowerProduction(agent: Agent): number {
-    switch (agent.getType()) {
-      case EntityType.PowerPlant:
-        return 1;
-      default:
-        throw new Error("Entity is not a generator");
+    if (agent.getType() in POWER_PRODUCTIONS) {
+      return POWER_PRODUCTIONS[agent.getType()]!;
     }
+
+    throw new Error("Entity is not a generator");
   }
 
   private getPowerConsumption(agent: Agent): number {
@@ -95,14 +111,6 @@ class PowerController {
     }
 
     throw new Error("Entity is not a consumer");
-  }
-
-  private getRecurringPowerConsumption(agent: Agent): number {
-    if (agent.getType() in RECURRING_POWER_CONSUMPTIONS) {
-      return RECURRING_POWER_CONSUMPTIONS[agent.getType()]!;
-    }
-
-    return 0;
   }
 }
 
