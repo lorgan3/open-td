@@ -119,6 +119,10 @@ class Path {
     return this.tiles;
   }
 
+  getLength() {
+    return this.tiles.length;
+  }
+
   getCoordinates(index = this.index) {
     if (index >= this.tiles.length - 1) {
       const tile = this.tiles[this.tiles.length - 1];

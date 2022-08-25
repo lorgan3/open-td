@@ -69,6 +69,22 @@ class SpawnGroup {
     });
   };
 
+  rePath(pathfinder: Pathfinder) {
+    const spawnPoints = this.spawnPoints.map((path) => path.getTile(0));
+    const target = this.spawnPoints[0].getTile(
+      this.spawnPoints[0].getLength() - 1
+    );
+
+    this.spawnPoints = pathfinder
+      .getHivePath(spawnPoints, target)
+      .filter((path): path is Path => !!path)
+      .map((path) => {
+        path.setSpeed(0.01);
+
+        return path;
+      });
+  }
+
   static fromTiles(spawnPoints: Tile[], target: Tile, pathfinder: Pathfinder) {
     return new SpawnGroup(
       pathfinder

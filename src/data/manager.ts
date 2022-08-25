@@ -15,7 +15,7 @@ import Tile, {
 } from "./terrain/tile";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
-import Wave from "./wave/wave";
+import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
 
 class Manager {
   private static instance: Manager;
@@ -198,55 +198,58 @@ class Manager {
       } else {
         // ...and make the others stronger
         spawnGroup.grow();
+        spawnGroup.rePath(this.pathfinder);
       }
     }
 
-    // Add a new spawn location every wave
-    let direction = Math.random() * Math.PI * 2;
-    let spawned = false;
-    let backOff = 3;
-    for (let i = 0; i < 20; i++) {
-      this.surface.forRay(
-        this.base.getTile().getX(),
-        this.base.getTile().getY(),
-        direction,
-        (tile) => {
-          if (tile.isDiscovered()) {
-            backOff = 3;
-            return true;
-          }
-
-          backOff--;
-
-          if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
-            return true;
-          }
-
-          this.spawnGroups.push(
-            SpawnGroup.fromTiles(
-              [tile, tile, tile, tile],
-              this.base.getTile(),
-              this.pathfinder
-            )
-          );
-          const tilesToUpdate: Tile[] = [];
-          this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
-            if (FREE_TILES.has(tile.getType())) {
-              tilesToUpdate.push(
-                new Tile(tile.getX(), tile.getY(), TileType.Spore)
-              );
+    if (this.spawnGroups.length < MAX_SPAWN_GROUPS) {
+      // Add a new spawn location every wave
+      let direction = Math.random() * Math.PI * 2;
+      let spawned = false;
+      let backOff = 3;
+      for (let i = 0; i < 20; i++) {
+        this.surface.forRay(
+          this.base.getTile().getX(),
+          this.base.getTile().getY(),
+          direction,
+          (tile) => {
+            if (tile.isDiscovered()) {
+              backOff = 3;
+              return true;
             }
-          });
-          this.surface.setTiles(tilesToUpdate);
-          spawned = true;
-          return false;
-        }
-      );
 
-      if (!spawned) {
-        direction += direction + Math.PI / 10;
-      } else {
-        break;
+            backOff--;
+
+            if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
+              return true;
+            }
+
+            this.spawnGroups.push(
+              SpawnGroup.fromTiles(
+                [tile, tile, tile, tile],
+                this.base.getTile(),
+                this.pathfinder
+              )
+            );
+            const tilesToUpdate: Tile[] = [];
+            this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
+              if (FREE_TILES.has(tile.getType())) {
+                tilesToUpdate.push(
+                  new Tile(tile.getX(), tile.getY(), TileType.Spore)
+                );
+              }
+            });
+            this.surface.setTiles(tilesToUpdate);
+            spawned = true;
+            return false;
+          }
+        );
+
+        if (!spawned) {
+          direction += direction + Math.PI / 10;
+        } else {
+          break;
+        }
       }
     }
 

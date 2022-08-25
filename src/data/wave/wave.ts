@@ -10,6 +10,8 @@ import { getDirtCheckpoints } from "../terrain/checkpoint/dirt";
 const MIN_SPAWN_INTERVAL = 50;
 const SPAWN_INTERVAL = 350;
 
+export const MAX_SPAWN_GROUPS = 3;
+
 class Wave {
   private time = 0;
   private lastActivation = 0;
