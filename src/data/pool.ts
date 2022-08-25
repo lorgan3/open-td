@@ -64,6 +64,10 @@ class Pool<I, O> {
   getSize() {
     return this.size;
   }
+
+  getUsed() {
+    return this.usedEntities;
+  }
 }
 
 export default Pool;

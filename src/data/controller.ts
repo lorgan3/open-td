@@ -6,9 +6,21 @@ import placeables, { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
 import Tile, { FREE_TILES } from "./terrain/tile";
 
+enum Keys {
+  Shift = "Shift",
+}
+
+function isKey(key: string): key is Keys {
+  return key in Keys;
+}
+
 class Controller {
   private mouseDownX = 0;
   private mouseDownY = 0;
+  private mouseX = 0;
+  private mouseY = 0;
+  private pressedKeys: Partial<Record<Keys, boolean>> = {};
+  private isMouseDown = false;
 
   private selectedPlacable: Placeable | null = null;
 
@@ -25,15 +37,24 @@ class Controller {
   public mouseDown(x: number, y: number) {
     this.mouseDownX = x;
     this.mouseDownY = y;
+    this.isMouseDown = true;
   }
 
-  public mouseUp(x: number, y: number, shiftKey: boolean) {
-    if (!this.selectedPlacable) {
-      return;
+  public mouseMove(x: number, y: number) {
+    this.mouseX = x;
+    this.mouseY = y;
+  }
+
+  public getSelection() {
+    if (!this.isMouseDown) {
+      return [];
     }
 
-    if (shiftKey) {
-      if (x > y) {
+    let x = this.mouseX;
+    let y = this.mouseY;
+
+    if (this.pressedKeys[Keys.Shift]) {
+      if (Math.abs(x - this.mouseDownX) > Math.abs(y - this.mouseDownY)) {
         y = this.mouseDownY;
       } else {
         x = this.mouseDownX;
@@ -46,6 +67,17 @@ class Controller {
         tiles.push(tile);
       }
     });
+
+    return tiles;
+  }
+
+  public mouseUp(x: number, y: number) {
+    if (!this.selectedPlacable) {
+      this.isMouseDown = false;
+      return;
+    }
+
+    let tiles = this.getSelection();
 
     if (this.selectedPlacable.entityType === EntityType.None) {
       tiles.forEach((tile) => {
@@ -75,6 +107,19 @@ class Controller {
     Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
       affectedTiles: tiles,
     });
+    this.isMouseDown = false;
+  }
+
+  public keyDown(key: string) {
+    if (isKey(key)) {
+      this.pressedKeys[key as Keys] = true;
+    }
+  }
+
+  public keyUp(key: string) {
+    if (isKey(key)) {
+      this.pressedKeys[key as Keys] = false;
+    }
   }
 }
 

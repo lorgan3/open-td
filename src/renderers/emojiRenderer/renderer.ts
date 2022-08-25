@@ -19,6 +19,7 @@ declare global {
 
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
+  private selectionPool: Pool<number, HTMLSpanElement>;
   public xStep = 0;
   public yStep = 0;
   private offsetX = 0;
@@ -51,6 +52,35 @@ class Renderer implements IRenderer {
         htmlElement.children[0].textContent = entity
           ? this.getEntityEmoji(entity!)
           : "";
+        htmlElement.style.position = "absolute";
+        htmlElement.style.top = "0";
+        htmlElement.style.left = "0";
+        htmlElement.style.display = active ? "block" : "none";
+        htmlElement.style.willChange = "transform";
+
+        this.target!.appendChild(htmlElement);
+
+        return htmlElement;
+      },
+      PoolType.Growing,
+      0
+    );
+
+    this.selectionPool = new Pool(
+      (active, original) => {
+        if (original) {
+          original.style.display = "block";
+          return original;
+        }
+
+        const htmlElement = document.createElement("span");
+        htmlElement.appendChild(document.createElement("span"));
+        if (IS_WINDOWS) {
+          (htmlElement.children[0] as HTMLElement).style.margin = "-0.35ch";
+        }
+
+        htmlElement.children[0].textContent = "🟧";
+        htmlElement.style.opacity = "0.7";
         htmlElement.style.position = "absolute";
         htmlElement.style.top = "0";
         htmlElement.style.left = "0";
@@ -145,6 +175,7 @@ class Renderer implements IRenderer {
       }
     });
 
+    this.renderSelection();
     this.surface.markPristine();
   }
 
@@ -217,6 +248,28 @@ class Renderer implements IRenderer {
     }
   }
 
+  private renderSelection() {
+    const selection = this.controller.getSelection();
+    const usedTiles = this.selectionPool.getUsed();
+
+    selection.forEach((tile, i) => {
+      const htmlElement = usedTiles.has(i)
+        ? usedTiles.get(i)!
+        : this.selectionPool.get(i);
+
+      htmlElement.style.transform = `translate(${tile.getX() * this.xStep}px, ${
+        tile.getY() * this.yStep
+      }px)`;
+    });
+
+    for (let i = usedTiles.size - 1; i >= selection.length; i--) {
+      const htmlElement = this.selectionPool.free(i);
+      if (htmlElement) {
+        htmlElement.style.display = "none";
+      }
+    }
+  }
+
   unmount(): void {
     throw new Error("Method not implemented.");
   }
@@ -281,6 +334,17 @@ class Renderer implements IRenderer {
       this.controller.mouseDown(x, y);
     });
 
+    target.addEventListener("mousemove", (event: MouseEvent) => {
+      const x = Math.floor(
+        (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
+      );
+      const y = Math.floor(
+        (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
+      );
+
+      this.controller.mouseMove(x, y);
+    });
+
     target.addEventListener("mouseup", (event: MouseEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
@@ -289,13 +353,21 @@ class Renderer implements IRenderer {
         (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
       );
 
-      this.controller.mouseUp(x, y, event.shiftKey);
+      this.controller.mouseUp(x, y);
+    });
+
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
+      this.controller.keyDown(event.key);
+    });
+
+    window.addEventListener("keyup", (event: KeyboardEvent) => {
+      this.controller.keyUp(event.key);
     });
   }
 
   private getEmoji(tile: Tile) {
     if (tile.hasStaticEntity()) {
-      if (!tile.getStaticEntity()!.getAgent().isVisible()) {
+      if (!tile.getStaticEntity()!.getAgent().isVisible() && !DEBUG) {
         return "🌌";
       }
 
