@@ -39,6 +39,9 @@ class Renderer implements IRenderer {
       (active, original, entity) => {
         if (original) {
           original.style.display = "block";
+          original.style.opacity = "1";
+          original.style.transformOrigin = "50% 50%";
+          original.style.filter = "none";
           original.children[0].textContent = this.getEntityEmoji(entity!);
           return original;
         }
@@ -144,18 +147,16 @@ class Renderer implements IRenderer {
 
     const entities = this.surface.getEntities();
     for (let entity of entities) {
-      if (!this.getEntityEmoji(entity)) {
+      const fn = OVERRIDES[entity.getAgent().getType()];
+      if (!this.getEntityEmoji(entity) && !fn) {
         continue;
       }
 
       const htmlElement = this.pool.get(entity);
-      htmlElement.style.opacity = "1";
-      htmlElement.style.transformOrigin = "50% 50%";
       htmlElement.style.display = entity.getAgent().isVisible()
         ? "block"
         : "none";
 
-      const fn = OVERRIDES[entity.getAgent().getType()];
       if (fn) {
         fn(this, entity.getAgent(), htmlElement);
       } else {
