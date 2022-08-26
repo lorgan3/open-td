@@ -249,8 +249,11 @@ class Renderer implements IRenderer {
   }
 
   private renderSelection() {
-    const selection = this.controller.getSelection();
     const usedTiles = this.selectionPool.getUsed();
+    let selection = this.controller.getSelection();
+    if (selection.length === 1) {
+      selection = [];
+    }
 
     selection.forEach((tile, i) => {
       const htmlElement = usedTiles.has(i)
