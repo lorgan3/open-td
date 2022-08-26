@@ -56,6 +56,7 @@ onUnmounted(() => (mounted = false));
 
   .canvas {
     position: relative;
+    display: flex;
 
     .render-target {
       width: 1280px;

@@ -1,4 +1,4 @@
-import Controller from "../../data/controller";
+import Controller, { Keys } from "../../data/controller";
 import Entity, { EntityType } from "../../data/entity/entity";
 import Manager from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
@@ -8,6 +8,9 @@ import { IRenderer } from "../api";
 import { OVERRIDES } from "./overrides";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
+const MAX_FONT_SIZE = 42;
+const MIN_FONT_SIZE = 3;
+const DEFAULT_FONT_SIZE = 20;
 
 let DEBUG = false;
 
@@ -25,6 +28,7 @@ class Renderer implements IRenderer {
   private offsetX = 0;
   private offsetY = 0;
   private time = 0;
+  private fontSize = DEFAULT_FONT_SIZE;
 
   private _showCoverage = false;
 
@@ -107,28 +111,21 @@ class Renderer implements IRenderer {
   mount(target: HTMLDivElement): void {
     this.target = target;
 
-    target.style.lineHeight = "1em";
+    target.style.lineHeight = "1ch";
     target.style.whiteSpace = "nowrap";
     target.style.display = "inline-flex";
     target.style.flexDirection = "column";
     target.style.cursor = "crosshair";
     target.style.userSelect = "none";
     target.style.position = "relative";
-    target.style.fontSize = "20px";
     target.style.fontFamily =
       '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Android Emoji","EmojiOne Mozilla","Twemoji Mozilla","Noto Emoji","Segoe UI Symbol",EmojiSymbols';
 
     this.renderTiles();
 
-    const { width, height, x, y } = target.getBoundingClientRect();
-    const totalWidth = target.scrollWidth;
-    const totalHeight = target.scrollHeight;
+    this.zoom();
 
-    this.xStep = totalWidth / this.surface.getWidth();
-    this.yStep = totalHeight / this.surface.getHeight();
-    this.offsetX = x - target.scrollLeft;
-    this.offsetY = y - target.scrollTop;
-
+    const { width, height } = this.target!.getBoundingClientRect();
     const center = Manager.Instance.getBase().getTile();
     target.scrollLeft = center.getX() * this.xStep - width / 2;
     target.scrollTop = center.getY() * this.yStep - height / 2;
@@ -136,6 +133,29 @@ class Renderer implements IRenderer {
     this.rerender(0);
 
     this.registerEventHandlers(target);
+  }
+
+  private zoom() {
+    const xPercent =
+      (this.target!.scrollLeft + this.target!.clientWidth / 2) /
+      this.target!.scrollWidth;
+    const yPercent =
+      (this.target!.scrollTop + this.target!.clientHeight / 2) /
+      this.target!.scrollHeight;
+
+    this.target!.style.fontSize = `${this.fontSize}px`;
+
+    const { width, height, x, y } = this.target!.getBoundingClientRect();
+    const totalWidth = this.target!.scrollWidth;
+    const totalHeight = this.target!.scrollHeight;
+
+    this.xStep = totalWidth / this.surface.getWidth();
+    this.yStep = totalHeight / this.surface.getHeight();
+    this.offsetX = x - this.target!.scrollLeft;
+    this.offsetY = y - this.target!.scrollTop;
+
+    this.target!.scrollLeft = xPercent * totalWidth - width / 2;
+    this.target!.scrollTop = yPercent * totalHeight - height / 2;
   }
 
   rerender(dt: number): void {
@@ -366,6 +386,17 @@ class Renderer implements IRenderer {
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.controller.keyUp(event.key);
+
+      let originalFontSize = this.fontSize;
+      if (event.key === Keys.Minus) {
+        this.fontSize = Math.max(MIN_FONT_SIZE, this.fontSize - 4);
+      } else if (event.key === Keys.Plus || event.key === Keys.Equals) {
+        this.fontSize = Math.min(MAX_FONT_SIZE, this.fontSize + 4);
+      }
+
+      if (this.fontSize !== originalFontSize) {
+        this.zoom();
+      }
     });
   }
 

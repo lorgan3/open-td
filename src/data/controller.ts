@@ -3,10 +3,13 @@ import { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
 import Tile from "./terrain/tile";
 
-enum Keys {
+export enum Keys {
   Shift = "Shift",
   Control = "Control",
   Meta = "Meta",
+  Plus = "+",
+  Minus = "-",
+  Equals = "=",
 }
 
 function isKey(key: string): key is Keys {
