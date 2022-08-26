@@ -85,4 +85,8 @@ const placeables: Placeable[] = [
   },
 ];
 
+export const placeableEntityTypes = new Set(
+  placeables.map((placeable) => placeable.entityType)
+);
+
 export default placeables;

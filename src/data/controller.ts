@@ -1,10 +1,7 @@
-import { EntityType } from "./entity/entity";
-import { GameEvent } from "./events";
 import Manager from "./manager";
-import { TOWER_PRICES } from "./moneyController";
-import placeables, { Placeable } from "./placeables";
+import { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
-import Tile, { FREE_TILES } from "./terrain/tile";
+import Tile from "./terrain/tile";
 
 enum Keys {
   Shift = "Shift",
@@ -90,36 +87,9 @@ class Controller {
       return;
     }
 
-    let tiles = this.getSelection();
+    const tiles = this.getSelection();
+    Manager.Instance.getBuildController().build(tiles, this.selectedPlacable);
 
-    if (this.selectedPlacable.entityType === EntityType.None) {
-      tiles.forEach((tile) => {
-        if (tile.hasStaticEntity()) {
-          const entity = tile.getStaticEntity()!;
-          const placeable = placeables.find(
-            (placeable) => placeable.entityType === entity.getAgent().getType()
-          );
-
-          if (placeable) {
-            Manager.Instance.addMoney(TOWER_PRICES[placeable.entityType] ?? 0);
-            this.surface.despawnStatic(entity.getAgent());
-          }
-        }
-      });
-    } else {
-      tiles = tiles.filter((tile) => FREE_TILES.has(tile.getType()));
-      if (Manager.Instance.buy(this.selectedPlacable, tiles.length)) {
-        tiles.forEach((tile) => {
-          if (this.selectedPlacable?.entity) {
-            this.surface.spawnStatic(new this.selectedPlacable.entity(tile));
-          }
-        });
-      }
-    }
-
-    Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
-      affectedTiles: tiles,
-    });
     this.isMouseDown = false;
   }
 

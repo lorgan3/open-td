@@ -1,7 +1,9 @@
+import BuildController from "./buildController";
 import Controller from "./controller";
 import Base from "./entity/base";
+import Blueprint from "./entity/Blueprint";
 import Enemy from "./entity/enemies/enemy";
-import { AgentCategory } from "./entity/entity";
+import { Agent, AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable } from "./placeables";
@@ -25,6 +27,7 @@ class Manager {
   private visibilityController: VisibilityController;
   private powerController: PowerController;
   private moneyController: MoneyController;
+  private buildController: BuildController;
   private pathfinder: Pathfinder;
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
@@ -44,6 +47,7 @@ class Manager {
     this.visibilityController = new VisibilityController(surface);
     this.powerController = new PowerController();
     this.moneyController = new MoneyController(1000);
+    this.buildController = new BuildController(surface);
     this.pathfinder = new Pathfinder(surface);
 
     if (basePoint.hasStaticEntity()) {
@@ -144,6 +148,10 @@ class Manager {
     return this.powerController;
   }
 
+  getBuildController() {
+    return this.buildController;
+  }
+
   getBase() {
     return this.base;
   }
@@ -172,7 +180,16 @@ class Manager {
 
     this.moneyController.removeMoney(cost);
     this.triggerStatUpdate();
+
     return true;
+  }
+
+  sell(agent: Agent) {
+    if (agent instanceof Blueprint) {
+      this.addMoney(TOWER_PRICES[agent.getPlaceable().entityType] ?? 0);
+    } else {
+      this.addMoney(TOWER_PRICES[agent.getType()] ?? 0);
+    }
   }
 
   addMoney(amount: number) {
@@ -261,6 +278,7 @@ class Manager {
 
   private end() {
     this.powerController.processPower();
+    this.buildController.commit();
   }
 
   addEventListener<E extends keyof EventParamsMap>(
