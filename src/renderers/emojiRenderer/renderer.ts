@@ -151,8 +151,8 @@ class Renderer implements IRenderer {
 
     this.xStep = totalWidth / this.surface.getWidth();
     this.yStep = totalHeight / this.surface.getHeight();
-    this.offsetX = x - this.target!.scrollLeft;
-    this.offsetY = y - this.target!.scrollTop;
+    this.offsetX = x;
+    this.offsetY = y;
 
     this.target!.scrollLeft = xPercent * totalWidth - width / 2;
     this.target!.scrollTop = yPercent * totalHeight - height / 2;
@@ -389,9 +389,9 @@ class Renderer implements IRenderer {
 
       let originalFontSize = this.fontSize;
       if (event.key === Keys.Minus) {
-        this.fontSize = Math.max(MIN_FONT_SIZE, this.fontSize - 4);
+        this.fontSize = Math.max(MIN_FONT_SIZE, this.fontSize * 0.8);
       } else if (event.key === Keys.Plus || event.key === Keys.Equals) {
-        this.fontSize = Math.min(MAX_FONT_SIZE, this.fontSize + 4);
+        this.fontSize = Math.min(MAX_FONT_SIZE, this.fontSize * 1.2);
       }
 
       if (this.fontSize !== originalFontSize) {
