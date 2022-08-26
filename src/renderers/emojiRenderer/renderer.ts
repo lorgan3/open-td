@@ -369,40 +369,50 @@ class Renderer implements IRenderer {
     });
   }
 
-  private getEmoji(tile: Tile) {
+  public getStaticEntityEmoji(entityType: EntityType) {
+    switch (entityType) {
+      case EntityType.Tower:
+        return "🗼";
+      case EntityType.Wall:
+        return "🧱";
+      case EntityType.Mortar:
+        return "🛰️";
+      case EntityType.Flamethrower:
+        return "🧯";
+      case EntityType.Railgun:
+        return "🌡️";
+      case EntityType.ElectricFence:
+        return "⚡";
+      case EntityType.Fence:
+        return "🥅";
+      case EntityType.Freezer:
+        return "❄️";
+      case EntityType.Base:
+        return "⛺";
+      case EntityType.Tree:
+        return "🌲";
+      case EntityType.Rock:
+        return "🪨";
+      case EntityType.Radar:
+        return "📡";
+      case EntityType.PowerPlant:
+        return "🏭";
+      case EntityType.None:
+        return "❌";
+      default:
+        return "❓";
+    }
+  }
+
+  private getEmoji = (tile: Tile) => {
     if (tile.hasStaticEntity()) {
       if (!tile.getStaticEntity()!.getAgent().isVisible() && !DEBUG) {
         return "🌌";
       }
 
-      switch (tile.getStaticEntity()!.getAgent().getType()) {
-        case EntityType.Tower:
-          return "🗼";
-        case EntityType.Wall:
-          return "🧱";
-        case EntityType.Mortar:
-          return "🛰️";
-        case EntityType.Flamethrower:
-          return "🧯";
-        case EntityType.Railgun:
-          return "🌡️";
-        case EntityType.ElectricFence:
-          return "⚡";
-        case EntityType.Fence:
-          return "🥅";
-        case EntityType.Freezer:
-          return "❄️";
-        case EntityType.Base:
-          return "⛺";
-        case EntityType.Tree:
-          return "🌲";
-        case EntityType.Rock:
-          return "🪨";
-        case EntityType.Radar:
-          return "📡";
-        case EntityType.PowerPlant:
-          return "🏭";
-      }
+      return this.getStaticEntityEmoji(
+        tile.getStaticEntity()!.getAgent().getType()
+      );
     }
 
     if (!tile.isDiscovered() && !DEBUG) {
@@ -431,7 +441,7 @@ class Renderer implements IRenderer {
       default:
         return "🌌";
     }
-  }
+  };
 
   private getEntityEmoji(entity: Entity) {
     switch (entity.getAgent().getType()) {
