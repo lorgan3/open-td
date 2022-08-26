@@ -9,7 +9,7 @@ import { OVERRIDES } from "./overrides";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
-const MIN_FONT_SIZE = 3;
+const MIN_FONT_SIZE = 4;
 const DEFAULT_FONT_SIZE = 20;
 
 let DEBUG = false;
