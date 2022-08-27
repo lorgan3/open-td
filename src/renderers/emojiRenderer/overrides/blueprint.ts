@@ -4,7 +4,7 @@ import Blueprint from "../../../data/entity/Blueprint";
 const render: RenderFn<Blueprint> = (renderer, blueprint, htmlElement) => {
   const entity = blueprint.entity;
 
-  htmlElement.textContent = renderer.getStaticEntityEmoji(
+  htmlElement.children[0].textContent = renderer.getStaticEntityEmoji(
     blueprint.getPlaceable().entityType
   );
   htmlElement.style.opacity = "0.5";
