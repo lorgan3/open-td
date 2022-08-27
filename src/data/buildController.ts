@@ -92,8 +92,8 @@ class BuildController {
     validTiles.forEach((tile) => {
       const currentBlueprint = this.blueprints.get(tile.getHash());
       if (currentBlueprint) {
-        this.surface.despawn(currentBlueprint);
         Manager.Instance.sell(currentBlueprint);
+        this.surface.despawn(currentBlueprint);
       }
 
       const blueprint = new Blueprint(tile, placeable);
@@ -112,6 +112,7 @@ class BuildController {
         }
 
         this.blueprints.delete(hash);
+        this.surface.despawn(blueprint);
         return;
       }
 
