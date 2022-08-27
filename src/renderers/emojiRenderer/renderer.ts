@@ -60,8 +60,8 @@ class Renderer implements IRenderer {
           ? this.getEntityEmoji(entity!)
           : "";
         htmlElement.style.position = "absolute";
-        htmlElement.style.top = "0";
-        htmlElement.style.left = "0";
+        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "2px";
+        htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
 
@@ -89,8 +89,8 @@ class Renderer implements IRenderer {
         htmlElement.children[0].textContent = "🟧";
         htmlElement.style.opacity = "0.7";
         htmlElement.style.position = "absolute";
-        htmlElement.style.top = "0";
-        htmlElement.style.left = "0";
+        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "2px";
+        htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
 
@@ -111,7 +111,7 @@ class Renderer implements IRenderer {
   mount(target: HTMLDivElement): void {
     this.target = target;
 
-    target.style.lineHeight = "1ch";
+    target.style.lineHeight = IS_WINDOWS ? "1.86ch" : "1ch";
     target.style.whiteSpace = "nowrap";
     target.style.display = "inline-flex";
     target.style.flexDirection = "column";
@@ -237,10 +237,10 @@ class Renderer implements IRenderer {
       this.coverageMap.style.opacity = "0.5";
       this.coverageMap.style.position = "absolute";
       this.coverageMap.style.top = "0";
-      this.coverageMap.style.left = IS_WINDOWS ? "-2px" : "0";
+      this.coverageMap.style.left = IS_WINDOWS ? "-0.125ch" : "0";
       if (IS_WINDOWS) {
         this.coverageMap.style.letterSpacing = "-0.7ch";
-        this.coverageMap.style.wordSpacing = "22px";
+        this.coverageMap.style.wordSpacing = "2.04ch";
       }
 
       this.target!.appendChild(this.coverageMap);
