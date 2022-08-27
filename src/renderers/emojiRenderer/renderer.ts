@@ -60,7 +60,7 @@ class Renderer implements IRenderer {
           ? this.getEntityEmoji(entity!)
           : "";
         htmlElement.style.position = "absolute";
-        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "2px";
+        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "-.075ch";
         htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
@@ -89,7 +89,7 @@ class Renderer implements IRenderer {
         htmlElement.children[0].textContent = "🟧";
         htmlElement.style.opacity = "0.7";
         htmlElement.style.position = "absolute";
-        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "2px";
+        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "-.075ch";
         htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
