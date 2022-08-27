@@ -72,6 +72,10 @@ class Manager {
   }
 
   tick(dt: number) {
+    if (this.base.isDestroyed()) {
+      return;
+    }
+
     const entities = this.surface.getEntities();
     for (let entity of entities) {
       if (entity.getAgent().tick) {

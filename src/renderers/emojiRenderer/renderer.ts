@@ -484,6 +484,8 @@ class Renderer implements IRenderer {
         return "〰";
       case EntityType.Flame:
         return "🔥";
+      case EntityType.Shockwave:
+        return "🌀";
       default:
         return "";
     }
