@@ -6,13 +6,23 @@ import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
 import TowerMenu from "./TowerMenu.vue";
 import GameStats from "./GameStats.vue";
+import Controller from "../data/controller";
 
 const canvas = ref<HTMLDivElement | null>(null);
 
 const surface = new Surface(300, 300, generate);
+const controller = new Controller(surface);
+const renderer = new Renderer(surface, controller);
+
 const targetTile = surface.getTile(150, 150)!;
-const manager = new Manager(targetTile, surface);
-const renderer = new Renderer(manager.getSurface(), manager.getController());
+const manager = new Manager(
+  targetTile,
+  surface,
+  controller,
+  renderer.showMessage
+);
+
+renderer.showMessage("Welcome to Open TD!");
 
 let mounted = false;
 let oldTimestamp = 0;

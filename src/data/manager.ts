@@ -1,3 +1,4 @@
+import { MessageFn } from "../renderers/api";
 import BuildController from "./buildController";
 import Controller from "./controller";
 import Base from "./entity/base";
@@ -23,7 +24,6 @@ class Manager {
   private static instance: Manager;
 
   private eventHandlers: Map<GameEvent, Set<EventHandler<any>>>;
-  private controller: Controller;
   private visibilityController: VisibilityController;
   private powerController: PowerController;
   private moneyController: MoneyController;
@@ -38,12 +38,12 @@ class Manager {
   constructor(
     basePoint: Tile,
     private surface: Surface,
-    controller?: Controller
+    private controller: Controller,
+    private messageFn: MessageFn
   ) {
     Manager.instance = this;
 
     this.eventHandlers = new Map();
-    this.controller = controller ?? new Controller(surface);
     this.visibilityController = new VisibilityController(surface);
     this.powerController = new PowerController();
     this.moneyController = new MoneyController(1000);
@@ -278,6 +278,10 @@ class Manager {
 
     this.level++;
     this.triggerStatUpdate();
+  }
+
+  showMessage(content: string) {
+    this.messageFn(content);
   }
 
   private end() {

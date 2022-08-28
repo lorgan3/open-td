@@ -1,11 +1,13 @@
+import { createApp } from "vue";
 import Controller, { Keys } from "../../data/controller";
 import Entity, { EntityType } from "../../data/entity/entity";
 import Manager from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { TileType } from "../../data/terrain/tile";
-import { IRenderer } from "../api";
+import { IRenderer, MessageFn } from "../api";
 import { OVERRIDES } from "./overrides";
+import SimpleMessage from "../../components/SimpleMessage.vue";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -23,6 +25,9 @@ declare global {
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
   private selectionPool: Pool<number, HTMLSpanElement>;
+  private messageFn: Promise<MessageFn>;
+  private resolveMessageFn!: (fn: MessageFn) => void;
+
   public xStep = 0;
   public yStep = 0;
   private offsetX = 0;
@@ -33,6 +38,7 @@ class Renderer implements IRenderer {
   private _showCoverage = false;
 
   private target: HTMLDivElement | null = null;
+  private world: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
 
   private coverageMap: HTMLDivElement | null = null;
@@ -65,7 +71,7 @@ class Renderer implements IRenderer {
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
 
-        this.target!.appendChild(htmlElement);
+        this.world!.appendChild(htmlElement);
 
         return htmlElement;
       },
@@ -94,12 +100,16 @@ class Renderer implements IRenderer {
         htmlElement.style.display = active ? "block" : "none";
         htmlElement.style.willChange = "transform";
 
-        this.target!.appendChild(htmlElement);
+        this.world!.appendChild(htmlElement);
 
         return htmlElement;
       },
       PoolType.Growing,
       0
+    );
+
+    this.messageFn = new Promise(
+      (resolve) => (this.resolveMessageFn = resolve)
     );
 
     window.debug = () => {
@@ -111,51 +121,62 @@ class Renderer implements IRenderer {
   mount(target: HTMLDivElement): void {
     this.target = target;
 
-    target.style.lineHeight = IS_WINDOWS ? "1.86ch" : "1ch";
-    target.style.whiteSpace = "nowrap";
-    target.style.display = "inline-flex";
-    target.style.flexDirection = "column";
-    target.style.cursor = "crosshair";
-    target.style.userSelect = "none";
-    target.style.position = "relative";
-    target.style.fontFamily =
+    const container = target.appendChild(document.createElement("div"));
+    createApp(SimpleMessage, {
+      register: this.resolveMessageFn,
+      test: "test",
+    }).mount(container);
+
+    this.world = target.appendChild(document.createElement("div"));
+
+    this.world.style.overflow = "auto";
+    this.world.style.width = "100%";
+    this.world.style.height = "100%";
+    this.world.style.lineHeight = IS_WINDOWS ? "1.86ch" : "1ch";
+    this.world.style.whiteSpace = "nowrap";
+    this.world.style.display = "inline-flex";
+    this.world.style.flexDirection = "column";
+    this.world.style.cursor = "crosshair";
+    this.world.style.userSelect = "none";
+    this.world.style.position = "relative";
+    this.world.style.fontFamily =
       '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Android Emoji","EmojiOne Mozilla","Twemoji Mozilla","Noto Emoji","Segoe UI Symbol",EmojiSymbols';
 
     this.renderTiles();
 
     this.zoom();
 
-    const { width, height } = this.target!.getBoundingClientRect();
+    const { width, height } = this.world!.getBoundingClientRect();
     const center = Manager.Instance.getBase().getTile();
-    target.scrollLeft = center.getX() * this.xStep - width / 2;
-    target.scrollTop = center.getY() * this.yStep - height / 2;
+    this.world.scrollLeft = center.getX() * this.xStep - width / 2;
+    this.world.scrollTop = center.getY() * this.yStep - height / 2;
 
     this.rerender(0);
 
-    this.registerEventHandlers(target);
+    this.registerEventHandlers(this.world);
   }
 
   private zoom() {
     const xPercent =
-      (this.target!.scrollLeft + this.target!.clientWidth / 2) /
-      this.target!.scrollWidth;
+      (this.world!.scrollLeft + this.world!.clientWidth / 2) /
+      this.world!.scrollWidth;
     const yPercent =
-      (this.target!.scrollTop + this.target!.clientHeight / 2) /
-      this.target!.scrollHeight;
+      (this.world!.scrollTop + this.world!.clientHeight / 2) /
+      this.world!.scrollHeight;
 
-    this.target!.style.fontSize = `${this.fontSize}px`;
+    this.world!.style.fontSize = `${this.fontSize}px`;
 
-    const { width, height, x, y } = this.target!.getBoundingClientRect();
-    const totalWidth = this.target!.scrollWidth;
-    const totalHeight = this.target!.scrollHeight;
+    const { width, height, x, y } = this.world!.getBoundingClientRect();
+    const totalWidth = this.world!.scrollWidth;
+    const totalHeight = this.world!.scrollHeight;
 
     this.xStep = totalWidth / this.surface.getWidth();
     this.yStep = totalHeight / this.surface.getHeight();
     this.offsetX = x;
     this.offsetY = y;
 
-    this.target!.scrollLeft = xPercent * totalWidth - width / 2;
-    this.target!.scrollTop = yPercent * totalHeight - height / 2;
+    this.world!.scrollLeft = xPercent * totalWidth - width / 2;
+    this.world!.scrollTop = yPercent * totalHeight - height / 2;
   }
 
   rerender(dt: number): void {
@@ -221,7 +242,7 @@ class Renderer implements IRenderer {
         }
 
         this.rows[i] = row;
-        this.target!.appendChild(row);
+        this.world!.appendChild(row);
       }
 
       const content = this.surface.getRow(i).map(this.getEmoji).join("");
@@ -243,7 +264,7 @@ class Renderer implements IRenderer {
         this.coverageMap.style.wordSpacing = "2.04ch";
       }
 
-      this.target!.appendChild(this.coverageMap);
+      this.world!.appendChild(this.coverageMap);
     }
 
     if (this._showCoverage) {
@@ -349,10 +370,10 @@ class Renderer implements IRenderer {
 
     target.addEventListener("mousedown", (event: MouseEvent) => {
       const x = Math.floor(
-        (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
+        (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
       const y = Math.floor(
-        (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
+        (event.pageY - this.offsetY + this.world!.scrollTop) / this.yStep
       );
 
       this.controller.mouseDown(x, y);
@@ -360,10 +381,10 @@ class Renderer implements IRenderer {
 
     target.addEventListener("mousemove", (event: MouseEvent) => {
       const x = Math.floor(
-        (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
+        (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
       const y = Math.floor(
-        (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
+        (event.pageY - this.offsetY + this.world!.scrollTop) / this.yStep
       );
 
       this.controller.mouseMove(x, y);
@@ -371,10 +392,10 @@ class Renderer implements IRenderer {
 
     target.addEventListener("mouseup", (event: MouseEvent) => {
       const x = Math.floor(
-        (event.pageX - this.offsetX + this.target!.scrollLeft) / this.xStep
+        (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
       const y = Math.floor(
-        (event.pageY - this.offsetY + this.target!.scrollTop) / this.yStep
+        (event.pageY - this.offsetY + this.world!.scrollTop) / this.yStep
       );
 
       this.controller.mouseUp(x, y);
@@ -398,6 +419,11 @@ class Renderer implements IRenderer {
         this.zoom();
       }
     });
+  }
+
+  async showMessage(content: string) {
+    const fn = await this.messageFn;
+    fn(content);
   }
 
   public getStaticEntityEmoji(entityType: EntityType) {
@@ -492,10 +518,10 @@ class Renderer implements IRenderer {
   }
 
   private getBBox() {
-    const scrollTop = this.target!.scrollTop / this.yStep;
-    const scrollLeft = this.target!.scrollLeft / this.xStep;
-    const height = this.target!.clientHeight / this.yStep;
-    const width = this.target!.clientWidth / this.xStep;
+    const scrollTop = this.world!.scrollTop / this.yStep;
+    const scrollLeft = this.world!.scrollLeft / this.xStep;
+    const height = this.world!.clientHeight / this.yStep;
+    const width = this.world!.clientWidth / this.xStep;
 
     return [
       [scrollLeft, scrollTop],
