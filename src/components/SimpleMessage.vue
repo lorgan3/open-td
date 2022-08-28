@@ -4,6 +4,7 @@ import { MessageFn } from "../renderers/api";
 
 interface Message {
   content: string;
+  closable: boolean;
 }
 
 const props = defineProps<{
@@ -13,9 +14,15 @@ const props = defineProps<{
 const messageQueue = ref<Message[]>([]);
 const firstMessage = ref<Message | undefined>();
 
-const queueMessage = (content: string) => {
-  messageQueue.value.push({ content });
+const queueMessage: MessageFn = (content, config) => {
+  const msg = { content, closable: config?.closable ?? true };
+  if (config?.override) {
+    messageQueue.value = [];
+    firstMessage.value = msg;
+    return;
+  }
 
+  messageQueue.value.push(msg);
   if (!firstMessage.value) {
     firstMessage.value = messageQueue.value.pop();
   }
@@ -32,7 +39,9 @@ onMounted(() => {
 
 <template>
   <div v-if="firstMessage" class="message">
-    <button class="close-button" @click="close">✖</button>
+    <button v-if="firstMessage.closable" class="close-button" @click="close">
+      ✖
+    </button>
     <div>{{ firstMessage.content }}</div>
   </div>
 </template>

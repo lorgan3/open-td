@@ -7,4 +7,7 @@ export interface IRenderer {
   showMessage: MessageFn;
 }
 
-export type MessageFn = (content: string) => void;
+export type MessageFn = (
+  content: string,
+  config?: { override?: boolean; closable?: boolean }
+) => void;

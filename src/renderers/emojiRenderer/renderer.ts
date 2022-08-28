@@ -421,10 +421,10 @@ class Renderer implements IRenderer {
     });
   }
 
-  async showMessage(content: string) {
+  showMessage: MessageFn = async (...args) => {
     const fn = await this.messageFn;
-    fn(content);
-  }
+    fn(...args);
+  };
 
   public getStaticEntityEmoji(entityType: EntityType) {
     switch (entityType) {

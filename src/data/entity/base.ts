@@ -48,7 +48,10 @@ class Base implements Agent {
     this.hp -= damage;
 
     if (this.hp <= 0) {
-      alert("You lose!");
+      Manager.Instance.showMessage("You lose!", {
+        override: true,
+        closable: false,
+      });
     } else {
       this.invincibleTime = INVINCIBLE_TIME;
       this.shockwave();

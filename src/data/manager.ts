@@ -280,9 +280,9 @@ class Manager {
     this.triggerStatUpdate();
   }
 
-  showMessage(content: string) {
-    this.messageFn(content);
-  }
+  showMessage: MessageFn = (...args) => {
+    this.messageFn(...args);
+  };
 
   private end() {
     this.powerController.processPower();
