@@ -40,12 +40,12 @@ export const coverTilesWithTowerSightLines = (
               return;
             }
 
+            tile.addTower(tower);
+            coveredTiles.add(tile);
+
             if (sightLineFn && sightLineFn(tile)) {
               return false;
             }
-
-            tile.addTower(tower);
-            coveredTiles.add(tile);
           },
           true
         );
