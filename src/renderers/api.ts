@@ -5,6 +5,7 @@ export interface IRenderer {
   showCoverage(): void;
   hideCoverage(): void;
   showMessage: MessageFn;
+  move(params: { x?: number; y?: number; zoom?: number }): void;
 }
 
 export type MessageFn = (

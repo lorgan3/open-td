@@ -320,6 +320,35 @@ class Renderer implements IRenderer {
     return this.time;
   }
 
+  private canMove(deltaX: number, deltaY: number) {
+    if (DEBUG) {
+      return true;
+    }
+
+    const bbox = this.getBBox();
+    const constraints = Manager.Instance.getVisibilityController().getBBox();
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0 && bbox[0][0] <= constraints[0][0]) {
+        return false;
+      }
+
+      if (deltaX > 0 && bbox[1][0] >= constraints[1][0]) {
+        return false;
+      }
+    } else {
+      if (deltaY < 0 && bbox[0][1] <= constraints[0][1]) {
+        return false;
+      }
+
+      if (deltaY > 0 && bbox[1][1] >= constraints[1][1]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   private registerEventHandlers(target: HTMLDivElement) {
     target.addEventListener("contextmenu", (event: Event) => {
       event.preventDefault();
@@ -334,26 +363,8 @@ class Renderer implements IRenderer {
       const bbox = this.getBBox();
       const constraints = Manager.Instance.getVisibilityController().getBBox();
 
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX < 0 && bbox[0][0] <= constraints[0][0]) {
-          event.preventDefault();
-          return;
-        }
-
-        if (deltaX > 0 && bbox[1][0] >= constraints[1][0]) {
-          event.preventDefault();
-          return;
-        }
-      } else {
-        if (deltaY < 0 && bbox[0][1] <= constraints[0][1]) {
-          event.preventDefault();
-          return;
-        }
-
-        if (deltaY > 0 && bbox[1][1] >= constraints[1][1]) {
-          event.preventDefault();
-          return;
-        }
+      if (!this.canMove(deltaX, deltaY)) {
+        event.preventDefault();
       }
     };
 
@@ -400,21 +411,12 @@ class Renderer implements IRenderer {
 
     window.addEventListener("keydown", (event: KeyboardEvent) => {
       this.controller.keyDown(event.key);
+      event.preventDefault();
     });
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.controller.keyUp(event.key);
-
-      let originalFontSize = this.fontSize;
-      if (event.key === Keys.Minus) {
-        this.fontSize = Math.max(MIN_FONT_SIZE, this.fontSize * 0.8);
-      } else if (event.key === Keys.Plus || event.key === Keys.Equals) {
-        this.fontSize = Math.min(MAX_FONT_SIZE, this.fontSize * 1.2);
-      }
-
-      if (this.fontSize !== originalFontSize) {
-        this.zoom();
-      }
+      event.preventDefault();
     });
   }
 
@@ -422,6 +424,25 @@ class Renderer implements IRenderer {
     const fn = await this.messageFn;
     return fn(...args);
   };
+
+  move({ x = 0, y = 0, zoom }: { x?: number; y?: number; zoom?: number }) {
+    if (x || y) {
+      if (this.canMove(x, y)) {
+        this.world!.scrollLeft += (x * this.fontSize) / 2;
+        this.world!.scrollTop += (y * this.fontSize) / 2;
+      }
+    }
+
+    if (zoom) {
+      if (zoom < 0) {
+        this.fontSize = Math.max(MIN_FONT_SIZE, this.fontSize * 0.9);
+      } else {
+        this.fontSize = Math.min(MAX_FONT_SIZE, this.fontSize * 1.1);
+      }
+
+      this.zoom();
+    }
+  }
 
   public getStaticEntityEmoji(entityType: EntityType) {
     switch (entityType) {

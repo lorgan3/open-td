@@ -10,10 +10,22 @@ export enum Keys {
   Plus = "+",
   Minus = "-",
   Equals = "=",
+  Up = "ArrowUp",
+  Left = "ArrowLeft",
+  Right = "ArrowRight",
+  Down = "ArrowDown",
+  W = "w",
+  A = "a",
+  S = "s",
+  D = "d",
+  Z = "z",
+  Q = "q",
 }
 
+const values = new Set<string>(Object.values(Keys));
+
 function isKey(key: string): key is Keys {
-  return key in Keys;
+  return values.has(key);
 }
 
 class Controller {
@@ -106,6 +118,10 @@ class Controller {
     if (isKey(key)) {
       this.pressedKeys[key as Keys] = false;
     }
+  }
+
+  public isKeyDown(key: Keys) {
+    return this.pressedKeys[key] ?? false;
   }
 }
 

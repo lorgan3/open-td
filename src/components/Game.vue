@@ -6,7 +6,7 @@ import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
 import TowerMenu from "./TowerMenu.vue";
 import GameStats from "./GameStats.vue";
-import Controller from "../data/controller";
+import Controller, { Keys } from "../data/controller";
 import TutorialManager from "../data/tutorialManager";
 
 const props = defineProps<{
@@ -38,6 +38,28 @@ onMounted(() => {
   renderer.mount(canvas.value as HTMLDivElement);
 
   const render = (timestamp: number) => {
+    const x =
+      +controller.isKeyDown(Keys.Right)! +
+      +controller.isKeyDown(Keys.D)! -
+      +controller.isKeyDown(Keys.Left)! -
+      +controller.isKeyDown(Keys.A)! -
+      +controller.isKeyDown(Keys.Q)!;
+    const y =
+      +controller.isKeyDown(Keys.Down)! +
+      +controller.isKeyDown(Keys.S)! -
+      +controller.isKeyDown(Keys.Up)! -
+      +controller.isKeyDown(Keys.W)! -
+      +controller.isKeyDown(Keys.Z)!;
+
+    const zoom =
+      +controller.isKeyDown(Keys.Plus)! +
+      +controller.isKeyDown(Keys.Equals)! -
+      +controller.isKeyDown(Keys.Minus)!;
+
+    if (x || y || zoom) {
+      renderer.move({ x, y, zoom });
+    }
+
     const dt = timestamp - oldTimestamp;
     manager.tick(dt);
     renderer.rerender(dt);
