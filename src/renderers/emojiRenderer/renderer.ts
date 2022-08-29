@@ -128,10 +128,7 @@ class Renderer implements IRenderer {
     }).mount(container);
 
     this.world = target.appendChild(document.createElement("div"));
-
-    this.world.style.overflow = "auto";
-    this.world.style.width = "100%";
-    this.world.style.height = "100%";
+    this.world.className = "scrollable";
     this.world.style.lineHeight = IS_WINDOWS ? "1.86ch" : "1ch";
     this.world.style.whiteSpace = "nowrap";
     this.world.style.display = "inline-flex";

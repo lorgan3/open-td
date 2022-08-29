@@ -87,3 +87,19 @@ onUnmounted(() => (mounted = false));
   }
 }
 </style>
+
+<style lang="scss">
+.scrollable {
+  position: relative;
+
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+</style>
