@@ -74,8 +74,8 @@ onUnmounted(() => (mounted = false));
     display: flex;
 
     .render-target {
-      max-width: 1280px;
-      max-height: 900px;
+      max-width: 100vw;
+      max-height: calc(100vh - 70px);
       overflow: auto;
 
       -ms-overflow-style: none;
