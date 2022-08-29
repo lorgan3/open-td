@@ -1,12 +1,33 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import Game from "./components/Game.vue";
+import MainMenu from "./components/MainMenu.vue";
+
+enum State {
+  Menu,
+  Game,
+}
+
+const state = ref(State.Menu);
+const gameSeed = ref("");
+
+const startGame = (seed: string) => {
+  state.value = State.Game;
+  gameSeed.value = seed;
+};
 </script>
 
 <template>
-  <Game />
+  <MainMenu v-if="state == State.Menu" :onPlay="startGame" />
+  <Game v-if="state == State.Game" :seed="gameSeed" />
 </template>
 
 <style>
+#app {
+  width: 100vw;
+  height: 100vh;
+}
+
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)

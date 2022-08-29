@@ -8,6 +8,11 @@ import TowerMenu from "./TowerMenu.vue";
 import GameStats from "./GameStats.vue";
 import Controller from "../data/controller";
 
+// @TODO: use the seed
+const props = defineProps<{
+  seed: string;
+}>();
+
 const canvas = ref<HTMLDivElement | null>(null);
 
 const surface = new Surface(300, 300, generate);
