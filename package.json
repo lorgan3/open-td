@@ -9,6 +9,7 @@
     "check-types": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "alea": "^1.0.1",
     "heap": "^0.2.7",
     "simplex-noise": "^4.0.0",
     "vue": "^3.2.37"

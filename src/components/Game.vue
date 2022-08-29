@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
-import generate from "../data/terrain/generator";
+import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const canvas = ref<HTMLDivElement | null>(null);
 
-const surface = new Surface(300, 300, generate);
+const surface = new Surface(300, 300, getGenerator(props.seed));
 const controller = new Controller(surface);
 const renderer = new Renderer(surface, controller);
 
