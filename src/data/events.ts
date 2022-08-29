@@ -5,12 +5,14 @@ export enum GameEvent {
   StatUpdate = 0,
   SurfaceChange = 1,
   BlackOut = 2,
+  OpenBuildMenu = 3,
 }
 
 export interface EventParamsMap {
   [GameEvent.StatUpdate]: [StatUpdate];
   [GameEvent.SurfaceChange]: [SurfaceChange];
   [GameEvent.BlackOut]: [BlackOut];
+  [GameEvent.OpenBuildMenu]: [];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (

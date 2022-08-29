@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import Controller from "../data/controller";
+import { GameEvent } from "../data/events";
+import Manager from "../data/manager";
 import { TOWER_PRICES } from "../data/moneyController";
 import placeables, { Placeable } from "../data/placeables";
 
@@ -21,12 +23,30 @@ const selectedPlaceable = ref(props.controller.getPlacable());
 
 function toggleMenu() {
   menuVisible.value = !menuVisible.value;
+
+  if (menuVisible.value) {
+    Manager.Instance.triggerEvent(GameEvent.OpenBuildMenu);
+  }
 }
 
 function selectTower(tower: Placeable) {
   props.controller.setPlaceable(tower);
   selectedPlaceable.value = tower;
 }
+
+const listenToB = (event: KeyboardEvent) => {
+  if (event.key === "b" || event.key === "B") {
+    toggleMenu();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keypress", listenToB);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keypress", listenToB);
+});
 </script>
 
 <template>
