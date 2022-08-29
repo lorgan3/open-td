@@ -7,6 +7,7 @@ import Manager from "../data/manager";
 import TowerMenu from "./TowerMenu.vue";
 import GameStats from "./GameStats.vue";
 import Controller from "../data/controller";
+import TutorialManager from "../data/tutorialManager";
 
 // @TODO: use the seed
 const props = defineProps<{
@@ -27,7 +28,8 @@ const manager = new Manager(
   renderer.showMessage
 );
 
-renderer.showMessage("Welcome to Open TD!");
+const tutorialManager = new TutorialManager();
+tutorialManager.start();
 
 let mounted = false;
 let oldTimestamp = 0;
