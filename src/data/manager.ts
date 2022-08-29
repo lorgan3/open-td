@@ -298,6 +298,8 @@ class Manager {
     } else {
       this.eventHandlers.set(event, new Set([fn]));
     }
+
+    return () => this.removeEventListener(event, fn);
   }
 
   removeEventListener<E extends keyof EventParamsMap>(

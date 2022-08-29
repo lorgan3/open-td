@@ -55,22 +55,24 @@ export const coverTilesWithTowerSightLines = (
   };
 
   run();
-  const update = ({ affectedTiles }: SurfaceChange) => {
-    for (const tile of affectedTiles) {
-      if (coveredTiles.has(tile)) {
-        coveredTiles.forEach((tile) => tile.removeTower(tower));
-        coveredTiles.clear();
-        run();
 
-        return;
+  const removeEventListener = Manager.Instance.addEventListener(
+    GameEvent.SurfaceChange,
+    ({ affectedTiles }: SurfaceChange) => {
+      for (const tile of affectedTiles) {
+        if (coveredTiles.has(tile)) {
+          coveredTiles.forEach((tile) => tile.removeTower(tower));
+          coveredTiles.clear();
+          run();
+
+          return;
+        }
       }
     }
-  };
-
-  Manager.Instance.addEventListener(GameEvent.SurfaceChange, update);
+  );
 
   return () => {
     coveredTiles.forEach((tile) => tile.removeTower(tower));
-    Manager.Instance.removeEventListener(GameEvent.SurfaceChange, update);
+    removeEventListener();
   };
 };
