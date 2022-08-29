@@ -26,7 +26,7 @@ const submit = (event: Event) => {
 
 <template>
   <div class="wrapper">
-    <h1>Open TD 🗼</h1>
+    <h1>Open Tower Defense 🗼</h1>
 
     <div class="menu">
       <div class="menu-main">
@@ -40,7 +40,7 @@ const submit = (event: Event) => {
         <form @submit="submit" class="menu-play-inner">
           <h3>Which planet?</h3>
           <input ref="seedInput" v-model="seed" />
-          <button type="submit">Go!</button>
+          <button type="submit">Start!</button>
         </form>
       </div>
     </div>
@@ -64,13 +64,13 @@ const submit = (event: Event) => {
   gap: 10vh;
 
   h1 {
-    font-size: 10vh;
     text-align: center;
     color: #fff;
+    font-size: 84px;
   }
 
   h3 {
-    font-size: 24px;
+    font-size: 30px;
     text-align: center;
     color: #fff;
   }
@@ -80,7 +80,7 @@ const submit = (event: Event) => {
     width: 100%;
     height: 48px;
     box-sizing: border-box;
-    font-size: 24px;
+    font-size: 30px;
     text-align: center;
   }
 

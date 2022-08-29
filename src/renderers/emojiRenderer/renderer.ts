@@ -131,7 +131,7 @@ class Renderer implements IRenderer {
     this.world.className = "scrollable";
     this.world.style.lineHeight = IS_WINDOWS ? "1.86ch" : "1ch";
     this.world.style.whiteSpace = "nowrap";
-    this.world.style.display = "inline-flex";
+    this.world.style.display = "flex";
     this.world.style.flexDirection = "column";
     this.world.style.cursor = "crosshair";
     this.world.style.userSelect = "none";

@@ -23,9 +23,22 @@ const startGame = (seed: string) => {
 </template>
 
 <style>
+@font-face {
+  /* https://www.1001freefonts.com/jupiter-crash.font */
+  font-family: JupiterCrash;
+  src: url(./assets/jupiterc.ttf);
+}
+
 #app {
   width: 100vw;
   height: 100vh;
+  font-family: JupiterCrash;
+  font-size: 24px;
+}
+
+button {
+  font-family: JupiterCrash;
+  font-size: 24px;
 }
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
