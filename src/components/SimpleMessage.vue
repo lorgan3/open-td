@@ -5,6 +5,7 @@ import { MessageFn } from "../renderers/api";
 interface Message {
   content: string;
   closable: boolean;
+  input?: { type: "keyboard" };
 }
 
 const props = defineProps<{
@@ -13,23 +14,51 @@ const props = defineProps<{
 
 const messageQueue = ref<Message[]>([]);
 const firstMessage = ref<Message | undefined>();
+const text = ref("");
+
+let resolveMessage: (value: any) => void;
+let rejectMessage: () => void;
 
 const queueMessage: MessageFn = (content, config) => {
-  const msg = { content, closable: config?.closable ?? true };
+  const msg = {
+    content,
+    closable: config?.closable ?? true,
+    input: config?.input ? config.input : undefined,
+  };
+
+  const previousRejectFn = rejectMessage;
+  const promise = new Promise((resolve, reject) => {
+    resolveMessage = resolve;
+    rejectMessage = reject;
+  });
+
   if (config?.override) {
+    if (previousRejectFn) {
+      previousRejectFn();
+    }
+
     messageQueue.value = [];
     firstMessage.value = msg;
-    return;
+    return promise;
   }
 
   messageQueue.value.push(msg);
   if (!firstMessage.value) {
     firstMessage.value = messageQueue.value.pop();
   }
+
+  return promise;
 };
 
 const close = () => {
   firstMessage.value = messageQueue.value.pop();
+  rejectMessage();
+};
+
+const handleSubmit = (event: Event) => {
+  resolveMessage(text.value);
+  firstMessage.value = messageQueue.value.pop();
+  event.preventDefault();
 };
 
 onMounted(() => {
@@ -43,6 +72,14 @@ onMounted(() => {
       ✖
     </button>
     <div>{{ firstMessage.content }}</div>
+    <form
+      v-if="firstMessage.input?.type === 'keyboard'"
+      class="message-keyboard"
+      @submit="handleSubmit"
+    >
+      <input v-model="text" class="message-keyboard-input" />
+      <button type="submit">Submit</button>
+    </form>
   </div>
 </template>
 
@@ -66,6 +103,16 @@ onMounted(() => {
     border: 0;
     background: 0;
     cursor: pointer;
+  }
+
+  &-keyboard {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+
+    &-input {
+      flex: 1;
+    }
   }
 }
 </style>

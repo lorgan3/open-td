@@ -9,5 +9,9 @@ export interface IRenderer {
 
 export type MessageFn = (
   content: string,
-  config?: { override?: boolean; closable?: boolean }
-) => void;
+  config?: {
+    override?: boolean;
+    closable?: boolean;
+    input?: { type: "keyboard" };
+  }
+) => any | Promise<any>;

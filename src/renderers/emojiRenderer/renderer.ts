@@ -420,7 +420,7 @@ class Renderer implements IRenderer {
 
   showMessage: MessageFn = async (...args) => {
     const fn = await this.messageFn;
-    fn(...args);
+    return fn(...args);
   };
 
   public getStaticEntityEmoji(entityType: EntityType) {

@@ -281,7 +281,7 @@ class Manager {
   }
 
   showMessage: MessageFn = (...args) => {
-    this.messageFn(...args);
+    return this.messageFn(...args);
   };
 
   private end() {
