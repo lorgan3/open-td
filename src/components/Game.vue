@@ -9,7 +9,6 @@ import GameStats from "./GameStats.vue";
 import Controller from "../data/controller";
 import TutorialManager from "../data/tutorialManager";
 
-// @TODO: use the seed
 const props = defineProps<{
   seed: string;
 }>();
