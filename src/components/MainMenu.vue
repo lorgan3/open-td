@@ -1,18 +1,33 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import Key from "./controls/Key.vue";
+import MovementGrid from "./controls/MovementGrid.vue";
+import Mouse from "./controls/mouse.vue";
+import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
   onPlay: (seed: string) => void;
 }>();
 
-const showInput = ref(false);
+enum SubMenu {
+  None,
+  Play,
+  Controls,
+  Settings,
+}
+
+const openSubMenu = ref(SubMenu.None);
 const seed = ref("");
 const seedInput = ref<HTMLElement | null>(null);
 
-const onClick = () => {
-  showInput.value = !showInput.value;
+const onClick = (subMenu: SubMenu) => {
+  if (subMenu === openSubMenu.value) {
+    openSubMenu.value = SubMenu.None;
+    return;
+  }
+  openSubMenu.value = subMenu;
 
-  if (showInput.value) {
+  if (openSubMenu.value === SubMenu.Play) {
     seedInput.value?.focus();
   }
 };
@@ -31,17 +46,32 @@ const submit = (event: Event) => {
     <div class="menu">
       <div class="menu-main">
         <div class="menu-main-inner">
-          <button @click="onClick">Play</button>
-          <button disabled>How to play</button>
+          <button @click="onClick(SubMenu.Play)">Play</button>
+          <button @click="onClick(SubMenu.Controls)">Controls</button>
           <button disabled>Settings</button>
         </div>
       </div>
-      <div :class="{ 'menu-play': true, 'menu--hidden': !showInput }">
+      <div
+        :class="{
+          'menu-play': true,
+          'menu--hidden': openSubMenu !== SubMenu.Play,
+        }"
+      >
         <form @submit="submit" class="menu-play-inner">
           <h3>Which planet?</h3>
           <input ref="seedInput" v-model="seed" />
           <button type="submit">Start!</button>
         </form>
+      </div>
+      <div
+        :class="{
+          'menu-controls': true,
+          'menu--hidden': openSubMenu !== SubMenu.Controls,
+        }"
+      >
+        <div class="menu-play-inner">
+          <ControlsList />
+        </div>
       </div>
     </div>
   </div>
@@ -85,11 +115,13 @@ const submit = (event: Event) => {
   }
 
   .menu {
+    position: relative;
     display: flex;
     flex-direction: row;
     height: 50vh;
 
     > * {
+      position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -108,7 +140,8 @@ const submit = (event: Event) => {
     }
 
     &-main,
-    &-play {
+    &-play,
+    &-controls {
       &-inner {
         width: 300px;
         padding: 0 20px;
@@ -120,7 +153,10 @@ const submit = (event: Event) => {
     }
 
     &-play {
-      margin: -2px;
+      left: -2px;
+    }
+    &-controls {
+      left: -4px;
     }
   }
 }
