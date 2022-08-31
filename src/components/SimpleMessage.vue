@@ -17,7 +17,7 @@ const firstMessage = ref<Message | undefined>();
 const text = ref("");
 
 let resolveMessage: (value: any) => void;
-let rejectMessage: () => void;
+let cancelMessage: () => void;
 
 const queueMessage: MessageFn = (content, config) => {
   const msg = {
@@ -26,10 +26,10 @@ const queueMessage: MessageFn = (content, config) => {
     input: config?.input ? config.input : undefined,
   };
 
-  const previousRejectFn = rejectMessage;
+  const previousRejectFn = cancelMessage;
   const promise = new Promise((resolve, reject) => {
     resolveMessage = resolve;
-    rejectMessage = reject;
+    cancelMessage = config?.input ? reject : resolve;
   });
 
   if (config?.override) {
@@ -52,7 +52,7 @@ const queueMessage: MessageFn = (content, config) => {
 
 const close = () => {
   firstMessage.value = messageQueue.value.pop();
-  rejectMessage();
+  cancelMessage();
 };
 
 const handleSubmit = (event: Event) => {
