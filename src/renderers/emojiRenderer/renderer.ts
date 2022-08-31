@@ -474,6 +474,8 @@ class Renderer implements IRenderer {
         return "🏭";
       case EntityType.None:
         return "❌";
+      case EntityType.Armory:
+        return "🏰";
       default:
         return "❓";
     }

@@ -1,3 +1,4 @@
+import Armory from "./entity/Armory";
 import ElectricFence from "./entity/electricFence";
 import { AgentClass, EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
@@ -15,6 +16,7 @@ export interface Placeable {
   htmlElement: string;
   entity?: AgentClass;
   entityType: EntityType;
+  isBasePart?: boolean;
 }
 
 const placeables: Placeable[] = [
@@ -82,6 +84,13 @@ const placeables: Placeable[] = [
     entity: PowerPlant,
     entityType: EntityType.PowerPlant,
     htmlElement: "🏭",
+  },
+  {
+    name: "Armory",
+    entity: Armory,
+    entityType: EntityType.Armory,
+    htmlElement: "🏰",
+    isBasePart: true,
   },
 ];
 

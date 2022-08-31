@@ -1,10 +1,11 @@
 import placeables, { Placeable, placeableEntityTypes } from "./placeables";
 import Manager from "./manager";
 import Blueprint from "./entity/Blueprint";
-import Tile, { FREE_TILES } from "./terrain/tile";
+import Tile, { FREE_TILES, TileType } from "./terrain/tile";
 import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
+import { canBuild, canSell } from "./util/baseExpansion";
 
 class BuildController {
   private blueprints = new Map<string, Blueprint>();
@@ -82,6 +83,10 @@ class BuildController {
         return false;
       }
 
+      if (placeable.isBasePart && !canBuild(tile, this.surface)) {
+        return false;
+      }
+
       return true;
     });
 
@@ -139,6 +144,10 @@ class BuildController {
         return false;
       }
 
+      if (placeable.isBasePart && !canBuild(tile, this.surface)) {
+        return false;
+      }
+
       return true;
     });
 
@@ -152,6 +161,7 @@ class BuildController {
   }
 
   private sellEntities(selection: Tile[]) {
+    let unsellableBaseParts = 0;
     selection.forEach((tile) => {
       if (
         !tile.hasStaticEntity() ||
@@ -160,10 +170,22 @@ class BuildController {
         return;
       }
 
+      if (
+        tile.getType() === TileType.Base &&
+        !canSell(tile, Manager.Instance.getBase(), this.surface)
+      ) {
+        unsellableBaseParts++;
+        return;
+      }
+
       const agent = tile.getStaticEntity()!.getAgent();
       this.surface.despawnStatic(agent);
       Manager.Instance.sell(agent);
     });
+
+    Manager.Instance.showMessage(
+      `${unsellableBaseParts} tiles can't be sold because they're integral parts of your base.`
+    );
   }
 }
 

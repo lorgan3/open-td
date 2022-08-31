@@ -1,5 +1,6 @@
 import Manager from "../manager";
-import Tile from "../terrain/tile";
+import { createStoneSurface } from "../terrain/fill";
+import Tile, { FREE_TILES_INCLUDING_WATER, TileType } from "../terrain/tile";
 import Entity, { Agent, AgentCategory, EntityType } from "./entity";
 import Shockwave from "./projectiles/shockwave";
 
@@ -12,8 +13,11 @@ class Base implements Agent {
   public hp = 30;
   private invincibleTime = 0;
 
+  private baseParts = new Set<Tile>();
+
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.baseParts.add(tile);
   }
 
   tick(dt: number) {
@@ -68,28 +72,46 @@ class Base implements Agent {
     return this.hp <= 0;
   }
 
+  addPart(tile: Tile) {
+    this.baseParts.add(tile);
+  }
+
+  removePart(tile: Tile) {
+    this.baseParts.delete(tile);
+  }
+
+  getParts() {
+    return this.baseParts;
+  }
+
   private shockwave() {
     const surface = Manager.Instance.getSurface();
-    const targets = new Set<Tile>();
+    const targets = new Map<string, [Tile, Tile]>();
 
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        if (i === 0 && j === 0) {
-          continue;
-        }
+    this.baseParts.forEach((fromTile: Tile) => {
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i === 0 && j === 0) {
+            continue;
+          }
 
-        const tile = surface.getTile(
-          this.tile.getX() + i,
-          this.tile.getY() + j
-        );
-        if (tile) {
-          targets.add(tile);
+          const tile = surface.getTile(
+            fromTile.getX() + i,
+            fromTile.getY() + j
+          );
+          if (
+            tile &&
+            !targets.has(tile.getHash()) &&
+            FREE_TILES_INCLUDING_WATER.has(tile.getType())
+          ) {
+            targets.set(tile.getHash(), [fromTile, tile]);
+          }
         }
       }
-    }
+    });
 
-    targets.forEach((target) => {
-      const shockwave = new Shockwave(this.tile, target, DAMAGE);
+    targets.forEach(([fromTile, toTile]) => {
+      const shockwave = new Shockwave(fromTile, toTile, DAMAGE);
       surface.spawn(shockwave);
     });
   }

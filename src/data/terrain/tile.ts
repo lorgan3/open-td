@@ -19,6 +19,7 @@ export enum TileType {
   Ice = 14,
   PlayerBuilding = 15,
   NaturalFeature = 16,
+  Base = 17,
 }
 
 export const FREE_TILES = new Set([
@@ -51,6 +52,8 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.PowerPlant]: TileType.PlayerBuilding,
   [EntityType.Tree]: TileType.NaturalFeature,
   [EntityType.Rock]: TileType.NaturalFeature,
+  [EntityType.Armory]: TileType.Base,
+  [EntityType.Base]: TileType.Base,
 };
 
 class Tile {

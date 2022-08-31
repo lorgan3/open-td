@@ -12,6 +12,7 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Railgun]: 50,
   [EntityType.Radar]: 50,
   [EntityType.PowerPlant]: 20,
+  [EntityType.Armory]: 50,
 };
 
 class MoneyController {
