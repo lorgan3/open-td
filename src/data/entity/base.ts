@@ -38,6 +38,7 @@ class Base implements Agent {
 
   spawn() {
     Manager.Instance.getVisibilityController().registerAgent(this);
+    createStoneSurface(this.tile, 5);
   }
 
   despawn() {

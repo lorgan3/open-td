@@ -13,6 +13,7 @@ class Armory implements Agent {
 
   spawn() {
     Manager.Instance.getBase().addPart(this.tile);
+    createStoneSurface(this.tile, 3);
   }
 
   despawn() {

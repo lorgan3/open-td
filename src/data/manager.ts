@@ -57,17 +57,6 @@ class Manager {
     this.base = new Base(basePoint);
     surface.spawnStatic(this.base);
 
-    const tilesToUpdate: Tile[] = [];
-    this.surface.forCircle(basePoint.getX(), basePoint.getY(), 5, (tile) => {
-      if (
-        tile !== basePoint &&
-        FREE_TILES_INCLUDING_WATER.has(tile.getType())
-      ) {
-        tilesToUpdate.push(new Tile(tile.getX(), tile.getY(), TileType.Stone));
-      }
-    });
-    this.surface.setTiles(tilesToUpdate);
-
     console.log(this);
   }
 
