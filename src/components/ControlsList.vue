@@ -5,6 +5,26 @@ import Mouse from "./controls/mouse.vue";
 </script>
 
 <template>
+  <h3>Build menu</h3>
+  <div class="flex">
+    <Key char="b" />
+  </div>
+  <h3>Building</h3>
+  <div class="flex flex-justify">
+    <Mouse button="left" />
+    /
+    <span class="key-combination">
+      <Key char="⇧" emoji />
+      +
+      <Mouse button="left" />
+    </span>
+    /
+    <span class="key-combination">
+      <Key char="⌘" emoji />
+      +
+      <Mouse button="left" />
+    </span>
+  </div>
   <h3>Moving</h3>
   <div class="flex flex-justify">
     <MovementGrid>
@@ -27,26 +47,6 @@ import Mouse from "./controls/mouse.vue";
       <Key char="↓" emoji area="down" />
       <Key char="→" emoji area="right" />
     </MovementGrid>
-  </div>
-  <h3>Build menu</h3>
-  <div class="flex">
-    <Key char="b" />
-  </div>
-  <h3>Building</h3>
-  <div class="flex flex-justify">
-    <Mouse button="left" />
-    /
-    <span class="key-combination">
-      <Key char="⇧" emoji />
-      +
-      <Mouse button="left" />
-    </span>
-    /
-    <span class="key-combination">
-      <Key char="⌘" emoji />
-      +
-      <Mouse button="left" />
-    </span>
   </div>
   <h3>Zooming</h3>
   <div class="flex">
