@@ -1,8 +1,8 @@
 import Manager from "../manager";
 import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 
-class Radar implements Agent {
+class Radar implements StaticAgent {
   public entity: Entity;
   public category = AgentCategory.Player;
   public hp = 100;
@@ -17,6 +17,10 @@ class Radar implements Agent {
 
   getTile() {
     return this.tile;
+  }
+
+  updateTile(tile: Tile) {
+    this.tile = tile;
   }
 
   getHp() {

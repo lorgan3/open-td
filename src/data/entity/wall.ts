@@ -1,7 +1,7 @@
 import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 
-class Wall implements Agent {
+class Wall implements StaticAgent {
   public entity: Entity;
   public category = AgentCategory.Player;
 
@@ -15,6 +15,10 @@ class Wall implements Agent {
 
   getTile() {
     return this.tile;
+  }
+
+  updateTile(tile: Tile) {
+    this.tile = tile;
   }
 
   isVisible() {
