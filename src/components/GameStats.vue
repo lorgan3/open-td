@@ -8,6 +8,13 @@ const props = defineProps<{
   renderer: IRenderer;
 }>();
 
+const naturalNumberFormatter = Intl.NumberFormat(undefined, {
+  maximumFractionDigits: 0,
+});
+const numberFormatter = Intl.NumberFormat(undefined, {
+  maximumFractionDigits: 2,
+});
+
 const money = ref(0);
 const level = ref(0);
 const remainingEnemies = ref(0);
@@ -75,7 +82,9 @@ function toggleCoverage() {
       </li>
       <li>
         <span
-          >🛡️ {{ integrity }} (<span class="positive">+{{ regeneration }}</span
+          >🛡️ {{ naturalNumberFormatter.format(integrity) }} (<span
+            class="positive"
+            >+{{ numberFormatter.format(regeneration) }}</span
           >)</span
         >
         <span>👾 {{ remainingEnemies }}</span>

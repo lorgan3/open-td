@@ -68,6 +68,7 @@ class BuildController {
     Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
       affectedTiles: tiles,
     });
+    Manager.Instance.triggerStatUpdate();
   }
 
   private placeBlueprints(selection: Tile[], placeable: Placeable) {
@@ -105,6 +106,8 @@ class BuildController {
       this.surface.spawn(blueprint);
       this.blueprints.set(tile.getHash(), blueprint);
     });
+
+    Manager.Instance.triggerStatUpdate();
   }
 
   private sellBlueprints(selection: Tile[]) {
@@ -132,6 +135,8 @@ class BuildController {
       this.surface.spawn(blueprint);
       this.blueprints.set(tile.getHash(), blueprint);
     });
+
+    Manager.Instance.triggerStatUpdate();
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
@@ -158,6 +163,8 @@ class BuildController {
     validTiles.forEach((tile) => {
       this.surface.spawnStatic(new placeable.entity!(tile));
     });
+
+    Manager.Instance.triggerStatUpdate();
   }
 
   private sellEntities(selection: Tile[]) {
@@ -186,6 +193,7 @@ class BuildController {
     Manager.Instance.showMessage(
       `${unsellableBaseParts} tiles can't be sold because they're integral parts of your base.`
     );
+    Manager.Instance.triggerStatUpdate();
   }
 }
 

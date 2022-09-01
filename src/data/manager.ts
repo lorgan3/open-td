@@ -169,22 +169,18 @@ class Manager {
     }
 
     this.moneyController.removeMoney(cost);
-    this.triggerStatUpdate();
 
     return true;
   }
 
   sell(agent: Agent) {
     if (agent instanceof Blueprint) {
-      this.addMoney(TOWER_PRICES[agent.getPlaceable().entityType] ?? 0);
+      this.moneyController.addMoney(
+        TOWER_PRICES[agent.getPlaceable().entityType] ?? 0
+      );
     } else {
-      this.addMoney(TOWER_PRICES[agent.getType()] ?? 0);
+      this.moneyController.addMoney(TOWER_PRICES[agent.getType()] ?? 0);
     }
-  }
-
-  addMoney(amount: number) {
-    this.moneyController.addMoney(amount);
-    this.triggerStatUpdate();
   }
 
   start() {
