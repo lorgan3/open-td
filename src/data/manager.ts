@@ -8,7 +8,7 @@ import { Agent, AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable } from "./placeables";
-import PowerController from "./powerController";
+import PowerController, { POWER_CONSUMPTIONS } from "./powerController";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile, {
@@ -168,6 +168,15 @@ class Manager {
   buy(placeable: Placeable, amount = 1) {
     const cost = (TOWER_PRICES[placeable.entityType] ?? 0) * amount;
     if (cost > this.moneyController.getMoney()) {
+      this.showMessage(`You do not have enough money. This costs 🪙 ${cost}`);
+      return false;
+    }
+
+    const powerUsage = (POWER_CONSUMPTIONS[placeable.entityType] ?? 0) * amount;
+    if (powerUsage > this.powerController.getPower()) {
+      this.showMessage(
+        `You do not have enough stored power. This costs 🔋 ${powerUsage}`
+      );
       return false;
     }
 
