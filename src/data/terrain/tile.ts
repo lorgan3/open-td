@@ -56,6 +56,8 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Base]: TileType.Base,
 };
 
+export type TileWithStaticEntity = { getStaticEntity: () => Entity } & Tile;
+
 class Tile {
   private staticEntity: Entity | null = null;
   private hash: string;
@@ -92,7 +94,7 @@ class Tile {
     return this.staticEntity;
   }
 
-  hasStaticEntity(): this is { getStaticEntity: () => Entity } & Tile {
+  hasStaticEntity(): this is TileWithStaticEntity {
     return this.staticEntity !== null;
   }
 

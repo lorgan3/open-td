@@ -1,7 +1,7 @@
 import Base from "../entity/base";
 import { StaticAgent } from "../entity/entity";
 import Surface from "../terrain/surface";
-import Tile, { TileType } from "../terrain/tile";
+import Tile, { TileType, TileWithStaticEntity } from "../terrain/tile";
 
 const getAdjacentTiles = (tile: Tile, surface: Surface) => {
   const options: Array<[number, number]> = [
@@ -13,7 +13,9 @@ const getAdjacentTiles = (tile: Tile, surface: Surface) => {
 
   return options
     .map(([x, y]) => surface.getTile(tile.getX() + x, tile.getY() + y))
-    .filter((tile) => !!tile && tile.hasStaticEntity()) as Tile[];
+    .filter(
+      (tile) => !!tile && tile.hasStaticEntity()
+    ) as TileWithStaticEntity[];
 };
 
 export const canBuild = (tile: Tile, surface: Surface) => {
@@ -35,7 +37,7 @@ export const canSell = (target: Tile, base: Base, surface: Surface) => {
     if (
       tile === target ||
       filled.has(tile) ||
-      !base.getParts().has(tile.getStaticEntity()!.getAgent() as StaticAgent)
+      !base.getParts().has(tile.getStaticEntity().getAgent() as StaticAgent)
     ) {
       continue;
     }

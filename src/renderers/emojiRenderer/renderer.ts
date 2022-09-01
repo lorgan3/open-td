@@ -483,12 +483,12 @@ class Renderer implements IRenderer {
 
   private getEmoji = (tile: Tile) => {
     if (tile.hasStaticEntity()) {
-      if (!tile.getStaticEntity()!.getAgent().isVisible() && !DEBUG) {
+      if (!tile.getStaticEntity().getAgent().isVisible() && !DEBUG) {
         return "🌌";
       }
 
       return this.getStaticEntityEmoji(
-        tile.getStaticEntity()!.getAgent().getType()
+        tile.getStaticEntity().getAgent().getType()
       );
     }
 

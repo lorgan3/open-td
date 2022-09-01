@@ -23,7 +23,7 @@ export const getStaticEntityCheckpoints: CheckpointFn = (tiles) => {
   tiles.forEach((tile, index) => {
     if (tile.hasStaticEntity()) {
       if (
-        DESTRUCTIBLE_ENTITIES.has(tile.getStaticEntity()!.getAgent().getType())
+        DESTRUCTIBLE_ENTITIES.has(tile.getStaticEntity().getAgent().getType())
       ) {
         checkpoints.push(new StaticEntityCheckpoint(index));
       }

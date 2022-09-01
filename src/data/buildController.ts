@@ -51,7 +51,7 @@ class BuildController {
       tiles.push(tile);
 
       if (tile.hasStaticEntity()) {
-        const agent = tile.getStaticEntity()!.getAgent();
+        const agent = tile.getStaticEntity().getAgent();
         Manager.Instance.sell(agent);
         this.surface.despawnStatic(agent);
       }
@@ -78,7 +78,7 @@ class BuildController {
 
       if (
         tile.hasStaticEntity() &&
-        !placeableEntityTypes.has(tile.getStaticEntity()!.getAgent().getType())
+        !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
       ) {
         return false;
       }
@@ -123,7 +123,7 @@ class BuildController {
 
       if (
         !tile.hasStaticEntity() ||
-        !placeableEntityTypes.has(tile.getStaticEntity()!.getAgent().getType())
+        !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
       ) {
         return;
       }
@@ -165,7 +165,7 @@ class BuildController {
     selection.forEach((tile) => {
       if (
         !tile.hasStaticEntity() ||
-        !placeableEntityTypes.has(tile.getStaticEntity()!.getAgent().getType())
+        !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
       ) {
         return;
       }
@@ -178,7 +178,7 @@ class BuildController {
         return;
       }
 
-      const agent = tile.getStaticEntity()!.getAgent();
+      const agent = tile.getStaticEntity().getAgent();
       this.surface.despawnStatic(agent);
       Manager.Instance.sell(agent);
     });

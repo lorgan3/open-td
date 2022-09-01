@@ -76,9 +76,9 @@ class Surface {
     const originalTile = this.map[tile.getY() * this.width + tile.getX()];
 
     if (originalTile.hasStaticEntity() && !tile.hasStaticEntity()) {
-      tile.setStaticEntity(originalTile.getStaticEntity()!);
+      tile.setStaticEntity(originalTile.getStaticEntity());
     } else if (originalTile.hasStaticEntity()) {
-      this.despawnStatic(originalTile.getStaticEntity()!.getAgent());
+      this.despawnStatic(originalTile.getStaticEntity().getAgent());
     }
 
     tile["towers"] = originalTile["towers"];
