@@ -85,6 +85,7 @@ const placeables: Placeable[] = [
     entity: PowerPlant,
     entityType: EntityType.PowerPlant,
     htmlElement: "🏭",
+    isBasePart: true,
   },
   {
     name: "Armory",

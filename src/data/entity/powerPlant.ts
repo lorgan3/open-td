@@ -1,11 +1,11 @@
 import Manager from "../manager";
+import { createStoneSurface } from "../terrain/fill";
 import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 
-class PowerPlant implements Agent {
+class PowerPlant implements StaticAgent {
   public entity: Entity;
   public category = AgentCategory.Player;
-  public hp = 10;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -19,26 +19,23 @@ class PowerPlant implements Agent {
     return this.tile;
   }
 
-  getHp() {
-    return this.hp;
+  updateTile(tile: Tile) {
+    this.tile = tile;
   }
 
   spawn() {
+    Manager.Instance.getBase().addPart(this);
+    createStoneSurface(this.tile, 3);
     Manager.Instance.getPowerController().registerGenerator(this);
   }
 
   despawn() {
+    Manager.Instance.getBase().removePart(this);
     Manager.Instance.getPowerController().removeGenerator(this);
   }
 
   hit(damage: number) {
-    this.hp -= damage;
-
-    if (this.hp <= 0) {
-      Manager.Instance.getSurface().despawnStatic(this);
-    }
-
-    Manager.Instance.triggerStatUpdate();
+    Manager.Instance.getBase().hit(damage);
   }
 
   isVisible() {
