@@ -3,10 +3,6 @@ import { isTower } from "./entity/towers";
 import { GameEvent } from "./events";
 import Manager from "./manager";
 
-export const POWER_PRODUCTIONS: Partial<Record<EntityType, number>> = {
-  [EntityType.PowerPlant]: 5,
-};
-
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
   [EntityType.ElectricFence]: 1,
   [EntityType.Railgun]: 5,
@@ -16,8 +12,7 @@ class PowerController {
   private generators = new Set<Agent>();
   private consumers = new Set<Agent>();
 
-  private lastProduction = 0;
-  private lastConsumption = 0;
+  private consumption = 0;
 
   private power = 0;
 
@@ -36,45 +31,26 @@ class PowerController {
     }
 
     this.power -= consumption;
+    this.consumption += consumption;
     this.consumers.add(agent);
   }
 
   removeConsumer(agent: Agent) {
     // No refunds!
     this.consumers.delete(agent);
+    this.consumption -= this.getPowerConsumption(agent);
   }
 
   getProduction() {
-    let sum = 0;
-    this.generators.forEach(
-      (generator) => (sum += this.getPowerProduction(generator))
-    );
-
-    return sum;
-  }
-
-  getLastProduction() {
-    return this.lastProduction;
+    return Manager.Instance.getBase().getPartsCount(EntityType.PowerPlant) * 5;
   }
 
   getConsumption() {
-    let sum = 0;
-    this.consumers.forEach(
-      (consumer) => (sum += this.getPowerConsumption(consumer))
-    );
-
-    return sum;
-  }
-
-  getLastConsumption() {
-    return this.lastConsumption;
+    return this.consumption;
   }
 
   processPower() {
-    this.lastProduction = this.getProduction();
-    this.lastConsumption = this.getConsumption();
-
-    this.power = this.power + this.lastProduction - this.lastConsumption;
+    this.power = this.power + this.getProduction() - this.getConsumption();
 
     let fn: "enable" | "disable" = "enable";
     if (this.power < 0) {
@@ -95,14 +71,6 @@ class PowerController {
 
   getPower() {
     return this.power;
-  }
-
-  private getPowerProduction(agent: Agent): number {
-    if (agent.getType() in POWER_PRODUCTIONS) {
-      return POWER_PRODUCTIONS[agent.getType()]!;
-    }
-
-    throw new Error("Entity is not a generator");
   }
 
   private getPowerConsumption(agent: Agent): number {

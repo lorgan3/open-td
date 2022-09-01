@@ -26,12 +26,10 @@ class PowerPlant implements StaticAgent {
   spawn() {
     Manager.Instance.getBase().addPart(this);
     createStoneSurface(this.tile, 3);
-    Manager.Instance.getPowerController().registerGenerator(this);
   }
 
   despawn() {
     Manager.Instance.getBase().removePart(this);
-    Manager.Instance.getPowerController().removeGenerator(this);
   }
 
   hit(damage: number) {
