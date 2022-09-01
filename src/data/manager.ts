@@ -92,7 +92,8 @@ class Manager {
     ).size;
 
     this.triggerEvent(GameEvent.StatUpdate, {
-      integrity: this.getIntegrity(),
+      integrity: this.base.getHp(),
+      regeneration: this.base.getRegenerationFactor(),
       level: this.level,
       money: this.moneyController.getMoney(),
       production: this.powerController.getLastProduction(),
@@ -151,10 +152,6 @@ class Manager {
 
   getWave() {
     return this.wave;
-  }
-
-  getIntegrity() {
-    return this.base.getHp();
   }
 
   getMoney() {
@@ -276,6 +273,9 @@ class Manager {
   private end() {
     this.powerController.processPower();
     this.buildController.commit();
+    this.base.regenerate();
+
+    this.triggerStatUpdate();
   }
 
   addEventListener<E extends keyof EventParamsMap>(

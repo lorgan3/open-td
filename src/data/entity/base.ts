@@ -14,6 +14,7 @@ class Base implements StaticAgent {
   private invincibleTime = 0;
 
   private baseParts = new Set<StaticAgent>();
+  private basePartsByType = new Map<EntityType, number>();
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -69,6 +70,10 @@ class Base implements StaticAgent {
     Manager.Instance.triggerStatUpdate();
   }
 
+  regenerate() {
+    this.hp += this.getRegenerationFactor();
+  }
+
   isVisible() {
     return true;
   }
@@ -79,14 +84,33 @@ class Base implements StaticAgent {
 
   addPart(part: StaticAgent) {
     this.baseParts.add(part);
+    this.basePartsByType.set(
+      part.getType(),
+      (this.basePartsByType.get(part.getType()) ?? 0) + 1
+    );
   }
 
   removePart(part: StaticAgent) {
     this.baseParts.delete(part);
+    this.basePartsByType.set(
+      part.getType(),
+      this.basePartsByType.get(part.getType())! - 1
+    );
   }
 
   getParts() {
     return this.baseParts;
+  }
+
+  getPartsCount(type: EntityType) {
+    return this.basePartsByType.get(type) ?? 0;
+  }
+
+  getRegenerationFactor() {
+    const armories = this.getPartsCount(EntityType.Armory);
+
+    // Diminishing returns
+    return (armories * 50) / (armories + 25);
   }
 
   private shockwave() {

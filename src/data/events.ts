@@ -23,6 +23,7 @@ export interface StatUpdate {
   level: number;
   money: number;
   integrity: number;
+  regeneration: number;
   power: number;
   production: number;
   consumption: number;

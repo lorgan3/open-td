@@ -13,6 +13,7 @@ const level = ref(0);
 const remainingEnemies = ref(0);
 const inProgress = ref(false);
 const integrity = ref(0);
+const regeneration = ref(0);
 const showCoverage = ref(false);
 const power = ref(0);
 const lastProduction = ref(0);
@@ -24,6 +25,7 @@ const eventHandler = (stats: StatUpdate) => {
   remainingEnemies.value = stats.remainingEnemies;
   inProgress.value = stats.inProgress;
   integrity.value = stats.integrity;
+  regeneration.value = stats.regeneration;
   power.value = stats.power;
   lastProduction.value = stats.production;
   lastConsumption.value = stats.consumption;
@@ -72,7 +74,10 @@ function toggleCoverage() {
         </span>
       </li>
       <li>
-        <span>🛡️ {{ integrity }}</span>
+        <span
+          >🛡️ {{ integrity }} (<span class="positive">+{{ regeneration }}</span
+          >)</span
+        >
         <span>👾 {{ remainingEnemies }}</span>
       </li>
     </ul>
