@@ -3,6 +3,7 @@ import ElectricFence from "./entity/electricFence";
 import { AgentClass, EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
 import Freezer from "./entity/freezer";
+import Market from "./entity/Market";
 import PowerPlant from "./entity/powerPlant";
 import Radar from "./entity/radar";
 import Flamethrower from "./entity/towers/flamethrower";
@@ -90,6 +91,13 @@ const placeables: Placeable[] = [
     entity: Armory,
     entityType: EntityType.Armory,
     htmlElement: "🏰",
+    isBasePart: true,
+  },
+  {
+    name: "Market",
+    entity: Market,
+    entityType: EntityType.Market,
+    htmlElement: "🏪",
     isBasePart: true,
   },
 ];

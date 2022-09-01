@@ -13,10 +13,11 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Radar]: 50,
   [EntityType.PowerPlant]: 20,
   [EntityType.Armory]: 50,
+  [EntityType.Market]: 20,
 };
 
 class MoneyController {
-  constructor(private money = 0) {}
+  constructor(private money = 0, private multiplier = () => 1) {}
 
   setMoney(amount: number) {
     this.money = amount;
@@ -35,12 +36,16 @@ class MoneyController {
   }
 
   registerEnemyKill(enemy: IEnemy) {
-    const amount = this.getEnemyValue(enemy);
+    const amount = this.getEnemyValue(enemy) * this.multiplier();
     this.money += amount;
   }
 
   getMoney() {
     return this.money;
+  }
+
+  getMultiplier() {
+    return this.multiplier();
   }
 
   private getEnemyValue(enemy: IEnemy): number {

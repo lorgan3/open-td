@@ -54,6 +54,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Rock]: TileType.NaturalFeature,
   [EntityType.Armory]: TileType.Base,
   [EntityType.Base]: TileType.Base,
+  [EntityType.Market]: TileType.Base,
 };
 
 export type TileWithStaticEntity = { getStaticEntity: () => Entity } & Tile;

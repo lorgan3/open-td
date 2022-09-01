@@ -14,8 +14,13 @@ const naturalNumberFormatter = Intl.NumberFormat(undefined, {
 const numberFormatter = Intl.NumberFormat(undefined, {
   maximumFractionDigits: 2,
 });
+const percentageFormatter = Intl.NumberFormat(undefined, {
+  style: "percent",
+  maximumFractionDigits: 0,
+});
 
 const money = ref(0);
+const moneyMultiplier = ref(0);
 const level = ref(0);
 const remainingEnemies = ref(0);
 const inProgress = ref(false);
@@ -28,6 +33,7 @@ const lastConsumption = ref(0);
 
 const eventHandler = (stats: StatUpdate) => {
   money.value = stats.money;
+  moneyMultiplier.value = stats.moneyMultiplier;
   level.value = stats.level;
   remainingEnemies.value = stats.remainingEnemies;
   inProgress.value = stats.inProgress;
@@ -64,7 +70,12 @@ function toggleCoverage() {
   <div class="top-bar">
     <ul class="stats">
       <li>
-        <span>🪙 {{ money }}</span>
+        <span
+          >🪙 {{ money }} (<span class="positive">{{
+            percentageFormatter.format(moneyMultiplier)
+          }}</span
+          >)</span
+        >
         <span
           >🔋 {{ power }} (<span class="positive">+{{ lastProduction }}</span
           >/<span class="negative">-{{ lastConsumption }}</span

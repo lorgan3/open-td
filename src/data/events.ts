@@ -22,6 +22,7 @@ export type EventHandler<E extends keyof EventParamsMap> = (
 export interface StatUpdate {
   level: number;
   money: number;
+  moneyMultiplier: number;
   integrity: number;
   regeneration: number;
   power: number;

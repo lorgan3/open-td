@@ -46,7 +46,9 @@ class Manager {
     this.eventHandlers = new Map();
     this.visibilityController = new VisibilityController(surface);
     this.powerController = new PowerController();
-    this.moneyController = new MoneyController(1000);
+    this.moneyController = new MoneyController(1000, () =>
+      this.base.getMoneyFactor()
+    );
     this.buildController = new BuildController(surface);
     this.pathfinder = new Pathfinder(surface);
 
@@ -96,6 +98,7 @@ class Manager {
       regeneration: this.base.getRegenerationFactor(),
       level: this.level,
       money: this.moneyController.getMoney(),
+      moneyMultiplier: this.moneyController.getMultiplier(),
       production: this.powerController.getLastProduction(),
       consumption: this.powerController.getLastConsumption(),
       power: this.powerController.getPower(),

@@ -113,6 +113,13 @@ class Base implements StaticAgent {
     return (armories * 50) / (armories + 25);
   }
 
+  getMoneyFactor() {
+    const markets = this.getPartsCount(EntityType.Market);
+
+    // Diminishing returns
+    return 1 + (markets * 2.5) / (markets + 25);
+  }
+
   private shockwave() {
     const surface = Manager.Instance.getSurface();
     const targets = new Map<string, [Tile, Tile]>();
