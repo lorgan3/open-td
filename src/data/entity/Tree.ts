@@ -1,10 +1,10 @@
 import Manager from "../manager";
 import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 
-class Tree implements Agent {
+class Tree implements StaticAgent {
   public entity: Entity;
-  public category = AgentCategory.Player;
+  public category = AgentCategory.Unknown;
   private hp = 50;
 
   constructor(private tile: Tile) {
@@ -17,6 +17,10 @@ class Tree implements Agent {
 
   getTile() {
     return this.tile;
+  }
+
+  updateTile(tile: Tile) {
+    this.tile = tile;
   }
 
   hit(damage: number) {

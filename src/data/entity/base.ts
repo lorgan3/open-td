@@ -1,23 +1,23 @@
 import Manager from "../manager";
 import { createStoneSurface } from "../terrain/fill";
-import Tile, { FREE_TILES_INCLUDING_WATER, TileType } from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Tile, { FREE_TILES_INCLUDING_WATER } from "../terrain/tile";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 import Shockwave from "./projectiles/shockwave";
 
 const INVINCIBLE_TIME = 1000;
 const DAMAGE = 200;
 
-class Base implements Agent {
+class Base implements StaticAgent {
   public entity: Entity;
   public category = AgentCategory.Player;
   public hp = 30;
   private invincibleTime = 0;
 
-  private baseParts = new Set<Tile>();
+  private baseParts = new Set<StaticAgent>();
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-    this.baseParts.add(tile);
+    this.baseParts.add(this);
   }
 
   tick(dt: number) {
@@ -30,6 +30,10 @@ class Base implements Agent {
 
   getTile() {
     return this.tile;
+  }
+
+  updateTile(tile: Tile) {
+    this.tile = tile;
   }
 
   getHp() {
@@ -73,12 +77,12 @@ class Base implements Agent {
     return this.hp <= 0;
   }
 
-  addPart(tile: Tile) {
-    this.baseParts.add(tile);
+  addPart(part: StaticAgent) {
+    this.baseParts.add(part);
   }
 
-  removePart(tile: Tile) {
-    this.baseParts.delete(tile);
+  removePart(part: StaticAgent) {
+    this.baseParts.delete(part);
   }
 
   getParts() {
@@ -89,7 +93,7 @@ class Base implements Agent {
     const surface = Manager.Instance.getSurface();
     const targets = new Map<string, [Tile, Tile]>();
 
-    this.baseParts.forEach((fromTile: Tile) => {
+    this.baseParts.forEach((agent) => {
       for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
           if (i === 0 && j === 0) {
@@ -97,15 +101,15 @@ class Base implements Agent {
           }
 
           const tile = surface.getTile(
-            fromTile.getX() + i,
-            fromTile.getY() + j
+            agent.getTile().getX() + i,
+            agent.getTile().getY() + j
           );
           if (
             tile &&
             !targets.has(tile.getHash()) &&
             FREE_TILES_INCLUDING_WATER.has(tile.getType())
           ) {
-            targets.set(tile.getHash(), [fromTile, tile]);
+            targets.set(tile.getHash(), [agent.getTile(), tile]);
           }
         }
       }

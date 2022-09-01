@@ -1,4 +1,4 @@
-import Entity, { EntityType } from "../entity/entity";
+import Entity, { EntityType, isStaticAgent } from "../entity/entity";
 import { ITower } from "../entity/towers";
 
 export enum TileType {
@@ -92,13 +92,18 @@ class Tile {
     return this.staticEntity;
   }
 
-  hasStaticEntity() {
+  hasStaticEntity(): this is { getStaticEntity: () => Entity } & Tile {
     return this.staticEntity !== null;
   }
 
   setStaticEntity(entity: Entity) {
     if (this.staticEntity !== null) {
       throw new Error("A tile can only have 1 static entity.");
+    }
+
+    const agent = entity.getAgent();
+    if (isStaticAgent(agent)) {
+      agent.updateTile(this);
     }
 
     this.staticEntity = entity;

@@ -75,7 +75,9 @@ class Surface {
   private setTileInternal(tile: Tile) {
     const originalTile = this.map[tile.getY() * this.width + tile.getX()];
 
-    if (originalTile.hasStaticEntity()) {
+    if (originalTile.hasStaticEntity() && !tile.hasStaticEntity()) {
+      tile.setStaticEntity(originalTile.getStaticEntity()!);
+    } else if (originalTile.hasStaticEntity()) {
       this.despawnStatic(originalTile.getStaticEntity()!.getAgent());
     }
 

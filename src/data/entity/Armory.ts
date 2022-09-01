@@ -1,9 +1,9 @@
 import Manager from "../manager";
 import { createStoneSurface } from "../terrain/fill";
 import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 
-class Armory implements Agent {
+class Armory implements StaticAgent {
   public entity: Entity;
   public category = AgentCategory.Player;
 
@@ -12,12 +12,12 @@ class Armory implements Agent {
   }
 
   spawn() {
-    Manager.Instance.getBase().addPart(this.tile);
+    Manager.Instance.getBase().addPart(this);
     createStoneSurface(this.tile, 3);
   }
 
   despawn() {
-    Manager.Instance.getBase().removePart(this.tile);
+    Manager.Instance.getBase().removePart(this);
   }
 
   getType(): EntityType {
@@ -26,6 +26,10 @@ class Armory implements Agent {
 
   getTile() {
     return this.tile;
+  }
+
+  updateTile(tile: Tile) {
+    this.tile = tile;
   }
 
   hit(damage: number) {

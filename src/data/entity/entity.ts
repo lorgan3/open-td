@@ -19,6 +19,15 @@ export interface Agent {
   isVisible: () => boolean;
 }
 
+export interface StaticAgent extends Agent {
+  getTile(): Tile;
+  updateTile(tile: Tile): void;
+}
+
+export function isStaticAgent(agent: Agent): agent is StaticAgent {
+  return "getTile" in agent;
+}
+
 export type AgentClass = new (tile: Tile) => Agent;
 
 export enum EntityType {

@@ -69,6 +69,10 @@ class Mortar implements ITower {
     return this.tile;
   }
 
+  updateTile(tile: Tile) {
+    this.tile = tile;
+  }
+
   enable() {
     this.isEnabled = true;
   }

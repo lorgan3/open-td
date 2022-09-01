@@ -2,9 +2,9 @@ import { GameEvent, SurfaceChange } from "../../events";
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
-import { Agent } from "../entity";
+import { Agent, StaticAgent } from "../entity";
 
-export interface ITower extends Agent {
+export interface ITower extends StaticAgent {
   getCooldown(): number;
   fire(target: IEnemy): number;
   getTile(): Tile;
