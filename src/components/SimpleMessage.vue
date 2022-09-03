@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { MessageFn } from "../renderers/api";
+import TextWithControls from "./controls/TextWithControls.vue";
 
 interface Message {
   content: string;
@@ -71,7 +72,8 @@ onMounted(() => {
     <button v-if="firstMessage.closable" class="close-button" @click="close">
       ✖
     </button>
-    <div>{{ firstMessage.content }}</div>
+    <!-- <div>{{ firstMessage.content }}</div> -->
+    <TextWithControls :text="firstMessage.content" />
     <form
       v-if="firstMessage.input?.type === 'keyboard'"
       class="message-keyboard"

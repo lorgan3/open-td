@@ -5,7 +5,7 @@ const TUTORIALS = [
   () =>
     new Promise<void>((resolve) => {
       Manager.Instance.showMessage(
-        "Welcome to Open Tower Defense! Open the build menu by clicking the center-right button or by pressing 🅱️",
+        "Welcome to Open Tower Defense! Open the build menu by clicking the center-right button or by pressing {key: b}",
         { closable: false, override: true }
       );
 

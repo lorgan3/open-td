@@ -10,6 +10,8 @@ const props = defineProps<{
 
 <style lang="scss" scoped>
 .mouse {
+  display: inline-flex;
+  vertical-align: middle;
   border: 1px solid #888;
   border-radius: 50%;
   height: 24px;

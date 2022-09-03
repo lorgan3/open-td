@@ -23,7 +23,7 @@ const isLetter = props.char > "A" && props.char < "z";
   border-radius: 3px;
   width: 24px;
   height: 24px;
-  display: flex;
+  display: inline-flex;
   align-items: end;
   justify-content: center;
 }
