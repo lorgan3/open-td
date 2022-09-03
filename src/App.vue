@@ -34,6 +34,7 @@ const startGame = (seed: string) => {
   height: 100vh;
   font-family: JupiterCrash;
   font-size: 24px;
+  overflow: hidden;
 }
 
 button {
