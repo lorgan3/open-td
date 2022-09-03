@@ -4,7 +4,8 @@ import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
 import Bullet from "../projectiles/bullet";
 import { IEnemy } from "../enemies";
-import Entity, { AgentCategory, EntityType } from "../entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
+import Beacon from "../speedBeacon";
 
 const RANGE = 9;
 const COOLDOWN = 500;
@@ -17,6 +18,7 @@ class Tower implements ITower {
   private cleanupEventListener?: () => void;
   private hp = 50;
   private isEnabled = true;
+  private speedMultiplier = 1;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -27,7 +29,7 @@ class Tower implements ITower {
       return;
     }
 
-    this.cooldown = Math.max(0, this.cooldown - dt);
+    this.cooldown = Math.max(0, this.cooldown - dt * this.speedMultiplier);
   }
 
   fire(target: IEnemy) {
@@ -48,6 +50,16 @@ class Tower implements ITower {
 
   despawn() {
     this.cleanupEventListener?.();
+  }
+
+  updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
+    this.speedMultiplier = 1;
+
+    linkedAgents.forEach((agent) => {
+      if (agent instanceof Beacon) {
+        this.speedMultiplier += 0.5;
+      }
+    });
   }
 
   getCooldown() {
