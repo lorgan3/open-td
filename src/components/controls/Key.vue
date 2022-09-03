@@ -1,14 +1,15 @@
 <script setup lang="ts">
 const props = defineProps<{
   char: string;
-  emoji?: boolean;
   area?: string;
 }>();
+
+const isLetter = props.char > "A" && props.char < "z";
 </script>
 
 <template>
   <div
-    :class="{ key: true, emoji: props.emoji }"
+    :class="{ key: true, emoji: !isLetter }"
     :style="{ gridArea: props.area }"
   >
     {{ props.char }}

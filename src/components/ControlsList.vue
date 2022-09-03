@@ -14,13 +14,13 @@ import Mouse from "./controls/mouse.vue";
     <Mouse button="left" />
     /
     <span class="key-combination">
-      <Key char="⇧" emoji />
+      <Key char="⇧" />
       +
       <Mouse button="left" />
     </span>
     /
     <span class="key-combination">
-      <Key char="⌘" emoji />
+      <Key char="⌘" />
       +
       <Mouse button="left" />
     </span>
@@ -42,10 +42,10 @@ import Mouse from "./controls/mouse.vue";
     </MovementGrid>
     /
     <MovementGrid>
-      <Key char="↑" emoji area="up" />
-      <Key char="←" emoji area="left" />
-      <Key char="↓" emoji area="down" />
-      <Key char="→" emoji area="right" />
+      <Key char="↑" area="up" />
+      <Key char="←" area="left" />
+      <Key char="↓" area="down" />
+      <Key char="→" area="right" />
     </MovementGrid>
   </div>
   <h3>Zooming</h3>
