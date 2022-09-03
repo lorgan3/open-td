@@ -3,6 +3,7 @@ import Manager from "../../manager";
 import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
 import { Agent, StaticAgent } from "../entity";
+import SpeedBeacon from "../speedBeacon";
 
 export interface ITower extends StaticAgent {
   getCooldown(): number;
@@ -75,4 +76,16 @@ export const coverTilesWithTowerSightLines = (
     coveredTiles.forEach((tile) => tile.removeTower(tower));
     removeEventListener();
   };
+};
+
+export const getSpeedMultiplier = (linkedAgents: Set<StaticAgent>) => {
+  let speedMultiplier = 1;
+
+  linkedAgents.forEach((agent) => {
+    if (agent instanceof SpeedBeacon) {
+      speedMultiplier += 0.5;
+    }
+  });
+
+  return speedMultiplier;
 };

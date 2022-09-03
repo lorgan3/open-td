@@ -1,9 +1,9 @@
-import { coverTilesWithTowerSightLines, ITower } from ".";
+import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
-import Entity, { AgentCategory, EntityType } from "../entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
 import Flame from "../projectiles/flame";
 
 const RANGE = 3;
@@ -18,6 +18,7 @@ class Flamethrower implements ITower {
   private flame?: Flame;
   private hp = 200;
   private isEnabled = true;
+  private damageMultiplier = 1;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -35,7 +36,7 @@ class Flamethrower implements ITower {
     this.cooldown = COOLDOWN;
 
     if (!this.flame) {
-      this.flame = new Flame(this.tile, DAMAGE);
+      this.flame = new Flame(this.tile, DAMAGE * this.damageMultiplier);
       Manager.Instance.getSurface().spawn(this.flame);
     }
 
@@ -54,6 +55,10 @@ class Flamethrower implements ITower {
 
   despawn() {
     this.cleanupEventListener?.();
+  }
+
+  updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
+    this.damageMultiplier = getSpeedMultiplier(linkedAgents);
   }
 
   getCooldown() {

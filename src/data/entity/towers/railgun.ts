@@ -1,7 +1,7 @@
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
-import Entity, { AgentCategory, EntityType } from "../entity";
-import { coverTilesWithTowerSightLines, ITower } from ".";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
+import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
 import { IEnemy } from "../enemies";
 import Rail from "../projectiles/rail";
 import { isSolid } from "../../terrain/collision";
@@ -17,6 +17,7 @@ class Railgun implements ITower {
   private cleanupEventListener?: () => void;
   private hp = 100;
   private isEnabled = true;
+  private speedMultiplier = 1;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -27,7 +28,7 @@ class Railgun implements ITower {
       return;
     }
 
-    this.cooldown = Math.max(0, this.cooldown - dt);
+    this.cooldown = Math.max(0, this.cooldown - dt * this.speedMultiplier);
   }
 
   fire(target: IEnemy) {
@@ -50,6 +51,10 @@ class Railgun implements ITower {
   despawn() {
     Manager.Instance.getPowerController().removeConsumer(this);
     this.cleanupEventListener?.();
+  }
+
+  updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
+    this.speedMultiplier = getSpeedMultiplier(linkedAgents);
   }
 
   getCooldown() {

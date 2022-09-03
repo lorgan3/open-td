@@ -1,11 +1,10 @@
-import { coverTilesWithTowerSightLines, ITower } from ".";
+import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
 import Bullet from "../projectiles/bullet";
 import { IEnemy } from "../enemies";
 import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
-import Beacon from "../speedBeacon";
 
 const RANGE = 9;
 const COOLDOWN = 500;
@@ -53,13 +52,7 @@ class Tower implements ITower {
   }
 
   updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
-    this.speedMultiplier = 1;
-
-    linkedAgents.forEach((agent) => {
-      if (agent instanceof Beacon) {
-        this.speedMultiplier += 0.5;
-      }
-    });
+    this.speedMultiplier = getSpeedMultiplier(linkedAgents);
   }
 
   getCooldown() {

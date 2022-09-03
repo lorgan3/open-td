@@ -1,8 +1,8 @@
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
-import Entity, { AgentCategory, EntityType } from "../entity";
+import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
 import Rocket from "../projectiles/rocket";
-import { coverTilesWithTowerSightLines, ITower } from ".";
+import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
 import { IEnemy } from "../enemies";
 
 const RANGE = 30;
@@ -16,6 +16,7 @@ class Mortar implements ITower {
   private cleanupEventListener?: () => void;
   private hp = 100;
   private isEnabled = true;
+  private speedMultiplier = 1;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -26,7 +27,7 @@ class Mortar implements ITower {
       return;
     }
 
-    this.cooldown = Math.max(0, this.cooldown - dt);
+    this.cooldown = Math.max(0, this.cooldown - dt * this.speedMultiplier);
   }
 
   fire(target: IEnemy) {
@@ -43,6 +44,10 @@ class Mortar implements ITower {
 
   despawn() {
     this.cleanupEventListener?.();
+  }
+
+  updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
+    this.speedMultiplier = getSpeedMultiplier(linkedAgents);
   }
 
   getCooldown() {
