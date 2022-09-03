@@ -54,6 +54,19 @@ class Surface {
     return this.map[y * this.width + x];
   }
 
+  public getAdjacentTiles(middle: Tile) {
+    const options: Array<[number, number]> = [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ];
+
+    return options
+      .map(([x, y]) => this.getTile(middle.getX() + x, middle.getY() + y))
+      .filter((tile) => !!tile) as Tile[];
+  }
+
   public setTile(tile: Tile) {
     this.dirty = true;
     const originalTile = this.setTileInternal(tile);

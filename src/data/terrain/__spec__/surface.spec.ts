@@ -31,6 +31,22 @@ describe("surface", () => {
     expect(tile2.getY()).toEqual(4);
   });
 
+  it("can get adjacent tiles", () => {
+    expect(surface.getAdjacentTiles(surface.getTile(3, 3)!)).toEqual([
+      surface.getTile(4, 3),
+      surface.getTile(2, 3),
+      surface.getTile(3, 4),
+      surface.getTile(3, 2),
+    ]);
+  });
+
+  it("can get adjacent tiles in a corner", () => {
+    expect(surface.getAdjacentTiles(surface.getTile(0, 0)!)).toEqual([
+      surface.getTile(1, 0),
+      surface.getTile(0, 1),
+    ]);
+  });
+
   it("can get a row", () => {
     const row = surface.getRow(2);
 
