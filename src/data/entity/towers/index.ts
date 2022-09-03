@@ -1,6 +1,7 @@
 import { GameEvent, SurfaceChange } from "../../events";
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
+import DamageBeacon from "../damageBeacon";
 import { IEnemy } from "../enemies";
 import { Agent, StaticAgent } from "../entity";
 import SpeedBeacon from "../speedBeacon";
@@ -88,4 +89,16 @@ export const getSpeedMultiplier = (linkedAgents: Set<StaticAgent>) => {
   });
 
   return speedMultiplier;
+};
+
+export const getDamageMultiplier = (linkedAgents: Set<StaticAgent>) => {
+  let damageMultiplier = 1;
+
+  linkedAgents.forEach((agent) => {
+    if (agent instanceof DamageBeacon) {
+      damageMultiplier += 0.5;
+    }
+  });
+
+  return damageMultiplier;
 };

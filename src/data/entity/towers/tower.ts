@@ -1,4 +1,9 @@
-import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
+import {
+  coverTilesWithTowerSightLines,
+  getDamageMultiplier,
+  getSpeedMultiplier,
+  ITower,
+} from ".";
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
@@ -18,6 +23,7 @@ class Tower implements ITower {
   private hp = 50;
   private isEnabled = true;
   private speedMultiplier = 1;
+  private damageMultiplier = 1;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -32,11 +38,12 @@ class Tower implements ITower {
   }
 
   fire(target: IEnemy) {
+    const damage = DAMAGE * this.damageMultiplier;
     this.cooldown += COOLDOWN;
-    const bullet = new Bullet(this.tile, target, DAMAGE);
+    const bullet = new Bullet(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(bullet);
 
-    return DAMAGE;
+    return damage;
   }
 
   spawn() {
@@ -53,6 +60,7 @@ class Tower implements ITower {
 
   updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
     this.speedMultiplier = getSpeedMultiplier(linkedAgents);
+    this.damageMultiplier = getDamageMultiplier(linkedAgents);
   }
 
   getCooldown() {

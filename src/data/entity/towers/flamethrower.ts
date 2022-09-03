@@ -1,4 +1,9 @@
-import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
+import {
+  coverTilesWithTowerSightLines,
+  getDamageMultiplier,
+  getSpeedMultiplier,
+  ITower,
+} from ".";
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile from "../../terrain/tile";
@@ -58,7 +63,8 @@ class Flamethrower implements ITower {
   }
 
   updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
-    this.damageMultiplier = getSpeedMultiplier(linkedAgents);
+    this.damageMultiplier =
+      getSpeedMultiplier(linkedAgents) * getDamageMultiplier(linkedAgents);
   }
 
   getCooldown() {

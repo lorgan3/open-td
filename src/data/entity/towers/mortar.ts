@@ -2,7 +2,12 @@ import Manager from "../../manager";
 import Tile from "../../terrain/tile";
 import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
 import Rocket from "../projectiles/rocket";
-import { coverTilesWithTowerSightLines, getSpeedMultiplier, ITower } from ".";
+import {
+  coverTilesWithTowerSightLines,
+  getDamageMultiplier,
+  getSpeedMultiplier,
+  ITower,
+} from ".";
 import { IEnemy } from "../enemies";
 
 const RANGE = 30;
@@ -17,6 +22,7 @@ class Mortar implements ITower {
   private hp = 100;
   private isEnabled = true;
   private speedMultiplier = 1;
+  private damageMultiplier = 1;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -31,11 +37,12 @@ class Mortar implements ITower {
   }
 
   fire(target: IEnemy) {
+    const damage = DAMAGE * this.damageMultiplier;
     this.cooldown += COOLDOWN;
-    const projectile = new Rocket(this.tile, target, DAMAGE);
+    const projectile = new Rocket(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
 
-    return DAMAGE;
+    return damage;
   }
 
   spawn() {
@@ -48,6 +55,7 @@ class Mortar implements ITower {
 
   updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
     this.speedMultiplier = getSpeedMultiplier(linkedAgents);
+    this.damageMultiplier = getDamageMultiplier(linkedAgents);
   }
 
   getCooldown() {
