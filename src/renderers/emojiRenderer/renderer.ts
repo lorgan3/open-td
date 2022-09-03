@@ -536,6 +536,8 @@ class Renderer implements IRenderer {
         return "🔥";
       case EntityType.Shockwave:
         return "🌀";
+      case EntityType.Runner:
+        return "🪳";
       default:
         return "";
     }
