@@ -478,6 +478,8 @@ class Renderer implements IRenderer {
         return "🏰";
       case EntityType.Market:
         return "🏪";
+      case EntityType.SpeedBeacon:
+        return "⏰";
       default:
         return "❓";
     }

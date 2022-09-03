@@ -1,4 +1,5 @@
 import Armory from "./entity/Armory";
+import SpeedBeacon from "./entity/speedBeacon";
 import ElectricFence from "./entity/electricFence";
 import { AgentClass, EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
@@ -100,6 +101,12 @@ const placeables: Placeable[] = [
     entityType: EntityType.Market,
     htmlElement: "🏪",
     isBasePart: true,
+  },
+  {
+    name: "Speed Beacon",
+    entity: SpeedBeacon,
+    entityType: EntityType.SpeedBeacon,
+    htmlElement: "⏰",
   },
 ];
 
