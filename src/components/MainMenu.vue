@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Key from "./controls/Key.vue";
-import MovementGrid from "./controls/MovementGrid.vue";
-import Mouse from "./controls/mouse.vue";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
