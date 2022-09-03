@@ -480,6 +480,8 @@ class Renderer implements IRenderer {
         return "🏪";
       case EntityType.SpeedBeacon:
         return "⏰";
+      case EntityType.DamageBeacon:
+        return "🚨";
       default:
         return "❓";
     }

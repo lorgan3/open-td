@@ -12,6 +12,7 @@ import Mortar from "./entity/towers/mortar";
 import Railgun from "./entity/towers/railgun";
 import Tower from "./entity/towers/tower";
 import Wall from "./entity/wall";
+import DamageBeacon from "./entity/damageBeacon";
 
 export interface Placeable {
   name: string;
@@ -107,6 +108,12 @@ const placeables: Placeable[] = [
     entity: SpeedBeacon,
     entityType: EntityType.SpeedBeacon,
     htmlElement: "⏰",
+  },
+  {
+    name: "Damage Beacon",
+    entity: DamageBeacon,
+    entityType: EntityType.DamageBeacon,
+    htmlElement: "🚨",
   },
 ];
 
