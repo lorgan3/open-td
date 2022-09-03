@@ -8,7 +8,7 @@ import Flame from "../projectiles/flame";
 
 const RANGE = 3;
 const COOLDOWN = 1;
-const DAMAGE = 0.5;
+const DAMAGE = 0.05;
 
 class Flamethrower implements ITower {
   public entity: Entity;
@@ -32,11 +32,11 @@ class Flamethrower implements ITower {
     this.cooldown = Math.max(0, this.cooldown - dt);
   }
 
-  fire(target: IEnemy) {
+  fire(target: IEnemy, dt: number) {
     this.cooldown = COOLDOWN;
 
     if (!this.flame) {
-      this.flame = new Flame(this.tile, DAMAGE * this.damageMultiplier);
+      this.flame = new Flame(this.tile, DAMAGE * this.damageMultiplier * dt);
       Manager.Instance.getSurface().spawn(this.flame);
     }
 

@@ -23,15 +23,15 @@ class Mortar implements ITower {
   }
 
   tick(dt: number) {
-    if (!this.isEnabled) {
+    if (!this.isEnabled || this.cooldown <= 0) {
       return;
     }
 
-    this.cooldown = Math.max(0, this.cooldown - dt * this.speedMultiplier);
+    this.cooldown -= dt * this.speedMultiplier;
   }
 
   fire(target: IEnemy) {
-    this.cooldown = COOLDOWN;
+    this.cooldown += COOLDOWN;
     const projectile = new Rocket(this.tile, target, DAMAGE);
     Manager.Instance.getSurface().spawn(projectile);
 

@@ -7,7 +7,7 @@ import SpeedBeacon from "../speedBeacon";
 
 export interface ITower extends StaticAgent {
   getCooldown(): number;
-  fire(target: IEnemy): number;
+  fire(target: IEnemy, dt: number): number;
   getTile(): Tile;
   enable(): void;
   disable(): void;

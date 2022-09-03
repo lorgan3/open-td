@@ -50,14 +50,14 @@ class Enemy implements IEnemy {
     }
 
     if (this.isBusy()) {
-      this.getTargeted(this.path.getCurrentTile());
+      this.getTargeted(this.path.getCurrentTile(), dt);
     } else {
       const { from, to, step } = this.path.performStep(
         this,
         this.isVisible() ? dt : dt * 10
       );
       this.entity.move(from, to, step);
-      this.getTargeted(from);
+      this.getTargeted(from, dt);
     }
   }
 
@@ -76,10 +76,10 @@ class Enemy implements IEnemy {
     }
   }
 
-  private getTargeted(tile: Tile) {
+  private getTargeted(tile: Tile, dt: number) {
     if (this.predictedHp > 0) {
       for (let tower of tile.getAvailableTowers()) {
-        this.predictedHp -= tower.fire(this);
+        this.predictedHp -= tower.fire(this, dt);
 
         if (this.predictedHp <= 0) {
           break;
