@@ -91,6 +91,10 @@ class Enemy implements IEnemy {
   hit(damage: number) {
     this.hp -= damage;
 
+    if (this.hp < this.predictedHp) {
+      this.predictedHp = this.hp;
+    }
+
     if (this.hp <= 0) {
       Manager.Instance.despawnEnemy(this);
     }
