@@ -152,7 +152,7 @@ class Tile {
   }
 
   getAvailableTowers() {
-    return this.towers.filter((tower) => tower.getCooldown() === 0);
+    return this.towers.filter((tower) => tower.getCooldown() <= 0);
   }
 
   addLinkedAgent(agent: StaticAgent) {
