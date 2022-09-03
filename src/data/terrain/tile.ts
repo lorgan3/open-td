@@ -1,4 +1,8 @@
-import Entity, { EntityType, isStaticAgent } from "../entity/entity";
+import Entity, {
+  EntityType,
+  isStaticAgent,
+  StaticAgent,
+} from "../entity/entity";
 import { ITower } from "../entity/towers";
 
 export enum TileType {
@@ -64,6 +68,7 @@ class Tile {
   private hash: string;
   private actualType: TileType;
   private towers: ITower[] = [];
+  private linkedAgents?: Set<StaticAgent>;
   private discovered = false;
 
   constructor(
@@ -107,6 +112,10 @@ class Tile {
     const agent = entity.getAgent();
     if (isStaticAgent(agent)) {
       agent.updateTile(this);
+
+      if (this.linkedAgents && agent.updateLinkedAgents) {
+        agent.updateLinkedAgents(this.linkedAgents);
+      }
     }
 
     this.staticEntity = entity;
@@ -143,6 +152,36 @@ class Tile {
 
   getAvailableTowers() {
     return this.towers.filter((tower) => tower.getCooldown() === 0);
+  }
+
+  addLinkedAgent(agent: StaticAgent) {
+    if (!this.linkedAgents) {
+      this.linkedAgents = new Set();
+    }
+
+    this.linkedAgents.add(agent);
+
+    const staticAgent = this.staticEntity?.getAgent() as StaticAgent;
+    if (staticAgent && staticAgent.updateLinkedAgents) {
+      staticAgent.updateLinkedAgents(this.linkedAgents);
+    }
+  }
+
+  removeLinkedAgent(agent: StaticAgent) {
+    if (!this.linkedAgents) {
+      return;
+    }
+
+    this.linkedAgents.delete(agent);
+
+    const staticAgent = this.staticEntity?.getAgent();
+    if (isStaticAgent(staticAgent) && staticAgent.updateLinkedAgents) {
+      staticAgent.updateLinkedAgents(this.linkedAgents);
+    }
+  }
+
+  getLinkedAgents() {
+    return this.linkedAgents;
   }
 
   // @TODO instead of a string, just the index on the surface would be more efficient

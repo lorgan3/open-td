@@ -22,10 +22,11 @@ export interface Agent {
 export interface StaticAgent extends Agent {
   getTile(): Tile;
   updateTile(tile: Tile): void;
+  updateLinkedAgents?: (linkedAgents: Set<StaticAgent>) => void;
 }
 
-export function isStaticAgent(agent: Agent): agent is StaticAgent {
-  return "getTile" in agent;
+export function isStaticAgent(agent?: Agent | null): agent is StaticAgent {
+  return agent ? "getTile" in agent : false;
 }
 
 export type AgentClass = new (tile: Tile) => Agent;
