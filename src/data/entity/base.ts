@@ -1,6 +1,6 @@
 import Manager from "../manager";
 import { createStoneSurface } from "../terrain/fill";
-import Tile, { FREE_TILES_INCLUDING_WATER } from "../terrain/tile";
+import Tile, { FREE_TILES_INCLUDING_BUILDINGS } from "../terrain/tile";
 import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 import Shockwave from "./projectiles/shockwave";
 
@@ -138,7 +138,7 @@ class Base implements StaticAgent {
           if (
             tile &&
             !targets.has(tile.getHash()) &&
-            FREE_TILES_INCLUDING_WATER.has(tile.getType())
+            FREE_TILES_INCLUDING_BUILDINGS.has(tile.getType())
           ) {
             targets.set(tile.getHash(), [agent.getTile(), tile]);
           }

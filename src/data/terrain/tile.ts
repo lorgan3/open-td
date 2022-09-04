@@ -38,7 +38,15 @@ export const FREE_TILES_INCLUDING_WATER = new Set([
   ...FREE_TILES,
   TileType.Water,
   TileType.Ice,
+  TileType.Bridge,
   TileType.NaturalFeature,
+]);
+
+export const FREE_TILES_INCLUDING_BUILDINGS = new Set([
+  ...FREE_TILES_INCLUDING_WATER,
+  TileType.Freezer,
+  TileType.ElectricFence,
+  TileType.Fence,
 ]);
 
 export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
