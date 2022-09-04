@@ -68,6 +68,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Base]: TileType.Base,
   [EntityType.Market]: TileType.Base,
   [EntityType.SpeedBeacon]: TileType.Obstructed,
+  [EntityType.DamageBeacon]: TileType.Obstructed,
 };
 
 export type TileWithStaticEntity = { getStaticEntity: () => Entity } & Tile;
