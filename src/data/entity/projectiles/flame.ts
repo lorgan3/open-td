@@ -10,11 +10,11 @@ class Flame implements Agent {
   public category = AgentCategory.Unknown;
   public time = 0;
 
-  constructor(private tile: Tile, private damage: number) {
+  constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
   }
 
-  dealDamage(enemy: IEnemy) {
+  dealDamage(enemy: IEnemy, damage: number) {
     if (this.time > LIFETIME) {
       Manager.Instance.getSurface().spawn(this);
     }
@@ -28,7 +28,7 @@ class Flame implements Agent {
     this.entity.setX(enemy.entity.getAlignedX());
     this.entity.setY(enemy.entity.getAlignedY());
 
-    enemy.hit(this.damage);
+    enemy.hit(damage);
     enemy.lightOnFire && enemy.lightOnFire();
   }
 

@@ -38,16 +38,17 @@ class Flamethrower implements ITower {
   }
 
   fire(target: IEnemy, dt: number) {
+    const damage = DAMAGE * this.damageMultiplier * dt;
     this.cooldown = COOLDOWN;
 
     if (!this.flame) {
-      this.flame = new Flame(this.tile, DAMAGE * this.damageMultiplier * dt);
+      this.flame = new Flame(this.tile);
       Manager.Instance.getSurface().spawn(this.flame);
     }
 
-    this.flame.dealDamage(target);
+    this.flame.dealDamage(target, damage);
 
-    return DAMAGE;
+    return damage;
   }
 
   spawn() {
