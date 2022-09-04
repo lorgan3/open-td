@@ -6,6 +6,7 @@ import Manager from "./manager";
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
   [EntityType.ElectricFence]: 1,
   [EntityType.Railgun]: 5,
+  [EntityType.Laser]: 3,
 };
 
 class PowerController {

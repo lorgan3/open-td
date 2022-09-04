@@ -13,6 +13,7 @@ import Railgun from "./entity/towers/railgun";
 import Tower from "./entity/towers/tower";
 import Wall from "./entity/wall";
 import DamageBeacon from "./entity/damageBeacon";
+import Laser from "./entity/towers/Laser";
 
 export interface Placeable {
   name: string;
@@ -114,6 +115,12 @@ const placeables: Placeable[] = [
     entity: DamageBeacon,
     entityType: EntityType.DamageBeacon,
     htmlElement: "🚨",
+  },
+  {
+    name: "Laser",
+    entity: Laser,
+    entityType: EntityType.Laser,
+    htmlElement: "🔭",
   },
 ];
 

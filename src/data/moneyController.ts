@@ -16,6 +16,7 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Market]: 20,
   [EntityType.SpeedBeacon]: 50,
   [EntityType.DamageBeacon]: 40,
+  [EntityType.Laser]: 30,
 };
 
 class MoneyController {
