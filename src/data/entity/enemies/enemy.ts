@@ -1,4 +1,4 @@
-import { IEnemy } from ".";
+import { IEnemy, Status } from ".";
 import Manager from "../../manager";
 import Path from "../../terrain/path";
 import Tile from "../../terrain/tile";
@@ -6,10 +6,14 @@ import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 
 export const COOLDOWN = 600;
 const DAMAGE = 10;
+const ON_FIRE_TIME = 3000;
+const FIRE_DAMAGE = 0.01;
 
 class Enemy implements IEnemy {
   public entity: Entity;
   public category = AgentCategory.Enemy;
+  private status = Status.Normal;
+  private statusDuration = 0;
 
   public hp = 100;
   private predictedHp = this.hp;
@@ -30,6 +34,10 @@ class Enemy implements IEnemy {
     return this.path;
   }
 
+  getStatus() {
+    return this.status;
+  }
+
   tick(dt: number) {
     if (this.cooldown < dt && this.callback) {
       this.callback();
@@ -37,6 +45,15 @@ class Enemy implements IEnemy {
     }
 
     this.cooldown = Math.max(0, this.cooldown - dt);
+
+    if (this.status === Status.OnFire) {
+      this.statusDuration -= dt;
+      if (this.statusDuration <= 0) {
+        this.status = Status.Normal;
+      } else {
+        this.hit(FIRE_DAMAGE * dt);
+      }
+    }
 
     if (this.path.isPaused(this) && !this.isBusy()) {
       const to = this.path.getTile();
@@ -118,6 +135,11 @@ class Enemy implements IEnemy {
     }
 
     return this.path.getFuturePosition(time - this.cooldown);
+  }
+
+  lightOnFire() {
+    this.status = Status.OnFire;
+    this.statusDuration = ON_FIRE_TIME;
   }
 }
 

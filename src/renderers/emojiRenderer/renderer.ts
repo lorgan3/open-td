@@ -52,6 +52,8 @@ class Renderer implements IRenderer {
           original.style.opacity = "1";
           original.style.transformOrigin = "50% 50%";
           original.style.filter = "none";
+          original.style.color = "initial";
+          original.style.textShadow = "none";
           original.children[0].textContent = this.getEntityEmoji(entity!);
           return original;
         }

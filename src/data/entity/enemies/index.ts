@@ -8,4 +8,11 @@ export interface IEnemy extends Agent {
   hp: number;
   getFuturePosition(time: number): number;
   miss(damage: number): void;
+  getStatus(): Status;
+  lightOnFire?: () => void;
+}
+
+export enum Status {
+  Normal,
+  OnFire,
 }
