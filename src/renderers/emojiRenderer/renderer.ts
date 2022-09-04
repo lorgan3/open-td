@@ -484,6 +484,8 @@ class Renderer implements IRenderer {
         return "⏰";
       case EntityType.DamageBeacon:
         return "🚨";
+      case EntityType.Laser:
+        return "🔭";
       default:
         return "❓";
     }
@@ -535,7 +537,7 @@ class Renderer implements IRenderer {
       case EntityType.Bullet:
         return "▪";
       case EntityType.Rail:
-        return "〰";
+        return "⬛";
       case EntityType.Flame:
         return "🔥";
       case EntityType.Shockwave:
