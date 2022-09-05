@@ -77,9 +77,8 @@ class VisibilityController {
   private getVisibilityRange(agent: Agent) {
     switch (agent.getType()) {
       case EntityType.Base:
-        return 35 + this.agents.size * 5;
       case EntityType.Radar:
-        return 24;
+        return 35;
       default:
         throw new Error("Entity has no visibility defined");
     }
