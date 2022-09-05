@@ -18,27 +18,28 @@ class BuildController {
   }
 
   build(selection: Tile[], placeable: Placeable) {
+    let affectedTiles: Tile[];
     if (placeable.entityType === EntityType.None) {
       if (Manager.Instance.getIsStarted()) {
-        this.sellBlueprints(selection);
+        affectedTiles = this.sellBlueprints(selection);
       } else {
-        this.sellEntities(selection);
+        affectedTiles = this.sellEntities(selection);
       }
 
       Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
-        affectedTiles: selection,
+        affectedTiles,
       });
       return;
     }
 
     if (Manager.Instance.getIsStarted()) {
-      this.placeBlueprints(selection, placeable);
+      affectedTiles = this.placeBlueprints(selection, placeable);
     } else {
-      this.placeEntities(selection, placeable);
+      affectedTiles = this.placeEntities(selection, placeable);
     }
 
     Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
-      affectedTiles: selection,
+      affectedTiles,
     });
   }
 
@@ -92,7 +93,7 @@ class BuildController {
     });
 
     if (!Manager.Instance.buy(placeable, validTiles.length)) {
-      return;
+      return [];
     }
 
     validTiles.forEach((tile) => {
@@ -108,9 +109,11 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
+    return validTiles;
   }
 
   private sellBlueprints(selection: Tile[]) {
+    const affectedTiles: Tile[] = [];
     selection.forEach((tile) => {
       const hash = tile.getHash();
       if (this.blueprints.has(hash)) {
@@ -131,12 +134,14 @@ class BuildController {
         return;
       }
 
+      affectedTiles.push(tile);
       const blueprint = new Blueprint(tile, this.deletePlaceable);
       this.surface.spawn(blueprint);
       this.blueprints.set(tile.getHash(), blueprint);
     });
 
     Manager.Instance.triggerStatUpdate();
+    return affectedTiles;
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
@@ -157,7 +162,7 @@ class BuildController {
     });
 
     if (!Manager.Instance.buy(placeable, validTiles.length)) {
-      return;
+      return [];
     }
 
     validTiles.forEach((tile) => {
@@ -165,9 +170,11 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
+    return validTiles;
   }
 
   private sellEntities(selection: Tile[]) {
+    const affectedTiles: Tile[] = [];
     let unsellableBaseParts = 0;
     selection.forEach((tile) => {
       if (
@@ -185,6 +192,7 @@ class BuildController {
         return;
       }
 
+      affectedTiles.push(tile);
       const agent = tile.getStaticEntity().getAgent();
       this.surface.despawnStatic(agent);
       Manager.Instance.sell(agent);
@@ -194,6 +202,7 @@ class BuildController {
       `${unsellableBaseParts} tiles can't be sold because they're integral parts of your base.`
     );
     Manager.Instance.triggerStatUpdate();
+    return affectedTiles;
   }
 }
 
