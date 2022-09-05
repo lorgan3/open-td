@@ -21,17 +21,16 @@ class ElectricFence implements ITower {
   }
 
   fire(target: IEnemy) {
+    if (Manager.Instance.consume(this)) {
+      return 0;
+    }
+
     target.hit(DAMAGE);
 
     return DAMAGE;
   }
 
-  spawn() {
-    Manager.Instance.getPowerController().registerConsumer(this);
-  }
-
   despawn() {
-    Manager.Instance.getPowerController().removeConsumer(this);
     this.tile.removeTower(this);
   }
 

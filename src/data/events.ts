@@ -11,7 +11,7 @@ export enum GameEvent {
 export interface EventParamsMap {
   [GameEvent.StatUpdate]: [StatUpdate];
   [GameEvent.SurfaceChange]: [SurfaceChange];
-  [GameEvent.BlackOut]: [BlackOut];
+  [GameEvent.BlackOut]: [];
   [GameEvent.OpenBuildMenu]: [];
 }
 
@@ -35,8 +35,4 @@ export interface StatUpdate {
 
 export interface SurfaceChange {
   affectedTiles: Tile[];
-}
-
-export interface BlackOut {
-  affectedConsumers: Agent[];
 }

@@ -38,8 +38,13 @@ class Laser implements ITower {
   }
 
   fire(target: IEnemy, dt: number) {
-    const damage = DAMAGE * this.damageMultiplier * dt;
     this.cooldown = COOLDOWN;
+
+    if (!Manager.Instance.consume(this)) {
+      return 0;
+    }
+
+    const damage = DAMAGE * this.damageMultiplier * dt;
 
     if (!this.laserBeam) {
       this.laserBeam = new LaserBeam(this.tile);
@@ -52,7 +57,6 @@ class Laser implements ITower {
   }
 
   spawn() {
-    Manager.Instance.getPowerController().registerConsumer(this);
     this.cleanupEventListener = coverTilesWithTowerSightLines(
       this,
       RANGE,
@@ -61,7 +65,6 @@ class Laser implements ITower {
   }
 
   despawn() {
-    Manager.Instance.getPowerController().removeConsumer(this);
     this.cleanupEventListener?.();
   }
 

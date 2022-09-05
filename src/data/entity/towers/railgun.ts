@@ -38,8 +38,13 @@ class Railgun implements ITower {
   }
 
   fire(target: IEnemy) {
-    const damage = DAMAGE * this.damageMultiplier;
     this.cooldown += COOLDOWN;
+
+    if (!Manager.Instance.consume(this)) {
+      return 0;
+    }
+
+    const damage = DAMAGE * this.damageMultiplier;
     const projectile = new Rail(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
 
@@ -47,7 +52,6 @@ class Railgun implements ITower {
   }
 
   spawn() {
-    Manager.Instance.getPowerController().registerConsumer(this);
     this.cleanupEventListener = coverTilesWithTowerSightLines(
       this,
       RANGE,
@@ -56,7 +60,6 @@ class Railgun implements ITower {
   }
 
   despawn() {
-    Manager.Instance.getPowerController().removeConsumer(this);
     this.cleanupEventListener?.();
   }
 

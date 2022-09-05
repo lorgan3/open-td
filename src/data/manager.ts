@@ -11,11 +11,7 @@ import { Placeable } from "./placeables";
 import PowerController, { POWER_CONSUMPTIONS } from "./powerController";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
-import Tile, {
-  FREE_TILES,
-  FREE_TILES_INCLUDING_WATER,
-  TileType,
-} from "./terrain/tile";
+import Tile, { FREE_TILES, TileType } from "./terrain/tile";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
@@ -172,14 +168,6 @@ class Manager {
       return false;
     }
 
-    const powerUsage = (POWER_CONSUMPTIONS[placeable.entityType] ?? 0) * amount;
-    if (powerUsage > this.powerController.getPower()) {
-      this.showMessage(
-        `You do not have enough stored power. This costs 🔋 ${powerUsage}`
-      );
-      return false;
-    }
-
     this.moneyController.removeMoney(cost);
 
     return true;
@@ -271,6 +259,8 @@ class Manager {
     this.wave = Wave.fromDynamicSpawnGroups(this.level, this.spawnGroups);
 
     this.level++;
+
+    this.powerController.processPower();
     this.triggerStatUpdate();
   }
 
@@ -278,8 +268,13 @@ class Manager {
     return this.messageFn(...args);
   };
 
+  consume(agent: Agent) {
+    return this.powerController.consume(
+      POWER_CONSUMPTIONS[agent.getType()] ?? 0
+    );
+  }
+
   private end() {
-    this.powerController.processPower();
     this.buildController.commit();
     this.base.regenerate();
 
