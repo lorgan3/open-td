@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import Key from "./Key.vue";
 import Mouse from "./mouse.vue";
 
@@ -8,17 +9,31 @@ const props = defineProps<{
 
 const buttonMap = { 0: "left", 1: "right", 3: "middle" } as any;
 
-const regex = /^(?<left>.*?){(?<control>key|mouse): (?<type>.)}(?<right>.*)$/;
-const result = regex.exec(props.text);
+const left = ref(props.text);
+const control = ref("");
+const type = ref("");
+const right = ref("");
 
-let left = props.text;
-let control: string, type: string, right: string;
-if (result) {
-  left = result.groups!.left;
-  control = result.groups!.control;
-  type = result.groups!.type;
-  right = result.groups!.right;
-}
+watch(
+  () => props.text,
+  (newText) => {
+    const regex =
+      /^(?<left>.*?){(?<control>key|mouse): (?<type>.)}(?<right>.*)$/;
+    const result = regex.exec(newText);
+    if (result) {
+      left.value = result.groups!.left;
+      control.value = result.groups!.control;
+      type.value = result.groups!.type;
+      right.value = result.groups!.right;
+    } else {
+      left.value = newText;
+      control.value = "";
+      type.value = "";
+      right.value = "";
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
