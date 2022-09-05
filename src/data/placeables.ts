@@ -82,6 +82,7 @@ const placeables: Placeable[] = [
     entity: Radar,
     entityType: EntityType.Radar,
     htmlElement: "📡",
+    isBasePart: true,
   },
   {
     name: "Power plant",

@@ -1,11 +1,11 @@
 import Manager from "../manager";
+import { createStoneSurface } from "../terrain/fill";
 import Tile from "../terrain/tile";
 import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
 
 class Radar implements StaticAgent {
   public entity: Entity;
   public category = AgentCategory.Player;
-  public hp = 100;
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
@@ -23,26 +23,19 @@ class Radar implements StaticAgent {
     this.tile = tile;
   }
 
-  getHp() {
-    return this.hp;
-  }
-
   spawn() {
     Manager.Instance.getVisibilityController().registerAgent(this);
+    Manager.Instance.getBase().addPart(this);
+    createStoneSurface(this.tile, 3);
   }
 
   despawn() {
     Manager.Instance.getVisibilityController().removeAgent(this);
+    Manager.Instance.getBase().removePart(this);
   }
 
   hit(damage: number) {
-    this.hp -= damage;
-
-    if (this.hp <= 0) {
-      Manager.Instance.getSurface().despawnStatic(this);
-    }
-
-    Manager.Instance.triggerStatUpdate();
+    Manager.Instance.getBase().hit(damage);
   }
 
   isVisible() {

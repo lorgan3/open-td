@@ -1,9 +1,11 @@
 import Base from "./entity/base";
 import { Agent, EntityType } from "./entity/entity";
 import Surface from "./terrain/surface";
+import Tile from "./terrain/tile";
 
 class VisibilityController {
   private agents = new Set<Agent>();
+  private edgeMap = new Map<number, [number, number]>();
   private base?: Base;
 
   private minX?: number;
@@ -20,19 +22,16 @@ class VisibilityController {
       this.base = agent;
     } else if (!!this.base) {
       const range = this.getVisibilityRange(this.base);
-      this.updateVisibility(
-        this.base.entity.getAlignedX(),
-        this.base.entity.getAlignedY(),
-        range
-      );
+      const coords = this.getVisibilityEdge(this.base);
+      this.edgeMap.set(agent.entity.getId(), coords);
+
+      this.updateVisibility(...coords, range);
     }
 
     const range = this.getVisibilityRange(agent);
-    this.updateVisibility(
-      agent.entity.getAlignedX(),
-      agent.entity.getAlignedY(),
-      range
-    );
+    const coords = this.getVisibilityEdge(agent);
+    this.edgeMap.set(agent.entity.getId(), coords);
+    this.updateVisibility(...coords, range);
   }
 
   removeAgent(agent: Agent) {
@@ -42,25 +41,19 @@ class VisibilityController {
 
     if (agent instanceof Base) {
       this.base = undefined;
-    } else {
-      const range = this.getVisibilityRange(this.base!);
-      this.surface.forCircle(
-        this.base!.entity.getX(),
-        this.base!.entity.getY(),
-        range,
-        (tile) => tile.setIsDiscovered(false)
-      );
     }
 
-    const range = this.getVisibilityRange(agent);
-    this.surface.forCircle(
-      agent.entity.getX(),
-      agent.entity.getY(),
-      range,
-      (tile) => tile.setIsDiscovered(false)
-    );
+    this.agents.forEach((agent) => {
+      const range = this.getVisibilityRange(agent);
+      const coords = this.edgeMap.get(agent.entity.getId())!;
+      this.surface.forCircle(...coords, range, (tile) =>
+        tile.setIsDiscovered(false)
+      );
+    });
 
     this.agents.delete(agent);
+    this.edgeMap.delete(agent.entity.getId());
+
     this.minX = undefined;
     this.minY = undefined;
     this.maxX = undefined;
@@ -68,11 +61,9 @@ class VisibilityController {
 
     this.agents.forEach((agent) => {
       const range = this.getVisibilityRange(agent);
-      this.updateVisibility(
-        agent.entity.getAlignedX(),
-        agent.entity.getAlignedY(),
-        range
-      );
+      const coords = this.getVisibilityEdge(agent);
+      this.edgeMap.set(agent.entity.getId(), coords);
+      this.updateVisibility(...coords, range);
     });
   }
 
@@ -92,6 +83,35 @@ class VisibilityController {
       default:
         throw new Error("Entity has no visibility defined");
     }
+  }
+
+  private getVisibilityEdge(agent: Agent): [number, number] {
+    if (agent instanceof Base || !this.base) {
+      return [agent.entity.getAlignedX(), agent.entity.getAlignedY()];
+    }
+
+    let lastTile: Tile;
+    const direction = Math.atan2(
+      agent.entity.getAlignedY() - this.base.entity.getAlignedY(),
+      agent.entity.getAlignedX() - this.base.entity.getAlignedX()
+    );
+    this.surface.forRay(
+      this.base.entity.getAlignedX(),
+      this.base.entity.getAlignedY(),
+      direction,
+      (tile) => {
+        if (!tile.isDiscovered()) {
+          return false;
+        }
+
+        lastTile = tile;
+        return true;
+      }
+    );
+
+    return lastTile!
+      ? [lastTile.getX(), lastTile.getY()]
+      : [agent.entity.getAlignedX(), agent.entity.getAlignedY()];
   }
 
   private updateVisibility(x: number, y: number, range: number) {

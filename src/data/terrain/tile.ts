@@ -60,7 +60,7 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.ElectricFence]: TileType.ElectricFence,
   [EntityType.Fence]: TileType.Fence,
   [EntityType.Freezer]: TileType.Freezer,
-  [EntityType.Radar]: TileType.PlayerBuilding,
+  [EntityType.Radar]: TileType.Base,
   [EntityType.PowerPlant]: TileType.Base,
   [EntityType.Tree]: TileType.NaturalFeature,
   [EntityType.Rock]: TileType.NaturalFeature,
