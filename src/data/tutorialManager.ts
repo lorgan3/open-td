@@ -17,10 +17,9 @@ const TUTORIALS = [
         GameEvent.OpenBuildMenu,
         () => {
           removeEventListener();
-
           Manager.Instance.showMessage(
             "Build towers and walls near your base to protect it from enemies lurking in undiscovered areas",
-            { closable: false, override: true }
+            { override: true }
           );
 
           resolve();
@@ -31,9 +30,12 @@ const TUTORIALS = [
     new Promise<void>((resolve) => {
       const removeEventListener = Manager.Instance.addEventListener(
         GameEvent.SurfaceChange,
-        () => {
-          removeEventListener();
+        ({ affectedTiles }) => {
+          if (!affectedTiles.length) {
+            return;
+          }
 
+          removeEventListener();
           Manager.Instance.showMessage(
             "Start the wave when you are ready. Good luck!",
             { override: true }
