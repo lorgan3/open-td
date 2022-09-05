@@ -114,6 +114,7 @@ class BuildController {
 
   private sellBlueprints(selection: Tile[]) {
     const affectedTiles: Tile[] = [];
+    let unsellableBaseParts = 0;
     selection.forEach((tile) => {
       const hash = tile.getHash();
       if (this.blueprints.has(hash)) {
@@ -134,12 +135,23 @@ class BuildController {
         return;
       }
 
+      if (tile.getType() === TileType.Base) {
+        unsellableBaseParts++;
+        return;
+      }
+
       affectedTiles.push(tile);
       const blueprint = new Blueprint(tile, this.deletePlaceable);
       this.surface.spawn(blueprint);
       this.blueprints.set(tile.getHash(), blueprint);
     });
 
+    if (unsellableBaseParts > 0) {
+      Manager.Instance.showMessage(
+        `${unsellableBaseParts} base parts can't be sold during the attack phase`,
+        { override: true }
+      );
+    }
     Manager.Instance.triggerStatUpdate();
     return affectedTiles;
   }
@@ -198,9 +210,12 @@ class BuildController {
       Manager.Instance.sell(agent);
     });
 
-    Manager.Instance.showMessage(
-      `${unsellableBaseParts} tiles can't be sold because they're integral parts of your base.`
-    );
+    if (unsellableBaseParts > 0) {
+      Manager.Instance.showMessage(
+        `${unsellableBaseParts} tiles can't be sold because they're integral parts of your base.`,
+        { override: true }
+      );
+    }
     Manager.Instance.triggerStatUpdate();
     return affectedTiles;
   }
