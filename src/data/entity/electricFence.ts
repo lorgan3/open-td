@@ -4,7 +4,7 @@ import { IEnemy } from "./enemies";
 import Entity, { AgentCategory, EntityType } from "./entity";
 import { ITower } from "./towers";
 
-const DAMAGE = 2;
+const DAMAGE = 0.125;
 
 class ElectricFence implements ITower {
   public entity: Entity;
@@ -20,14 +20,15 @@ class ElectricFence implements ITower {
     return this.isEnabled ? 0 : 1;
   }
 
-  fire(target: IEnemy) {
-    if (Manager.Instance.consume(this)) {
+  fire(target: IEnemy, dt: number) {
+    if (Manager.Instance.consumeContinuous(this, dt)) {
       return 0;
     }
 
-    target.hit(DAMAGE);
+    const damage = DAMAGE * dt;
+    target.hit(damage);
 
-    return DAMAGE;
+    return damage;
   }
 
   despawn() {

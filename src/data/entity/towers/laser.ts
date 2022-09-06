@@ -40,7 +40,7 @@ class Laser implements ITower {
   fire(target: IEnemy, dt: number) {
     this.cooldown = COOLDOWN;
 
-    if (!Manager.Instance.consume(this)) {
+    if (!Manager.Instance.consumeContinuous(this, dt, this.damageMultiplier)) {
       return 0;
     }
 

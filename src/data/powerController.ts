@@ -3,10 +3,14 @@ import { GameEvent } from "./events";
 import Manager from "./manager";
 
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
-  [EntityType.ElectricFence]: 1,
+  [EntityType.ElectricFence]: 0.8,
   [EntityType.Railgun]: 5,
-  [EntityType.Laser]: 0.03,
+  [EntityType.Laser]: 0.004,
 };
+
+export const SPEED_BEACON_CONSUMPTION = 2;
+
+export const DAMAGE_BEACON_CONSUMPTION = 1.25;
 
 class PowerController {
   private generators = new Set<Agent>();
@@ -33,6 +37,10 @@ class PowerController {
   }
 
   consume(power: number) {
+    if (power === 0) {
+      return true;
+    }
+
     if (this.blackout) {
       return false;
     }
@@ -43,6 +51,7 @@ class PowerController {
       this.power = 0;
       this.blackout = true;
       Manager.Instance.triggerEvent(GameEvent.BlackOut);
+      Manager.Instance.triggerStatUpdate();
 
       return false;
     }

@@ -8,7 +8,11 @@ import { Agent, AgentCategory } from "./entity/entity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable } from "./placeables";
-import PowerController, { POWER_CONSUMPTIONS } from "./powerController";
+import PowerController, {
+  DAMAGE_BEACON_CONSUMPTION,
+  POWER_CONSUMPTIONS,
+  SPEED_BEACON_CONSUMPTION,
+} from "./powerController";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile, { FREE_TILES, TileType } from "./terrain/tile";
@@ -268,9 +272,19 @@ class Manager {
     return this.messageFn(...args);
   };
 
-  consume(agent: Agent) {
+  consume(agent: Agent, speedMultiplier = 1, damageMultiplier = 1) {
     return this.powerController.consume(
-      POWER_CONSUMPTIONS[agent.getType()] ?? 0
+      (POWER_CONSUMPTIONS[agent.getType()] ?? 0) +
+        (speedMultiplier - 1) * SPEED_BEACON_CONSUMPTION +
+        (damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION
+    );
+  }
+
+  consumeContinuous(agent: Agent, dt: number, damageMultiplier = 1) {
+    console.log(dt);
+    return this.powerController.consume(
+      (POWER_CONSUMPTIONS[agent.getType()] ?? 0) * dt +
+        ((damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION * dt) / 16
     );
   }
 

@@ -77,8 +77,10 @@ function toggleCoverage() {
           >)</span
         >
         <span
-          >🔋 {{ power }} (<span class="positive">+{{ lastProduction }}</span
-          >/<span class="negative">-{{ lastConsumption }}</span
+          >🔋 {{ naturalNumberFormatter.format(power) }} (<span class="positive"
+            >+{{ numberFormatter.format(lastProduction) }}</span
+          >/<span class="negative"
+            >-{{ numberFormatter.format(lastConsumption) }}</span
           >)</span
         >
       </li>

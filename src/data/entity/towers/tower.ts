@@ -38,8 +38,15 @@ class Tower implements ITower {
   }
 
   fire(target: IEnemy) {
-    const damage = DAMAGE * this.damageMultiplier;
     this.cooldown += COOLDOWN;
+
+    const isPowered = Manager.Instance.consume(
+      this,
+      this.speedMultiplier,
+      this.damageMultiplier
+    );
+
+    const damage = DAMAGE * (isPowered ? this.damageMultiplier : 1);
     const bullet = new Bullet(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(bullet);
 

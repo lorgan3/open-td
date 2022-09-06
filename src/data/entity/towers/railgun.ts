@@ -40,7 +40,13 @@ class Railgun implements ITower {
   fire(target: IEnemy) {
     this.cooldown += COOLDOWN;
 
-    if (!Manager.Instance.consume(this)) {
+    if (
+      !Manager.Instance.consume(
+        this,
+        this.speedMultiplier,
+        this.damageMultiplier
+      )
+    ) {
       return 0;
     }
 
