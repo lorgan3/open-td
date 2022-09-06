@@ -154,7 +154,7 @@ class Tile {
   }
 
   isCoveredByTower() {
-    return this.towers.length > 0;
+    return this.isDiscovered() && this.towers.length > 0;
   }
 
   removeTower(tower: ITower) {

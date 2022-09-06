@@ -94,7 +94,7 @@ class Enemy implements IEnemy {
   }
 
   private getTargeted(tile: Tile, dt: number) {
-    if (this.predictedHp > 0) {
+    if (this.predictedHp > 0 && this.isVisible()) {
       for (let tower of tile.getAvailableTowers()) {
         this.predictedHp -= tower.fire(this, dt);
 
