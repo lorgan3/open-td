@@ -1,14 +1,34 @@
 import Base from "../entity/base";
 import { StaticAgent } from "../entity/entity";
 import Surface from "../terrain/surface";
-import Tile, { TileType } from "../terrain/tile";
+import Tile from "../terrain/tile";
 
-export const canBuild = (tile: Tile, surface: Surface) => {
-  const adjacentTiles = surface.getAdjacentTiles(tile);
-  return !!adjacentTiles.find((tile) => tile.getType() === TileType.Base);
+const EMPTY_SET = new Set<Tile>();
+
+export const canBuild = (
+  tiles: Set<Tile>,
+  base: Base,
+  surface: Surface,
+  pendingRemovedTiles = EMPTY_SET
+) => {
+  return floodFill(pendingRemovedTiles, tiles, base, surface);
 };
 
-export const canSell = (target: Tile, base: Base, surface: Surface) => {
+export const canSell = (
+  tiles: Set<Tile>,
+  base: Base,
+  surface: Surface,
+  pendingAddedTiles = EMPTY_SET
+) => {
+  return floodFill(tiles, pendingAddedTiles, base, surface);
+};
+
+export const floodFill = (
+  tilesToSell: Set<Tile>,
+  tilesToBuy: Set<Tile>,
+  base: Base,
+  surface: Surface
+) => {
   // Perform something like a flood fill to determine whether all base parts are still connected
   // https://en.wikipedia.org/wiki/Flood_fill
 
@@ -19,13 +39,14 @@ export const canSell = (target: Tile, base: Base, surface: Surface) => {
   while (tilesToCheck.length > 0) {
     const tile = tilesToCheck.pop()!;
 
-    if (tile === target || filled.has(tile)) {
+    if (tilesToSell.has(tile) || filled.has(tile)) {
       continue;
     }
 
     if (
-      !tile.hasStaticEntity() ||
-      !base.getParts().has(tile.getStaticEntity().getAgent() as StaticAgent)
+      !tilesToBuy.has(tile) &&
+      (!tile.hasStaticEntity() ||
+        !base.getParts().has(tile.getStaticEntity().getAgent() as StaticAgent))
     ) {
       continue;
     }
@@ -34,5 +55,7 @@ export const canSell = (target: Tile, base: Base, surface: Surface) => {
     surface.getAdjacentTiles(tile).forEach((tile) => tilesToCheck.push(tile));
   }
 
-  return filled.size === base.getParts().size - 1;
+  return (
+    filled.size === base.getParts().size + tilesToBuy.size - tilesToSell.size
+  );
 };

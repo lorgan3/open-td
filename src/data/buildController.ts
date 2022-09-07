@@ -1,15 +1,25 @@
 import placeables, { Placeable, placeableEntityTypes } from "./placeables";
 import Manager from "./manager";
 import Blueprint from "./entity/Blueprint";
-import Tile, { FREE_TILES, TileType } from "./terrain/tile";
+import Tile, { FREE_TILES } from "./terrain/tile";
 import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
-import { canBuild, canSell } from "./util/baseExpansion";
+import { canBuild, floodFill } from "./util/baseExpansion";
+
+export const BASE_PARTS = new Set([
+  EntityType.Armory,
+  EntityType.Radar,
+  EntityType.Market,
+  EntityType.PowerPlant,
+]);
 
 class BuildController {
   private blueprints = new Map<string, Blueprint>();
   private deletePlaceable: Placeable;
+
+  private pendingBaseAdditions: Blueprint[] = [];
+  private pendingBaseRemovals: Blueprint[] = [];
 
   constructor(private surface: Surface) {
     this.deletePlaceable = placeables.find(
@@ -66,6 +76,8 @@ class BuildController {
     });
 
     this.blueprints.clear();
+    this.pendingBaseAdditions = [];
+    this.pendingBaseRemovals = [];
     Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
       affectedTiles: tiles,
     });
@@ -85,12 +97,27 @@ class BuildController {
         return false;
       }
 
-      if (placeable.isBasePart && !canBuild(tile, this.surface)) {
-        return false;
-      }
-
       return true;
     });
+
+    if (placeable.isBasePart) {
+      const { pendingBaseAdditions, pendingBaseRemovals } =
+        this.getPendingTiles(selection);
+      if (
+        !floodFill(
+          pendingBaseRemovals,
+          pendingBaseAdditions,
+          Manager.Instance.getBase(),
+          this.surface
+        )
+      ) {
+        Manager.Instance.showMessage("Not all tiles connect to the base", {
+          override: true,
+        });
+
+        return [];
+      }
+    }
 
     if (!Manager.Instance.buy(placeable, validTiles.length)) {
       return [];
@@ -101,11 +128,45 @@ class BuildController {
       if (currentBlueprint) {
         Manager.Instance.sell(currentBlueprint);
         this.surface.despawn(currentBlueprint);
+
+        if (currentBlueprint.isBasePart()) {
+          this.pendingBaseAdditions.splice(
+            this.pendingBaseAdditions.indexOf(currentBlueprint),
+            1
+          );
+        } else if (
+          tile.hasStaticEntity() &&
+          BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+        ) {
+          this.pendingBaseRemovals.splice(
+            this.pendingBaseRemovals.indexOf(currentBlueprint),
+            1
+          );
+        }
+
+        if (
+          currentBlueprint.isDelete() &&
+          tile.hasStaticEntity() &&
+          BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+        ) {
+          this.pendingBaseRemovals.splice(
+            this.pendingBaseRemovals.indexOf(currentBlueprint),
+            1
+          );
+        }
       }
 
       const blueprint = new Blueprint(tile, placeable);
       this.surface.spawn(blueprint);
       this.blueprints.set(tile.getHash(), blueprint);
+
+      if (
+        placeable.isBasePart &&
+        (!tile.hasStaticEntity() ||
+          !BASE_PARTS.has(tile.getStaticEntity().getAgent().getType()))
+      ) {
+        this.pendingBaseAdditions.push(blueprint);
+      }
     });
 
     Manager.Instance.triggerStatUpdate();
@@ -113,47 +174,107 @@ class BuildController {
   }
 
   private sellBlueprints(selection: Tile[]) {
-    const affectedTiles: Tile[] = [];
-    let unsellableBaseParts = 0;
-    selection.forEach((tile) => {
-      const hash = tile.getHash();
-      if (this.blueprints.has(hash)) {
-        const blueprint = this.blueprints.get(hash)!;
-        if (!blueprint.isDelete()) {
-          Manager.Instance.sell(blueprint);
+    const hasBlueprints = selection.find((tile) =>
+      this.blueprints.has(tile.getHash())
+    );
+    let validTiles = selection.filter((tile) => {
+      if (hasBlueprints) {
+        if (this.blueprints.has(tile.getHash())) {
+          return true;
         }
 
-        this.blueprints.delete(hash);
-        this.surface.despawn(blueprint);
-        return;
+        return false;
       }
 
       if (
-        !tile.hasStaticEntity() ||
-        !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
+        tile.hasStaticEntity() &&
+        placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
       ) {
+        return true;
+      }
+
+      return false;
+    });
+
+    const { baseTiles, otherTiles } = this.splitTiles(validTiles);
+
+    if (baseTiles.length) {
+      const { pendingBaseAdditions, pendingBaseRemovals } =
+        this.getPendingTiles(baseTiles, true);
+
+      if (
+        !floodFill(
+          pendingBaseRemovals,
+          pendingBaseAdditions,
+          Manager.Instance.getBase(),
+          this.surface
+        )
+      ) {
+        validTiles = otherTiles;
+
+        Manager.Instance.showMessage("Not all base parts can be sold", {
+          override: true,
+        });
+      }
+    }
+
+    validTiles.forEach((tile) => {
+      if (hasBlueprints) {
+        const blueprint = this.blueprints.get(tile.getHash());
+        if (blueprint) {
+          if (!blueprint.isDelete()) {
+            Manager.Instance.sell(blueprint);
+
+            if (
+              tile.hasStaticEntity() &&
+              BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+            ) {
+              this.pendingBaseRemovals.splice(
+                this.pendingBaseRemovals.indexOf(blueprint),
+                1
+              );
+            }
+          }
+
+          if (
+            blueprint.isBasePart() &&
+            (!tile.hasStaticEntity() ||
+              !BASE_PARTS.has(tile.getStaticEntity().getAgent().getType()))
+          ) {
+            this.pendingBaseAdditions.splice(
+              this.pendingBaseAdditions.indexOf(blueprint),
+              1
+            );
+          }
+
+          this.blueprints.delete(tile.getHash());
+          this.surface.despawn(blueprint);
+
+          if (
+            tile.hasStaticEntity() &&
+            BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+          ) {
+            this.pendingBaseRemovals.splice(
+              this.pendingBaseRemovals.indexOf(blueprint),
+              1
+            );
+          }
+        }
+
         return;
       }
 
-      if (tile.getType() === TileType.Base) {
-        unsellableBaseParts++;
-        return;
-      }
-
-      affectedTiles.push(tile);
       const blueprint = new Blueprint(tile, this.deletePlaceable);
       this.surface.spawn(blueprint);
       this.blueprints.set(tile.getHash(), blueprint);
+
+      if (BASE_PARTS.has(tile.getStaticEntity()!.getAgent().getType())) {
+        this.pendingBaseRemovals.push(blueprint);
+      }
     });
 
-    if (unsellableBaseParts > 0) {
-      Manager.Instance.showMessage(
-        `${unsellableBaseParts} base parts can't be sold during the attack phase`,
-        { override: true }
-      );
-    }
     Manager.Instance.triggerStatUpdate();
-    return affectedTiles;
+    return validTiles;
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
@@ -166,12 +287,15 @@ class BuildController {
         return false;
       }
 
-      if (placeable.isBasePart && !canBuild(tile, this.surface)) {
-        return false;
-      }
-
       return true;
     });
+
+    if (
+      placeable.isBasePart &&
+      !canBuild(new Set(validTiles), Manager.Instance.getBase(), this.surface)
+    ) {
+      return [];
+    }
 
     if (!Manager.Instance.buy(placeable, validTiles.length)) {
       return [];
@@ -186,38 +310,127 @@ class BuildController {
   }
 
   private sellEntities(selection: Tile[]) {
-    const affectedTiles: Tile[] = [];
-    let unsellableBaseParts = 0;
-    selection.forEach((tile) => {
+    let validTiles = selection.filter((tile) => {
       if (
-        !tile.hasStaticEntity() ||
-        !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
+        tile.hasStaticEntity() &&
+        placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
       ) {
-        return;
+        return true;
       }
 
-      if (
-        tile.getType() === TileType.Base &&
-        !canSell(tile, Manager.Instance.getBase(), this.surface)
-      ) {
-        unsellableBaseParts++;
-        return;
-      }
+      return false;
+    });
 
-      affectedTiles.push(tile);
-      const agent = tile.getStaticEntity().getAgent();
+    const { baseTiles, otherTiles } = this.splitTiles(validTiles);
+
+    if (baseTiles.length) {
+      const { pendingBaseAdditions, pendingBaseRemovals } =
+        this.getPendingTiles(baseTiles, true);
+
+      if (
+        !floodFill(
+          pendingBaseRemovals,
+          pendingBaseAdditions,
+          Manager.Instance.getBase(),
+          this.surface
+        )
+      ) {
+        validTiles = otherTiles;
+
+        Manager.Instance.showMessage("Not all base parts can be sold", {
+          override: true,
+        });
+      }
+    }
+
+    validTiles.forEach((tile) => {
+      const agent = tile.getStaticEntity()!.getAgent();
       this.surface.despawnStatic(agent);
       Manager.Instance.sell(agent);
     });
 
-    if (unsellableBaseParts > 0) {
-      Manager.Instance.showMessage(
-        `${unsellableBaseParts} tiles can't be sold because they're integral parts of your base.`,
-        { override: true }
-      );
-    }
     Manager.Instance.triggerStatUpdate();
-    return affectedTiles;
+    return validTiles;
+  }
+
+  private splitTiles(tiles: Tile[]) {
+    const baseTiles: Tile[] = [];
+    const otherTiles: Tile[] = [];
+
+    tiles.forEach((tile) => {
+      const blueprint = this.blueprints.get(tile.getHash());
+
+      if (blueprint && blueprint.isBasePart()) {
+        baseTiles.push(tile);
+        return;
+      }
+
+      if (
+        tile.hasStaticEntity() &&
+        BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+      ) {
+        baseTiles.push(tile);
+      } else {
+        otherTiles.push(tile);
+      }
+    });
+
+    return { baseTiles, otherTiles };
+  }
+
+  getPendingTiles(selectedTiles: Tile[], isDelete = false) {
+    const pendingBaseAdditions = new Set(
+      this.pendingBaseAdditions.map(
+        (blueprint) =>
+          this.surface.getTile(
+            blueprint.entity.getAlignedX(),
+            blueprint.entity.getAlignedY()
+          )!
+      )
+    );
+    const pendingBaseRemovals = new Set(
+      this.pendingBaseRemovals.map(
+        (blueprint) =>
+          this.surface.getTile(
+            blueprint.entity.getAlignedX(),
+            blueprint.entity.getAlignedY()
+          )!
+      )
+    );
+
+    let remove = (tile: Tile) => {
+      if (pendingBaseAdditions.delete(tile)) {
+        return;
+      }
+
+      if (pendingBaseRemovals.delete(tile)) {
+        return;
+      }
+
+      pendingBaseRemovals.add(tile);
+    };
+
+    selectedTiles.forEach((tile) => {
+      if (isDelete) {
+        remove(tile);
+        return;
+      }
+
+      const blueprint = this.blueprints.get(tile.getHash());
+      if (blueprint) {
+        if (blueprint.isDelete()) {
+          pendingBaseRemovals.delete(tile);
+          return;
+        }
+
+        pendingBaseAdditions.add(tile);
+        return;
+      }
+
+      pendingBaseAdditions.add(tile);
+    });
+
+    return { pendingBaseAdditions, pendingBaseRemovals };
   }
 }
 

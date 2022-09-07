@@ -281,7 +281,6 @@ class Manager {
   }
 
   consumeContinuous(agent: Agent, dt: number, damageMultiplier = 1) {
-    console.log(dt);
     return this.powerController.consume(
       (POWER_CONSUMPTIONS[agent.getType()] ?? 0) * dt +
         ((damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION * dt) / 16

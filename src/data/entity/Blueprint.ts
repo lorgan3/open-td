@@ -29,6 +29,10 @@ class Blueprint implements Agent {
   isDelete() {
     return this.placeable.entityType === EntityType.None;
   }
+
+  isBasePart() {
+    return !!this.placeable.isBasePart;
+  }
 }
 
 export default Blueprint;
