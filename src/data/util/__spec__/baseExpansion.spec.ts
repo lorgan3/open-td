@@ -1,6 +1,5 @@
 import Controller from "../../controller";
 import Armory from "../../entity/Armory";
-import { EntityType } from "../../entity/entity";
 import Manager from "../../manager";
 import Surface from "../../terrain/surface";
 import Tile, { TileType } from "../../terrain/tile";

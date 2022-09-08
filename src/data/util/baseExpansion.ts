@@ -3,26 +3,6 @@ import { StaticAgent } from "../entity/entity";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 
-const EMPTY_SET = new Set<Tile>();
-
-export const canBuild = (
-  tiles: Set<Tile>,
-  base: Base,
-  surface: Surface,
-  pendingRemovedTiles = EMPTY_SET
-) => {
-  return floodFill(pendingRemovedTiles, tiles, base, surface);
-};
-
-export const canSell = (
-  tiles: Set<Tile>,
-  base: Base,
-  surface: Surface,
-  pendingAddedTiles = EMPTY_SET
-) => {
-  return floodFill(tiles, pendingAddedTiles, base, surface);
-};
-
 export const floodFill = (
   tilesToSell: Set<Tile>,
   tilesToBuy: Set<Tile>,

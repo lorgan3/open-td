@@ -5,7 +5,7 @@ import Tile, { FREE_TILES } from "./terrain/tile";
 import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
-import { canBuild, floodFill } from "./util/baseExpansion";
+import { floodFill } from "./util/baseExpansion";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -292,7 +292,12 @@ class BuildController {
 
     if (
       placeable.isBasePart &&
-      !canBuild(new Set(validTiles), Manager.Instance.getBase(), this.surface)
+      !floodFill(
+        new Set(),
+        new Set(validTiles),
+        Manager.Instance.getBase(),
+        this.surface
+      )
     ) {
       return [];
     }
