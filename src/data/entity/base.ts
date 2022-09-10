@@ -11,6 +11,35 @@ import StaticEntity, { StaticAgent } from "./staticEntity";
 const INVINCIBLE_TIME = 1000;
 const DAMAGE = 200;
 
+const TILES = [
+  [0, 0],
+  [1, 0],
+  [1, 1],
+  [0, 1],
+];
+const CORNERS = [
+  [
+    [-1, 0],
+    [-1, -1],
+    [0, -1],
+  ],
+  [
+    [0, -1],
+    [1, -1],
+    [1, 0],
+  ],
+  [
+    [1, 0],
+    [1, 1],
+    [0, 1],
+  ],
+  [
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+  ],
+];
+
 class Base implements StaticAgent {
   public static scale = 2;
 
@@ -131,25 +160,27 @@ class Base implements StaticAgent {
     const targets = new Map<string, [Tile, Tile]>();
 
     this.baseParts.forEach((agent) => {
-      for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-          if (i === 0 && j === 0) {
-            continue;
-          }
+      TILES.forEach(([x, y], i) => {
+        const source = surface.getTile(
+          agent.getTile().getX() + x,
+          agent.getTile().getY() + y
+        )!;
 
-          const tile = surface.getTile(
-            agent.getTile().getX() + i,
-            agent.getTile().getY() + j
+        CORNERS[i].forEach(([x2, y2]) => {
+          const target = surface.getTile(
+            agent.getTile().getX() + x + x2,
+            agent.getTile().getY() + y + y2
           );
+
           if (
-            tile &&
-            !targets.has(tile.getHash()) &&
-            FREE_TILES_INCLUDING_BUILDINGS.has(tile.getType())
+            target &&
+            !targets.has(target.getHash()) &&
+            FREE_TILES_INCLUDING_BUILDINGS.has(target.getType())
           ) {
-            targets.set(tile.getHash(), [agent.getTile(), tile]);
+            targets.set(target.getHash(), [source, target]);
           }
-        }
-      }
+        });
+      });
     });
 
     targets.forEach(([fromTile, toTile]) => {
