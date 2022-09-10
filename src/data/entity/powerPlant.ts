@@ -28,7 +28,7 @@ class PowerPlant implements StaticAgent {
 
   spawn() {
     Manager.Instance.getBase().addPart(this);
-    createStoneSurface(this.tile, 3);
+    createStoneSurface(this, 3);
   }
 
   despawn() {

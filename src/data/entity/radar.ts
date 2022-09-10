@@ -29,7 +29,7 @@ class Radar implements StaticAgent {
   spawn() {
     Manager.Instance.getVisibilityController().registerAgent(this);
     Manager.Instance.getBase().addPart(this);
-    createStoneSurface(this.tile, 3);
+    createStoneSurface(this, 3);
   }
 
   despawn() {

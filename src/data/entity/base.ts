@@ -49,7 +49,7 @@ class Base implements StaticAgent {
 
   spawn() {
     Manager.Instance.getVisibilityController().registerAgent(this);
-    createStoneSurface(this.tile, 5);
+    createStoneSurface(this, 4);
   }
 
   despawn() {
