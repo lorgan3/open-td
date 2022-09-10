@@ -1,18 +1,19 @@
 import Manager from "../manager";
-import Tile from "../terrain/tile";
+import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { IEnemy } from "./enemies";
 import Entity, { AgentCategory, EntityType } from "./entity";
+import StaticEntity from "./staticEntity";
 import { ITower } from "./towers";
 
 const DAMAGE = 0.125;
 
 class ElectricFence implements ITower {
-  public entity: Entity;
+  public entity: StaticEntity;
   public category = AgentCategory.Player;
   private isEnabled = true;
 
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
     tile.addTower(this);
   }
 
@@ -40,7 +41,7 @@ class ElectricFence implements ITower {
   }
 
   getTile() {
-    return this.tile;
+    return this.tile as TileWithStaticEntity;
   }
 
   updateTile(tile: Tile) {

@@ -19,18 +19,6 @@ export interface Agent {
   isVisible: () => boolean;
 }
 
-export interface StaticAgent extends Agent {
-  getTile(): Tile;
-  updateTile(tile: Tile): void;
-  updateLinkedAgents?: (linkedAgents: Set<StaticAgent>) => void;
-}
-
-export function isStaticAgent(agent?: Agent | null): agent is StaticAgent {
-  return agent ? "getTile" in agent : false;
-}
-
-export type AgentClass = new (tile: Tile) => Agent;
-
 export enum EntityType {
   None = 0,
   Tower = 1,
@@ -82,7 +70,7 @@ class Entity {
   private id: number;
   private rotation = 0;
 
-  constructor(private x: number, private y: number, private agent: Agent) {
+  constructor(private x: number, private y: number, protected agent: Agent) {
     this.id = id++;
   }
 
@@ -91,7 +79,7 @@ class Entity {
   }
 
   getAlignedX() {
-    return Math.floor(this.x);
+    return this.x | 0;
   }
 
   getY() {
@@ -99,7 +87,7 @@ class Entity {
   }
 
   getAlignedY() {
-    return Math.floor(this.y);
+    return this.y | 0;
   }
 
   getAgent() {

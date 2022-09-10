@@ -1,7 +1,7 @@
 import Armory from "./entity/Armory";
 import SpeedBeacon from "./entity/speedBeacon";
 import ElectricFence from "./entity/electricFence";
-import { AgentClass, EntityType } from "./entity/entity";
+import { EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
 import Freezer from "./entity/freezer";
 import Market from "./entity/Market";
@@ -14,11 +14,13 @@ import Tower from "./entity/towers/tower";
 import Wall from "./entity/wall";
 import DamageBeacon from "./entity/damageBeacon";
 import Laser from "./entity/towers/Laser";
+import Tile from "./terrain/tile";
+import { StaticAgent } from "./entity/staticEntity";
 
 export interface Placeable {
   name: string;
   htmlElement: string;
-  entity?: AgentClass;
+  entity?: new (tile: Tile) => StaticAgent;
   entityType: EntityType;
   isBasePart?: boolean;
 }

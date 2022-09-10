@@ -1,14 +1,18 @@
 import Manager from "../manager";
 import { createStoneSurface } from "../terrain/fill";
-import Tile, { FREE_TILES_INCLUDING_BUILDINGS } from "../terrain/tile";
-import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
+import Tile, {
+  FREE_TILES_INCLUDING_BUILDINGS,
+  TileWithStaticEntity,
+} from "../terrain/tile";
+import { AgentCategory, EntityType } from "./entity";
 import Shockwave from "./projectiles/shockwave";
+import StaticEntity, { StaticAgent } from "./staticEntity";
 
 const INVINCIBLE_TIME = 1000;
 const DAMAGE = 200;
 
 class Base implements StaticAgent {
-  public entity: Entity;
+  public entity: StaticEntity;
   public category = AgentCategory.Player;
   public hp = 30;
   private invincibleTime = 0;
@@ -17,7 +21,7 @@ class Base implements StaticAgent {
   private basePartsByType = new Map<EntityType, number>();
 
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
     this.baseParts.add(this);
   }
 
@@ -30,7 +34,7 @@ class Base implements StaticAgent {
   }
 
   getTile() {
-    return this.tile;
+    return this.tile as TileWithStaticEntity;
   }
 
   updateTile(tile: Tile) {

@@ -1,6 +1,6 @@
 import Manager from "../../manager";
-import Tile from "../../terrain/tile";
-import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
+import Tile, { TileWithStaticEntity } from "../../terrain/tile";
+import { AgentCategory, EntityType } from "../entity";
 import Rocket from "../projectiles/rocket";
 import {
   coverTilesWithTowerSightLines,
@@ -9,13 +9,14 @@ import {
   ITower,
 } from ".";
 import { IEnemy } from "../enemies";
+import StaticEntity, { StaticAgent } from "../staticEntity";
 
 const RANGE = 30;
 const COOLDOWN = 5000;
 const DAMAGE = 100;
 
 class Mortar implements ITower {
-  public entity: Entity;
+  public entity: StaticEntity;
   public category = AgentCategory.Player;
   private cooldown = 0;
   private cleanupEventListener?: () => void;
@@ -25,7 +26,7 @@ class Mortar implements ITower {
   private damageMultiplier = 1;
 
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
   }
 
   tick(dt: number) {
@@ -86,7 +87,7 @@ class Mortar implements ITower {
   }
 
   getTile() {
-    return this.tile;
+    return this.tile as TileWithStaticEntity;
   }
 
   updateTile(tile: Tile) {

@@ -1,14 +1,15 @@
 import Manager from "../manager";
 import { createStoneSurface } from "../terrain/fill";
-import Tile from "../terrain/tile";
-import Entity, { AgentCategory, EntityType, StaticAgent } from "./entity";
+import Tile, { TileWithStaticEntity } from "../terrain/tile";
+import { AgentCategory, EntityType } from "./entity";
+import StaticEntity, { StaticAgent } from "./staticEntity";
 
 class PowerPlant implements StaticAgent {
-  public entity: Entity;
+  public entity: StaticEntity;
   public category = AgentCategory.Player;
 
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
   }
 
   getType(): EntityType {
@@ -16,7 +17,7 @@ class PowerPlant implements StaticAgent {
   }
 
   getTile() {
-    return this.tile;
+    return this.tile as TileWithStaticEntity;
   }
 
   updateTile(tile: Tile) {

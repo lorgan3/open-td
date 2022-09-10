@@ -1,15 +1,16 @@
 import { GameEvent, SurfaceChange } from "../../events";
 import Manager from "../../manager";
-import Tile from "../../terrain/tile";
+import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import DamageBeacon from "../damageBeacon";
 import { IEnemy } from "../enemies";
-import { Agent, StaticAgent } from "../entity";
+import { Agent } from "../entity";
 import SpeedBeacon from "../speedBeacon";
+import { StaticAgent } from "../staticEntity";
 
 export interface ITower extends StaticAgent {
   getCooldown(): number;
   fire(target: IEnemy, dt: number): number;
-  getTile(): Tile;
+  getTile(): TileWithStaticEntity;
   enable(): void;
   disable(): void;
 }

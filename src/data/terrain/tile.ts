@@ -1,8 +1,8 @@
-import Entity, {
-  EntityType,
+import { EntityType } from "../entity/entity";
+import StaticEntity, {
   isStaticAgent,
   StaticAgent,
-} from "../entity/entity";
+} from "../entity/staticEntity";
 import { ITower } from "../entity/towers";
 
 export enum TileType {
@@ -72,10 +72,12 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Laser]: TileType.Obstructed,
 };
 
-export type TileWithStaticEntity = { getStaticEntity: () => Entity } & Tile;
+export type TileWithStaticEntity = {
+  getStaticEntity: () => StaticEntity;
+} & Tile;
 
 class Tile {
-  private staticEntity: Entity | null = null;
+  private staticEntity: StaticEntity | null = null;
   private hash: string;
   private actualType: TileType;
   private towers: ITower[] = [];
@@ -107,7 +109,7 @@ class Tile {
     return this.actualType;
   }
 
-  getStaticEntity() {
+  getStaticEntity(): StaticEntity | null {
     return this.staticEntity;
   }
 
@@ -115,7 +117,7 @@ class Tile {
     return this.staticEntity !== null;
   }
 
-  setStaticEntity(entity: Entity) {
+  setStaticEntity(entity: StaticEntity) {
     if (this.staticEntity !== null) {
       throw new Error("A tile can only have 1 static entity.");
     }
@@ -172,7 +174,7 @@ class Tile {
 
     this.linkedAgents.add(agent);
 
-    const staticAgent = this.staticEntity?.getAgent() as StaticAgent;
+    const staticAgent = this.staticEntity?.getAgent();
     if (staticAgent && staticAgent.updateLinkedAgents) {
       staticAgent.updateLinkedAgents(this.linkedAgents);
     }

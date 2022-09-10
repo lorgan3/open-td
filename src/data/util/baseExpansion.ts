@@ -1,5 +1,4 @@
 import Base from "../entity/base";
-import { StaticAgent } from "../entity/entity";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 
@@ -26,7 +25,7 @@ export const floodFill = (
     if (
       !tilesToBuy.has(tile) &&
       (!tile.hasStaticEntity() ||
-        !base.getParts().has(tile.getStaticEntity().getAgent() as StaticAgent))
+        !base.getParts().has(tile.getStaticEntity().getAgent()))
     ) {
       continue;
     }

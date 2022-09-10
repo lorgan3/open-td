@@ -6,10 +6,11 @@ import {
 } from ".";
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
-import Tile from "../../terrain/tile";
+import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import { IEnemy } from "../enemies";
-import Entity, { AgentCategory, EntityType, StaticAgent } from "../entity";
+import { AgentCategory, EntityType } from "../entity";
 import Flame from "../projectiles/flame";
+import StaticEntity, { StaticAgent } from "../staticEntity";
 
 const RANGE = 3;
 const COOLDOWN = 1;
@@ -26,7 +27,7 @@ class Flamethrower implements ITower {
   private damageMultiplier = 1;
 
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
   }
 
   tick(dt: number) {
@@ -95,7 +96,7 @@ class Flamethrower implements ITower {
   }
 
   getTile() {
-    return this.tile;
+    return this.tile as TileWithStaticEntity;
   }
 
   updateTile(tile: Tile) {
