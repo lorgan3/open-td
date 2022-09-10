@@ -44,9 +44,9 @@ export enum EntityType {
   Market = 21,
   SpeedBeacon = 22,
   Runner = 23,
-  DamageBeacon = 23,
-  Laser = 24,
-  LaserBeam = 25,
+  DamageBeacon = 24,
+  Laser = 25,
+  LaserBeam = 26,
 }
 
 export const DESTRUCTIBLE_ENTITIES = new Set([
