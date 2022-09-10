@@ -128,9 +128,18 @@ class Surface {
     targetX: number,
     targetY: number,
     fn: (tile: Tile, index: number) => void | boolean,
-    connected = false
+    config?: {
+      connected?: boolean;
+      scale?: number;
+    }
   ) {
+    const scale = config?.scale ?? 1;
+    sourceX = Math.floor(sourceX / scale) * scale;
+    sourceY = Math.floor(sourceY / scale) * scale;
+    targetX = Math.floor(targetX / scale) * scale;
+    targetY = Math.floor(targetY / scale) * scale;
     const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
+
     return this.forRay(
       sourceX,
       sourceY,
@@ -139,7 +148,7 @@ class Surface {
         const done = fn(tile, index) === false;
         return !done && !(tile.getX() === targetX && tile.getY() === targetY);
       },
-      connected
+      config
     );
   }
 
@@ -148,8 +157,14 @@ class Surface {
     sourceY: number,
     direction: number,
     fn: (tile: Tile, index: number) => boolean,
-    connected = false
+    config?: {
+      connected?: boolean;
+      scale?: number;
+    }
   ) {
+    const connected = config?.connected ?? false;
+    const scale = config?.scale ?? 1;
+
     // Determine the direction of the line
     const xDiff = Math.cos(direction);
     const yDiff = Math.sin(direction);
@@ -159,7 +174,7 @@ class Surface {
     let xStep = Math.abs(xDiff / sum);
     let yStep = Math.abs(yDiff / sum);
 
-    let ratio = 1 + (xStep > yStep ? yStep / xStep : xStep / yStep);
+    let ratio = (1 + (xStep > yStep ? yStep / xStep : xStep / yStep)) * scale;
     xStep *= ratio * Math.sign(xDiff);
     yStep *= ratio * Math.sign(yDiff);
 
@@ -169,14 +184,14 @@ class Surface {
     let i = 0;
     while (true) {
       let skip = false;
-      const x = Math.round(sourceX);
-      let y = Math.round(sourceY);
+      const x = Math.round(sourceX / scale) * scale;
+      let y = Math.round(sourceY / scale) * scale;
 
       if (
         connected &&
         prevX !== undefined &&
-        Math.round(prevX) !== x &&
-        Math.round(prevY!) !== y
+        Math.round(prevX / scale) * scale !== x &&
+        Math.round(prevY! / scale) * scale !== y
       ) {
         y = Math.round(prevY!);
         skip = true;
@@ -210,8 +225,17 @@ class Surface {
     y1: number,
     x2: number,
     y2: number,
-    fn: (tile: Tile) => void
+    fn: (tile: Tile) => void,
+    config?: {
+      scale?: number;
+    }
   ) {
+    const scale = config?.scale ?? 1;
+    x1 = Math.floor(x1 / scale) * scale;
+    y1 = Math.floor(y1 / scale) * scale;
+    x2 = Math.floor(x2 / scale) * scale;
+    y2 = Math.floor(y2 / scale) * scale;
+
     const runFn = (x: number, y: number) => {
       const tile = this.getTile(x, y);
       if (tile) {
@@ -221,22 +245,22 @@ class Surface {
 
     const horizontalLoop = (y: number) => {
       if (x2 > x1) {
-        for (let x = x1; x <= x2; x++) {
+        for (let x = x1; x <= x2; x += scale) {
           runFn(x, y);
         }
       } else {
-        for (let x = x1; x >= x2; x--) {
+        for (let x = x1; x >= x2; x -= scale) {
           runFn(x, y);
         }
       }
     };
 
     if (y2 > y1) {
-      for (let y = y1; y <= y2; y++) {
+      for (let y = y1; y <= y2; y += scale) {
         horizontalLoop(y);
       }
     } else {
-      for (let y = y1; y >= y2; y--) {
+      for (let y = y1; y >= y2; y -= scale) {
         horizontalLoop(y);
       }
     }
@@ -247,8 +271,17 @@ class Surface {
     y: number,
     d: number,
     fn: (tile: Tile) => void,
-    edgeOnly = false
+    config?: {
+      edgeOnly?: boolean;
+      scale?: number;
+    }
   ) {
+    const edgeOnly = config?.edgeOnly ?? false;
+    const scale = config?.scale ?? 1;
+
+    x = Math.floor(x / scale) * scale;
+    y = Math.floor(y / scale) * scale;
+
     let r = d / 2;
     const rSquared = r * r;
     const innerRSquared = (r - 1) * (r - 1);
@@ -267,16 +300,16 @@ class Surface {
       }
     };
 
-    if (d % 2 === 0) {
-      for (let cy = -r; cy < r; cy++) {
-        for (let cx = -r; cx < r; cx++) {
-          runFn(cx, cy, 0.5);
+    if ((d % 2) * scale === 0) {
+      for (let cy = -r; cy < r; cy += scale) {
+        for (let cx = -r; cx < r; cx += scale) {
+          runFn(cx, cy, 0.5 * scale);
         }
       }
     } else {
       r = r | 0;
-      for (let cy = -r; cy < r + 1; cy++) {
-        for (let cx = -r; cx < r + 1; cx++) {
+      for (let cy = -r; cy < r + 1; cy += scale) {
+        for (let cx = -r; cx < r + 1; cx += scale) {
           runFn(cx, cy);
         }
       }

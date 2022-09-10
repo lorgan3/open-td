@@ -104,6 +104,7 @@ describe("surface", () => {
       sourceY: 1,
       targetX: 4,
       targetY: 1,
+      scale: 1,
       steps: [
         [1, 1],
         [2, 1],
@@ -117,6 +118,7 @@ describe("surface", () => {
       sourceY: 4,
       targetX: 1,
       targetY: 1,
+      scale: 1,
       steps: [
         [1, 4],
         [1, 3],
@@ -130,6 +132,7 @@ describe("surface", () => {
       sourceY: 0,
       targetX: 4,
       targetY: 4,
+      scale: 1,
       steps: [
         [0, 0],
         [1, 1],
@@ -144,6 +147,7 @@ describe("surface", () => {
       sourceY: 0,
       targetX: 0,
       targetY: 4,
+      scale: 1,
       steps: [
         [4, 0],
         [3, 1],
@@ -158,6 +162,7 @@ describe("surface", () => {
       sourceY: 4,
       targetX: 3,
       targetY: 3,
+      scale: 1,
       steps: [
         [7, 4],
         [6, 4],
@@ -172,6 +177,7 @@ describe("surface", () => {
       sourceY: 1,
       targetX: -5,
       targetY: 2,
+      scale: 1,
       steps: [
         [1, 1],
         [0, 1],
@@ -181,9 +187,9 @@ describe("surface", () => {
 
   it.each(lineTable)(
     "runs a function for every tile in a $case line from [$sourceX, $sourceY] to [$targetX, $targetY]",
-    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+    ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
       const fn = jest.fn();
-      surface.forLine(sourceX, sourceY, targetX, targetY, fn);
+      surface.forLine(sourceX, sourceY, targetX, targetY, fn, { scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
@@ -198,14 +204,14 @@ describe("surface", () => {
 
   it.each(lineTable)(
     "runs a function for every tile in a $case ray from [$sourceX, $sourceY] with direction [$targetX, $targetY]",
-    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+    ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
       const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
 
       // Abort the ray when the target has been reached
       const fn = jest.fn(
         (tile: Tile) => tile.getX() !== targetX || tile.getY() !== targetY
       );
-      surface.forRay(sourceX, sourceY, direction, fn);
+      surface.forRay(sourceX, sourceY, direction, fn, { scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
@@ -225,6 +231,7 @@ describe("surface", () => {
       sourceY: 1,
       targetX: 4,
       targetY: 1,
+      scale: 1,
       steps: [
         [1, 1],
         [2, 1],
@@ -238,6 +245,7 @@ describe("surface", () => {
       sourceY: 4,
       targetX: 1,
       targetY: 1,
+      scale: 1,
       steps: [
         [1, 4],
         [1, 3],
@@ -251,6 +259,7 @@ describe("surface", () => {
       sourceY: 0,
       targetX: 4,
       targetY: 4,
+      scale: 1,
       steps: [
         [0, 0],
         [1, 0],
@@ -269,6 +278,7 @@ describe("surface", () => {
       sourceY: 0,
       targetX: 0,
       targetY: 4,
+      scale: 1,
       steps: [
         [4, 0],
         [3, 0],
@@ -287,6 +297,7 @@ describe("surface", () => {
       sourceY: 4,
       targetX: 3,
       targetY: 3,
+      scale: 1,
       steps: [
         [7, 4],
         [6, 4],
@@ -302,6 +313,7 @@ describe("surface", () => {
       sourceY: 1,
       targetX: -5,
       targetY: 2,
+      scale: 1,
       steps: [
         [1, 1],
         [0, 1],
@@ -309,55 +321,14 @@ describe("surface", () => {
     },
   ];
 
-  const rectTable = [
-    {
-      case: "regular",
-      sourceX: 1,
-      sourceY: 1,
-      targetX: 2,
-      targetY: 2,
-      steps: [
-        [1, 1],
-        [2, 1],
-        [1, 2],
-        [2, 2],
-      ],
-    },
-    {
-      case: "inverted",
-      sourceX: 3,
-      sourceY: 3,
-      targetX: 2,
-      targetY: 2,
-      steps: [
-        [3, 3],
-        [2, 3],
-        [3, 2],
-        [2, 2],
-      ],
-    },
-    {
-      case: "out of bounds",
-      sourceX: 7,
-      sourceY: 3,
-      targetX: 11,
-      targetY: 5,
-      steps: [
-        [7, 3],
-        [8, 3],
-        [9, 3],
-        [7, 4],
-        [8, 4],
-        [9, 4],
-      ],
-    },
-  ];
-
   it.each(connectedLineTable)(
     "runs a function for every tile in a connected $case line from [$sourceX, $sourceY] to [$targetX, $targetY]",
-    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+    ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
       const fn = jest.fn();
-      surface.forLine(sourceX, sourceY, targetX, targetY, fn, true);
+      surface.forLine(sourceX, sourceY, targetX, targetY, fn, {
+        connected: true,
+        scale,
+      });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
@@ -372,14 +343,17 @@ describe("surface", () => {
 
   it.each(connectedLineTable)(
     "runs a function for every tile in a connected $case ray from [$sourceX, $sourceY] with direction [$targetX, $targetY]",
-    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+    ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
       const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
 
       // Abort the ray when the target has been reached
       const fn = jest.fn(
         (tile: Tile) => tile.getX() !== targetX || tile.getY() !== targetY
       );
-      surface.forRay(sourceX, sourceY, direction, fn, true);
+      surface.forRay(sourceX, sourceY, direction, fn, {
+        connected: true,
+        scale,
+      });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
@@ -391,6 +365,53 @@ describe("surface", () => {
       );
     }
   );
+
+  const rectTable = [
+    {
+      case: "regular",
+      sourceX: 1,
+      sourceY: 1,
+      targetX: 2,
+      targetY: 2,
+      scale: 1,
+      steps: [
+        [1, 1],
+        [2, 1],
+        [1, 2],
+        [2, 2],
+      ],
+    },
+    {
+      case: "inverted",
+      sourceX: 3,
+      sourceY: 3,
+      targetX: 2,
+      targetY: 2,
+      scale: 1,
+      steps: [
+        [3, 3],
+        [2, 3],
+        [3, 2],
+        [2, 2],
+      ],
+    },
+    {
+      case: "out of bounds",
+      sourceX: 7,
+      sourceY: 3,
+      targetX: 11,
+      targetY: 5,
+      scale: 1,
+      steps: [
+        [7, 3],
+        [8, 3],
+        [9, 3],
+        [7, 4],
+        [8, 4],
+        [9, 4],
+      ],
+    },
+  ];
 
   it.each(rectTable)(
     "runs a function for every tile in a $case rectangle from [$sourceX, $sourceY] to [$targetX, $targetY]",
@@ -415,6 +436,7 @@ describe("surface", () => {
       y: 2,
       d: 1,
       edgeOnly: false,
+      scale: 1,
       steps: [[4, 2]],
     },
     {
@@ -423,6 +445,7 @@ describe("surface", () => {
       y: 2,
       d: 2,
       edgeOnly: false,
+      scale: 1,
       steps: [
         [3, 1],
         [4, 1],
@@ -436,6 +459,7 @@ describe("surface", () => {
       y: 2,
       d: 3,
       edgeOnly: false,
+      scale: 1,
       steps: [
         [3, 1],
         [4, 1],
@@ -454,6 +478,7 @@ describe("surface", () => {
       y: 1,
       d: 4,
       edgeOnly: false,
+      scale: 1,
       steps: [
         [0, 0],
         [1, 0],
@@ -471,6 +496,7 @@ describe("surface", () => {
       y: 2,
       d: 5,
       edgeOnly: true,
+      scale: 1,
       steps: [
         [1, 0],
         [2, 0],
@@ -492,6 +518,7 @@ describe("surface", () => {
       y: 1,
       d: 5,
       edgeOnly: true,
+      scale: 1,
       steps: [
         [0, 0],
         [1, 0],
@@ -511,9 +538,9 @@ describe("surface", () => {
 
   it.each(circleTable)(
     "runs a function for every tile in a $case circle at [$x, $y] with d $d",
-    ({ x, y, d, edgeOnly, steps }) => {
+    ({ x, y, d, edgeOnly, scale, steps }) => {
       const fn = jest.fn();
-      surface.forCircle(x, y, d, fn, edgeOnly);
+      surface.forCircle(x, y, d, fn, { edgeOnly, scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>

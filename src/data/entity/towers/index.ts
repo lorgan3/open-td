@@ -49,10 +49,14 @@ export const coverTilesWithTowerSightLines = (
               return false;
             }
           },
-          true
+          {
+            connected: true,
+          }
         );
       },
-      true
+      {
+        edgeOnly: true,
+      }
     );
   };
 
