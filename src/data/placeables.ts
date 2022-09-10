@@ -14,13 +14,13 @@ import Tower from "./entity/towers/tower";
 import Wall from "./entity/wall";
 import DamageBeacon from "./entity/damageBeacon";
 import Laser from "./entity/towers/Laser";
+import { StaticAgent, StaticAgentStatics } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
-import { StaticAgent } from "./entity/staticEntity";
 
 export interface Placeable {
   name: string;
   htmlElement: string;
-  entity?: new (tile: Tile) => StaticAgent;
+  entity?: (new (tile: Tile) => StaticAgent) & StaticAgentStatics;
   entityType: EntityType;
   isBasePart?: boolean;
 }

@@ -8,6 +8,11 @@ export interface StaticAgent extends Agent {
   updateLinkedAgents?: (linkedAgents: Set<StaticAgent>) => void;
 }
 
+// There doesn't seem to be any way to properly define static properties on an interface :(
+export interface StaticAgentStatics {
+  scale: number;
+}
+
 export function isStaticAgent(agent?: Agent | null): agent is StaticAgent {
   return agent ? "getTile" in agent : false;
 }

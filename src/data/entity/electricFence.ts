@@ -1,13 +1,15 @@
 import Manager from "../manager";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { IEnemy } from "./enemies";
-import Entity, { AgentCategory, EntityType } from "./entity";
+import { AgentCategory, EntityType } from "./entity";
 import StaticEntity from "./staticEntity";
 import { ITower } from "./towers";
 
 const DAMAGE = 0.125;
 
 class ElectricFence implements ITower {
+  public static scale = 1;
+
   public entity: StaticEntity;
   public category = AgentCategory.Player;
   private isEnabled = true;

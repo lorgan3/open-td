@@ -12,12 +12,14 @@ import { AgentCategory, EntityType } from "../entity";
 import Flame from "../projectiles/flame";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
-const RANGE = 3;
+const RANGE = 6;
 const COOLDOWN = 1;
 const DAMAGE = 0.05;
 
 class Flamethrower implements ITower {
-  public entity: Entity;
+  public static scale = 2;
+
+  public entity: StaticEntity;
   public category = AgentCategory.Player;
   private cooldown = 0;
   private cleanupEventListener?: () => void;

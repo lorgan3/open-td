@@ -3,6 +3,8 @@ import { AgentCategory, EntityType } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 
 class Freezer implements StaticAgent {
+  public static scale = 2;
+
   public entity: StaticEntity;
   public category = AgentCategory.Player;
 

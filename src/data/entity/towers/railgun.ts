@@ -17,6 +17,8 @@ const COOLDOWN = 5000;
 const DAMAGE = 100;
 
 class Railgun implements ITower {
+  public static scale = 2;
+
   public entity: StaticEntity;
   public category = AgentCategory.Player;
   private cooldown = 0;

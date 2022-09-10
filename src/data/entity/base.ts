@@ -12,6 +12,8 @@ const INVINCIBLE_TIME = 1000;
 const DAMAGE = 200;
 
 class Base implements StaticAgent {
+  public static scale = 2;
+
   public entity: StaticEntity;
   public category = AgentCategory.Player;
   public hp = 30;
