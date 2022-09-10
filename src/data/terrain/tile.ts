@@ -123,7 +123,7 @@ class Tile {
     }
 
     const agent = entity.getAgent();
-    if (isStaticAgent(agent)) {
+    if (isStaticAgent(agent) && agent.getTile().getHash() === this.getHash()) {
       agent.updateTile(this);
 
       if (this.linkedAgents && agent.updateLinkedAgents) {
