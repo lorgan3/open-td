@@ -26,11 +26,12 @@ export const coverTilesWithTowerSightLines = (
 ) => {
   const surface = Manager.Instance.getSurface();
   const coveredTiles = new Set<Tile>();
+  const towerTiles = new Set(surface.getEntityTiles(tower));
 
   const run = () => {
     surface.forCircle(
-      tower.entity.getX(),
-      tower.entity.getY(),
+      tower.entity.getX() + 1,
+      tower.entity.getY() + 1,
       range,
       (target) => {
         surface.forLine(
@@ -38,8 +39,8 @@ export const coverTilesWithTowerSightLines = (
           tower.entity.getY(),
           target.getX(),
           target.getY(),
-          (tile, index) => {
-            if (index === 0) {
+          (tile) => {
+            if (towerTiles.has(tile)) {
               return;
             }
 
