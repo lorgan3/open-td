@@ -16,13 +16,13 @@ class SpeedBeacon implements StaticAgent {
 
   spawn() {
     Manager.Instance.getSurface()
-      .getAdjacentTiles(this.tile)
+      .getAdjacentTiles(this.tile, SpeedBeacon.scale)
       .forEach((tile) => tile.addLinkedAgent(this));
   }
 
   despawn() {
     Manager.Instance.getSurface()
-      .getAdjacentTiles(this.tile)
+      .getAdjacentTiles(this.tile, SpeedBeacon.scale)
       .forEach((tile) => tile.removeLinkedAgent(this));
   }
 
