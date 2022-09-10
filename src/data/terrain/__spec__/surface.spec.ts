@@ -183,6 +183,33 @@ describe("surface", () => {
         [0, 1],
       ],
     },
+    {
+      case: "diagonal scale 2",
+      sourceX: 2,
+      sourceY: 2,
+      targetX: 8,
+      targetY: 4,
+      scale: 2,
+      steps: [
+        [2, 2],
+        [4, 2],
+        [6, 4],
+        [8, 4],
+      ],
+    },
+    {
+      case: "diagonal scale 3",
+      sourceX: 9,
+      sourceY: 0,
+      targetX: 3,
+      targetY: 3,
+      scale: 3,
+      steps: [
+        [9, 0],
+        [6, 3],
+        [3, 3],
+      ],
+    },
   ];
 
   it.each(lineTable)(
@@ -319,6 +346,21 @@ describe("surface", () => {
         [0, 1],
       ],
     },
+    {
+      case: "diagonal scale 2",
+      sourceX: 2,
+      sourceY: 2,
+      targetX: 8,
+      targetY: 4,
+      scale: 2,
+      steps: [
+        [2, 2],
+        [4, 2],
+        [6, 2],
+        [6, 4],
+        [8, 4],
+      ],
+    },
   ];
 
   it.each(connectedLineTable)(
@@ -411,13 +453,29 @@ describe("surface", () => {
         [9, 4],
       ],
     },
+    {
+      case: "scale 2",
+      sourceX: 2,
+      sourceY: 2,
+      targetX: 6,
+      targetY: 4,
+      scale: 2,
+      steps: [
+        [2, 2],
+        [4, 2],
+        [6, 2],
+        [2, 4],
+        [4, 4],
+        [6, 4],
+      ],
+    },
   ];
 
   it.each(rectTable)(
     "runs a function for every tile in a $case rectangle from [$sourceX, $sourceY] to [$targetX, $targetY]",
-    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+    ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
       const fn = jest.fn();
-      surface.forRect(sourceX, sourceY, targetX, targetY, fn);
+      surface.forRect(sourceX, sourceY, targetX, targetY, fn, { scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
       steps.forEach(([x, y], i) =>
@@ -532,6 +590,43 @@ describe("surface", () => {
         [0, 3],
         [1, 3],
         [2, 3],
+      ],
+    },
+    {
+      case: "scale 2",
+      x: 4,
+      y: 2,
+      d: 3,
+      edgeOnly: false,
+      scale: 2,
+      steps: [
+        [2, 0],
+        [4, 0],
+        [6, 0],
+        [2, 2],
+        [4, 2],
+        [6, 2],
+        [2, 4],
+        [4, 4],
+        [6, 4],
+      ],
+    },
+    {
+      case: "scale 2 edges only",
+      x: 4,
+      y: 2,
+      d: 3,
+      edgeOnly: true,
+      scale: 2,
+      steps: [
+        [2, 0],
+        [4, 0],
+        [6, 0],
+        [2, 2],
+        [6, 2],
+        [2, 4],
+        [4, 4],
+        [6, 4],
       ],
     },
   ];

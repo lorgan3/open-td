@@ -279,8 +279,8 @@ class Surface {
     const edgeOnly = config?.edgeOnly ?? false;
     const scale = config?.scale ?? 1;
 
-    x = Math.floor(x / scale) * scale;
-    y = Math.floor(y / scale) * scale;
+    x = Math.floor(x / scale);
+    y = Math.floor(y / scale);
 
     let r = d / 2;
     const rSquared = r * r;
@@ -293,23 +293,23 @@ class Surface {
       if (dist < rSquared && !(edgeOnly && dist < innerRSquared)) {
         // @TODO: it is possible this calls the function for the same tile multiple times out of bounds in edgeOnly mode
         // edgeOnly mode might also behave unexpectedly when the center is out of bounds
-        const tile = this.getTile(x + cx, y + cy, edgeOnly);
+        const tile = this.getTile((x + cx) * scale, (y + cy) * scale, edgeOnly);
         if (tile) {
           fn(tile);
         }
       }
     };
 
-    if ((d % 2) * scale === 0) {
-      for (let cy = -r; cy < r; cy += scale) {
-        for (let cx = -r; cx < r; cx += scale) {
-          runFn(cx, cy, 0.5 * scale);
+    if (d % 2 === 0) {
+      for (let cy = -r; cy < r; cy += 1) {
+        for (let cx = -r; cx < r; cx += 1) {
+          runFn(cx, cy, 0.5);
         }
       }
     } else {
       r = r | 0;
-      for (let cy = -r; cy < r + 1; cy += scale) {
-        for (let cx = -r; cx < r + 1; cx += scale) {
+      for (let cy = -r; cy < r + 1; cy += 1) {
+        for (let cx = -r; cx < r + 1; cx += 1) {
           runFn(cx, cy);
         }
       }
