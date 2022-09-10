@@ -95,6 +95,7 @@ class Renderer implements IRenderer {
         }
 
         htmlElement.children[0].textContent = "🟧";
+        htmlElement.style.transformOrigin = "0 0";
         htmlElement.style.opacity = "0.7";
         htmlElement.style.position = "absolute";
         htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "-.075ch";
@@ -296,6 +297,8 @@ class Renderer implements IRenderer {
       selection = [];
     }
 
+    const scale = this.controller.getPlacable()?.entity?.scale || 1;
+
     selection.forEach((tile, i) => {
       const htmlElement = usedTiles.has(i)
         ? usedTiles.get(i)!
@@ -303,7 +306,7 @@ class Renderer implements IRenderer {
 
       htmlElement.style.transform = `translate(${tile.getX() * this.xStep}px, ${
         tile.getY() * this.yStep
-      }px)`;
+      }px) scale(${scale})`;
     });
 
     for (let i = usedTiles.size - 1; i >= selection.length; i--) {
