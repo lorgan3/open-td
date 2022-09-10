@@ -14,7 +14,7 @@ export const floodFill = (
   const baseTile = base.getTile();
   const filled = new Set<Tile>([baseTile]);
 
-  const tilesToCheck = surface.getAdjacentTiles(baseTile);
+  const tilesToCheck = surface.getAdjacentTiles(baseTile, 2);
   while (tilesToCheck.length > 0) {
     const tile = tilesToCheck.pop()!;
 
@@ -31,7 +31,9 @@ export const floodFill = (
     }
 
     filled.add(tile);
-    surface.getAdjacentTiles(tile).forEach((tile) => tilesToCheck.push(tile));
+    surface
+      .getAdjacentTiles(tile, 2)
+      .forEach((tile) => tilesToCheck.push(tile));
   }
 
   return (
