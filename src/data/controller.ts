@@ -69,11 +69,20 @@ class Controller {
 
     if (this.pressedKeys[Keys.Control] || this.pressedKeys[Keys.Meta]) {
       let tiles: Tile[] = [];
-      this.surface.forRect(this.mouseDownX, this.mouseDownY, x, y, (tile) => {
-        if (tile.isDiscovered()) {
-          tiles.push(tile);
+      this.surface.forRect(
+        this.mouseDownX,
+        this.mouseDownY,
+        x,
+        y,
+        (tile) => {
+          if (tile.isDiscovered()) {
+            tiles.push(tile);
+          }
+        },
+        {
+          scale: this.selectedPlacable?.entity?.scale || 1,
         }
-      });
+      );
 
       return tiles;
     }
@@ -87,11 +96,20 @@ class Controller {
     }
 
     let tiles: Tile[] = [];
-    this.surface.forLine(this.mouseDownX, this.mouseDownY, x, y, (tile) => {
-      if (tile.isDiscovered()) {
-        tiles.push(tile);
+    this.surface.forLine(
+      this.mouseDownX,
+      this.mouseDownY,
+      x,
+      y,
+      (tile) => {
+        if (tile.isDiscovered()) {
+          tiles.push(tile);
+        }
+      },
+      {
+        scale: this.selectedPlacable?.entity?.scale || 1,
       }
-    });
+    );
 
     return tiles;
   }

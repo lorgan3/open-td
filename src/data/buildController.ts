@@ -85,20 +85,9 @@ class BuildController {
   }
 
   private placeBlueprints(selection: Tile[], placeable: Placeable) {
-    const validTiles = selection.filter((tile) => {
-      if (!FREE_TILES.has(tile.getBaseType())) {
-        return false;
-      }
-
-      if (
-        tile.hasStaticEntity() &&
-        !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
-      ) {
-        return false;
-      }
-
-      return true;
-    });
+    const validTiles = selection.filter((tile) =>
+      this.checkIsFree(tile, placeable.entity!.scale, true)
+    );
 
     if (placeable.isBasePart) {
       const { pendingBaseAdditions, pendingBaseRemovals } =
@@ -278,17 +267,9 @@ class BuildController {
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
-    const validTiles = selection.filter((tile) => {
-      if (!FREE_TILES.has(tile.getBaseType())) {
-        return false;
-      }
-
-      if (tile.hasStaticEntity()) {
-        return false;
-      }
-
-      return true;
-    });
+    const validTiles = selection.filter((tile) =>
+      this.checkIsFree(tile, placeable.entity!.scale)
+    );
 
     if (
       placeable.isBasePart &&
@@ -436,6 +417,25 @@ class BuildController {
     });
 
     return { pendingBaseAdditions, pendingBaseRemovals };
+  }
+
+  private checkIsFree(tile: Tile, scale: number, canOverwrite = false) {
+    const tiles = this.surface.getEntityTiles(tile.getX(), tile.getY(), scale);
+    return !tiles!.find((tile) => {
+      if (!FREE_TILES.has(tile.getBaseType())) {
+        return true;
+      }
+
+      if (
+        tile.hasStaticEntity() &&
+        (!canOverwrite ||
+          !placeableEntityTypes.has(
+            tile.getStaticEntity().getAgent().getType()
+          ))
+      ) {
+        return true;
+      }
+    });
   }
 }
 
