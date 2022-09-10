@@ -3,6 +3,7 @@ import Manager from "../manager";
 import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";
+import { StaticAgent, StaticAgentStatics } from "../entity/staticEntity";
 
 class Surface {
   public map!: Tile[];
@@ -54,7 +55,38 @@ class Surface {
     return this.map[y * this.width + x];
   }
 
-  public getAdjacentTiles(middle: Tile) {
+  /** @TODO: Protect against invalid coordinates for the provided scale? */
+  getEntityTiles(agent: StaticAgent): Tile[];
+  getEntityTiles(x: number, y: number, scale: number): Tile[];
+  getEntityTiles(agentOrx: StaticAgent | number, y?: number, scale?: number) {
+    let x: number;
+
+    if (y) {
+      x = agentOrx as number;
+    } else {
+      const agent = agentOrx as StaticAgent;
+      x = agent.getTile().getX();
+      y = agent.getTile().getY();
+
+      scale = (agent.constructor as unknown as StaticAgentStatics).scale;
+    }
+
+    switch (scale) {
+      case 1:
+        return [this.map[y * this.width + x]];
+      case 2:
+        return [
+          this.map[y * this.width + x],
+          this.map[y * this.width + x + 1],
+          this.map[(y + 1) * this.width + x],
+          this.map[(y + 1) * this.width + x + 1],
+        ];
+      default:
+        throw new Error("Unsupported agent scale!");
+    }
+  }
+
+  public getAdjacentTiles(middle: Tile, scale = 1) {
     const options: Array<[number, number]> = [
       [1, 0],
       [-1, 0],
@@ -63,7 +95,9 @@ class Surface {
     ];
 
     return options
-      .map(([x, y]) => this.getTile(middle.getX() + x, middle.getY() + y))
+      .map(([x, y]) =>
+        this.getTile(middle.getX() + x * scale, middle.getY() + y * scale)
+      )
       .filter((tile) => !!tile) as Tile[];
   }
 
@@ -325,9 +359,10 @@ class Surface {
     }
   }
 
-  public spawnStatic(agent: Agent) {
-    const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
-    tile!.setStaticEntity(agent.entity);
+  public spawnStatic(agent: StaticAgent) {
+    const tiles = this.getEntityTiles(agent);
+    tiles.forEach((tile) => tile.setStaticEntity(agent.entity));
+
     this.spawn(agent);
     this.dirty = true;
   }
@@ -348,9 +383,10 @@ class Surface {
     return result;
   }
 
-  public despawnStatic(agent: Agent) {
-    const tile = this.getTile(agent.entity.getX() | 0, agent.entity.getY() | 0);
-    tile!.clearStaticEntity();
+  public despawnStatic(agent: StaticAgent) {
+    const tiles = this.getEntityTiles(agent);
+    tiles.forEach((tile) => tile.clearStaticEntity());
+
     this.despawn(agent);
     this.dirty = true;
   }
