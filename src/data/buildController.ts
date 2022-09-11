@@ -366,14 +366,14 @@ class BuildController {
   }
 
   private splitTiles(tiles: Tile[]) {
-    const baseTiles: Tile[] = [];
+    const baseTiles = new Set<Tile>();
     const otherTiles: Tile[] = [];
 
     tiles.forEach((tile) => {
       const blueprint = this.blueprints.get(tile.getHash());
 
       if (blueprint && blueprint.isBasePart()) {
-        baseTiles.push(tile);
+        baseTiles.add(blueprint.getTile());
         return;
       }
 
@@ -381,13 +381,13 @@ class BuildController {
         tile.hasStaticEntity() &&
         BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
       ) {
-        baseTiles.push(tile);
+        baseTiles.add(tile.getStaticEntity().getAgent().getTile());
       } else {
         otherTiles.push(tile);
       }
     });
 
-    return { baseTiles, otherTiles };
+    return { baseTiles: [...baseTiles], otherTiles };
   }
 
   getPendingTiles(selectedTiles: Tile[], isDelete = false) {
