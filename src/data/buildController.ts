@@ -147,7 +147,7 @@ class BuildController {
 
       const blueprint = new Blueprint(tile, placeable);
       this.surface.spawn(blueprint);
-      this.blueprints.set(tile.getHash(), blueprint);
+      this.reserveBlueprint(blueprint);
 
       if (
         placeable.isBasePart &&
@@ -236,7 +236,7 @@ class BuildController {
             );
           }
 
-          this.blueprints.delete(tile.getHash());
+          this.freeBlueprint(blueprint);
           this.surface.despawn(blueprint);
 
           if (
@@ -255,7 +255,7 @@ class BuildController {
 
       const blueprint = new Blueprint(tile, this.deletePlaceable);
       this.surface.spawn(blueprint);
-      this.blueprints.set(tile.getHash(), blueprint);
+      this.reserveBlueprint(blueprint);
 
       if (BASE_PARTS.has(tile.getStaticEntity()!.getAgent().getType())) {
         this.pendingBaseRemovals.push(blueprint);
@@ -436,6 +436,22 @@ class BuildController {
         return true;
       }
     });
+  }
+
+  private reserveBlueprint(blueprint: Blueprint) {
+    const tile = blueprint.getTile();
+    const scale = blueprint.getPlaceable().entity?.scale || 1;
+    this.surface
+      .getEntityTiles(tile.getX(), tile.getY(), scale)
+      .forEach((tile) => this.blueprints.set(tile.getHash(), blueprint));
+  }
+
+  private freeBlueprint(blueprint: Blueprint) {
+    const tile = blueprint.getTile();
+    const scale = blueprint.getPlaceable().entity?.scale || 1;
+    this.surface
+      .getEntityTiles(tile.getX(), tile.getY(), scale)
+      .forEach((tile) => this.blueprints.delete(tile.getHash()));
   }
 }
 
