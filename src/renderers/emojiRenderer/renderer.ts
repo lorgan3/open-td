@@ -1,6 +1,6 @@
 import { createApp } from "vue";
-import Controller, { Keys } from "../../data/controller";
-import Entity, { EntityType } from "../../data/entity/entity";
+import Controller from "../../data/controller";
+import Entity, { AgentCategory, EntityType } from "../../data/entity/entity";
 import Manager from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
@@ -8,6 +8,10 @@ import Tile, { TileType } from "../../data/terrain/tile";
 import { IRenderer, MessageFn } from "../api";
 import { OVERRIDES } from "./overrides";
 import SimpleMessage from "../../components/SimpleMessage.vue";
+import {
+  isStaticAgent,
+  StaticAgentStatics,
+} from "../../data/entity/staticEntity";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -25,6 +29,7 @@ declare global {
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
   private selectionPool: Pool<number, HTMLSpanElement>;
+  private scaledTilesPool: Pool<Entity, HTMLSpanElement>;
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
 
@@ -97,6 +102,38 @@ class Renderer implements IRenderer {
         htmlElement.children[0].textContent = "🟧";
         htmlElement.style.transformOrigin = "0 0";
         htmlElement.style.opacity = "0.7";
+        htmlElement.style.position = "absolute";
+        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "-.075ch";
+        htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
+        htmlElement.style.display = active ? "block" : "none";
+        htmlElement.style.willChange = "transform";
+
+        this.world!.appendChild(htmlElement);
+
+        return htmlElement;
+      },
+      PoolType.Growing,
+      0
+    );
+
+    this.scaledTilesPool = new Pool(
+      (active, original, entity) => {
+        if (original) {
+          original.style.display = "block";
+          return original;
+        }
+
+        const htmlElement = document.createElement("span");
+        htmlElement.appendChild(document.createElement("span"));
+        if (IS_WINDOWS) {
+          (htmlElement.children[0] as HTMLElement).style.margin = "-0.35ch";
+        }
+
+        htmlElement.children[0].textContent = this.getStaticEntityEmoji(
+          entity!.getAgent().getType()
+        );
+        htmlElement.style.transformOrigin = "0 0";
+
         htmlElement.style.position = "absolute";
         htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "-.075ch";
         htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
@@ -248,6 +285,29 @@ class Renderer implements IRenderer {
       const content = this.surface.getRow(i).map(this.getEmoji).join("");
       row.textContent = content;
     }
+
+    const entities = this.surface.getEntitiesForCategory(AgentCategory.Player);
+    for (let entity of entities) {
+      const agent = entity.getAgent();
+      if (
+        isStaticAgent(agent) &&
+        (agent.constructor as unknown as StaticAgentStatics).scale === 2
+      ) {
+        const htmlElement = this.scaledTilesPool.get(entity);
+
+        htmlElement.style.transform = `translate(${
+          entity.getX() * this.xStep
+        }px, ${entity.getY() * this.yStep}px) scale(2)`;
+      }
+    }
+
+    const deletedEntities = this.surface.getDeletedEntities();
+    deletedEntities.forEach((entity) => {
+      const htmlElement = this.scaledTilesPool.free(entity);
+      if (htmlElement) {
+        htmlElement.style.display = "none";
+      }
+    });
 
     this.renderCoverage();
   }
@@ -500,9 +560,16 @@ class Renderer implements IRenderer {
         return "🌌";
       }
 
-      return this.getStaticEntityEmoji(
-        tile.getStaticEntity().getAgent().getType()
-      );
+      if (
+        (
+          tile.getStaticEntity().getAgent()
+            .constructor as unknown as StaticAgentStatics
+        ).scale !== 2
+      ) {
+        return this.getStaticEntityEmoji(
+          tile.getStaticEntity().getAgent().getType()
+        );
+      }
     }
 
     if (!tile.isDiscovered() && !DEBUG) {
