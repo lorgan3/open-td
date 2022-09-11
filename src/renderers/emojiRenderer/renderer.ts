@@ -9,6 +9,7 @@ import { IRenderer, MessageFn } from "../api";
 import { OVERRIDES } from "./overrides";
 import SimpleMessage from "../../components/SimpleMessage.vue";
 import {
+  getScale,
   isStaticAgent,
   StaticAgentStatics,
 } from "../../data/entity/staticEntity";
@@ -291,10 +292,7 @@ class Renderer implements IRenderer {
     const entities = this.surface.getEntitiesForCategory(AgentCategory.Player);
     for (let entity of entities) {
       const agent = entity.getAgent();
-      if (
-        isStaticAgent(agent) &&
-        (agent.constructor as unknown as StaticAgentStatics).scale === 2
-      ) {
+      if (isStaticAgent(agent) && getScale(agent) === 2) {
         const htmlElement = this.scaledTilesPool.get(entity);
 
         htmlElement.style.transform = `translate(${
@@ -563,12 +561,7 @@ class Renderer implements IRenderer {
         return "🌌";
       }
 
-      if (
-        (
-          tile.getStaticEntity().getAgent()
-            .constructor as unknown as StaticAgentStatics
-        ).scale !== 2
-      ) {
+      if (getScale(tile.getStaticEntity().getAgent()) !== 2) {
         return this.getStaticEntityEmoji(
           tile.getStaticEntity().getAgent().getType()
         );

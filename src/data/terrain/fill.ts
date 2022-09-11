@@ -1,11 +1,11 @@
 import { AgentCategory } from "../entity/entity";
-import { StaticAgent, StaticAgentStatics } from "../entity/staticEntity";
+import { getScale, StaticAgent } from "../entity/staticEntity";
 import Manager from "../manager";
 import Tile, { FREE_TILES_INCLUDING_WATER, TileType } from "./tile";
 
 export const createStoneSurface = (agent: StaticAgent, radius: number) => {
   const tilesToUpdate: Tile[] = [];
-  const scale = (agent.constructor as unknown as StaticAgentStatics).scale;
+  const scale = getScale(agent);
   const offset = scale === 2 ? 1 : 0;
 
   Manager.Instance.getSurface().forCircle(

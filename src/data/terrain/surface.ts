@@ -3,7 +3,7 @@ import Manager from "../manager";
 import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";
-import { StaticAgent, StaticAgentStatics } from "../entity/staticEntity";
+import { getScale, StaticAgent } from "../entity/staticEntity";
 
 class Surface {
   public map!: Tile[];
@@ -67,8 +67,7 @@ class Surface {
       const agent = agentOrx as StaticAgent;
       x = agent.getTile().getX();
       y = agent.getTile().getY();
-
-      scale = (agent.constructor as unknown as StaticAgentStatics).scale;
+      scale = getScale(agent);
     }
 
     switch (scale) {

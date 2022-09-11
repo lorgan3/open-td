@@ -13,6 +13,10 @@ export interface StaticAgentStatics {
   scale: number;
 }
 
+export const getScale = (staticAgent: StaticAgent) => {
+  return (staticAgent.constructor as unknown as StaticAgentStatics).scale;
+};
+
 export function isStaticAgent(agent?: Agent | null): agent is StaticAgent {
   return agent ? "getTile" in agent : false;
 }
