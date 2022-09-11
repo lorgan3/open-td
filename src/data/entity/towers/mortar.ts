@@ -48,8 +48,6 @@ class Mortar implements ITower {
       this.damageMultiplier
     );
 
-    console.log(this.speedMultiplier, this.damageMultiplier);
-
     const damage = DAMAGE * (isPowered ? this.damageMultiplier : 0);
     const projectile = new Rocket(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
@@ -59,7 +57,6 @@ class Mortar implements ITower {
 
   spawn() {
     this.cleanupEventListener = coverTilesWithTowerSightLines(this, RANGE);
-    console.log(this);
   }
 
   despawn() {
