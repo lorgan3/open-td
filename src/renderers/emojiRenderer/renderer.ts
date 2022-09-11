@@ -39,6 +39,7 @@ class Renderer implements IRenderer {
   private offsetY = 0;
   private time = 0;
   private fontSize = DEFAULT_FONT_SIZE;
+  private hasMoved = false;
 
   private _showCoverage = false;
 
@@ -219,7 +220,8 @@ class Renderer implements IRenderer {
   rerender(dt: number): void {
     this.time += dt;
 
-    if (this.surface.isDirty()) {
+    if (this.surface.isDirty() || this.hasMoved) {
+      this.hasMoved = false;
       this.renderTiles();
     }
 
@@ -506,6 +508,7 @@ class Renderer implements IRenderer {
       }
 
       this.zoom();
+      this.hasMoved = true;
     }
   }
 
