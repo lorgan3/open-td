@@ -4,7 +4,7 @@ import { AgentCategory, EntityType } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 
 class Rock implements StaticAgent {
-  public static scale = 2;
+  public static scale = 1;
 
   public entity: StaticEntity;
   public category = AgentCategory.Unknown;
