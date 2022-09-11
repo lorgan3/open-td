@@ -40,12 +40,12 @@ export const coverTilesWithTowerSightLines = (
           target.getX(),
           target.getY(),
           (tile) => {
+            tile.addTower(tower);
+            coveredTiles.add(tile);
+
             if (towerTiles.has(tile)) {
               return;
             }
-
-            tile.addTower(tower);
-            coveredTiles.add(tile);
 
             if (sightLineFn && sightLineFn(tile)) {
               return false;
