@@ -6,6 +6,7 @@ import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
 import { floodFill } from "./util/baseExpansion";
+import { getScale } from "./entity/staticEntity";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -207,10 +208,19 @@ class BuildController {
       }
     }
 
+    const affectedTiles: Tile[] = [];
     validTiles.forEach((tile) => {
       if (hasBlueprints) {
         const blueprint = this.blueprints.get(tile.getHash());
         if (blueprint) {
+          affectedTiles.push(
+            ...this.surface.getEntityTiles(
+              blueprint.getTile().getX(),
+              blueprint.getTile().getY(),
+              blueprint.getScale()
+            )
+          );
+
           if (!blueprint.isDelete()) {
             Manager.Instance.sell(blueprint);
 
@@ -253,17 +263,26 @@ class BuildController {
         return;
       }
 
-      const blueprint = new Blueprint(tile, this.deletePlaceable);
-      this.surface.spawn(blueprint);
-      this.reserveBlueprint(blueprint);
+      if (tile.hasStaticEntity() && !this.blueprints.get(tile.getHash())) {
+        const agent = tile.getStaticEntity().getAgent();
+        affectedTiles.push(...this.surface.getEntityTiles(agent));
 
-      if (BASE_PARTS.has(tile.getStaticEntity()!.getAgent().getType())) {
-        this.pendingBaseRemovals.push(blueprint);
+        const blueprint = new Blueprint(
+          agent.getTile(),
+          this.deletePlaceable,
+          getScale(agent)
+        );
+        this.surface.spawn(blueprint);
+        this.reserveBlueprint(blueprint);
+
+        if (BASE_PARTS.has(agent.getType())) {
+          this.pendingBaseRemovals.push(blueprint);
+        }
       }
     });
 
     Manager.Instance.triggerStatUpdate();
-    return validTiles;
+    return affectedTiles;
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
@@ -296,6 +315,7 @@ class BuildController {
   }
 
   private sellEntities(selection: Tile[]) {
+    let affectedTiles: Tile[] = [];
     let validTiles = selection.filter((tile) => {
       if (
         tile.hasStaticEntity() &&
@@ -330,13 +350,16 @@ class BuildController {
     }
 
     validTiles.forEach((tile) => {
-      const agent = tile.getStaticEntity()!.getAgent();
-      this.surface.despawnStatic(agent);
-      Manager.Instance.sell(agent);
+      if (tile.hasStaticEntity()) {
+        const agent = tile.getStaticEntity().getAgent();
+        affectedTiles.push(...this.surface.getEntityTiles(agent));
+        this.surface.despawnStatic(agent);
+        Manager.Instance.sell(agent);
+      }
     });
 
     Manager.Instance.triggerStatUpdate();
-    return validTiles;
+    return affectedTiles;
   }
 
   private splitTiles(tiles: Tile[]) {
@@ -440,17 +463,15 @@ class BuildController {
 
   private reserveBlueprint(blueprint: Blueprint) {
     const tile = blueprint.getTile();
-    const scale = blueprint.getPlaceable().entity?.scale || 1;
     this.surface
-      .getEntityTiles(tile.getX(), tile.getY(), scale)
+      .getEntityTiles(tile.getX(), tile.getY(), blueprint.getScale())
       .forEach((tile) => this.blueprints.set(tile.getHash(), blueprint));
   }
 
   private freeBlueprint(blueprint: Blueprint) {
     const tile = blueprint.getTile();
-    const scale = blueprint.getPlaceable().entity?.scale || 1;
     this.surface
-      .getEntityTiles(tile.getX(), tile.getY(), scale)
+      .getEntityTiles(tile.getX(), tile.getY(), blueprint.getScale())
       .forEach((tile) => this.blueprints.delete(tile.getHash()));
   }
 }

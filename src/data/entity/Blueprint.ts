@@ -6,7 +6,11 @@ class Blueprint implements Agent {
   public entity: Entity;
   public category = AgentCategory.Player;
 
-  constructor(private tile: Tile, private placeable: Placeable) {
+  constructor(
+    private tile: Tile,
+    private placeable: Placeable,
+    private scaleOverride?: number
+  ) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
   }
 
@@ -24,6 +28,10 @@ class Blueprint implements Agent {
 
   getPlaceable() {
     return this.placeable;
+  }
+
+  getScale() {
+    return this.placeable.entity?.scale || this.scaleOverride || 1;
   }
 
   isDelete() {

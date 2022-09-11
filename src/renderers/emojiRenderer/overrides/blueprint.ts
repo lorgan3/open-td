@@ -4,7 +4,6 @@ import { StaticAgentStatics } from "../../../data/entity/staticEntity";
 
 const render: RenderFn<Blueprint> = (renderer, blueprint, htmlElement) => {
   const entity = blueprint.entity;
-  const scale = blueprint.getPlaceable().entity?.scale || 1;
 
   htmlElement.children[0].textContent = renderer.getStaticEntityEmoji(
     blueprint.getPlaceable().entityType
@@ -16,7 +15,7 @@ const render: RenderFn<Blueprint> = (renderer, blueprint, htmlElement) => {
     entity.getX() * renderer.xStep
   }px, ${
     entity.getY() * renderer.yStep
-  }px) rotate(${entity.getRotation()}deg) scale(${scale})`;
+  }px) rotate(${entity.getRotation()}deg) scale(${blueprint.getScale()})`;
 };
 
 export default render;
