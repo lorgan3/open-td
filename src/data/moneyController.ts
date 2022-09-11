@@ -1,5 +1,6 @@
+import Blueprint from "./entity/Blueprint";
 import { IEnemy } from "./entity/enemies";
-import { EntityType } from "./entity/entity";
+import { Agent, EntityType } from "./entity/entity";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
@@ -19,7 +20,11 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Laser]: 30,
 };
 
+const SELL_MULTIPLIER = 0.5;
+
 class MoneyController {
+  private recentlyBought = new Set<Agent>();
+
   constructor(private money = 0, private multiplier = () => 1) {}
 
   setMoney(amount: number) {
@@ -43,12 +48,39 @@ class MoneyController {
     this.money += amount;
   }
 
+  buy(agent: Agent) {
+    const cost = TOWER_PRICES[agent.getType()] ?? 0;
+
+    if (cost > this.money) {
+      throw new Error("Not enough money!");
+    }
+
+    this.removeMoney(cost);
+    this.recentlyBought.add(agent);
+  }
+
+  sell(agent: Agent) {
+    if (agent instanceof Blueprint) {
+      this.addMoney(TOWER_PRICES[agent.getPlaceable().entityType] ?? 0);
+    } else {
+      const price = TOWER_PRICES[agent.getType()] ?? 0;
+
+      this.addMoney(
+        price * (this.recentlyBought.has(agent) ? 1 : SELL_MULTIPLIER)
+      );
+    }
+  }
+
   getMoney() {
     return this.money;
   }
 
   getMultiplier() {
     return this.multiplier();
+  }
+
+  clearRecents() {
+    this.recentlyBought.clear();
   }
 
   private getEnemyValue(enemy: IEnemy): number {

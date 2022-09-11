@@ -64,7 +64,7 @@ class BuildController {
 
       if (tile.hasStaticEntity()) {
         const agent = tile.getStaticEntity().getAgent();
-        Manager.Instance.sell(agent);
+        Manager.Instance.getMoneyController().sell(agent);
         this.surface.despawnStatic(agent);
       }
 
@@ -109,14 +109,14 @@ class BuildController {
       }
     }
 
-    if (!Manager.Instance.buy(placeable, validTiles.length)) {
+    if (!Manager.Instance.canBuy(placeable, validTiles.length)) {
       return [];
     }
 
     validTiles.forEach((tile) => {
       const currentBlueprint = this.blueprints.get(tile.getHash());
       if (currentBlueprint) {
-        Manager.Instance.sell(currentBlueprint);
+        Manager.Instance.getMoneyController().sell(currentBlueprint);
         this.surface.despawn(currentBlueprint);
 
         if (currentBlueprint.isBasePart()) {
@@ -148,6 +148,7 @@ class BuildController {
 
       const blueprint = new Blueprint(tile, placeable);
       this.surface.spawn(blueprint);
+      Manager.Instance.getMoneyController().buy(blueprint);
       this.reserveBlueprint(blueprint);
 
       if (
@@ -222,7 +223,7 @@ class BuildController {
           );
 
           if (!blueprint.isDelete()) {
-            Manager.Instance.sell(blueprint);
+            Manager.Instance.getMoneyController().sell(blueprint);
 
             if (
               tile.hasStaticEntity() &&
@@ -302,12 +303,14 @@ class BuildController {
       return [];
     }
 
-    if (!Manager.Instance.buy(placeable, validTiles.length)) {
+    if (!Manager.Instance.canBuy(placeable, validTiles.length)) {
       return [];
     }
 
     validTiles.forEach((tile) => {
-      this.surface.spawnStatic(new placeable.entity!(tile));
+      const agent = new placeable.entity!(tile);
+      this.surface.spawnStatic(agent);
+      Manager.Instance.getMoneyController().buy(agent);
     });
 
     Manager.Instance.triggerStatUpdate();
@@ -354,7 +357,7 @@ class BuildController {
         const agent = tile.getStaticEntity().getAgent();
         affectedTiles.push(...this.surface.getEntityTiles(agent));
         this.surface.despawnStatic(agent);
-        Manager.Instance.sell(agent);
+        Manager.Instance.getMoneyController().sell(agent);
       }
     });
 

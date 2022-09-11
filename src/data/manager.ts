@@ -2,9 +2,9 @@ import { MessageFn } from "../renderers/api";
 import BuildController from "./buildController";
 import Controller from "./controller";
 import Base from "./entity/base";
-import Blueprint from "./entity/Blueprint";
 import Enemy from "./entity/enemies/enemy";
 import { Agent, AgentCategory } from "./entity/entity";
+import StaticEntity from "./entity/staticEntity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable } from "./placeables";
@@ -149,6 +149,10 @@ class Manager {
     return this.buildController;
   }
 
+  getMoneyController() {
+    return this.moneyController;
+  }
+
   getBase() {
     return this.base;
   }
@@ -165,26 +169,14 @@ class Manager {
     return !!this.wave && !this.wave.isDone();
   }
 
-  buy(placeable: Placeable, amount = 1) {
+  canBuy(placeable: Placeable, amount = 1) {
     const cost = (TOWER_PRICES[placeable.entityType] ?? 0) * amount;
     if (cost > this.moneyController.getMoney()) {
       this.showMessage(`You do not have enough money. This costs 🪙 ${cost}`);
       return false;
     }
 
-    this.moneyController.removeMoney(cost);
-
     return true;
-  }
-
-  sell(agent: Agent) {
-    if (agent instanceof Blueprint) {
-      this.moneyController.addMoney(
-        TOWER_PRICES[agent.getPlaceable().entityType] ?? 0
-      );
-    } else {
-      this.moneyController.addMoney(TOWER_PRICES[agent.getType()] ?? 0);
-    }
   }
 
   start() {
@@ -265,6 +257,7 @@ class Manager {
     this.level++;
 
     this.powerController.processPower();
+    this.moneyController.clearRecents();
     this.triggerStatUpdate();
   }
 
