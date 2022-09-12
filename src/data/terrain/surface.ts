@@ -127,8 +127,7 @@ class Surface {
       this.despawnStatic(originalTile.getStaticEntity().getAgent());
     }
 
-    tile["towers"] = originalTile["towers"];
-    tile["discoveryStatus"] = originalTile["discoveryStatus"];
+    tile.sync(originalTile);
     this.map[tile.getY() * this.width + tile.getX()] = tile;
 
     return originalTile;

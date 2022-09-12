@@ -211,6 +211,11 @@ class Tile {
   getHash() {
     return this.hash;
   }
+
+  sync(other: Tile) {
+    this.towers = other.towers;
+    this.discoveryStatus = other.discoveryStatus;
+  }
 }
 
 export default Tile;
