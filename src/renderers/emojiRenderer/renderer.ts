@@ -4,15 +4,11 @@ import Entity, { AgentCategory, EntityType } from "../../data/entity/entity";
 import Manager from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
-import Tile, { TileType } from "../../data/terrain/tile";
+import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
 import { IRenderer, MessageFn } from "../api";
 import { OVERRIDES } from "./overrides";
 import SimpleMessage from "../../components/SimpleMessage.vue";
-import {
-  getScale,
-  isStaticAgent,
-  StaticAgentStatics,
-} from "../../data/entity/staticEntity";
+import { getScale, isStaticAgent } from "../../data/entity/staticEntity";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -556,20 +552,20 @@ class Renderer implements IRenderer {
   }
 
   private getEmoji = (tile: Tile) => {
-    if (tile.hasStaticEntity()) {
-      if (!tile.getStaticEntity().getAgent().isVisible() && !DEBUG) {
-        return "🌌";
-      }
+    if (tile.getDiscoveryStatus() === DiscoveryStatus.Pending && !DEBUG) {
+      return "🔍";
+    }
 
+    if (!tile.isDiscovered() && !DEBUG) {
+      return "🌌";
+    }
+
+    if (tile.hasStaticEntity()) {
       if (getScale(tile.getStaticEntity().getAgent()) !== 2) {
         return this.getStaticEntityEmoji(
           tile.getStaticEntity().getAgent().getType()
         );
       }
-    }
-
-    if (!tile.isDiscovered() && !DEBUG) {
-      return "🌌";
     }
 
     switch (tile.getBaseType()) {

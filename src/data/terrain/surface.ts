@@ -128,7 +128,7 @@ class Surface {
     }
 
     tile["towers"] = originalTile["towers"];
-    tile["discovered"] = originalTile["discovered"];
+    tile["discoveryStatus"] = originalTile["discoveryStatus"];
     this.map[tile.getY() * this.width + tile.getX()] = tile;
 
     return originalTile;

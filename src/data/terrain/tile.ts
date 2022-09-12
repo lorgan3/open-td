@@ -5,6 +5,12 @@ import StaticEntity, {
 } from "../entity/staticEntity";
 import { ITower } from "../entity/towers";
 
+export enum DiscoveryStatus {
+  Undiscovered,
+  Pending,
+  Discovered,
+}
+
 export enum TileType {
   Void = 0,
   Grass = 1,
@@ -82,7 +88,7 @@ class Tile {
   private actualType: TileType;
   private towers: ITower[] = [];
   private linkedAgents?: Set<StaticAgent>;
-  private discovered = false;
+  private discoveryStatus = DiscoveryStatus.Undiscovered;
 
   constructor(
     private x: number,
@@ -147,12 +153,16 @@ class Tile {
     }
   }
 
-  setIsDiscovered(discovered = true) {
-    this.discovered = discovered;
+  setDiscoveryStatus(status: DiscoveryStatus) {
+    this.discoveryStatus = status;
   }
 
   isDiscovered() {
-    return this.discovered;
+    return this.discoveryStatus === DiscoveryStatus.Discovered;
+  }
+
+  getDiscoveryStatus() {
+    return this.discoveryStatus;
   }
 
   isCoveredByTower() {

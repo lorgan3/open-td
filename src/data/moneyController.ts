@@ -83,6 +83,10 @@ class MoneyController {
     this.recentlyBought.clear();
   }
 
+  isRecent(agent: Agent) {
+    return this.recentlyBought.has(agent);
+  }
+
   private getEnemyValue(enemy: IEnemy): number {
     switch (enemy.getType()) {
       case EntityType.Slime:

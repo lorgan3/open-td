@@ -4,7 +4,6 @@ import Controller from "./controller";
 import Base from "./entity/base";
 import Enemy from "./entity/enemies/enemy";
 import { Agent, AgentCategory } from "./entity/entity";
-import StaticEntity from "./entity/staticEntity";
 import { EventHandler, EventParamsMap, GameEvent } from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable } from "./placeables";
@@ -188,6 +187,10 @@ class Manager {
       this.wave.cleanup();
     }
 
+    this.powerController.processPower();
+    this.moneyController.clearRecents();
+    this.visibilityController.update();
+
     for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
       const spawnGroup = this.spawnGroups[i];
 
@@ -256,8 +259,6 @@ class Manager {
 
     this.level++;
 
-    this.powerController.processPower();
-    this.moneyController.clearRecents();
     this.triggerStatUpdate();
   }
 
