@@ -1,8 +1,7 @@
-import { GameEvent } from "../events";
 import Manager from "../manager";
 import Path from "../terrain/path";
 import Pathfinder from "../terrain/pathfinder";
-import Tile from "../terrain/tile";
+import Tile, { DiscoveryStatus } from "../terrain/tile";
 
 export enum SpawnGroupType {
   Teleport = 0,
@@ -31,20 +30,6 @@ class SpawnGroup {
     return this.type;
   }
 
-  initialize() {
-    Manager.Instance?.addEventListener(
-      GameEvent.SurfaceChange,
-      this.updatePathCosts
-    );
-  }
-
-  cleanup() {
-    Manager.Instance.removeEventListener(
-      GameEvent.SurfaceChange,
-      this.updatePathCosts
-    );
-  }
-
   grow() {
     this.strength++;
   }
@@ -56,24 +41,25 @@ class SpawnGroup {
   // Returns a number [0, 1] based on how many of its tiles are already discovered
   isExposed() {
     const exposedTiles = this.spawnPoints.reduce(
-      (sum, path) => (path.getTile(0).isDiscovered() ? sum + 1 : sum),
+      (sum, path) =>
+        path.getTile(0).getDiscoveryStatus() !== DiscoveryStatus.Undiscovered
+          ? sum + 1
+          : sum,
       0
     );
 
     return exposedTiles / this.spawnPoints.length;
   }
 
-  private updatePathCosts = () => {
-    this.spawnPoints.forEach((path) => {
-      path.recompute();
-    });
-  };
-
   rePath(pathfinder: Pathfinder) {
     const spawnPoints = this.spawnPoints.map((path) => path.getTile(0));
-    const target = this.spawnPoints[0].getTile(
+    const oldTarget = this.spawnPoints[0].getTile(
       this.spawnPoints[0].getLength() - 1
     );
+    const target = Manager.Instance.getSurface().getTile(
+      oldTarget.getX(),
+      oldTarget.getY()
+    )!;
 
     this.spawnPoints = pathfinder
       .getHivePath(spawnPoints, target)

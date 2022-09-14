@@ -22,7 +22,6 @@ class Wave {
     private initialIntensity: number
   ) {
     this.intensity = initialIntensity;
-    spawnGroups.forEach((spawnGroup) => spawnGroup.initialize());
   }
 
   isDone() {
@@ -82,10 +81,6 @@ class Wave {
       const enemy = this.getNextUnitToSpawn();
       Manager.Instance.spawnEnemy(enemy);
     }
-  }
-
-  public cleanup() {
-    this.spawnGroups.forEach((spawnGroup) => spawnGroup.cleanup());
   }
 
   static fromStaticSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {

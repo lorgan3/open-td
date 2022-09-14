@@ -4,7 +4,12 @@ import Controller from "./controller";
 import Base from "./entity/base";
 import Enemy from "./entity/enemies/enemy";
 import { Agent, AgentCategory } from "./entity/entity";
-import { EventHandler, EventParamsMap, GameEvent } from "./events";
+import {
+  EventHandler,
+  EventParamsMap,
+  GameEvent,
+  SurfaceChange,
+} from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable } from "./placeables";
 import PowerController, {
@@ -14,7 +19,7 @@ import PowerController, {
 } from "./powerController";
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
-import Tile, { FREE_TILES, TileType } from "./terrain/tile";
+import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
@@ -30,6 +35,7 @@ class Manager {
   private pathfinder: Pathfinder;
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
+  private nextSpawnGroup: SpawnGroup | undefined;
 
   private level = 0;
   private wave: Wave | undefined;
@@ -57,6 +63,8 @@ class Manager {
 
     this.base = new Base(basePoint);
     surface.spawnStatic(this.base);
+
+    this.addEventListener(GameEvent.SurfaceChange, this.onSurfaceChange);
 
     console.log(this);
   }
@@ -185,10 +193,6 @@ class Manager {
       throw new Error("Wave already in progress!");
     }
 
-    if (this.wave) {
-      this.wave.cleanup();
-    }
-
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.update();
@@ -206,55 +210,21 @@ class Manager {
       }
     }
 
-    if (this.spawnGroups.length < MAX_SPAWN_GROUPS) {
-      // Add a new spawn location every wave
-      let direction = Math.random() * Math.PI * 2;
-      let spawned = false;
-      let backOff = 3;
-      for (let i = 0; i < 20; i++) {
-        this.surface.forRay(
-          this.base.getTile().getX(),
-          this.base.getTile().getY(),
-          direction,
-          (tile) => {
-            if (tile.isDiscovered()) {
-              backOff = 3;
-              return true;
-            }
-
-            backOff--;
-
-            if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
-              return true;
-            }
-
-            this.spawnGroups.push(
-              SpawnGroup.fromTiles(
-                [tile, tile, tile, tile],
-                this.base.getTile(),
-                this.pathfinder
-              )
-            );
-            const tilesToUpdate: Tile[] = [];
-            this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
-              if (FREE_TILES.has(tile.getType())) {
-                tilesToUpdate.push(
-                  new Tile(tile.getX(), tile.getY(), TileType.Spore)
-                );
-              }
-            });
-            this.surface.setTiles(tilesToUpdate);
-            spawned = true;
-            return false;
-          }
-        );
-
-        if (!spawned) {
-          direction += direction + Math.PI / 10;
-        } else {
-          break;
+    const spawnGroup = this.getNextSpawnGroup();
+    if (spawnGroup) {
+      const tile = spawnGroup.getSpawnPoints()[0].getTile(0);
+      const tilesToUpdate: Tile[] = [];
+      this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
+        if (FREE_TILES.has(tile.getType())) {
+          tilesToUpdate.push(
+            new Tile(tile.getX(), tile.getY(), TileType.Spore)
+          );
         }
-      }
+      });
+      this.surface.setTiles(tilesToUpdate);
+
+      this.spawnGroups.push(spawnGroup);
+      this.nextSpawnGroup = undefined;
     }
 
     this.wave = Wave.fromDynamicSpawnGroups(this.level, this.spawnGroups);
@@ -283,12 +253,108 @@ class Manager {
     );
   }
 
+  getSpawnGroups() {
+    return this.spawnGroups;
+  }
+
+  getNextSpawnGroup() {
+    if (this.nextSpawnGroup && !this.nextSpawnGroup.isExposed()) {
+      return this.nextSpawnGroup;
+    }
+
+    if (this.spawnGroups.length >= MAX_SPAWN_GROUPS) {
+      return;
+    }
+
+    let direction = Math.random() * Math.PI * 2;
+    let spawned = false;
+    let backOff = 3;
+    for (let i = 0; i < 20; i++) {
+      this.surface.forRay(
+        this.base.getTile().getX(),
+        this.base.getTile().getY(),
+        direction,
+        (tile) => {
+          if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
+            backOff = 3;
+            return true;
+          }
+
+          backOff--;
+
+          if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
+            return true;
+          }
+
+          this.nextSpawnGroup = SpawnGroup.fromTiles(
+            [tile, tile, tile, tile],
+            this.base.getTile(),
+            this.pathfinder
+          );
+
+          spawned = true;
+          return false;
+        }
+      );
+
+      if (!spawned) {
+        direction += direction + Math.PI / 10;
+      } else {
+        break;
+      }
+    }
+
+    return this.nextSpawnGroup;
+  }
+
   private end() {
     this.buildController.commit();
     this.base.regenerate();
 
     this.triggerStatUpdate();
   }
+
+  private onSurfaceChange = ({
+    affectedTiles,
+    removedStaticAgents,
+  }: SurfaceChange) => {
+    const isStarted = this.getIsStarted();
+
+    this.spawnGroups.forEach((spawnGroup) => {
+      if (isStarted) {
+        spawnGroup.getSpawnPoints().forEach((path) => {
+          if (path.isAffectedByTiles(affectedTiles)) {
+            path.recompute();
+          }
+        });
+      } else {
+        // If an agent was removed a better route may be available
+        const shouldRePath =
+          removedStaticAgents.size > 0 ||
+          !!spawnGroup
+            .getSpawnPoints()
+            .find((path) => path.isAffectedByTiles(affectedTiles));
+
+        if (!!shouldRePath) {
+          spawnGroup.rePath(this.pathfinder);
+        }
+      }
+    });
+
+    const nextSpawnGroup = this.getNextSpawnGroup();
+    if (!isStarted && nextSpawnGroup) {
+      // If an agent was removed a better route may be available
+      const shouldRePath =
+        removedStaticAgents.size > 0 ||
+        !!nextSpawnGroup
+          .getSpawnPoints()
+          .find((path) => path.isAffectedByTiles(affectedTiles));
+
+      if (shouldRePath) {
+        nextSpawnGroup!.rePath(this.pathfinder);
+      }
+    }
+  };
 
   addEventListener<E extends keyof EventParamsMap>(
     event: E,
