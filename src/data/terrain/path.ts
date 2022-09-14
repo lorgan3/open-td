@@ -1,7 +1,7 @@
 import { Agent } from "../entity/entity";
 import { Checkpoint } from "./checkpoint";
 import Pathfinder from "./pathfinder";
-import Tile, { TileType } from "./tile";
+import Tile from "./tile";
 
 interface Section {
   from: number;
@@ -12,6 +12,7 @@ interface Section {
 class Path {
   private index = 0;
   private sectionIndex = 0;
+  private tileSet: Set<Tile>;
 
   private constructor(
     private pathfinder: Pathfinder,
@@ -20,7 +21,9 @@ class Path {
     private speed: number,
     private costs: number[],
     private checkpoints: Checkpoint[] = []
-  ) {}
+  ) {
+    this.tileSet = new Set(tiles);
+  }
 
   performStep(agent: Agent, dt: number) {
     const step = this.index % 1;
@@ -189,9 +192,24 @@ class Path {
       this.tiles[i] = toTile;
       this.costs[i] = this.pathfinder.getCost(toTile, fromTile) ?? 1;
       fromTile = toTile;
+
+      if (tile !== toTile) {
+        this.tileSet.delete(tile);
+        this.tileSet.add(toTile);
+      }
     }
 
     this.sections = Path.calculateSections(this.tiles, this.costs);
+  }
+
+  isAffectedByTiles(tiles: Set<Tile>) {
+    for (let tile of tiles) {
+      if (this.tileSet.has(tile)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private static calculateSections(tiles: Tile[], costs: number[]) {
