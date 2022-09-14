@@ -13,7 +13,9 @@ class Surface {
   private entitiesMap = new Map<AgentCategory, Set<Entity>>();
 
   private dirty = false;
-  private changedTiles: Tile[] = [];
+  private changedTiles = new Set<Tile>();
+  private addedAgents = new Set<StaticAgent>();
+  private removedAgents = new Set<StaticAgent>();
 
   constructor(
     private width = 50,
@@ -110,6 +112,8 @@ class Surface {
   }
 
   private setTileInternal(tile: Tile) {
+    this.dirty = true;
+
     const originalTile = this.map[tile.getY() * this.width + tile.getX()];
 
     if (originalTile.hasStaticEntity() && !tile.hasStaticEntity()) {
@@ -120,21 +124,25 @@ class Surface {
 
     tile.sync(originalTile);
     this.map[tile.getY() * this.width + tile.getX()] = tile;
-    this.changedTiles.push(originalTile);
+    this.changedTiles.add(originalTile);
 
     return originalTile;
   }
 
   public processChangedTiles() {
-    if (!this.changedTiles.length) {
+    if (!this.changedTiles.size) {
       return;
     }
 
-    this.dirty = true;
     Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
       affectedTiles: this.changedTiles,
+      addedStaticAgents: this.addedAgents,
+      removedStaticAgents: this.removedAgents,
     });
-    this.changedTiles = [];
+
+    this.changedTiles.clear();
+    this.addedAgents.clear();
+    this.removedAgents.clear();
   }
 
   public getRow(y: number) {
@@ -363,10 +371,14 @@ class Surface {
 
   public spawnStatic(agent: StaticAgent) {
     const tiles = this.getEntityTiles(agent);
-    tiles.forEach((tile) => tile.setStaticEntity(agent.entity));
+    tiles.forEach((tile) => {
+      tile.setStaticEntity(agent.entity);
+      this.changedTiles.add(tile);
+    });
 
+    this.addedAgents.add(agent);
     this.spawn(agent);
-    this.changedTiles.push(...tiles);
+    this.dirty = true;
   }
 
   public despawn(agent: Agent) {
@@ -387,10 +399,14 @@ class Surface {
 
   public despawnStatic(agent: StaticAgent) {
     const tiles = this.getEntityTiles(agent);
-    tiles.forEach((tile) => tile.clearStaticEntity());
+    tiles.forEach((tile) => {
+      tile.clearStaticEntity();
+      this.changedTiles.add(tile);
+    });
 
+    this.removedAgents.add(agent);
     this.despawn(agent);
-    this.changedTiles.push(...tiles);
+    this.dirty = true;
   }
 
   public getEntities() {

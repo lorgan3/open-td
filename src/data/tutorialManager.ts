@@ -31,7 +31,7 @@ const TUTORIALS = [
       const removeEventListener = Manager.Instance.addEventListener(
         GameEvent.SurfaceChange,
         ({ affectedTiles }) => {
-          if (!affectedTiles.length) {
+          if (!affectedTiles.size) {
             return;
           }
 

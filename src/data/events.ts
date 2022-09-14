@@ -1,4 +1,4 @@
-import { Agent } from "./entity/entity";
+import { StaticAgent } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
 
 export enum GameEvent {
@@ -34,5 +34,7 @@ export interface StatUpdate {
 }
 
 export interface SurfaceChange {
-  affectedTiles: Tile[];
+  affectedTiles: Set<Tile>;
+  addedStaticAgents: Set<StaticAgent>;
+  removedStaticAgents: Set<StaticAgent>;
 }
