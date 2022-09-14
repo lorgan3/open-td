@@ -13,6 +13,7 @@ class Surface {
   private entitiesMap = new Map<AgentCategory, Set<Entity>>();
 
   private dirty = false;
+  private changedTiles: Tile[] = [];
 
   constructor(
     private width = 50,
@@ -101,21 +102,11 @@ class Surface {
   }
 
   public setTile(tile: Tile) {
-    this.dirty = true;
-    const originalTile = this.setTileInternal(tile);
-
-    Manager.Instance?.triggerEvent(GameEvent.SurfaceChange, {
-      affectedTiles: [originalTile],
-    });
+    this.setTileInternal(tile);
   }
 
   public setTiles(tiles: Tile[]) {
-    this.dirty = true;
-    const originalTiles = tiles.map((tile) => this.setTileInternal(tile));
-
-    Manager.Instance?.triggerEvent(GameEvent.SurfaceChange, {
-      affectedTiles: originalTiles,
-    });
+    tiles.map((tile) => this.setTileInternal(tile));
   }
 
   private setTileInternal(tile: Tile) {
@@ -129,8 +120,21 @@ class Surface {
 
     tile.sync(originalTile);
     this.map[tile.getY() * this.width + tile.getX()] = tile;
+    this.changedTiles.push(originalTile);
 
     return originalTile;
+  }
+
+  public processChangedTiles() {
+    if (!this.changedTiles.length) {
+      return;
+    }
+
+    this.dirty = true;
+    Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
+      affectedTiles: this.changedTiles,
+    });
+    this.changedTiles = [];
   }
 
   public getRow(y: number) {
@@ -362,7 +366,7 @@ class Surface {
     tiles.forEach((tile) => tile.setStaticEntity(agent.entity));
 
     this.spawn(agent);
-    this.dirty = true;
+    this.changedTiles.push(...tiles);
   }
 
   public despawn(agent: Agent) {
@@ -386,7 +390,7 @@ class Surface {
     tiles.forEach((tile) => tile.clearStaticEntity());
 
     this.despawn(agent);
-    this.dirty = true;
+    this.changedTiles.push(...tiles);
   }
 
   public getEntities() {

@@ -62,6 +62,8 @@ class Manager {
   }
 
   tick(dt: number) {
+    this.surface.processChangedTiles();
+
     if (this.base.isDestroyed()) {
       return;
     }

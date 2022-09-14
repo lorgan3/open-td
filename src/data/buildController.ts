@@ -4,7 +4,6 @@ import Blueprint from "./entity/Blueprint";
 import Tile, { FREE_TILES } from "./terrain/tile";
 import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
-import { GameEvent } from "./events";
 import { floodFill } from "./util/baseExpansion";
 import { getScale } from "./entity/staticEntity";
 
@@ -29,29 +28,20 @@ class BuildController {
   }
 
   build(selection: Tile[], placeable: Placeable) {
-    let affectedTiles: Tile[];
     if (placeable.entityType === EntityType.None) {
       if (Manager.Instance.getIsStarted()) {
-        affectedTiles = this.sellBlueprints(selection);
+        this.sellBlueprints(selection);
       } else {
-        affectedTiles = this.sellEntities(selection);
+        this.sellEntities(selection);
       }
-
-      Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
-        affectedTiles,
-      });
       return;
     }
 
     if (Manager.Instance.getIsStarted()) {
-      affectedTiles = this.placeBlueprints(selection, placeable);
+      this.placeBlueprints(selection, placeable);
     } else {
-      affectedTiles = this.placeEntities(selection, placeable);
+      this.placeEntities(selection, placeable);
     }
-
-    Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
-      affectedTiles,
-    });
   }
 
   commit() {
@@ -79,9 +69,6 @@ class BuildController {
     this.blueprints.clear();
     this.pendingBaseAdditions = [];
     this.pendingBaseRemovals = [];
-    Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
-      affectedTiles: tiles,
-    });
     Manager.Instance.triggerStatUpdate();
   }
 
@@ -161,7 +148,6 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
-    return validTiles;
   }
 
   private sellBlueprints(selection: Tile[]) {
@@ -209,19 +195,10 @@ class BuildController {
       }
     }
 
-    const affectedTiles: Tile[] = [];
     validTiles.forEach((tile) => {
       if (hasBlueprints) {
         const blueprint = this.blueprints.get(tile.getHash());
         if (blueprint) {
-          affectedTiles.push(
-            ...this.surface.getEntityTiles(
-              blueprint.getTile().getX(),
-              blueprint.getTile().getY(),
-              blueprint.getScale()
-            )
-          );
-
           if (!blueprint.isDelete()) {
             Manager.Instance.getMoneyController().sell(blueprint);
 
@@ -266,7 +243,6 @@ class BuildController {
 
       if (tile.hasStaticEntity() && !this.blueprints.get(tile.getHash())) {
         const agent = tile.getStaticEntity().getAgent();
-        affectedTiles.push(...this.surface.getEntityTiles(agent));
 
         const blueprint = new Blueprint(
           agent.getTile(),
@@ -283,7 +259,6 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
-    return affectedTiles;
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
@@ -314,11 +289,9 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
-    return validTiles;
   }
 
   private sellEntities(selection: Tile[]) {
-    let affectedTiles: Tile[] = [];
     let validTiles = selection.filter((tile) => {
       if (
         tile.hasStaticEntity() &&
@@ -355,14 +328,12 @@ class BuildController {
     validTiles.forEach((tile) => {
       if (tile.hasStaticEntity()) {
         const agent = tile.getStaticEntity().getAgent();
-        affectedTiles.push(...this.surface.getEntityTiles(agent));
         this.surface.despawnStatic(agent);
         Manager.Instance.getMoneyController().sell(agent);
       }
     });
 
     Manager.Instance.triggerStatUpdate();
-    return affectedTiles;
   }
 
   private splitTiles(tiles: Tile[]) {
