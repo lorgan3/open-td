@@ -26,9 +26,10 @@ export const coverTilesWithTowerSightLines = (
 ) => {
   const surface = Manager.Instance.getSurface();
   const coveredTiles = new Set<Tile>();
-  const towerTiles = new Set(surface.getEntityTiles(tower));
 
   const run = () => {
+    const towerTiles = new Set(surface.getEntityTiles(tower));
+
     surface.forCircle(
       tower.entity.getX() + 1,
       tower.entity.getY() + 1,
