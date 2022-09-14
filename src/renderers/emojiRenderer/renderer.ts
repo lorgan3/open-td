@@ -330,6 +330,25 @@ class Renderer implements IRenderer {
       this.coverageMap.style.display = "block";
     } else {
       this.coverageMap.style.display = "none";
+      return;
+    }
+
+    const tiles = new Set<Tile>();
+    Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
+      spawnGroup
+        .getSpawnPoints()[0]
+        .getTiles()
+        .forEach((tile) => tiles.add(tile))
+    );
+
+    if (!Manager.Instance.getIsStarted()) {
+      const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
+      if (nextSpawnGroup) {
+        nextSpawnGroup
+          .getSpawnPoints()[0]
+          .getTiles()
+          .forEach((tile) => tiles.add(tile));
+      }
     }
 
     const rows = this.surface.getHeight();
@@ -343,7 +362,16 @@ class Renderer implements IRenderer {
 
       const content = this.surface
         .getRow(i)
-        .map((tile) => (tile.isCoveredByTower() ? "🟥" : "&nbsp;"))
+        .map((tile) => {
+          const isCovered = tile.isCoveredByTower();
+          return tiles.has(tile)
+            ? isCovered
+              ? "⚔️"
+              : "🐾"
+            : isCovered
+            ? "🎯"
+            : "&nbsp;";
+        })
         .join("");
       row.innerHTML = content;
     }
