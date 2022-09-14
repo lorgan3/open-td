@@ -45,18 +45,24 @@ class BuildController {
   }
 
   commit() {
-    const tiles: Tile[] = [];
-
     this.blueprints.forEach((blueprint) => {
       const tile = blueprint.getTile();
+      const tiles = this.surface.getEntityTiles(
+        tile.getX(),
+        tile.getY(),
+        blueprint.getScale()
+      );
       this.surface.despawn(blueprint);
-      tiles.push(tile);
 
-      if (tile.hasStaticEntity()) {
+      tiles.forEach((tile) => {
+        if (!tile.hasStaticEntity()) {
+          return;
+        }
+
         const agent = tile.getStaticEntity().getAgent();
         Manager.Instance.getMoneyController().sell(agent);
         this.surface.despawnStatic(agent);
-      }
+      });
 
       if (blueprint.isDelete()) {
         return;
@@ -101,10 +107,19 @@ class BuildController {
     }
 
     validTiles.forEach((tile) => {
-      const currentBlueprint = this.blueprints.get(tile.getHash());
-      if (currentBlueprint) {
+      const tiles = this.surface.getEntityTiles(
+        tile.getX(),
+        tile.getY(),
+        placeable.entity!.scale
+      );
+      tiles.forEach((tile) => {
+        const currentBlueprint = this.blueprints.get(tile.getHash());
+        if (!currentBlueprint) {
+          return;
+        }
+
         Manager.Instance.getMoneyController().sell(currentBlueprint);
-        this.surface.despawn(currentBlueprint);
+        this.freeBlueprint(currentBlueprint);
 
         if (currentBlueprint.isBasePart()) {
           this.pendingBaseAdditions.splice(
@@ -131,10 +146,9 @@ class BuildController {
             1
           );
         }
-      }
+      });
 
       const blueprint = new Blueprint(tile, placeable);
-      this.surface.spawn(blueprint);
       Manager.Instance.getMoneyController().buy(blueprint);
       this.reserveBlueprint(blueprint);
 
@@ -225,7 +239,6 @@ class BuildController {
           }
 
           this.freeBlueprint(blueprint);
-          this.surface.despawn(blueprint);
 
           if (
             tile.hasStaticEntity() &&
@@ -249,7 +262,6 @@ class BuildController {
           this.deletePlaceable,
           getScale(agent)
         );
-        this.surface.spawn(blueprint);
         this.reserveBlueprint(blueprint);
 
         if (BASE_PARTS.has(agent.getType())) {
@@ -436,6 +448,8 @@ class BuildController {
   }
 
   private reserveBlueprint(blueprint: Blueprint) {
+    this.surface.spawn(blueprint);
+
     const tile = blueprint.getTile();
     this.surface
       .getEntityTiles(tile.getX(), tile.getY(), blueprint.getScale())
@@ -443,6 +457,8 @@ class BuildController {
   }
 
   private freeBlueprint(blueprint: Blueprint) {
+    this.surface.despawn(blueprint);
+
     const tile = blueprint.getTile();
     this.surface
       .getEntityTiles(tile.getX(), tile.getY(), blueprint.getScale())
