@@ -220,9 +220,12 @@ class Renderer implements IRenderer {
   rerender(dt: number): void {
     this.time += dt;
 
-    if (this.surface.isDirty() || this.hasMoved) {
-      this.hasMoved = false;
+    if (this.surface.isDirty()) {
       this.renderTiles();
+    }
+
+    if (this.surface.isDirty() || this.hasMoved) {
+      this.renderStaticAgents();
     }
 
     const entities = this.surface.getEntities();
@@ -288,6 +291,10 @@ class Renderer implements IRenderer {
       row.textContent = content;
     }
 
+    this.renderCoverage();
+  }
+
+  private renderStaticAgents() {
     const entities = this.surface.getEntitiesForCategory(AgentCategory.Player);
     for (let entity of entities) {
       const agent = entity.getAgent();
@@ -307,8 +314,6 @@ class Renderer implements IRenderer {
         htmlElement.style.display = "none";
       }
     });
-
-    this.renderCoverage();
   }
 
   private renderCoverage() {
