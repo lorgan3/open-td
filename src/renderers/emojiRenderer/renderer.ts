@@ -118,6 +118,9 @@ class Renderer implements IRenderer {
       (active, original, entity) => {
         if (original) {
           original.style.display = "block";
+          original.children[0].textContent = this.getStaticEntityEmoji(
+            entity!.getAgent().getType()
+          );
           return original;
         }
 
@@ -127,9 +130,9 @@ class Renderer implements IRenderer {
           (htmlElement.children[0] as HTMLElement).style.margin = "-0.35ch";
         }
 
-        htmlElement.children[0].textContent = this.getStaticEntityEmoji(
-          entity!.getAgent().getType()
-        );
+        htmlElement.children[0].textContent = entity
+          ? this.getStaticEntityEmoji(entity.getAgent().getType())
+          : "";
         htmlElement.style.transformOrigin = "0 0";
 
         htmlElement.style.position = "absolute";
