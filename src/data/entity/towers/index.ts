@@ -5,7 +5,7 @@ import DamageBeacon from "../damageBeacon";
 import { IEnemy } from "../enemies";
 import { Agent } from "../entity";
 import SpeedBeacon from "../speedBeacon";
-import { StaticAgent } from "../staticEntity";
+import { StaticAgent, StaticAgentStatics } from "../staticEntity";
 
 export interface ITower extends StaticAgent {
   getCooldown(): number;
@@ -15,9 +15,17 @@ export interface ITower extends StaticAgent {
   disable(): void;
 }
 
+export interface ITowerStatics extends StaticAgentStatics {
+  readonly range: number;
+}
+
 export function isTower(agent: Agent): agent is ITower {
   return "getCooldown" in agent;
 }
+
+export const getRange = (tower: ITower) => {
+  return (tower.constructor as unknown as ITowerStatics).range;
+};
 
 export const coverTilesWithTowerSightLines = (
   tower: ITower,

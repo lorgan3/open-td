@@ -10,7 +10,7 @@ export interface StaticAgent extends Agent {
 
 // There doesn't seem to be any way to properly define static properties on an interface :(
 export interface StaticAgentStatics {
-  scale: number;
+  readonly scale: number;
 }
 
 export const getScale = (staticAgent: StaticAgent) => {

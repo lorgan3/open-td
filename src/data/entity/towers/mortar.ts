@@ -11,12 +11,12 @@ import {
 import { IEnemy } from "../enemies";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
-const RANGE = 30;
 const COOLDOWN = 5000;
 const DAMAGE = 100;
 
 class Mortar implements ITower {
-  public static scale = 2;
+  public static readonly scale = 2;
+  public static readonly range = 30;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
@@ -56,7 +56,10 @@ class Mortar implements ITower {
   }
 
   spawn() {
-    this.cleanupEventListener = coverTilesWithTowerSightLines(this, RANGE);
+    this.cleanupEventListener = coverTilesWithTowerSightLines(
+      this,
+      Mortar.range
+    );
   }
 
   despawn() {

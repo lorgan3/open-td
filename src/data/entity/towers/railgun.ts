@@ -12,12 +12,12 @@ import Rail from "../projectiles/rail";
 import { isSolid } from "../../terrain/collision";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
-const RANGE = 30;
 const COOLDOWN = 5000;
 const DAMAGE = 100;
 
 class Railgun implements ITower {
-  public static scale = 2;
+  public static readonly scale = 2;
+  public static readonly range = 30;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
@@ -63,7 +63,7 @@ class Railgun implements ITower {
   spawn() {
     this.cleanupEventListener = coverTilesWithTowerSightLines(
       this,
-      RANGE,
+      Railgun.range,
       isSolid
     );
   }

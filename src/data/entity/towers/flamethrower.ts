@@ -12,12 +12,12 @@ import { AgentCategory, EntityType } from "../entity";
 import Flame from "../projectiles/flame";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
-const RANGE = 6;
 const COOLDOWN = 1;
 const DAMAGE = 0.05;
 
 class Flamethrower implements ITower {
-  public static scale = 2;
+  public static readonly scale = 2;
+  public static readonly range = 6;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
@@ -63,7 +63,7 @@ class Flamethrower implements ITower {
   spawn() {
     this.cleanupEventListener = coverTilesWithTowerSightLines(
       this,
-      RANGE,
+      Flamethrower.range,
       isSolid
     );
   }

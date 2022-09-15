@@ -12,12 +12,12 @@ import { isSolid } from "../../terrain/collision";
 import LaserBeam from "../projectiles/laserBeam";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
-const RANGE = 16;
 const COOLDOWN = 1;
 const DAMAGE = 0.05;
 
 class Laser implements ITower {
-  public static scale = 2;
+  public static readonly scale = 2;
+  public static readonly range = 16;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
@@ -62,7 +62,7 @@ class Laser implements ITower {
   spawn() {
     this.cleanupEventListener = coverTilesWithTowerSightLines(
       this,
-      RANGE,
+      Laser.range,
       isSolid
     );
   }
