@@ -25,106 +25,138 @@ export interface Placeable {
   isBasePart?: boolean;
 }
 
+export const FENCE: Placeable = {
+  name: "Fence",
+  entity: Fence,
+  entityType: EntityType.Fence,
+  htmlElement: "🥅",
+};
+
+export const WALL: Placeable = {
+  name: "Wall",
+  entity: Wall,
+  entityType: EntityType.Wall,
+  htmlElement: "🚧",
+};
+
+export const ELECTRIC_FENCE = {
+  name: "Electric fence",
+  entity: ElectricFence,
+  entityType: EntityType.ElectricFence,
+  htmlElement: "⚡",
+};
+
+export const FREEZER = {
+  name: "Freezer",
+  entity: Freezer,
+  entityType: EntityType.Freezer,
+  htmlElement: "❄️",
+};
+
+export const TOWER = {
+  name: "Tower",
+  entity: Tower,
+  entityType: EntityType.Tower,
+  htmlElement: "🗼",
+};
+
+export const MORTAR = {
+  name: "Mortar",
+  entity: Mortar,
+  entityType: EntityType.Mortar,
+  htmlElement: "🛰️",
+};
+
+export const FLAMETHROWER = {
+  name: "Flamethrower",
+  entity: Flamethrower,
+  entityType: EntityType.Flamethrower,
+  htmlElement: "🧯",
+};
+
+export const RAILGUN = {
+  name: "Railgun",
+  entity: Railgun,
+  entityType: EntityType.Railgun,
+  htmlElement: "🌡️",
+};
+
+export const DEMOLISH = {
+  name: "Demolish",
+  entityType: EntityType.None,
+  htmlElement: "❌",
+};
+
+export const RADAR = {
+  name: "Radar",
+  entity: Radar,
+  entityType: EntityType.Radar,
+  htmlElement: "📡",
+  isBasePart: true,
+};
+
+export const POWER_PLANT = {
+  name: "Power plant",
+  entity: PowerPlant,
+  entityType: EntityType.PowerPlant,
+  htmlElement: "🏭",
+  isBasePart: true,
+};
+
+export const ARMORY = {
+  name: "Armory",
+  entity: Armory,
+  entityType: EntityType.Armory,
+  htmlElement: "🏰",
+  isBasePart: true,
+};
+
+export const MARKET = {
+  name: "Market",
+  entity: Market,
+  entityType: EntityType.Market,
+  htmlElement: "🏪",
+  isBasePart: true,
+};
+
+export const SPEED_BEACON = {
+  name: "Speed Beacon",
+  entity: SpeedBeacon,
+  entityType: EntityType.SpeedBeacon,
+  htmlElement: "⏰",
+};
+
+export const DAMAGE_BEACON = {
+  name: "Damage Beacon",
+  entity: DamageBeacon,
+  entityType: EntityType.DamageBeacon,
+  htmlElement: "🚨",
+};
+
+export const LASER = {
+  name: "Laser",
+  entity: Laser,
+  entityType: EntityType.Laser,
+  htmlElement: "🔭",
+};
+
 const placeables: Placeable[] = [
-  {
-    name: "Fence",
-    entity: Fence,
-    entityType: EntityType.Fence,
-    htmlElement: "🥅",
-  },
-  {
-    name: "Wall",
-    entity: Wall,
-    entityType: EntityType.Wall,
-    htmlElement: "🚧",
-  },
-  {
-    name: "Electric fence",
-    entity: ElectricFence,
-    entityType: EntityType.ElectricFence,
-    htmlElement: "⚡",
-  },
-  {
-    name: "Freezer",
-    entity: Freezer,
-    entityType: EntityType.Freezer,
-    htmlElement: "❄️",
-  },
-  {
-    name: "Tower",
-    entity: Tower,
-    entityType: EntityType.Tower,
-    htmlElement: "🗼",
-  },
-  {
-    name: "Mortar",
-    entity: Mortar,
-    entityType: EntityType.Mortar,
-    htmlElement: "🛰️",
-  },
-  {
-    name: "Flamethrower",
-    entity: Flamethrower,
-    entityType: EntityType.Flamethrower,
-    htmlElement: "🧯",
-  },
-  {
-    name: "Railgun",
-    entity: Railgun,
-    entityType: EntityType.Railgun,
-    htmlElement: "🌡️",
-  },
-  {
-    name: "Demolish",
-    entityType: EntityType.None,
-    htmlElement: "❌",
-  },
-  {
-    name: "Radar",
-    entity: Radar,
-    entityType: EntityType.Radar,
-    htmlElement: "📡",
-    isBasePart: true,
-  },
-  {
-    name: "Power plant",
-    entity: PowerPlant,
-    entityType: EntityType.PowerPlant,
-    htmlElement: "🏭",
-    isBasePart: true,
-  },
-  {
-    name: "Armory",
-    entity: Armory,
-    entityType: EntityType.Armory,
-    htmlElement: "🏰",
-    isBasePart: true,
-  },
-  {
-    name: "Market",
-    entity: Market,
-    entityType: EntityType.Market,
-    htmlElement: "🏪",
-    isBasePart: true,
-  },
-  {
-    name: "Speed Beacon",
-    entity: SpeedBeacon,
-    entityType: EntityType.SpeedBeacon,
-    htmlElement: "⏰",
-  },
-  {
-    name: "Damage Beacon",
-    entity: DamageBeacon,
-    entityType: EntityType.DamageBeacon,
-    htmlElement: "🚨",
-  },
-  {
-    name: "Laser",
-    entity: Laser,
-    entityType: EntityType.Laser,
-    htmlElement: "🔭",
-  },
+  DEMOLISH,
+  FENCE,
+  WALL,
+  ELECTRIC_FENCE,
+  FREEZER,
+  TOWER,
+  MORTAR,
+  FLAMETHROWER,
+  RAILGUN,
+  RADAR,
+  POWER_PLANT,
+  ARMORY,
+  MARKET,
+  SPEED_BEACON,
+  DAMAGE_BEACON,
+  LASER,
 ];
 
 export const placeableEntityTypes = new Set(

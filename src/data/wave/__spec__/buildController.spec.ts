@@ -1,21 +1,12 @@
 import BuildController from "../../buildController";
 import Blueprint from "../../entity/Blueprint";
 import { EntityType } from "../../entity/entity";
-import placeables from "../../placeables";
+import placeables, { ARMORY, DEMOLISH, TOWER } from "../../placeables";
 import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
 
 describe("buildController", () => {
   const emptySet = new Set<Tile>();
-  const deletePlacable = placeables.find(
-    (placeable) => placeable.entityType === EntityType.None
-  )!;
-  const armoryPlacable = placeables.find(
-    (placeable) => placeable.entityType === EntityType.Armory
-  )!;
-  const towerPlacable = placeables.find(
-    (placeable) => placeable.entityType === EntityType.Tower
-  )!;
 
   it("can add a pending tile", () => {
     const surface = new Surface(5, 5);
@@ -47,7 +38,7 @@ describe("buildController", () => {
 
     const selectedTile = surface.getTile(2, 2)!;
 
-    const blueprint = new Blueprint(selectedTile, deletePlacable);
+    const blueprint = new Blueprint(selectedTile, DEMOLISH);
     controller["pendingBaseRemovals"] = [blueprint];
     controller["blueprints"].set(selectedTile.getHash(), blueprint);
 
@@ -63,7 +54,7 @@ describe("buildController", () => {
 
     const selectedTile = surface.getTile(2, 2)!;
 
-    const blueprint = new Blueprint(selectedTile, deletePlacable);
+    const blueprint = new Blueprint(selectedTile, DEMOLISH);
     controller["pendingBaseRemovals"] = [blueprint];
     controller["blueprints"].set(selectedTile.getHash(), blueprint);
 
@@ -79,7 +70,7 @@ describe("buildController", () => {
 
     const selectedTile = surface.getTile(2, 2)!;
 
-    const blueprint = new Blueprint(selectedTile, armoryPlacable);
+    const blueprint = new Blueprint(selectedTile, ARMORY);
     controller["pendingBaseAdditions"] = [blueprint];
     controller["blueprints"].set(selectedTile.getHash(), blueprint);
 
@@ -95,7 +86,7 @@ describe("buildController", () => {
 
     const selectedTile = surface.getTile(2, 2)!;
 
-    const blueprint = new Blueprint(selectedTile, armoryPlacable);
+    const blueprint = new Blueprint(selectedTile, ARMORY);
     controller["pendingBaseAdditions"] = [blueprint];
     controller["blueprints"].set(selectedTile.getHash(), blueprint);
 
@@ -111,7 +102,7 @@ describe("buildController", () => {
 
     const selectedTile = surface.getTile(2, 2)!;
 
-    const blueprint = new Blueprint(selectedTile, towerPlacable);
+    const blueprint = new Blueprint(selectedTile, TOWER);
     controller["blueprints"].set(selectedTile.getHash(), blueprint);
 
     expect(controller.getPendingTiles([selectedTile])).toEqual({

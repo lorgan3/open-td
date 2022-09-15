@@ -1,4 +1,8 @@
-import placeables, { Placeable, placeableEntityTypes } from "./placeables";
+import placeables, {
+  DEMOLISH,
+  Placeable,
+  placeableEntityTypes,
+} from "./placeables";
 import Manager from "./manager";
 import Blueprint from "./entity/Blueprint";
 import Tile, { FREE_TILES } from "./terrain/tile";
@@ -16,16 +20,11 @@ export const BASE_PARTS = new Set([
 
 class BuildController {
   private blueprints = new Map<string, Blueprint>();
-  private deletePlaceable: Placeable;
 
   private pendingBaseAdditions: Blueprint[] = [];
   private pendingBaseRemovals: Blueprint[] = [];
 
-  constructor(private surface: Surface) {
-    this.deletePlaceable = placeables.find(
-      (placeable) => placeable.entityType === EntityType.None
-    )!;
-  }
+  constructor(private surface: Surface) {}
 
   build(selection: Tile[], placeable: Placeable) {
     if (placeable.entityType === EntityType.None) {
@@ -259,7 +258,7 @@ class BuildController {
 
         const blueprint = new Blueprint(
           agent.getTile(),
-          this.deletePlaceable,
+          DEMOLISH,
           getScale(agent)
         );
         this.reserveBlueprint(blueprint);
