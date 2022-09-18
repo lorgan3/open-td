@@ -4,10 +4,10 @@ import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
-import TowerMenu from "./TowerMenu.vue";
 import GameStats from "./GameStats.vue";
 import Controller, { Keys } from "../data/controller";
 import TutorialManager from "../data/tutorialManager";
+import Marketplace from "./marketplace/Marketplace.vue";
 
 const props = defineProps<{
   seed: string;
@@ -81,7 +81,7 @@ onUnmounted(() => (mounted = false));
     <GameStats :renderer="renderer" />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
-      <TowerMenu :controller="manager.getController()" />
+      <Marketplace :controller="manager.getController()" />
     </div>
   </div>
 </template>
