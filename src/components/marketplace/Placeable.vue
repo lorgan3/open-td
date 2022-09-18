@@ -47,6 +47,7 @@ const range =
   flex-direction: column;
   justify-content: space-between;
   color: #fff;
+  outline: none;
 
   width: 192px;
   height: 192px;

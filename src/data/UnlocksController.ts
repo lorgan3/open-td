@@ -62,7 +62,7 @@ class UnlocksController {
     this.availableUnlocks.delete(type);
     const nextUnlock = this.unlockLinkedMap.get(type);
     if (nextUnlock) {
-      this.availableUnlocks.add(type);
+      this.availableUnlocks.add(nextUnlock);
     }
   }
 }

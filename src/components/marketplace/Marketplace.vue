@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Controller, { Keys } from "../../data/controller";
 
-import { onMounted, onUnmounted, ref } from "vue";
+import { getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { Placeable as TPlaceable } from "../../data/placeables";
 
 import { DEMOLISH, Group, SECTIONS } from "../../data/placeables";
@@ -17,6 +17,7 @@ const props = defineProps<{
 
 const selected = ref(props.controller.getPlacable());
 const visible = ref(false);
+const instance = getCurrentInstance();
 
 let removeEventListener: () => void;
 onMounted(() => {
@@ -35,6 +36,11 @@ const onSelect = (item: TPlaceable) => {
 };
 
 const groups = Object.values(Group);
+
+const unlock = () => {
+  props.unlocksController.unlock(selected.value!.entityType);
+  instance!.proxy!.$forceUpdate();
+};
 
 const close = () => {
   visible.value = false;
@@ -62,7 +68,17 @@ const toggle = () => {
           {{ selected ? selected.description : "Select a tower below." }}
         </p>
         <div class="buttons">
-          <button @click="close">close</button>
+          <button
+            v-if="
+              selected &&
+              !props.unlocksController.isUnlocked(selected.entityType)
+            "
+            :disabled="!props.unlocksController.canUnlock(selected.entityType)"
+            @click="unlock"
+          >
+            Unlock
+          </button>
+          <button @click="close">Close</button>
         </div>
       </div>
       <div class="grid">
@@ -151,6 +167,7 @@ const toggle = () => {
       display: flex;
       flex-direction: column;
       align-items: stretch;
+      gap: 8px;
       padding: 8px;
       width: 200px;
       border-left: 2px solid #fff;
