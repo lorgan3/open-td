@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import Controller from "../data/controller";
+import Controller, { Keys } from "../data/controller";
 import { GameEvent } from "../data/events";
 import Manager from "../data/manager";
 import { TOWER_PRICES } from "../data/moneyController";
@@ -34,18 +34,15 @@ function selectTower(tower: Placeable) {
   selectedPlaceable.value = tower;
 }
 
-const listenToB = (event: KeyboardEvent) => {
-  if (event.key === "b" || event.key === "B") {
-    toggleMenu();
-  }
-};
-
+let removeEventListener: () => void;
 onMounted(() => {
-  window.addEventListener("keypress", listenToB);
+  removeEventListener = props.controller.addKeyListener(Keys.B, toggleMenu);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("keypress", listenToB);
+  if (removeEventListener) {
+    removeEventListener();
+  }
 });
 </script>
 

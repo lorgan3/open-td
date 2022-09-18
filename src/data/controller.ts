@@ -20,6 +20,7 @@ export enum Keys {
   D = "d",
   Z = "z",
   Q = "q",
+  B = "b",
 }
 
 const values = new Set<string>(Object.values(Keys));
@@ -35,6 +36,7 @@ class Controller {
   private mouseY = 0;
   private pressedKeys: Partial<Record<Keys, boolean>> = {};
   private isMouseDown = false;
+  private eventHandlers = new Map<Keys, Set<() => void>>();
 
   private selectedPlacable: Placeable | null = null;
 
@@ -135,11 +137,27 @@ class Controller {
   public keyUp(key: string) {
     if (isKey(key)) {
       this.pressedKeys[key as Keys] = false;
+
+      this.eventHandlers.get(key)?.forEach((fn) => fn());
     }
   }
 
   public isKeyDown(key: Keys) {
     return this.pressedKeys[key] ?? false;
+  }
+
+  public addKeyListener(key: Keys, fn: () => void) {
+    if (this.eventHandlers.has(key)) {
+      this.eventHandlers.get(key)!.add(fn);
+    } else {
+      this.eventHandlers.set(key, new Set([fn]));
+    }
+
+    return () => this.removeKeyListener(key, fn);
+  }
+
+  public removeKeyListener(key: Keys, fn: () => void) {
+    this.eventHandlers.get(key)?.delete(fn);
   }
 }
 
