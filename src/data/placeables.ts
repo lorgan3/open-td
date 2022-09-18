@@ -173,6 +173,22 @@ export const LASER: Placeable = {
   htmlElement: "🔭",
 };
 
+export enum Group {
+  Walls = "Walls",
+  BasicBuildings = "Basic buildings",
+  PoweredBuildings = "Powered Buildings",
+  BaseBuildings = "Base Buildings",
+  WildcardBuildings = "Wildcard Buildings",
+}
+
+export const SECTIONS: Record<Group, Placeable[]> = {
+  [Group.Walls]: [FENCE, WALL, ELECTRIC_FENCE],
+  [Group.BasicBuildings]: [TOWER, FLAMETHROWER, MORTAR],
+  [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
+  [Group.BaseBuildings]: [RADAR, ARMORY, MARKET],
+  [Group.WildcardBuildings]: [FREEZER, SPEED_BEACON, DAMAGE_BEACON],
+};
+
 const placeables: Placeable[] = [
   DEMOLISH,
   FENCE,
