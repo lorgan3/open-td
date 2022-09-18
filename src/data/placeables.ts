@@ -19,6 +19,7 @@ import Tile from "./terrain/tile";
 
 export interface Placeable {
   name: string;
+  description: string;
   htmlElement: string;
   entity?: (new (tile: Tile) => StaticAgent) & StaticAgentStatics;
   entityType: EntityType;
@@ -27,6 +28,8 @@ export interface Placeable {
 
 export const FENCE: Placeable = {
   name: "Fence",
+  description:
+    "A simple fence that land-based enemies have to walk around. If the fence becomes too long however, they will climb over it. Fences are low to towers can shoot over them.",
   entity: Fence,
   entityType: EntityType.Fence,
   htmlElement: "🥅",
@@ -34,107 +37,137 @@ export const FENCE: Placeable = {
 
 export const WALL: Placeable = {
   name: "Wall",
+  description:
+    "A large solid wall that land-based enemies have to walk around. If the wall is too long, enemies will attack and break it to continue their path but this less likely compared to fences. Walls block tower sight lines.",
   entity: Wall,
   entityType: EntityType.Wall,
   htmlElement: "🚧",
 };
 
-export const ELECTRIC_FENCE = {
+export const ELECTRIC_FENCE: Placeable = {
   name: "Electric fence",
+  description:
+    "Electric fences are similar to their normal counterpart but enemies are far less likely to climb over them. If they do they will also continuously receive damage, given that you have enough power stored.",
   entity: ElectricFence,
   entityType: EntityType.ElectricFence,
   htmlElement: "⚡",
 };
 
-export const FREEZER = {
+export const FREEZER: Placeable = {
   name: "Freezer",
+  description:
+    "A large pad that slows down land-based enemies that walk over it. The pad does not repel or attract enemies so they still have to be guided to walk over it.",
   entity: Freezer,
   entityType: EntityType.Freezer,
   htmlElement: "❄️",
 };
 
-export const TOWER = {
+export const TOWER: Placeable = {
   name: "Tower",
+  description:
+    "The cheapest and most basic tower. It has poor range and deals little damage",
   entity: Tower,
   entityType: EntityType.Tower,
   htmlElement: "🗼",
 };
 
-export const MORTAR = {
+export const MORTAR: Placeable = {
   name: "Mortar",
+  description:
+    "A powerful tower with a large range that can shoot over obstacles. It also deals splash damage, hurting all enemies near the impact. Reload speed and travel time of the projectile is slow though.",
   entity: Mortar,
   entityType: EntityType.Mortar,
   htmlElement: "🛰️",
 };
 
-export const FLAMETHROWER = {
+export const FLAMETHROWER: Placeable = {
   name: "Flamethrower",
+  description:
+    "A turret intended for close range combat. It continuously hurts a single enemy within range. Enemies that were lit on fire will also keep burning for a while.",
   entity: Flamethrower,
   entityType: EntityType.Flamethrower,
   htmlElement: "🧯",
 };
 
-export const RAILGUN = {
+export const RAILGUN: Placeable = {
   name: "Railgun",
+  description:
+    "A powerful tower with a large range that can pierce enemies. It shoots relatively fast and deals massive damage to an enemy and all enemies behind it at the cost of consuming power.",
   entity: Railgun,
   entityType: EntityType.Railgun,
   htmlElement: "🌡️",
 };
 
-export const DEMOLISH = {
+export const DEMOLISH: Placeable = {
   name: "Demolish",
+  description:
+    "Sell towers or blueprints. Blueprints and towers placed before the start of a wave are fully refunded. Other towers give back half their original cost when sold.",
   entityType: EntityType.None,
   htmlElement: "❌",
 };
 
-export const RADAR = {
+export const RADAR: Placeable = {
   name: "Radar",
+  description:
+    "A part of your base that exposes a large area in the direction that it was placed in. Exposed enemy bases are immediately neutralized when exposed by a radar.",
   entity: Radar,
   entityType: EntityType.Radar,
   htmlElement: "📡",
   isBasePart: true,
 };
 
-export const POWER_PLANT = {
+export const POWER_PLANT: Placeable = {
   name: "Power plant",
+  description:
+    "A part of your base that generates an amount power at the start of every wave. Power can be stored across waves and is consumed by various towers. More power plants will generate more power but there are diminishing returns.",
   entity: PowerPlant,
   entityType: EntityType.PowerPlant,
   htmlElement: "🏭",
   isBasePart: true,
 };
 
-export const ARMORY = {
+export const ARMORY: Placeable = {
   name: "Armory",
+  description:
+    "A part of your base that regenerates hit points at the start of every wave. More armories will regenerate more hit points but there are diminishing returns.",
   entity: Armory,
   entityType: EntityType.Armory,
   htmlElement: "🏰",
   isBasePart: true,
 };
 
-export const MARKET = {
+export const MARKET: Placeable = {
   name: "Market",
+  description:
+    "A part of your base that increases the amount of money you get per killed enemy. More markets will increase the multiplier but there are diminishing returns.",
   entity: Market,
   entityType: EntityType.Market,
   htmlElement: "🏪",
   isBasePart: true,
 };
 
-export const SPEED_BEACON = {
+export const SPEED_BEACON: Placeable = {
   name: "Speed Beacon",
+  description:
+    "A building that increases the reload speed of cardinally adjacent towers at the cost of some power for every shot fired. If there is no power (left) the towers will continue working as normal without a speed boost. Keep in mind that the beacon also blocks tower sight lines.",
   entity: SpeedBeacon,
   entityType: EntityType.SpeedBeacon,
   htmlElement: "⏰",
 };
 
-export const DAMAGE_BEACON = {
+export const DAMAGE_BEACON: Placeable = {
   name: "Damage Beacon",
+  description:
+    "A building that increases the damage of cardinally adjacent towers at the cost of some power for every shot fired. If there is no power (left) the towers will continue working as normal without a damage boost. Keep in mind that the beacon also blocks tower sight lines.",
   entity: DamageBeacon,
   entityType: EntityType.DamageBeacon,
   htmlElement: "🚨",
 };
 
-export const LASER = {
+export const LASER: Placeable = {
   name: "Laser",
+  description:
+    "A reasonably powerful tower that lights enemies on fire, similar to the flamethrower. It has a larger range but consumes power in order to fire.",
   entity: Laser,
   entityType: EntityType.Laser,
   htmlElement: "🔭",
