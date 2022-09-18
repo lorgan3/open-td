@@ -81,7 +81,10 @@ onUnmounted(() => (mounted = false));
     <GameStats :renderer="renderer" />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
-      <Marketplace :controller="manager.getController()" />
+      <Marketplace
+        :controller="manager.getController()"
+        :unlocksController="manager.getUnlocksController()"
+      />
     </div>
   </div>
 </template>

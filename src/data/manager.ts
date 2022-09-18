@@ -20,6 +20,7 @@ import PowerController, {
 import Pathfinder from "./terrain/pathfinder";
 import Surface from "./terrain/surface";
 import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
+import UnlocksController from "./UnlocksController";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
@@ -32,6 +33,8 @@ class Manager {
   private powerController: PowerController;
   private moneyController: MoneyController;
   private buildController: BuildController;
+  private unlocksController: UnlocksController;
+
   private pathfinder: Pathfinder;
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
@@ -55,6 +58,7 @@ class Manager {
       this.base.getMoneyFactor()
     );
     this.buildController = new BuildController(surface);
+    this.unlocksController = new UnlocksController();
     this.pathfinder = new Pathfinder(surface);
 
     if (basePoint.hasStaticEntity()) {
@@ -160,6 +164,10 @@ class Manager {
 
   getMoneyController() {
     return this.moneyController;
+  }
+
+  getUnlocksController() {
+    return this.unlocksController;
   }
 
   getBase() {
@@ -310,6 +318,7 @@ class Manager {
   private end() {
     this.buildController.commit();
     this.base.regenerate();
+    this.unlocksController.addPoint();
 
     this.triggerStatUpdate();
   }

@@ -28,7 +28,8 @@ const range =
   >
     <span class="sprite">{{ props.item.htmlElement }}</span>
     <span class="name"
-      >{{ props.item.name }} <span v-if="props.locked">🔒</span></span
+      >{{ props.item.name }}
+      <span v-if="props.locked" class="lock">🔒</span></span
     >
     <ul class="data">
       <li v-if="!!price"><span class="emoji">🪙</span> {{ price }}</li>
@@ -56,7 +57,11 @@ const range =
   padding: 4px;
 
   &--selected {
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &--locked {
+    background: rgba(0, 0, 0, 0.25);
   }
 
   &--selected,
@@ -68,11 +73,6 @@ const range =
       border: none;
       padding-bottom: 1px;
     }
-  }
-
-  &--locked:hover {
-    border: 2px dashed #fff;
-    padding: 2px;
   }
 
   .sprite {
@@ -92,6 +92,10 @@ const range =
     margin: 8px;
     display: flex;
     align-items: baseline;
+
+    .lock {
+      margin-left: 6px;
+    }
   }
 
   .data {

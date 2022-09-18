@@ -8,9 +8,11 @@ import { DEMOLISH, Group, SECTIONS } from "../../data/placeables";
 import Placeable from "./Placeable.vue";
 import Manager from "../../data/manager";
 import { GameEvent } from "../../data/events";
+import UnlocksController from "../../data/UnlocksController";
 
 const props = defineProps<{
   controller: Controller;
+  unlocksController: UnlocksController;
 }>();
 
 const selected = ref(props.controller.getPlacable());
@@ -69,7 +71,9 @@ const toggle = () => {
           <div v-for="placeable in SECTIONS[group]" class="item">
             <Placeable
               :item="placeable"
-              :locked="false"
+              :locked="
+                !props.unlocksController.isUnlocked(placeable.entityType)
+              "
               :selected="selected?.entityType === placeable.entityType"
               :onSelect="onSelect"
             />
