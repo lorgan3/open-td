@@ -4,10 +4,10 @@ import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
-import GameStats from "./GameStats.vue";
 import Controller, { Keys } from "../data/controller";
 import TutorialManager from "../data/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
+import Hud from "./hud/Hud.vue";
 
 const props = defineProps<{
   seed: string;
@@ -78,7 +78,7 @@ onUnmounted(() => (mounted = false));
 
 <template>
   <div class="wrapper">
-    <GameStats :renderer="renderer" />
+    <Hud :renderer="renderer" />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
       <Marketplace
@@ -101,7 +101,7 @@ onUnmounted(() => (mounted = false));
 
     .render-target {
       max-width: 100vw;
-      max-height: calc(100vh - 91px);
+      max-height: calc(100vh - 32px);
       overflow: auto;
 
       -ms-overflow-style: none;
