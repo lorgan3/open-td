@@ -144,6 +144,7 @@ const toggle = () => {
   border: 4px double #fff;
   overflow: hidden;
   max-width: calc(100vw - 48px);
+  max-height: calc(100% - 30px);
   margin: 24px;
   background: #2676d1;
   box-shadow: 0 0 5px 5px #2676d1;
@@ -177,7 +178,6 @@ const toggle = () => {
   .grid {
     display: flex;
     flex-direction: row;
-    overflow: hidden;
     overflow-x: auto;
 
     .column {
