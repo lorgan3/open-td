@@ -78,12 +78,13 @@ onUnmounted(() => (mounted = false));
 
 <template>
   <div class="wrapper">
-    <Hud :renderer="renderer" />
+    <Hud :renderer="renderer" :controller="manager.getController()" />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
       <Marketplace
         :controller="manager.getController()"
         :unlocksController="manager.getUnlocksController()"
+        :manager="manager"
       />
     </div>
   </div>

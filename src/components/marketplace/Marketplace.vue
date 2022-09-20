@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Controller, { Keys } from "../../data/controller";
+import Controller from "../../data/controller";
 
 import { getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { Placeable as TPlaceable } from "../../data/placeables";
@@ -53,15 +53,7 @@ const unlock = () => {
 };
 
 const close = () => {
-  visible.value = false;
-};
-
-const toggle = () => {
-  visible.value = !visible.value;
-
-  if (visible.value) {
-    Manager.Instance.triggerEvent(GameEvent.OpenBuildMenu);
-  }
+  props.controller.toggleBuildMenu();
 };
 </script>
 

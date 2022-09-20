@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
+import Controller from "../../data/controller";
 import { GameEvent, StatUpdate } from "../../data/events";
 import Manager from "../../data/manager";
 import { IRenderer } from "../../renderers/api";
@@ -7,43 +8,17 @@ import Stats from "./Stats.vue";
 
 const props = defineProps<{
   renderer: IRenderer;
+  controller: Controller;
 }>();
 
-const naturalNumberFormatter = Intl.NumberFormat(undefined, {
-  maximumFractionDigits: 0,
-});
-const numberFormatter = Intl.NumberFormat(undefined, {
-  maximumFractionDigits: 2,
-});
-const percentageFormatter = Intl.NumberFormat(undefined, {
-  style: "percent",
-  maximumFractionDigits: 0,
-});
-
-const money = ref(0);
-const moneyMultiplier = ref(0);
 const level = ref(0);
-const remainingEnemies = ref(0);
 const inProgress = ref(false);
-const integrity = ref(0);
-const regeneration = ref(0);
 const showCoverage = ref(false);
-const power = ref(0);
-const lastProduction = ref(0);
-const lastConsumption = ref(0);
 const expansion = ref(false);
 
 const eventHandler = (stats: StatUpdate) => {
-  money.value = stats.money;
-  moneyMultiplier.value = stats.moneyMultiplier;
   level.value = stats.level;
-  remainingEnemies.value = stats.remainingEnemies;
   inProgress.value = stats.inProgress;
-  integrity.value = stats.integrity;
-  regeneration.value = stats.regeneration;
-  power.value = stats.power;
-  lastProduction.value = stats.production;
-  lastConsumption.value = stats.consumption;
 };
 
 onMounted(() => {
@@ -84,6 +59,9 @@ function toggleCoverage() {
           <span class="emoji">⚔️</span>
           <span v-if="!inProgress">Start wave {{ level + 1 }}</span>
           <span v-if="inProgress">Wave {{ level }}</span>
+        </button>
+        <button class="toggle" @click="props.controller.toggleBuildMenu">
+          🔧
         </button>
         <button
           :class="{ toggle: true, 'toggle-toggled': expansion }"
