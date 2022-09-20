@@ -1,3 +1,4 @@
+import { GameEvent } from "./events";
 import Manager from "./manager";
 import { Placeable } from "./placeables";
 import Surface from "./terrain/surface";
@@ -39,6 +40,7 @@ class Controller {
   private eventHandlers = new Map<Keys, Set<() => void>>();
 
   private selectedPlacable: Placeable | null = null;
+  private buildMenuOpen = false;
 
   constructor(private surface: Surface) {}
 
@@ -139,6 +141,19 @@ class Controller {
       this.pressedKeys[key as Keys] = false;
 
       this.eventHandlers.get(key)?.forEach((fn) => fn());
+
+      if (key === Keys.B) {
+        this.toggleBuildMenu();
+      }
+    }
+  }
+
+  public toggleBuildMenu() {
+    this.buildMenuOpen = !this.buildMenuOpen;
+    if (this.buildMenuOpen) {
+      Manager.Instance.triggerEvent(GameEvent.OpenBuildMenu);
+    } else {
+      Manager.Instance.triggerEvent(GameEvent.CloseBuildMenu);
     }
   }
 

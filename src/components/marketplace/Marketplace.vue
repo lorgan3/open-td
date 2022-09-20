@@ -13,20 +13,30 @@ import UnlocksController from "../../data/UnlocksController";
 const props = defineProps<{
   controller: Controller;
   unlocksController: UnlocksController;
+  manager: Manager;
 }>();
 
 const selected = ref(props.controller.getPlacable());
 const visible = ref(false);
 const instance = getCurrentInstance();
 
-let removeEventListener: () => void;
+let removeOpenMenuEventListener: () => void;
+let removeCloseMenuEventListener: () => void;
 onMounted(() => {
-  removeEventListener = props.controller.addKeyListener(Keys.B, toggle);
+  removeOpenMenuEventListener = props.manager.addEventListener(
+    GameEvent.OpenBuildMenu,
+    () => (visible.value = true)
+  );
+  removeCloseMenuEventListener = props.manager.addEventListener(
+    GameEvent.CloseBuildMenu,
+    () => (visible.value = false)
+  );
 });
 
 onUnmounted(() => {
-  if (removeEventListener) {
-    removeEventListener();
+  if (removeOpenMenuEventListener && removeCloseMenuEventListener) {
+    removeOpenMenuEventListener();
+    removeCloseMenuEventListener();
   }
 });
 

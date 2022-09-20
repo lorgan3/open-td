@@ -6,6 +6,7 @@ export enum GameEvent {
   SurfaceChange = 1,
   BlackOut = 2,
   OpenBuildMenu = 3,
+  CloseBuildMenu = 4,
 }
 
 export interface EventParamsMap {
@@ -13,6 +14,7 @@ export interface EventParamsMap {
   [GameEvent.SurfaceChange]: [SurfaceChange];
   [GameEvent.BlackOut]: [];
   [GameEvent.OpenBuildMenu]: [];
+  [GameEvent.CloseBuildMenu]: [];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (
