@@ -371,6 +371,10 @@ class Renderer implements IRenderer {
       const content = this.surface
         .getRow(i)
         .map((tile) => {
+          if (!tile.isDiscovered() && !DEBUG) {
+            return "&nbsp;";
+          }
+
           const isCovered = tile.isCoveredByTower();
           return tiles.has(tile)
             ? isCovered
