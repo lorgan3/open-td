@@ -172,13 +172,16 @@ class Renderer implements IRenderer {
     this.world.className = "scrollable";
     this.world.style.lineHeight = IS_WINDOWS ? "1.86ch" : "1ch";
     this.world.style.whiteSpace = "nowrap";
-    this.world.style.display = "flex";
-    this.world.style.flexDirection = "column";
     this.world.style.cursor = "crosshair";
     this.world.style.userSelect = "none";
     this.world.style.position = "relative";
     this.world.style.fontFamily =
       '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Android Emoji","EmojiOne Mozilla","Twemoji Mozilla","Noto Emoji","Segoe UI Symbol",EmojiSymbols';
+    this.world.style.backgroundColor = "#000";
+    if (IS_WINDOWS) {
+      this.world.style.letterSpacing = "-0.7ch";
+      this.world.style.wordSpacing = "2.04ch";
+    }
 
     this.renderTiles();
 
@@ -288,7 +291,7 @@ class Renderer implements IRenderer {
       }
 
       const content = this.surface.getRow(i).map(this.getEmoji).join("");
-      row.textContent = content;
+      row.innerHTML = content;
     }
 
     this.renderCoverage();
@@ -593,7 +596,7 @@ class Renderer implements IRenderer {
     }
 
     if (!tile.isDiscovered() && !DEBUG) {
-      return "🌌";
+      return "&nbsp;";
     }
 
     if (tile.hasStaticEntity()) {
@@ -624,7 +627,7 @@ class Renderer implements IRenderer {
       case TileType.Ice:
         return "🧊";
       default:
-        return "🌌";
+        return "&nbsp;";
     }
   };
 
