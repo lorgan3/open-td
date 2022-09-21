@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import Controller from "../../data/controller";
 import Entity, { AgentCategory, EntityType } from "../../data/entity/entity";
-import Manager from "../../data/manager";
+import Manager, { Difficulty } from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
@@ -342,20 +342,22 @@ class Renderer implements IRenderer {
     }
 
     const tiles = new Set<Tile>();
-    Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
-      spawnGroup
-        .getSpawnPoints()[0]
-        .getTiles()
-        .forEach((tile) => tiles.add(tile))
-    );
-
-    if (!Manager.Instance.getIsStarted()) {
-      const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
-      if (nextSpawnGroup) {
-        nextSpawnGroup
+    if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
+      Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
+        spawnGroup
           .getSpawnPoints()[0]
           .getTiles()
-          .forEach((tile) => tiles.add(tile));
+          .forEach((tile) => tiles.add(tile))
+      );
+
+      if (!Manager.Instance.getIsStarted()) {
+        const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
+        if (nextSpawnGroup) {
+          nextSpawnGroup
+            .getSpawnPoints()[0]
+            .getTiles()
+            .forEach((tile) => tiles.add(tile));
+        }
       }
     }
 

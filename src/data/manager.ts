@@ -26,9 +26,9 @@ import SpawnGroup from "./wave/SpawnGroup";
 import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
 
 export enum Difficulty {
-  Easy,
-  Normal,
-  Hard,
+  Easy = "easy",
+  Normal = "normal",
+  Hard = "hard",
 }
 
 class Manager {
@@ -320,6 +320,10 @@ class Manager {
     }
 
     return this.nextSpawnGroup;
+  }
+
+  getDifficulty() {
+    return this.difficulty;
   }
 
   private end() {

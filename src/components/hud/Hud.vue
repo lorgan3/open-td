@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import Controller from "../../data/controller";
 import { GameEvent, StatUpdate } from "../../data/events";
-import Manager from "../../data/manager";
+import Manager, { Difficulty } from "../../data/manager";
 import { IRenderer } from "../../renderers/api";
 import Stats from "./Stats.vue";
 
@@ -70,6 +70,7 @@ function toggleCoverage() {
           🔎
         </button>
         <button
+          v-if="Manager.Instance.getDifficulty() !== Difficulty.Hard"
           :class="{ toggle: true, 'toggle-toggled': showCoverage }"
           @click="toggleCoverage"
         >
