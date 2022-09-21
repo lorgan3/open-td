@@ -25,6 +25,12 @@ import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
 
+export enum Difficulty {
+  Easy,
+  Normal,
+  Hard,
+}
+
 class Manager {
   private static instance: Manager;
 
@@ -44,6 +50,7 @@ class Manager {
   private wave: Wave | undefined;
 
   constructor(
+    private difficulty: Difficulty,
     basePoint: Tile,
     private surface: Surface,
     private controller: Controller,

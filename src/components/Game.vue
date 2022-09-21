@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
-import Manager from "../data/manager";
+import Manager, { Difficulty } from "../data/manager";
 import Controller, { Keys } from "../data/controller";
 import TutorialManager from "../data/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
@@ -11,6 +11,7 @@ import Hud from "./hud/Hud.vue";
 
 const props = defineProps<{
   seed: string;
+  difficulty: Difficulty;
 }>();
 
 const canvas = ref<HTMLDivElement | null>(null);
@@ -21,6 +22,7 @@ const renderer = new Renderer(surface, controller);
 
 const targetTile = surface.getTile(150, 150)!;
 const manager = new Manager(
+  props.difficulty,
   targetTile,
   surface,
   controller,

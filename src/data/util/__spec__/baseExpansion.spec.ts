@@ -1,6 +1,6 @@
 import Controller from "../../controller";
 import Armory from "../../entity/Armory";
-import Manager from "../../manager";
+import Manager, { Difficulty } from "../../manager";
 import Surface from "../../terrain/surface";
 import Tile, { TileType } from "../../terrain/tile";
 import { floodFill } from "../baseExpansion";
@@ -9,6 +9,7 @@ describe("baseExpansion", () => {
   const surface = new Surface(8, 8);
   const basePoint = surface.getTile(2, 2)!;
   const manager = new Manager(
+    Difficulty.Normal,
     basePoint,
     surface,
     new Controller(surface),

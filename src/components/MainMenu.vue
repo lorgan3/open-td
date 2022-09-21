@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { Difficulty } from "../data/manager";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
-  onPlay: (seed: string) => void;
+  onPlay: (seed: string, difficulty: Difficulty) => void;
 }>();
 
 enum SubMenu {
@@ -13,9 +14,29 @@ enum SubMenu {
   Settings,
 }
 
+const difficulties: Record<Difficulty, { label: string; description: string }> =
+  {
+    [Difficulty.Easy]: {
+      label: "Easy",
+      description:
+        "Allows checking which tiles are covered by tower sight lines. Shows the approximate path enemies will take. Enemies die quicker and undiscovered nests do not become stronger.",
+    },
+    [Difficulty.Normal]: {
+      label: "Normal",
+      description:
+        "Allows checking which tiles are covered by tower sight lines. Undiscovered nests slowly gain more strength.",
+    },
+    [Difficulty.Hard]: {
+      label: "Hard",
+      description:
+        "Checking tower sight lines is no longer possible, enemies die slower and undiscovered nests gain strength more quickly",
+    },
+  };
+
 const openSubMenu = ref(SubMenu.None);
 const seed = ref("");
 const seedInput = ref<HTMLElement | null>(null);
+const difficulty = ref(Difficulty.Normal);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -32,7 +53,7 @@ const onClick = (subMenu: SubMenu) => {
 const submit = (event: Event) => {
   event.preventDefault();
 
-  props.onPlay(seed.value);
+  props.onPlay(seed.value, difficulty.value);
 };
 </script>
 
@@ -55,8 +76,21 @@ const submit = (event: Event) => {
         }"
       >
         <form @submit="submit" class="menu-play-inner">
-          <h3>Which planet?</h3>
-          <input ref="seedInput" v-model="seed" />
+          <label>
+            Which planet?
+            <input ref="seedInput" v-model="seed" />
+          </label>
+          <label>
+            Difficulty
+            <select v-model="difficulty">
+              <option v-for="({ label }, value) in difficulties" :value="value">
+                {{ label }}
+              </option>
+            </select>
+          </label>
+          <p class="difficulty-description">
+            {{ difficulties[difficulty].description }}
+          </p>
           <button type="submit">Start!</button>
         </form>
       </div>
@@ -96,10 +130,14 @@ const submit = (event: Event) => {
     font-size: 84px;
   }
 
-  h3 {
+  label {
     font-size: 30px;
     text-align: center;
     color: #fff;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
   button,
@@ -109,6 +147,18 @@ const submit = (event: Event) => {
     box-sizing: border-box;
     font-size: 30px;
     text-align: center;
+    font-family: JupiterCrash;
+  }
+
+  select {
+    height: 48px;
+    font-size: 30px;
+    text-align: center;
+    font-family: JupiterCrash;
+  }
+
+  .difficulty-description {
+    color: #fff;
   }
 
   .menu {
