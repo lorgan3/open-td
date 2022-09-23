@@ -1,8 +1,4 @@
-import placeables, {
-  DEMOLISH,
-  Placeable,
-  placeableEntityTypes,
-} from "./placeables";
+import { DEMOLISH, Placeable, placeableEntityTypes } from "./placeables";
 import Manager from "./manager";
 import Blueprint from "./entity/Blueprint";
 import Tile, { FREE_TILES } from "./terrain/tile";
@@ -10,6 +6,7 @@ import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { floodFill } from "./util/baseExpansion";
 import { getScale } from "./entity/staticEntity";
+import { DEFAULT_EXPIRE_TIME } from "../renderers/api";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -94,7 +91,7 @@ class BuildController {
         )
       ) {
         Manager.Instance.showMessage("Not all tiles connect to the base", {
-          override: true,
+          expires: DEFAULT_EXPIRE_TIME,
         });
 
         return [];
@@ -203,7 +200,7 @@ class BuildController {
         validTiles = otherTiles;
 
         Manager.Instance.showMessage("Not all base parts can be sold", {
-          override: true,
+          expires: DEFAULT_EXPIRE_TIME,
         });
       }
     }
@@ -286,6 +283,9 @@ class BuildController {
         this.surface
       )
     ) {
+      Manager.Instance.showMessage("Not all tiles connect to the base", {
+        expires: DEFAULT_EXPIRE_TIME,
+      });
       return [];
     }
 
@@ -331,7 +331,7 @@ class BuildController {
         validTiles = otherTiles;
 
         Manager.Instance.showMessage("Not all base parts can be sold", {
-          override: true,
+          expires: DEFAULT_EXPIRE_TIME,
         });
       }
     }

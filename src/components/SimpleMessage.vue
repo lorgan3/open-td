@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { getCurrentInstance, onMounted, ref } from "vue";
 import { MessageFn } from "../renderers/api";
 import TextWithControls from "./controls/TextWithControls.vue";
 
 interface Message {
+  id: number;
   content: string;
   closable: boolean;
-  input?: { type: "keyboard" };
+  open: boolean;
 }
 
 const props = defineProps<{
@@ -14,52 +15,52 @@ const props = defineProps<{
 }>();
 
 const messageQueue = ref<Message[]>([]);
-const firstMessage = ref<Message | undefined>();
-const text = ref("");
-
-let resolveMessage: (value: any) => void;
-let cancelMessage: () => void;
+const timers = ref(new Map<number, number>());
+const instance = getCurrentInstance();
 
 const queueMessage: MessageFn = (content, config) => {
   const msg = {
+    id: Date.now(),
     content,
     closable: config?.closable ?? true,
-    input: config?.input ? config.input : undefined,
+    open: true,
   };
 
-  const previousRejectFn = cancelMessage;
-  const promise = new Promise((resolve, reject) => {
-    resolveMessage = resolve;
-    cancelMessage = config?.input ? reject : resolve;
-  });
+  if (config?.expires) {
+    const id = window.setTimeout(() => {
+      close(msg);
+    }, config.expires);
 
+    timers.value.set(msg.id, id);
+  }
+
+  let targetIndex = -1;
   if (config?.override) {
-    if (previousRejectFn) {
-      previousRejectFn();
-    }
-
-    messageQueue.value = [];
-    firstMessage.value = msg;
-    return promise;
+    targetIndex = messageQueue.value.findIndex(
+      (msg) => msg.id === config.override
+    );
   }
 
-  messageQueue.value.push(msg);
-  if (!firstMessage.value) {
-    firstMessage.value = messageQueue.value.pop();
+  if (targetIndex !== -1) {
+    const oldId = messageQueue.value[targetIndex].id;
+    window.clearTimeout(timers.value.get(oldId));
+    timers.value.delete(oldId);
+
+    messageQueue.value[targetIndex] = msg;
+  } else {
+    messageQueue.value.push(msg);
   }
 
-  return promise;
+  return Promise.resolve(msg.id);
 };
 
-const close = () => {
-  firstMessage.value = messageQueue.value.pop();
-  cancelMessage();
-};
+const close = (message: Message) => {
+  message.open = false;
+  instance!.proxy!.$forceUpdate();
 
-const handleSubmit = (event: Event) => {
-  resolveMessage(text.value);
-  firstMessage.value = messageQueue.value.pop();
-  event.preventDefault();
+  window.setTimeout(() => {
+    messageQueue.value.splice(messageQueue.value.indexOf(message), 1);
+  }, 200);
 };
 
 onMounted(() => {
@@ -68,34 +69,54 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="firstMessage" class="message">
-    <button v-if="firstMessage.closable" class="close-button" @click="close">
-      ✖
-    </button>
-    <!-- <div>{{ firstMessage.content }}</div> -->
-    <TextWithControls :text="firstMessage.content" />
-    <form
-      v-if="firstMessage.input?.type === 'keyboard'"
-      class="message-keyboard"
-      @submit="handleSubmit"
+  <div class="message-wrapper">
+    <div
+      v-for="index in messageQueue.length + 1"
+      :key="index"
+      :class="{
+        message: true,
+        'message--visible': messageQueue[index - 1]?.open,
+      }"
     >
-      <input v-model="text" class="message-keyboard-input" />
-      <button type="submit">Submit</button>
-    </form>
+      <div v-if="messageQueue[index - 1]">
+        <button
+          v-if="messageQueue[index - 1].closable"
+          class="close-button"
+          @click="() => close(messageQueue[index - 1])"
+        >
+          ✖
+        </button>
+        <TextWithControls :text="messageQueue[index - 1].content" />
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.message {
+.message-wrapper {
   position: absolute;
   top: 30px;
-  left: 30px;
+  left: 10px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
   max-width: 300px;
-  padding: 20px;
-  border: 3px solid #444;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 3px solid #000;
   background: #fff;
   z-index: 1;
   box-shadow: 5px 5px 10px -5px;
+  transition: transform 0.2s;
+  transform: translateX(-320px);
+
+  &--visible {
+    transform: translateX(0px);
+  }
 
   .close-button {
     position: absolute;

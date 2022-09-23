@@ -18,7 +18,7 @@ watch(
   () => props.text,
   (newText) => {
     const regex =
-      /^(?<left>.*?){(?<control>key|mouse): (?<type>.)}(?<right>.*)$/;
+      /^(?<left>.*?){(?<control>key|mouse): (?<type>.*?)}(?<right>.*)$/;
     const result = regex.exec(newText);
     if (result) {
       left.value = result.groups!.left;

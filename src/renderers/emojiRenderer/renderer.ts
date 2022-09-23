@@ -165,7 +165,6 @@ class Renderer implements IRenderer {
     const container = target.appendChild(document.createElement("div"));
     createApp(SimpleMessage, {
       register: this.resolveMessageFn,
-      test: "test",
     }).mount(container);
 
     this.world = target.appendChild(document.createElement("div"));

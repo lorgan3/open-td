@@ -11,8 +11,10 @@ export interface IRenderer {
 export type MessageFn = (
   content: string,
   config?: {
-    override?: boolean;
+    override?: number;
     closable?: boolean;
-    input?: { type: "keyboard" };
+    expires?: number;
   }
-) => any | Promise<any>;
+) => Promise<number>;
+
+export const DEFAULT_EXPIRE_TIME = 2000;

@@ -1,33 +1,29 @@
 import { GameEvent } from "./events";
 import Manager from "./manager";
 
-const TUTORIALS = [
+const TUTORIALS: Array<(override: number) => Promise<number>> = [
   () =>
-    new Promise<void>((resolve) => {
+    new Promise<number>((resolve) => {
       Manager.Instance.showMessage(
-        "Welcome to Open Tower Defense! Open the build menu by clicking the center-right button or by pressing {key: b}",
-        { closable: false, override: true }
-      );
-
-      resolve();
+        "Welcome to Open Tower Defense! Open the build menu by clicking the {key: 🔧} button or by pressing {key: b}",
+        { closable: false }
+      ).then(resolve);
     }),
-  () =>
-    new Promise<void>((resolve) => {
+  (override) =>
+    new Promise<number>((resolve) => {
       const removeEventListener = Manager.Instance.addEventListener(
         GameEvent.OpenBuildMenu,
         () => {
           removeEventListener();
           Manager.Instance.showMessage(
             "Build towers and walls near your base to protect it from enemies lurking in undiscovered areas",
-            { override: true }
-          );
-
-          resolve();
+            { override }
+          ).then(resolve);
         }
       );
     }),
-  () =>
-    new Promise<void>((resolve) => {
+  (override) =>
+    new Promise<number>((resolve) => {
       const removeEventListener = Manager.Instance.addEventListener(
         GameEvent.SurfaceChange,
         ({ affectedTiles }) => {
@@ -38,10 +34,8 @@ const TUTORIALS = [
           removeEventListener();
           Manager.Instance.showMessage(
             "Start the wave when you are ready. Good luck!",
-            { override: true }
-          );
-
-          resolve();
+            { override }
+          ).then(resolve);
         }
       );
     }),
@@ -50,6 +44,7 @@ const TUTORIALS = [
 class TutorialManager {
   private promise?: Promise<void>;
   private reject?: () => void;
+  private previousId = -1;
 
   async start() {
     this.promise = new Promise(async (resolve, reject) => {
@@ -58,7 +53,7 @@ class TutorialManager {
       for (let i = 0; i < TUTORIALS.length; i++) {
         const tutorial = TUTORIALS[i];
 
-        await tutorial();
+        this.previousId = await tutorial(this.previousId);
       }
 
       resolve();

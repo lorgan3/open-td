@@ -94,7 +94,6 @@ class Base implements StaticAgent {
 
     if (this.hp <= 0) {
       Manager.Instance.showMessage("You lose!", {
-        override: true,
         closable: false,
       });
     } else {
