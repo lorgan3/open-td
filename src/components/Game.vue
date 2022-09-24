@@ -5,7 +5,7 @@ import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager, { Difficulty } from "../data/manager";
 import Controller, { Keys } from "../data/controller";
-import TutorialManager from "../data/tutorialManager";
+import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
 import Hud from "./hud/Hud.vue";
 
