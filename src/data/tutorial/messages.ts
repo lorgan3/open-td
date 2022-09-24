@@ -1,7 +1,43 @@
-import { GameEvent } from "../events";
+import { EventParamsMap, GameEvent } from "../events";
 import Manager, { Difficulty } from "../manager";
 
 export type TutorialMessage = (override: number) => Promise<number>;
+
+const continueAfterEvent = <E extends GameEvent>(
+  promise: Promise<number> | number,
+  event: E,
+  condition?: (...args: EventParamsMap[E]) => boolean | void
+) => {
+  return new Promise<void>((resolve) => {
+    const removeEventListener = Manager.Instance.addEventListener(
+      event,
+      (...args) => {
+        if (!condition || condition(...args)) {
+          removeEventListener();
+          resolve();
+        }
+      }
+    );
+  }).then(() => promise);
+};
+
+const continueAfterEvents = (
+  promise: Promise<number> | number,
+  events: GameEvent[],
+  condition?: (args: any) => boolean | void
+) => {
+  return new Promise<void>((resolve) => {
+    const removeEventListeners = Manager.Instance.addEventListeners(
+      events,
+      (args) => {
+        if (!condition || condition(args)) {
+          removeEventListeners();
+          resolve();
+        }
+      }
+    );
+  }).then(() => promise);
+};
 
 export const INTRO: TutorialMessage = () =>
   new Promise<number>((resolve) => {
@@ -9,13 +45,7 @@ export const INTRO: TutorialMessage = () =>
       "Welcome to Open Tower Defense! Open the build menu by clicking the {key: 🔧} button or by pressing {key: b}"
     );
 
-    const removeEventListener = Manager.Instance.addEventListener(
-      GameEvent.OpenBuildMenu,
-      () => {
-        removeEventListener();
-        promise.then(resolve);
-      }
-    );
+    continueAfterEvent(promise, GameEvent.OpenBuildMenu).then(resolve);
   });
 
 export const BUILD_TOWERS: TutorialMessage = (override) =>
@@ -25,17 +55,11 @@ export const BUILD_TOWERS: TutorialMessage = (override) =>
       { override }
     );
 
-    const removeEventListener = Manager.Instance.addEventListener(
+    continueAfterEvent(
+      promise,
       GameEvent.SurfaceChange,
-      ({ affectedTiles }) => {
-        if (!affectedTiles.size) {
-          return;
-        }
-
-        removeEventListener();
-        promise.then(resolve);
-      }
-    );
+      ({ affectedTiles }) => !!affectedTiles.size
+    ).then(resolve);
   });
 
 export const CHECK_COVERAGE: TutorialMessage = (override) =>
@@ -53,47 +77,33 @@ export const CHECK_COVERAGE: TutorialMessage = (override) =>
       { override }
     );
 
-    const removeEventListeners = Manager.Instance.addEventListeners(
-      [GameEvent.ToggleShowCoverage, GameEvent.StartWave],
-      () => {
-        removeEventListeners();
-        promise.then(resolve);
-      }
-    );
+    continueAfterEvents(promise, [
+      GameEvent.ToggleShowCoverage,
+      GameEvent.StartWave,
+    ]).then(resolve);
   });
 
 export const START_WAVE: TutorialMessage = (override) =>
   new Promise<number>((resolve) => {
     if (Manager.Instance.getIsStarted()) {
-      resolve(override);
+      continueAfterEvent(override, GameEvent.EndWave).then(resolve);
       return;
     }
 
-    Manager.Instance.showMessage(
+    const promise = Manager.Instance.showMessage(
       "Start the wave when you are ready. Good luck!",
       { override }
-    ).then(resolve);
+    );
+
+    continueAfterEvent(promise, GameEvent.EndWave).then(resolve);
   });
 
 export const BUY_UPGRADE: TutorialMessage = (override) =>
   new Promise<number>((resolve) => {
-    let removeEventListener = Manager.Instance.addEventListener(
-      GameEvent.EndWave,
-      () => {
-        removeEventListener();
-
-        const promise = Manager.Instance.showMessage(
-          "After beating a wave you can unlock a new building in the build menu strengthen your defense, take a look!",
-          { override }
-        );
-
-        removeEventListener = Manager.Instance.addEventListener(
-          GameEvent.OpenBuildMenu,
-          () => {
-            removeEventListener();
-            promise.then(resolve);
-          }
-        );
-      }
+    const promise = Manager.Instance.showMessage(
+      "After beating a wave you can unlock a new building in the build menu strengthen your defense, take a look!",
+      { override }
     );
+
+    continueAfterEvent(promise, GameEvent.OpenBuildMenu).then(resolve);
   });
