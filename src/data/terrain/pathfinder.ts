@@ -22,10 +22,10 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Grass]: 3,
   [TileType.Water]: 20,
   [TileType.Stone]: 4,
-  [TileType.Wall]: 200,
+  [TileType.Wall]: 3,
   [TileType.Spore]: 2,
-  [TileType.ElectricFence]: 10,
-  [TileType.Fence]: 100,
+  [TileType.ElectricFence]: 5,
+  [TileType.Fence]: 20,
   [TileType.Freezer]: 6,
   [TileType.Obstructed]: 3,
   [TileType.Bridge]: 5,
@@ -39,7 +39,9 @@ export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
 };
 
 export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
-  [TileType.ElectricFence]: 20,
+  [TileType.Fence]: 5,
+  [TileType.ElectricFence]: 40,
+  [TileType.Wall]: 66.666,
   [TileType.Freezer]: 0.5,
   [TileType.Obstructed]: 500,
   [TileType.PlayerBuilding]: -10,

@@ -1,3 +1,4 @@
+import Manager from "../manager";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { AgentCategory, EntityType } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
@@ -7,6 +8,7 @@ class Wall implements StaticAgent {
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
+  private hp = 50;
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
@@ -22,6 +24,14 @@ class Wall implements StaticAgent {
 
   updateTile(tile: Tile) {
     this.tile = tile;
+  }
+
+  hit(damage: number) {
+    this.hp -= damage;
+
+    if (this.hp <= 0) {
+      Manager.Instance.getSurface().despawnStatic(this);
+    }
   }
 
   isVisible() {

@@ -3,7 +3,7 @@ import { GameEvent } from "./events";
 import Manager from "./manager";
 
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
-  [EntityType.ElectricFence]: 0.8,
+  [EntityType.ElectricFence]: 0.05,
   [EntityType.Railgun]: 5,
   [EntityType.Laser]: 0.004,
 };

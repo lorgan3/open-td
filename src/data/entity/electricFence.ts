@@ -5,7 +5,7 @@ import { AgentCategory, EntityType } from "./entity";
 import StaticEntity from "./staticEntity";
 import { ITower } from "./towers";
 
-const DAMAGE = 0.125;
+const DAMAGE = 0.625;
 
 class ElectricFence implements ITower {
   public static scale = 1;
@@ -24,7 +24,7 @@ class ElectricFence implements ITower {
   }
 
   fire(target: IEnemy, dt: number) {
-    if (Manager.Instance.consumeContinuous(this, dt)) {
+    if (!Manager.Instance.consumeContinuous(this, dt)) {
       return 0;
     }
 

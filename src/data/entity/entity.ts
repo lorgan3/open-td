@@ -64,6 +64,7 @@ export const DESTRUCTIBLE_ENTITIES = new Set([
   EntityType.SpeedBeacon,
   EntityType.DamageBeacon,
   EntityType.Laser,
+  EntityType.Wall,
 ]);
 
 class Entity {
