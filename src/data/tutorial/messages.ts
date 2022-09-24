@@ -39,28 +39,28 @@ const continueAfterEvents = (
   }).then(() => promise);
 };
 
-export const INTRO: TutorialMessage = () =>
-  new Promise<number>((resolve) => {
-    const promise = Manager.Instance.showMessage(
-      "Welcome to Open Tower Defense! Open the build menu by clicking the {key: 🔧} button or by pressing {key: b}"
+const createTutorialMessage =
+  (message: string, ...events: GameEvent[]): TutorialMessage =>
+  (override) =>
+    continueAfterEvents(
+      Manager.Instance.showMessage(message, { override }),
+      events
     );
 
-    continueAfterEvent(promise, GameEvent.OpenBuildMenu).then(resolve);
-  });
+export const INTRO = createTutorialMessage(
+  "Welcome to Open Tower Defense! Open the build menu by clicking the {key: 🔧} button or by pressing {key: b}",
+  GameEvent.OpenBuildMenu
+);
 
 export const BUILD_TOWERS: TutorialMessage = (override) =>
-  new Promise<number>((resolve) => {
-    const promise = Manager.Instance.showMessage(
+  continueAfterEvent(
+    Manager.Instance.showMessage(
       "Build towers and walls near your base to protect it from enemies lurking in undiscovered areas",
       { override }
-    );
-
-    continueAfterEvent(
-      promise,
-      GameEvent.SurfaceChange,
-      ({ affectedTiles }) => !!affectedTiles.size
-    ).then(resolve);
-  });
+    ),
+    GameEvent.SurfaceChange,
+    ({ affectedTiles }) => !!affectedTiles.size
+  );
 
 export const CHECK_COVERAGE: TutorialMessage = (override) =>
   new Promise<number>((resolve) => {
@@ -70,17 +70,15 @@ export const CHECK_COVERAGE: TutorialMessage = (override) =>
       return;
     }
 
-    const promise = Manager.Instance.showMessage(
-      `Click the {key: 🎯} button to view tower sight lines${
-        difficulty === Difficulty.Easy ? " and enemy paths" : " "
-      } to check how effective your layout is`,
-      { override }
-    );
-
-    continueAfterEvents(promise, [
-      GameEvent.ToggleShowCoverage,
-      GameEvent.StartWave,
-    ]).then(resolve);
+    continueAfterEvents(
+      Manager.Instance.showMessage(
+        `Click the {key: 🎯} button to view tower sight lines${
+          difficulty === Difficulty.Easy ? " and enemy paths" : " "
+        } to check how effective your layout is`,
+        { override }
+      ),
+      [GameEvent.ToggleShowCoverage, GameEvent.StartWave]
+    ).then(resolve);
   });
 
 export const START_WAVE: TutorialMessage = (override) =>
@@ -90,20 +88,16 @@ export const START_WAVE: TutorialMessage = (override) =>
       return;
     }
 
-    const promise = Manager.Instance.showMessage(
-      "Start the wave when you are ready. Good luck!",
-      { override }
-    );
-
-    continueAfterEvent(promise, GameEvent.EndWave).then(resolve);
+    continueAfterEvent(
+      Manager.Instance.showMessage(
+        "Start the wave when you are ready. Good luck!",
+        { override }
+      ),
+      GameEvent.EndWave
+    ).then(resolve);
   });
 
-export const BUY_UPGRADE: TutorialMessage = (override) =>
-  new Promise<number>((resolve) => {
-    const promise = Manager.Instance.showMessage(
-      "After beating a wave you can unlock a new building in the build menu strengthen your defense, take a look!",
-      { override }
-    );
-
-    continueAfterEvent(promise, GameEvent.OpenBuildMenu).then(resolve);
-  });
+export const BUY_UPGRADE = createTutorialMessage(
+  "After beating a wave you can unlock a new building in the build menu strengthen your defense, take a look!",
+  GameEvent.OpenBuildMenu
+);
