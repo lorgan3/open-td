@@ -208,6 +208,8 @@ class Manager {
       throw new Error("Wave already in progress!");
     }
 
+    this.triggerEvent(GameEvent.StartWave);
+
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.update();
@@ -332,6 +334,7 @@ class Manager {
     this.unlocksController.addPoint();
 
     this.triggerStatUpdate();
+    this.triggerEvent(GameEvent.EndWave);
   }
 
   private onSurfaceChange = ({
@@ -387,6 +390,14 @@ class Manager {
     }
 
     return () => this.removeEventListener(event, fn);
+  }
+
+  addEventListeners(events: GameEvent[], fn: EventHandler<any>) {
+    const removeEventListeners = events.map((event) =>
+      this.addEventListener(event, fn)
+    );
+
+    return () => removeEventListeners.forEach((fn) => fn());
   }
 
   removeEventListener<E extends keyof EventParamsMap>(

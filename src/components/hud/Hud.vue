@@ -43,6 +43,8 @@ function toggleCoverage() {
     ? props.renderer.hideCoverage()
     : props.renderer.showCoverage();
 
+  Manager.Instance.triggerEvent(GameEvent.ToggleShowCoverage);
+
   showCoverage.value = !showCoverage.value;
 }
 </script>

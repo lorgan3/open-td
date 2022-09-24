@@ -7,6 +7,9 @@ export enum GameEvent {
   BlackOut = 2,
   OpenBuildMenu = 3,
   CloseBuildMenu = 4,
+  ToggleShowCoverage = 5,
+  StartWave = 6,
+  EndWave = 7,
 }
 
 export interface EventParamsMap {
@@ -15,6 +18,9 @@ export interface EventParamsMap {
   [GameEvent.BlackOut]: [];
   [GameEvent.OpenBuildMenu]: [];
   [GameEvent.CloseBuildMenu]: [];
+  [GameEvent.ToggleShowCoverage]: [];
+  [GameEvent.StartWave]: [];
+  [GameEvent.EndWave]: [];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (
