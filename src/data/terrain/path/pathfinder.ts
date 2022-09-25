@@ -2,6 +2,10 @@ import Surface from "../surface";
 import Tile, { TileType } from "../tile";
 import Heap from "heap";
 import Path from "./path";
+import {
+  DEFAULT_LAND_BASED_COSTS,
+  DEFAULT_LAND_BASED_MULTIPLIERS,
+} from "./definitions";
 
 export const NEIGHBORS = [
   [0, -1],
@@ -18,37 +22,8 @@ export const NEIGHBORS = [
 // This is to prevent just going between a diagonal wall.
 export const MAX_DIAGONAL_COST = 150;
 
-export const DEFAULT_COSTS: Partial<Record<TileType, number>> = {
-  [TileType.Grass]: 3,
-  [TileType.Water]: 20,
-  [TileType.Stone]: 4,
-  [TileType.Wall]: 3,
-  [TileType.Spore]: 2,
-  [TileType.ElectricFence]: 5,
-  [TileType.Fence]: 20,
-  [TileType.Freezer]: 6,
-  [TileType.Obstructed]: 3,
-  [TileType.Bridge]: 5,
-  [TileType.Dirt]: 2.5,
-  [TileType.Sand]: 3.5,
-  [TileType.Snow]: 3.5,
-  [TileType.Ice]: 10,
-  [TileType.PlayerBuilding]: 3,
-  [TileType.NaturalFeature]: 5,
-  [TileType.Base]: Number.EPSILON,
-};
-
-export const DEFAULT_MULTIPLIERS: Partial<Record<TileType, number>> = {
-  [TileType.Fence]: 5,
-  [TileType.ElectricFence]: 40,
-  [TileType.Wall]: 66.666,
-  [TileType.Freezer]: 0.5,
-  [TileType.Obstructed]: 500,
-  [TileType.PlayerBuilding]: -10,
-};
-
 export const defaultCostMultiplier = (tile: Tile) =>
-  DEFAULT_MULTIPLIERS[tile.getType()] ?? 1;
+  DEFAULT_LAND_BASED_MULTIPLIERS[tile.getType()] ?? 1;
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class Pathfinder {
@@ -59,7 +34,7 @@ class Pathfinder {
     private costMultiplier = defaultCostMultiplier,
     costs:
       | Partial<Record<TileType, number>>
-      | ((tile: Tile) => number | null) = DEFAULT_COSTS
+      | ((tile: Tile) => number | null) = DEFAULT_LAND_BASED_COSTS
   ) {
     this.costFn =
       typeof costs === "function"
@@ -183,7 +158,7 @@ class Pathfinder {
     const multiplierFn = (tile: Tile) => {
       return (
         (visitedTiles[tile.getHash()] ?? 1) *
-        (DEFAULT_MULTIPLIERS[tile.getType()] ?? 1)
+        (DEFAULT_LAND_BASED_MULTIPLIERS[tile.getType()] ?? 1)
       );
     };
 
