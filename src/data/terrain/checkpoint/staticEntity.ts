@@ -11,9 +11,8 @@ export class StaticEntityCheckpoint implements Checkpoint {
   }
 
   process(tiles: Tile[], agent: Agent, dt: number): void {
-    (agent as IEnemy).attack(
-      tiles[this.index].getStaticEntity()!.getAgent(),
-      dt
+    (agent as IEnemy).AI.attack(
+      tiles[this.index].getStaticEntity()!.getAgent()
     );
   }
 }

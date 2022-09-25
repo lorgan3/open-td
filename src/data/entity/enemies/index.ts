@@ -1,13 +1,11 @@
 import Path from "../../terrain/path/path";
 import { Agent } from "../entity";
+import EnemyAI from "./enemyAI";
 
 export interface IEnemy extends Agent {
-  hit(damage: number): void;
+  AI: EnemyAI;
+  getDamage(): number;
   getPath(): Path;
-  attack(target: Agent, dt: number): void;
-  hp: number;
-  getFuturePosition(time: number): number;
-  miss(damage: number): void;
   getStatus(): Status;
   lightOnFire?: () => void;
 }

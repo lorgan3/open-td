@@ -40,7 +40,7 @@ class Shockwave implements Agent {
             enemy.getAlignedY() === this.target.getY()
         )
         .forEach((enemy) => {
-          (enemy.getAgent() as IEnemy).hit(this.damage);
+          (enemy.getAgent() as IEnemy).AI.hit(this.damage);
         });
     }
 

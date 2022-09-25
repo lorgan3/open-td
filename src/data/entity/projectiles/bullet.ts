@@ -28,7 +28,7 @@ class Bullet implements Agent {
     const dist = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     this.travelTime = dist / SPEED;
 
-    const index = this.target.getFuturePosition(this.travelTime);
+    const index = this.target.AI.getFuturePosition(this.travelTime);
 
     const { x, y } = target.getPath().getCoordinates(index);
     this.targetX = x;
@@ -38,7 +38,7 @@ class Bullet implements Agent {
   tick(dt: number) {
     if (this.time >= this.travelTime) {
       Manager.Instance.getSurface().despawn(this);
-      this.target.hit(this.damage);
+      this.target.AI.hit(this.damage);
     }
 
     this.time = Math.min(this.time + dt, this.travelTime);

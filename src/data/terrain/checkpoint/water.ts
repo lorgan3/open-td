@@ -1,16 +1,16 @@
 import { Checkpoint, CheckpointFn } from ".";
-import Enemy from "../../entity/enemies/enemy";
+import { IEnemy } from "../../entity/enemies";
 import Manager from "../../manager";
 import Tile, { TileType } from "../tile";
 
 export class WaterCheckpoint implements Checkpoint {
   constructor(public index: number) {}
 
-  isCleared(tiles: Tile[], agent: Enemy): boolean {
+  isCleared(tiles: Tile[], agent: IEnemy): boolean {
     return !this.getTiles(tiles[this.index], agent).length;
   }
 
-  process(tiles: Tile[], agent: Enemy, dt: number): void {
+  process(tiles: Tile[], agent: IEnemy, dt: number): void {
     const surface = Manager.Instance.getSurface();
     const tile = tiles[this.index];
     const targets = this.getTiles(tile, agent);
@@ -18,7 +18,7 @@ export class WaterCheckpoint implements Checkpoint {
     if (targets.length > 0) {
       const target = targets[0];
       agent.entity.lookAt(target);
-      agent.interact(() => {
+      agent.AI.interact(() => {
         if (
           surface.getTile(target.getX(), target.getY())!.getType() ===
           TileType.Water
@@ -31,7 +31,7 @@ export class WaterCheckpoint implements Checkpoint {
     }
   }
 
-  private getTiles(middleTile: Tile, agent: Enemy) {
+  private getTiles(middleTile: Tile, agent: IEnemy) {
     const surface = Manager.Instance.getSurface();
     const tiles: Tile[] = [];
 

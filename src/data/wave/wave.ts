@@ -1,5 +1,5 @@
 import Manager from "../manager";
-import Enemy from "../entity/enemies/enemy";
+import Enemy from "../entity/enemies/regular";
 import SpawnGroup from "./SpawnGroup";
 import { AgentCategory } from "../entity/entity";
 import { combineCheckpoints, maybe } from "../terrain/checkpoint";

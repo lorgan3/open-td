@@ -1,6 +1,7 @@
 import { RenderFn } from ".";
 import { Status } from "../../../data/entity/enemies";
-import Enemy, { COOLDOWN } from "../../../data/entity/enemies/enemy";
+import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
+import Enemy from "../../../data/entity/enemies/regular";
 
 const ONE_FOURTH = 1 / 4;
 
@@ -12,7 +13,7 @@ const render: RenderFn<Enemy> = (renderer, enemy, htmlElement) => {
   const time = (renderer.getTime() % 13) / 3;
 
   let rotation = entity.getRotation();
-  if (enemy.isBusy()) {
+  if (enemy.AI.isBusy()) {
     rotation += Math.sin(((renderer.getTime() % COOLDOWN) / COOLDOWN) * 5) * 20;
   }
 

@@ -29,7 +29,7 @@ class ElectricFence implements ITower {
     }
 
     const damage = DAMAGE * dt;
-    target.hit(damage);
+    target.AI.hit(damage);
 
     return damage;
   }

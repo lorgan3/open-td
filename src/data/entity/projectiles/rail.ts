@@ -58,7 +58,7 @@ class Rail implements Agent {
 
         return dist <= 0.5;
       })
-      .forEach((enemy) => (enemy.getAgent() as IEnemy).hit(this.damage));
+      .forEach((enemy) => (enemy.getAgent() as IEnemy).AI.hit(this.damage));
   }
 
   tick(dt: number) {

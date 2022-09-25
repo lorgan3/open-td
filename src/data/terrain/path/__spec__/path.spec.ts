@@ -1,5 +1,5 @@
 import Base from "../../../entity/base";
-import Enemy from "../../../entity/enemies/enemy";
+import Enemy from "../../../entity/enemies/regular";
 import {
   getStaticEntityCheckpoints,
   StaticEntityCheckpoint,

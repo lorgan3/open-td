@@ -30,7 +30,7 @@ class Rocket implements Agent {
     const dist = ARC_HEIGHT * 2 + Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     this.travelTime = dist / SPEED;
 
-    const index = this.target.getFuturePosition(this.travelTime);
+    const index = this.target.AI.getFuturePosition(this.travelTime);
     const { x, y } = target.getPath().getCoordinates(index);
     this.targetX = x;
     this.targetY = y;
@@ -52,14 +52,14 @@ class Rocket implements Agent {
           return diffX * diffX + diffY * diffY < RANGE_SQUARED;
         })
         .forEach((enemy) => {
-          (enemy.getAgent() as IEnemy).hit(this.damage);
+          (enemy.getAgent() as IEnemy).AI.hit(this.damage);
           if (enemy.getAgent() === this.target) {
             hitTarget = true;
           }
         });
 
       if (!hitTarget) {
-        this.target.miss(this.damage);
+        this.target.AI.miss(this.damage);
       }
     }
 

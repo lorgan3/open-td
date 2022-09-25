@@ -32,7 +32,7 @@ class LaserBeam implements Agent {
     );
     this.entity.setRotation((direction * 180) / Math.PI);
 
-    enemy.hit(damage);
+    enemy.AI.hit(damage);
     enemy.lightOnFire && enemy.lightOnFire();
   }
 

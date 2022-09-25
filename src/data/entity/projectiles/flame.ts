@@ -28,7 +28,7 @@ class Flame implements Agent {
     this.entity.setX(enemy.entity.getAlignedX());
     this.entity.setY(enemy.entity.getAlignedY());
 
-    enemy.hit(damage);
+    enemy.AI.hit(damage);
     enemy.lightOnFire && enemy.lightOnFire();
   }
 

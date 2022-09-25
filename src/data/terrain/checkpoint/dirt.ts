@@ -1,5 +1,5 @@
 import { Checkpoint, CheckpointFn } from ".";
-import Enemy from "../../entity/enemies/enemy";
+import { IEnemy } from "../../entity/enemies";
 import Manager from "../../manager";
 import Tile, { TileType } from "../tile";
 
@@ -8,11 +8,11 @@ const CONVERTIBLE_TILES = new Set([TileType.Grass, TileType.Snow]);
 export class DirtCheckpoint implements Checkpoint {
   constructor(public index: number) {}
 
-  isCleared(tiles: Tile[], agent: Enemy): boolean {
+  isCleared(tiles: Tile[], agent: IEnemy): boolean {
     return !CONVERTIBLE_TILES.has(tiles[this.index - 1].getType());
   }
 
-  process(tiles: Tile[], agent: Enemy, dt: number): void {
+  process(tiles: Tile[], agent: IEnemy, dt: number): void {
     const surface = Manager.Instance.getSurface();
     const tile = tiles[this.index - 1];
 

@@ -2,7 +2,7 @@ import { MessageFn } from "../renderers/api";
 import BuildController from "./buildController";
 import Controller from "./controller";
 import Base from "./entity/base";
-import Enemy from "./entity/enemies/enemy";
+import { IEnemy } from "./entity/enemies";
 import { Agent, AgentCategory } from "./entity/entity";
 import {
   EventHandler,
@@ -128,12 +128,12 @@ class Manager {
     });
   }
 
-  spawnEnemy(enemy: Enemy) {
+  spawnEnemy(enemy: IEnemy) {
     this.surface.spawn(enemy);
     this.triggerStatUpdate();
   }
 
-  despawnEnemy(enemy: Enemy) {
+  despawnEnemy(enemy: IEnemy) {
     if (this.surface.despawn(enemy)) {
       this.moneyController.registerEnemyKill(enemy);
 
