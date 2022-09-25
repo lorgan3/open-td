@@ -1,5 +1,5 @@
-import Path from "../../terrain/path";
-import Pathfinder from "../../terrain/pathfinder";
+import Path from "../../terrain/path/path";
+import Pathfinder from "../../terrain/path/pathfinder";
 import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
 import SpawnGroup from "../SpawnGroup";

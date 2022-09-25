@@ -1,5 +1,5 @@
-import Surface from "./surface";
-import Tile, { TileType } from "./tile";
+import Surface from "../surface";
+import Tile, { TileType } from "../tile";
 import Heap from "heap";
 import Path from "./path";
 

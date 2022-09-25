@@ -17,7 +17,7 @@ import PowerController, {
   POWER_CONSUMPTIONS,
   SPEED_BEACON_CONSUMPTION,
 } from "./powerController";
-import Pathfinder from "./terrain/pathfinder";
+import Pathfinder from "./terrain/path/pathfinder";
 import Surface from "./terrain/surface";
 import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
 import UnlocksController from "./UnlocksController";

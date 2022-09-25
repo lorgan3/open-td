@@ -1,4 +1,4 @@
-import Path from "../../terrain/path";
+import Path from "../../terrain/path/path";
 import { Agent } from "../entity";
 
 export interface IEnemy extends Agent {

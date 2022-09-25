@@ -1,7 +1,7 @@
-import { Agent } from "../entity/entity";
-import { Checkpoint } from "./checkpoint";
+import { Agent } from "../../entity/entity";
+import { Checkpoint } from "../checkpoint";
 import Pathfinder from "./pathfinder";
-import Tile from "./tile";
+import Tile from "../tile";
 
 interface Section {
   from: number;

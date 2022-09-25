@@ -1,6 +1,6 @@
 import Manager from "../manager";
-import Path from "../terrain/path";
-import Pathfinder from "../terrain/pathfinder";
+import Path from "../terrain/path/path";
+import Pathfinder from "../terrain/path/pathfinder";
 import Tile, { DiscoveryStatus } from "../terrain/tile";
 
 export enum SpawnGroupType {

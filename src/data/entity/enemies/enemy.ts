@@ -1,6 +1,6 @@
 import { IEnemy, Status } from ".";
 import Manager from "../../manager";
-import Path from "../../terrain/path";
+import Path from "../../terrain/path/path";
 import Tile from "../../terrain/tile";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 

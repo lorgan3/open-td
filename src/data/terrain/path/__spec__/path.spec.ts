@@ -1,13 +1,13 @@
-import Base from "../../entity/base";
-import Enemy from "../../entity/enemies/enemy";
+import Base from "../../../entity/base";
+import Enemy from "../../../entity/enemies/enemy";
 import {
   getStaticEntityCheckpoints,
   StaticEntityCheckpoint,
-} from "../checkpoint/staticEntity";
+} from "../../checkpoint/staticEntity";
 import Path from "../path";
 import Pathfinder from "../pathfinder";
-import Surface from "../surface";
-import Tile, { TileType } from "../tile";
+import Surface from "../../surface";
+import Tile, { TileType } from "../../tile";
 
 describe("path", () => {
   const speed = 1;
