@@ -1,11 +1,11 @@
 import { RenderFn } from ".";
 import { Status } from "../../../data/entity/enemies";
 import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
-import Enemy from "../../../data/entity/enemies/regular";
+import { IEnemy } from "../../../data/entity/enemies";
 
 const ONE_FOURTH = 1 / 4;
 
-const render: RenderFn<Enemy> = (renderer, enemy, htmlElement) => {
+const render: RenderFn<IEnemy> = (renderer, enemy, htmlElement) => {
   const entity = enemy.entity;
 
   const xOffset = (entity.getId() % 13) / 26 - ONE_FOURTH;

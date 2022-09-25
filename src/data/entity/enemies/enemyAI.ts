@@ -7,14 +7,14 @@ import { Agent } from "../entity";
 export const COOLDOWN = 600;
 
 class EnemyAI {
-  public hp = 100;
-  private predictedHp = this.hp;
-
+  private predictedHp;
   private cooldown = 0;
 
   private callback?: () => void;
 
-  constructor(private enemy: IEnemy) {}
+  constructor(private enemy: IEnemy, public hp: number) {
+    this.predictedHp = hp;
+  }
 
   tick(dt: number) {
     if (this.cooldown < dt && this.callback) {

@@ -90,6 +90,8 @@ class MoneyController {
   private getEnemyValue(enemy: IEnemy): number {
     switch (enemy.getType()) {
       case EntityType.Slime:
+        return 5;
+      case EntityType.Runner:
         return 3;
       default:
         throw new Error("Entity is not an enemy");

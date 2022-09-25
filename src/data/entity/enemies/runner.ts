@@ -6,10 +6,10 @@ import EnemyAI from "./enemyAI";
 
 const ON_FIRE_TIME = 3000;
 const FIRE_DAMAGE = 0.01;
-const SPEED = 0.01;
-const HP = 100;
+const SPEED = 0.025;
+const HP = 30;
 
-class Regular implements IEnemy {
+class Runner implements IEnemy {
   public entity: Entity;
   public category = AgentCategory.Enemy;
   private status = Status.Normal;
@@ -28,11 +28,11 @@ class Regular implements IEnemy {
   }
 
   getDamage() {
-    return 10;
+    return 6;
   }
 
   getType(): EntityType {
-    return EntityType.Slime;
+    return EntityType.Runner;
   }
 
   getPath() {
@@ -66,4 +66,4 @@ class Regular implements IEnemy {
   }
 }
 
-export default Regular;
+export default Runner;

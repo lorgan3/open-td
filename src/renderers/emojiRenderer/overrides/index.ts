@@ -2,7 +2,7 @@ import { Agent, EntityType } from "../../../data/entity/entity";
 import Renderer from "../renderer";
 import renderRail from "./rail";
 import renderFlame from "./flame";
-import renderRegularEnemy from "./regularEnemy";
+import renderEnemy from "./genericEnemy";
 import renderBlueprint from "./blueprint";
 import renderLaserBeam from "./laserBeam";
 
@@ -15,7 +15,8 @@ export type RenderFn<T extends Agent> = (
 export const OVERRIDES: Partial<Record<EntityType, RenderFn<any>>> = {
   [EntityType.Rail]: renderRail,
   [EntityType.Flame]: renderFlame,
-  [EntityType.Slime]: renderRegularEnemy,
+  [EntityType.Slime]: renderEnemy,
+  [EntityType.Runner]: renderEnemy,
   [EntityType.Blueprint]: renderBlueprint,
   [EntityType.LaserBeam]: renderLaserBeam,
 };
