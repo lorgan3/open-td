@@ -1,6 +1,8 @@
 import { TileType } from "../tile";
 
-export const DEFAULT_LAND_BASED_COSTS: Partial<Record<TileType, number>> = {
+export type PathMap = Partial<Record<TileType, number>>;
+
+export const DEFAULT_LAND_BASED_COSTS: PathMap = {
   [TileType.Grass]: 3,
   [TileType.Water]: 20,
   [TileType.Stone]: 4,
@@ -16,21 +18,21 @@ export const DEFAULT_LAND_BASED_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Snow]: 3.5,
   [TileType.Ice]: 10,
   [TileType.PlayerBuilding]: 3,
-  [TileType.NaturalFeature]: 5,
+  [TileType.Tree]: 5,
+  [TileType.Rock]: 5,
   [TileType.Base]: Number.EPSILON,
 };
 
-export const DEFAULT_LAND_BASED_MULTIPLIERS: Partial<Record<TileType, number>> =
-  {
-    [TileType.Fence]: 5,
-    [TileType.ElectricFence]: 40,
-    [TileType.Wall]: 66.666,
-    [TileType.Freezer]: 0.5,
-    [TileType.Obstructed]: 500,
-    [TileType.PlayerBuilding]: -10,
-  };
+export const DEFAULT_LAND_BASED_MULTIPLIERS: PathMap = {
+  [TileType.Fence]: 5,
+  [TileType.ElectricFence]: 40,
+  [TileType.Wall]: 66.666,
+  [TileType.Freezer]: 0.5,
+  [TileType.Obstructed]: 500,
+  [TileType.PlayerBuilding]: -10,
+};
 
-export const DEFAULT_SKY_BASED_COSTS: Partial<Record<TileType, number>> = {
+export const DEFAULT_SKY_BASED_COSTS: PathMap = {
   [TileType.Grass]: 3,
   [TileType.Water]: 3,
   [TileType.Stone]: 3,
@@ -46,17 +48,18 @@ export const DEFAULT_SKY_BASED_COSTS: Partial<Record<TileType, number>> = {
   [TileType.Snow]: 3,
   [TileType.Ice]: 3,
   [TileType.PlayerBuilding]: 3,
-  [TileType.NaturalFeature]: 3,
+  [TileType.Tree]: 3,
+  [TileType.Rock]: 3,
   [TileType.Base]: Number.EPSILON,
 };
 
-export const DEFAULT_SKY_BASED_MULTIPLIERS: Partial<Record<TileType, number>> =
-  {
-    [TileType.Fence]: 4,
-    [TileType.ElectricFence]: 4,
-    [TileType.Wall]: 4,
-    [TileType.NaturalFeature]: 4,
-    [TileType.Freezer]: 0.5,
-    [TileType.Obstructed]: 10,
-    [TileType.PlayerBuilding]: -10,
-  };
+export const DEFAULT_SKY_BASED_MULTIPLIERS: PathMap = {
+  [TileType.Fence]: 4,
+  [TileType.ElectricFence]: 4,
+  [TileType.Wall]: 4,
+  [TileType.Tree]: 4,
+  [TileType.Rock]: 4,
+  [TileType.Freezer]: 0.5,
+  [TileType.Obstructed]: 10,
+  [TileType.PlayerBuilding]: -10,
+};

@@ -28,8 +28,9 @@ export enum TileType {
   Sand = 13,
   Ice = 14,
   PlayerBuilding = 15,
-  NaturalFeature = 16,
-  Base = 17,
+  Tree = 16,
+  Rock = 17,
+  Base = 18,
 }
 
 export const FREE_TILES = new Set([
@@ -45,7 +46,8 @@ export const FREE_TILES_INCLUDING_WATER = new Set([
   TileType.Water,
   TileType.Ice,
   TileType.Bridge,
-  TileType.NaturalFeature,
+  TileType.Tree,
+  TileType.Rock,
 ]);
 
 export const FREE_TILES_INCLUDING_BUILDINGS = new Set([
@@ -68,8 +70,8 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.Freezer]: TileType.Freezer,
   [EntityType.Radar]: TileType.Base,
   [EntityType.PowerPlant]: TileType.Base,
-  [EntityType.Tree]: TileType.NaturalFeature,
-  [EntityType.Rock]: TileType.NaturalFeature,
+  [EntityType.Tree]: TileType.Tree,
+  [EntityType.Rock]: TileType.Rock,
   [EntityType.Armory]: TileType.Base,
   [EntityType.Base]: TileType.Base,
   [EntityType.Market]: TileType.Base,
