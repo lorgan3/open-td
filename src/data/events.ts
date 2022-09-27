@@ -36,7 +36,6 @@ export interface StatUpdate {
   power: number;
   production: number;
   consumption: number;
-  totalEnemies: number;
   remainingEnemies: number;
   inProgress: boolean;
 }

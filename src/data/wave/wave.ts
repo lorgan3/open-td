@@ -1,100 +1,38 @@
-import Manager from "../manager";
+import Runner from "../entity/enemies/runner";
 import SpawnGroup from "./SpawnGroup";
-import { AgentCategory } from "../entity/entity";
-
-const MIN_SPAWN_INTERVAL = 50;
-const SPAWN_INTERVAL = 350;
 
 export const MAX_SPAWN_GROUPS = 3;
 
 class Wave {
-  private time = 0;
-  private lastActivation = 0;
-  private intensity: number;
-
-  constructor(
-    private spawnGroups: SpawnGroup[],
-    private initialIntensity: number
-  ) {
-    this.intensity = initialIntensity;
-  }
+  constructor(private spawnGroups: SpawnGroup[]) {}
 
   isDone() {
-    return (
-      this.intensity === 0 &&
-      Manager.Instance.getSurface().getEntitiesForCategory(AgentCategory.Enemy)
-        .size === 0
-    );
+    return !this.spawnGroups.find((spawnGroup) => spawnGroup.getEnergy() > 0);
   }
 
   getSpawnGroups() {
     return this.spawnGroups;
   }
 
-  getInitialIntensity() {
-    return this.initialIntensity;
-  }
-
-  private getNextUnitToSpawn() {
-    const spawnGroup =
-      this.spawnGroups[this.intensity % this.spawnGroups.length];
-
-    if (
-      Math.random() * Math.min((spawnGroup.getStrength() - 1) / 5, 1.5) <
-      0.75
-    ) {
-      this.intensity--;
-    }
-
-    return spawnGroup.getNextUnit();
-  }
-
   tick(dt: number) {
-    this.time += dt;
-
-    if (this.intensity === 0) {
-      return;
-    }
-
-    if (
-      this.time >=
-      this.lastActivation +
-        MIN_SPAWN_INTERVAL +
-        SPAWN_INTERVAL / this.spawnGroups.length
-    ) {
-      this.lastActivation = this.time;
-      const enemy = this.getNextUnitToSpawn();
-      Manager.Instance.spawnEnemy(enemy);
-    }
+    this.spawnGroups.forEach((spawnGroup) => spawnGroup.tick(dt));
   }
 
-  static fromStaticSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
-    const enemyAmount = 5 + 2 ** level;
+  static fromSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
+    const enemyAmount = ((5 + 2 ** level) * Runner.cost) / spawnGroups.length;
 
-    if (level < spawnGroups.length) {
-      return new Wave([spawnGroups[level]], enemyAmount);
-    }
-
-    let value = level - spawnGroups.length;
-    if (!(value & ((1 << spawnGroups.length) - 1))) {
-      value = (value % spawnGroups.length) + 1;
-    }
-    const spawnGroupsThisWave: SpawnGroup[] = [];
-
-    // Use binary to determine which spawnGroups become active, eg: value = 5 => 101b => spawnGroups[0] and [3] become active
-    spawnGroups.forEach((spawnGroup, index) => {
-      if (value & (1 << index)) {
-        spawnGroupsThisWave.push(spawnGroup);
-      }
+    spawnGroups.forEach((spawnGroup, i) => {
+      spawnGroup.setParameters(
+        Runner,
+        enemyAmount,
+        350,
+        i * 2000,
+        Number.POSITIVE_INFINITY,
+        350
+      );
     });
 
-    return new Wave(spawnGroupsThisWave, enemyAmount);
-  }
-
-  static fromDynamicSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
-    const enemyAmount = 5 + 2 ** level;
-
-    return new Wave(spawnGroups, enemyAmount);
+    return new Wave(spawnGroups);
   }
 }
 

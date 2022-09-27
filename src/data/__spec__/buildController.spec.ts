@@ -1,9 +1,8 @@
-import BuildController from "../../buildController";
-import Blueprint from "../../entity/Blueprint";
-import { EntityType } from "../../entity/entity";
-import placeables, { ARMORY, DEMOLISH, TOWER } from "../../placeables";
-import Surface from "../../terrain/surface";
-import Tile from "../../terrain/tile";
+import BuildController from "../buildController";
+import Blueprint from "../entity/Blueprint";
+import { ARMORY, DEMOLISH, TOWER } from "../placeables";
+import Surface from "../terrain/surface";
+import Tile from "../terrain/tile";
 
 describe("buildController", () => {
   const emptySet = new Set<Tile>();

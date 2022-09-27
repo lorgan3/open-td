@@ -120,7 +120,6 @@ class Manager {
       consumption: this.powerController.getConsumption(),
       power: this.powerController.getPower(),
       remainingEnemies,
-      totalEnemies: this.wave ? this.wave.getInitialIntensity() : 0,
       inProgress: remainingEnemies !== 0,
     });
   }
@@ -138,7 +137,7 @@ class Manager {
         AgentCategory.Enemy
       ).size;
 
-      if (remainingEnemies === 0) {
+      if (remainingEnemies === 0 && this.wave?.isDone()) {
         this.end();
       }
 
@@ -241,7 +240,7 @@ class Manager {
       this.nextSpawnGroup = undefined;
     }
 
-    this.wave = Wave.fromDynamicSpawnGroups(this.level, this.spawnGroups);
+    this.wave = Wave.fromSpawnGroups(this.level, this.spawnGroups);
 
     this.level++;
 

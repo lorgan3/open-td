@@ -23,6 +23,7 @@ class Regular implements IEnemy {
   public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
   public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
   public static readonly type = EntityType.Slime;
+  public static readonly cost = 7;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;

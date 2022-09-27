@@ -28,6 +28,7 @@ class Runner implements IEnemy {
   public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
   public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
   public static readonly type = EntityType.Runner;
+  public static readonly cost = 5;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;

@@ -17,6 +17,7 @@ export interface IEnemyStatics {
   readonly pathCosts: PathMap;
   readonly pathMultipliers: PathMap;
   readonly type: EntityType;
+  readonly cost: number;
   new (tile: Tile, path: Path): IEnemy;
 }
 
