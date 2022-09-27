@@ -47,7 +47,7 @@ class Path {
         if (checkpoint.isCleared(this.tiles, agent)) {
           this.checkpoints.shift();
         } else {
-          this.index = end - 1;
+          this.index = checkpoint.index - 1;
           return { from: this.tiles[this.index], to, step: 0 };
         }
       } else {
