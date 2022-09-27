@@ -17,17 +17,19 @@ export class StaticEntityCheckpoint implements Checkpoint {
   }
 }
 
-export const getStaticEntityCheckpoints: CheckpointFn = (tiles) => {
-  const checkpoints: StaticEntityCheckpoint[] = [];
-  tiles.forEach((tile, index) => {
-    if (tile.hasStaticEntity()) {
-      if (
-        DESTRUCTIBLE_ENTITIES.has(tile.getStaticEntity().getAgent().getType())
-      ) {
-        checkpoints.push(new StaticEntityCheckpoint(index));
+export const staticCheckpointFactory =
+  (destructibleEntities = DESTRUCTIBLE_ENTITIES): CheckpointFn =>
+  (tiles) => {
+    const checkpoints: StaticEntityCheckpoint[] = [];
+    tiles.forEach((tile, index) => {
+      if (tile.hasStaticEntity()) {
+        if (
+          destructibleEntities.has(tile.getStaticEntity().getAgent().getType())
+        ) {
+          checkpoints.push(new StaticEntityCheckpoint(index));
+        }
       }
-    }
-  });
+    });
 
-  return checkpoints;
-};
+    return checkpoints;
+  };

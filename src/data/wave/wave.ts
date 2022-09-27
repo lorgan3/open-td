@@ -1,11 +1,7 @@
 import Manager from "../manager";
-import Enemy from "../entity/enemies/regular";
 import SpawnGroup from "./SpawnGroup";
 import { AgentCategory } from "../entity/entity";
-import { combineCheckpoints, maybe } from "../terrain/checkpoint";
-import { getStaticEntityCheckpoints } from "../terrain/checkpoint/staticEntity";
-import { getWaterCheckpoints } from "../terrain/checkpoint/water";
-import { getDirtCheckpoints } from "../terrain/checkpoint/dirt";
+import Runner from "../entity/enemies/runner";
 
 const MIN_SPAWN_INTERVAL = 50;
 const SPAWN_INTERVAL = 350;
@@ -52,16 +48,10 @@ class Wave {
       this.intensity--;
     }
 
-    path.setCheckpoints(
-      combineCheckpoints(
-        path.getTiles(),
-        getStaticEntityCheckpoints,
-        maybe(0.5, getDirtCheckpoints),
-        maybe(0.1, getWaterCheckpoints)
-      )
-    );
+    const unit = new Runner(path.getTile(), path);
+    unit.initializePath();
 
-    return new Enemy(path.getTile(), path);
+    return unit;
   }
 
   tick(dt: number) {

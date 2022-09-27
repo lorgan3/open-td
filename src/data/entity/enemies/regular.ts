@@ -1,8 +1,18 @@
 import { IEnemy, Status } from ".";
+import { combineCheckpoints, maybe } from "../../terrain/checkpoint";
+import { getDirtCheckpoints } from "../../terrain/checkpoint/dirt";
+import { staticCheckpointFactory } from "../../terrain/checkpoint/staticEntity";
+import { getWaterCheckpoints } from "../../terrain/checkpoint/water";
+import {
+  DEFAULT_LAND_BASED_COSTS,
+  DEFAULT_LAND_BASED_MULTIPLIERS,
+} from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
 import Tile from "../../terrain/tile";
 import Entity, { AgentCategory, EntityType } from "../entity";
 import EnemyAI from "./enemyAI";
+
+const getStaticEntityCheckpoints = staticCheckpointFactory();
 
 const ON_FIRE_TIME = 3000;
 const FIRE_DAMAGE = 0.01;
@@ -10,6 +20,9 @@ const SPEED = 0.01;
 const HP = 100;
 
 class Regular implements IEnemy {
+  public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
+  public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
+
   public entity: Entity;
   public category = AgentCategory.Enemy;
   private status = Status.Normal;
@@ -18,9 +31,20 @@ class Regular implements IEnemy {
   private ai: EnemyAI;
 
   constructor(tile: Tile, private path: Path) {
-    path.setSpeed(SPEED);
     this.entity = new Entity(tile.getX(), tile.getY(), this);
     this.ai = new EnemyAI(this, HP);
+  }
+
+  initializePath() {
+    this.path.setSpeed(SPEED);
+    this.path.setCheckpoints(
+      combineCheckpoints(
+        this.path.getTiles(),
+        getStaticEntityCheckpoints,
+        maybe(0.5, getDirtCheckpoints),
+        maybe(0.1, getWaterCheckpoints)
+      )
+    );
   }
 
   get AI() {

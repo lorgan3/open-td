@@ -1,7 +1,7 @@
 import Base from "../../../entity/base";
 import Enemy from "../../../entity/enemies/regular";
 import {
-  getStaticEntityCheckpoints,
+  staticCheckpointFactory,
   StaticEntityCheckpoint,
 } from "../../checkpoint/staticEntity";
 import Path from "../path";
@@ -188,6 +188,7 @@ describe("path", () => {
   });
 
   it("creates checkpoints for all destructible entities", () => {
+    const getStaticEntityCheckpoints = staticCheckpointFactory();
     const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
     const firstBase = surface.getTile(1, 0)!;
 
