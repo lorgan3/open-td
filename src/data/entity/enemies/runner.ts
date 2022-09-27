@@ -27,6 +27,7 @@ const HP = 30;
 class Runner implements IEnemy {
   public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
   public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
+  public static readonly type = EntityType.Runner;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
@@ -54,7 +55,7 @@ class Runner implements IEnemy {
   }
 
   getType(): EntityType {
-    return EntityType.Runner;
+    return Runner.type;
   }
 
   getPath() {

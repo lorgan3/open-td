@@ -22,6 +22,7 @@ const HP = 100;
 class Regular implements IEnemy {
   public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
   public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
+  public static readonly type = EntityType.Slime;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
@@ -56,7 +57,7 @@ class Regular implements IEnemy {
   }
 
   getType(): EntityType {
-    return EntityType.Slime;
+    return Regular.type;
   }
 
   getPath() {

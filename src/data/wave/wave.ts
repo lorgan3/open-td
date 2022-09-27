@@ -1,7 +1,6 @@
 import Manager from "../manager";
 import SpawnGroup from "./SpawnGroup";
 import { AgentCategory } from "../entity/entity";
-import Runner from "../entity/enemies/runner";
 
 const MIN_SPAWN_INTERVAL = 50;
 const SPAWN_INTERVAL = 350;
@@ -39,7 +38,6 @@ class Wave {
   private getNextUnitToSpawn() {
     const spawnGroup =
       this.spawnGroups[this.intensity % this.spawnGroups.length];
-    const path = spawnGroup.getNextSpawnPoint().clone();
 
     if (
       Math.random() * Math.min((spawnGroup.getStrength() - 1) / 5, 1.5) <
@@ -48,10 +46,7 @@ class Wave {
       this.intensity--;
     }
 
-    const unit = new Runner(path.getTile(), path);
-    unit.initializePath();
-
-    return unit;
+    return spawnGroup.getNextUnit();
   }
 
   tick(dt: number) {

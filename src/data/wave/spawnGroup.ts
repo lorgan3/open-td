@@ -1,3 +1,5 @@
+import { IEnemyStatics } from "../entity/enemies";
+import Runner from "../entity/enemies/runner";
 import { EntityType } from "../entity/entity";
 import PathData from "../terrain/path/pathData";
 import Pathfinder from "../terrain/path/pathfinder";
@@ -30,8 +32,13 @@ class SpawnGroup {
     return this.pathData.get(type)!;
   }
 
+  private getNextUnitClass(): IEnemyStatics {
+    return Runner;
+  }
+
   getSpawnPoints() {
-    return this.getPathData(EntityType.Runner).getPaths();
+    const clazz = this.getNextUnitClass();
+    return this.getPathData(clazz.type).getPaths();
   }
 
   getNextSpawnPoint() {
@@ -39,6 +46,16 @@ class SpawnGroup {
     const spawnPoint = spawnPoints[this.index];
     this.index = (this.index + 1) % spawnPoints.length;
     return spawnPoint;
+  }
+
+  getNextUnit() {
+    const clazz = this.getNextUnitClass();
+    const path = this.getNextSpawnPoint().clone();
+
+    const unit = new clazz(path.getTile(), path);
+    unit.initializePath();
+
+    return unit;
   }
 
   grow() {
