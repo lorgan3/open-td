@@ -63,12 +63,7 @@ class SpawnGroup {
 
     this.spawnPoints = pathfinder
       .getHivePath(spawnPoints, target)
-      .filter((path): path is Path => !!path)
-      .map((path) => {
-        path.setSpeed(0.01);
-
-        return path;
-      });
+      .filter((path): path is Path => !!path);
   }
 
   static fromTiles(spawnPoints: Tile[], target: Tile, pathfinder: Pathfinder) {
@@ -76,11 +71,6 @@ class SpawnGroup {
       pathfinder
         .getHivePath(spawnPoints, target)
         .filter((path): path is Path => !!path)
-        .map((path) => {
-          path.setSpeed(0.01);
-
-          return path;
-        })
     );
   }
 }
