@@ -156,10 +156,7 @@ class Pathfinder {
     const visitedTiles: Record<string, number> = {};
 
     const multiplierFn = (tile: Tile) => {
-      return (
-        (visitedTiles[tile.getHash()] ?? 1) *
-        (DEFAULT_LAND_BASED_MULTIPLIERS[tile.getType()] ?? 1)
-      );
+      return (visitedTiles[tile.getHash()] ?? 1) * this.costMultiplier(tile);
     };
 
     return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {
