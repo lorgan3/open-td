@@ -1,33 +1,44 @@
-import Manager from "../manager";
-import Path from "../terrain/path/path";
+import { EntityType } from "../entity/entity";
+import PathData from "../terrain/path/pathData";
 import Pathfinder from "../terrain/path/pathfinder";
+import Surface from "../terrain/surface";
 import Tile, { DiscoveryStatus } from "../terrain/tile";
-
-export enum SpawnGroupType {
-  Teleport = 0,
-}
 
 class SpawnGroup {
   private index = 0;
+  private pathData = new Map<EntityType, PathData>();
+  private strength = 1;
 
   constructor(
-    private spawnPoints: Path[],
-    private type = SpawnGroupType.Teleport,
-    private strength = 1
+    private spawnPoints: Tile[],
+    private target: Tile,
+    private surface: Surface
   ) {}
 
+  private getPathData(type: EntityType) {
+    if (!this.pathData.has(type)) {
+      this.pathData.set(
+        type,
+        new PathData(
+          new Pathfinder(this.surface),
+          this.spawnPoints,
+          this.target
+        )
+      );
+    }
+
+    return this.pathData.get(type)!;
+  }
+
   getSpawnPoints() {
-    return this.spawnPoints;
+    return this.getPathData(EntityType.Runner).getPaths();
   }
 
   getNextSpawnPoint() {
-    const spawnPoint = this.spawnPoints[this.index];
-    this.index = (this.index + 1) % this.spawnPoints.length;
+    const spawnPoints = this.getSpawnPoints();
+    const spawnPoint = spawnPoints[this.index];
+    this.index = (this.index + 1) % spawnPoints.length;
     return spawnPoint;
-  }
-
-  getType() {
-    return this.type;
   }
 
   grow() {
@@ -40,7 +51,8 @@ class SpawnGroup {
 
   // Returns a number [0, 1] based on how many of its tiles are already discovered
   isExposed() {
-    const exposedTiles = this.spawnPoints.reduce(
+    const spawnPoints = this.getSpawnPoints();
+    const exposedTiles = spawnPoints.reduce(
       (sum, path) =>
         path.getTile(0).getDiscoveryStatus() !== DiscoveryStatus.Undiscovered
           ? sum + 1
@@ -48,30 +60,15 @@ class SpawnGroup {
       0
     );
 
-    return exposedTiles / this.spawnPoints.length;
+    return exposedTiles / spawnPoints.length;
   }
 
-  rePath(pathfinder: Pathfinder) {
-    const spawnPoints = this.spawnPoints.map((path) => path.getTile(0));
-    const oldTarget = this.spawnPoints[0].getTile(
-      this.spawnPoints[0].getLength() - 1
-    );
-    const target = Manager.Instance.getSurface().getTile(
-      oldTarget.getX(),
-      oldTarget.getY()
-    )!;
-
-    this.spawnPoints = pathfinder
-      .getHivePath(spawnPoints, target)
-      .filter((path): path is Path => !!path);
+  rePath() {
+    this.pathData.forEach((pathData) => pathData.update());
   }
 
-  static fromTiles(spawnPoints: Tile[], target: Tile, pathfinder: Pathfinder) {
-    return new SpawnGroup(
-      pathfinder
-        .getHivePath(spawnPoints, target)
-        .filter((path): path is Path => !!path)
-    );
+  static fromTiles(spawnPoints: Tile[], target: Tile, surface: Surface) {
+    return new SpawnGroup(spawnPoints, target, surface);
   }
 }
 

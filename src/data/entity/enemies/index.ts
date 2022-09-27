@@ -1,5 +1,6 @@
 import { PathMap } from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
+import Tile from "../../terrain/tile";
 import { Agent } from "../entity";
 import EnemyAI from "./enemyAI";
 
@@ -15,6 +16,7 @@ export interface IEnemy extends Agent {
 export interface IEnemyStatics {
   readonly pathCosts: PathMap;
   readonly pathMultipliers: PathMap;
+  new (tile: Tile, path: Path): IEnemy;
 }
 
 export enum Status {

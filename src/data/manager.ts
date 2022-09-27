@@ -17,7 +17,6 @@ import PowerController, {
   POWER_CONSUMPTIONS,
   SPEED_BEACON_CONSUMPTION,
 } from "./powerController";
-import Pathfinder from "./terrain/path/pathfinder";
 import Surface from "./terrain/surface";
 import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
 import UnlocksController from "./UnlocksController";
@@ -41,7 +40,6 @@ class Manager {
   private buildController: BuildController;
   private unlocksController: UnlocksController;
 
-  private pathfinder: Pathfinder;
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
   private nextSpawnGroup: SpawnGroup | undefined;
@@ -66,7 +64,6 @@ class Manager {
     );
     this.buildController = new BuildController(surface);
     this.unlocksController = new UnlocksController();
-    this.pathfinder = new Pathfinder(surface);
 
     if (basePoint.hasStaticEntity()) {
       basePoint.clearStaticEntity();
@@ -223,7 +220,7 @@ class Manager {
       } else {
         // ...and make the others stronger
         spawnGroup.grow();
-        spawnGroup.rePath(this.pathfinder);
+        spawnGroup.rePath();
       }
     }
 
@@ -306,7 +303,7 @@ class Manager {
           this.nextSpawnGroup = SpawnGroup.fromTiles(
             [tile, tile, tile, tile],
             this.base.getTile(),
-            this.pathfinder
+            this.surface
           );
 
           spawned = true;
@@ -359,7 +356,7 @@ class Manager {
             .find((path) => path.isAffectedByTiles(affectedTiles));
 
         if (!!shouldRePath) {
-          spawnGroup.rePath(this.pathfinder);
+          spawnGroup.rePath();
         }
       }
     });
@@ -374,7 +371,7 @@ class Manager {
           .find((path) => path.isAffectedByTiles(affectedTiles));
 
       if (shouldRePath) {
-        nextSpawnGroup!.rePath(this.pathfinder);
+        nextSpawnGroup!.rePath();
       }
     }
   };
