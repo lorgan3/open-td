@@ -186,7 +186,19 @@ class Manager {
   }
 
   getIsStarted() {
-    return !!this.wave && !this.wave.isDone();
+    if (!this.wave) {
+      return false;
+    }
+
+    if (!this.wave.isDone()) {
+      return true;
+    }
+
+    const remainingEnemies = this.getSurface().getEntitiesForCategory(
+      AgentCategory.Enemy
+    ).size;
+
+    return remainingEnemies > 0;
   }
 
   canBuy(placeable: Placeable, amount = 1) {
