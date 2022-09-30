@@ -301,7 +301,7 @@ class Manager {
         direction,
         (tile) => {
           if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
-            backOff = 3;
+            backOff = 4;
             return true;
           }
 
