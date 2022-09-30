@@ -22,7 +22,7 @@ import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
 import UnlocksController from "./UnlocksController";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
-import Wave, { MAX_SPAWN_GROUPS } from "./wave/wave";
+import Wave from "./wave/wave";
 
 export enum Difficulty {
   Easy = "easy",
@@ -46,6 +46,7 @@ class Manager {
 
   private level = 0;
   private wave: Wave | undefined;
+  private timeSinceLastExpansion = 0;
 
   constructor(
     private difficulty: Difficulty,
@@ -221,6 +222,7 @@ class Manager {
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.update();
+    this.timeSinceLastExpansion++;
 
     for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
       const spawnGroup = this.spawnGroups[i];
@@ -287,10 +289,15 @@ class Manager {
       return this.nextSpawnGroup;
     }
 
-    if (this.spawnGroups.length >= MAX_SPAWN_GROUPS) {
+    const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
+    if (
+      this.spawnGroups.length > 0 &&
+      this.timeSinceLastExpansion < timeToExpansion
+    ) {
       return;
     }
 
+    this.timeSinceLastExpansion = 0;
     let direction = Math.random() * Math.PI * 2;
     let spawned = false;
     let backOff = 3;
