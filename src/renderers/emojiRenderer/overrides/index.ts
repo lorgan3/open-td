@@ -3,6 +3,7 @@ import Renderer from "../renderer";
 import renderRail from "./rail";
 import renderFlame from "./flame";
 import renderEnemy from "./genericEnemy";
+import renderFlier from "./flier";
 import renderBlueprint from "./blueprint";
 import renderLaserBeam from "./laserBeam";
 
@@ -17,6 +18,7 @@ export const OVERRIDES: Partial<Record<EntityType, RenderFn<any>>> = {
   [EntityType.Flame]: renderFlame,
   [EntityType.Slime]: renderEnemy,
   [EntityType.Runner]: renderEnemy,
+  [EntityType.Flier]: renderFlier,
   [EntityType.Blueprint]: renderBlueprint,
   [EntityType.LaserBeam]: renderLaserBeam,
 };

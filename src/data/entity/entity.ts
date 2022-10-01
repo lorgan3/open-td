@@ -47,20 +47,25 @@ export enum EntityType {
   DamageBeacon = 24,
   Laser = 25,
   LaserBeam = 26,
+  Flier = 27,
 }
 
-export const DESTRUCTIBLE_ENTITIES = new Set([
-  EntityType.Tower,
-  EntityType.Mortar,
-  EntityType.Flamethrower,
-  EntityType.Railgun,
+export const BASE_ENTITIES = new Set([
   EntityType.Base,
-  EntityType.Tree,
-  EntityType.Rock,
   EntityType.Radar,
   EntityType.PowerPlant,
   EntityType.Armory,
   EntityType.Market,
+]);
+
+export const DESTRUCTIBLE_ENTITIES = new Set([
+  ...BASE_ENTITIES,
+  EntityType.Tower,
+  EntityType.Mortar,
+  EntityType.Flamethrower,
+  EntityType.Railgun,
+  EntityType.Tree,
+  EntityType.Rock,
   EntityType.SpeedBeacon,
   EntityType.DamageBeacon,
   EntityType.Laser,

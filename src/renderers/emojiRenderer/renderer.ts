@@ -659,6 +659,8 @@ class Renderer implements IRenderer {
         return "🌀";
       case EntityType.Runner:
         return "🪳";
+      case EntityType.Flier:
+        return "🐝";
       default:
         return "";
     }
