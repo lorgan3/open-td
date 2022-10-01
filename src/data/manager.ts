@@ -343,6 +343,10 @@ class Manager {
     return this.difficulty;
   }
 
+  getIsBaseDestroyed() {
+    return this.base.isDestroyed();
+  }
+
   private end() {
     this.buildController.commit();
     this.base.regenerate();

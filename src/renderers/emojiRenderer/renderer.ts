@@ -319,6 +319,8 @@ class Renderer implements IRenderer {
   }
 
   private renderCoverage() {
+    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+
     if (!this.coverageMap) {
       this.coverageMap = document.createElement("div");
       this.coverageMap.style.opacity = "0.5";
@@ -372,7 +374,7 @@ class Renderer implements IRenderer {
       const content = this.surface
         .getRow(i)
         .map((tile) => {
-          if (!tile.isDiscovered() && !DEBUG) {
+          if (!tile.isDiscovered() && !revealEverything) {
             return "&nbsp;";
           }
 
@@ -426,7 +428,8 @@ class Renderer implements IRenderer {
   }
 
   private canMove(deltaX: number, deltaY: number) {
-    if (DEBUG) {
+    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+    if (revealEverything) {
       return true;
     }
 
@@ -461,7 +464,8 @@ class Renderer implements IRenderer {
     });
 
     const preventMovement = (deltaX: number, deltaY: number, event: Event) => {
-      if (DEBUG) {
+      const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+      if (revealEverything) {
         return;
       }
 
@@ -596,11 +600,15 @@ class Renderer implements IRenderer {
   }
 
   private getEmoji = (tile: Tile) => {
-    if (tile.getDiscoveryStatus() === DiscoveryStatus.Pending && !DEBUG) {
+    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+    if (
+      tile.getDiscoveryStatus() === DiscoveryStatus.Pending &&
+      !revealEverything
+    ) {
       return "🔍";
     }
 
-    if (!tile.isDiscovered() && !DEBUG) {
+    if (!tile.isDiscovered() && !revealEverything) {
       return "&nbsp;";
     }
 

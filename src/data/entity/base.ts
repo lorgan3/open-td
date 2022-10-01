@@ -96,6 +96,7 @@ class Base implements StaticAgent {
       Manager.Instance.showMessage("You lose!", {
         closable: false,
       });
+      Manager.Instance.getSurface().despawnStatic(this);
     } else {
       this.invincibleTime = INVINCIBLE_TIME;
       this.shockwave();
