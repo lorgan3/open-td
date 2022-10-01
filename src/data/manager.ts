@@ -66,11 +66,13 @@ class Manager {
     this.buildController = new BuildController(surface);
     this.unlocksController = new UnlocksController();
 
-    if (basePoint.hasStaticEntity()) {
-      basePoint.clearStaticEntity();
-    }
-
     this.base = new Base(basePoint);
+    this.surface.getEntityTiles(this.base).map((tile) => {
+      if (basePoint.hasStaticEntity()) {
+        basePoint.clearStaticEntity();
+      }
+    });
+
     surface.spawnStatic(this.base);
 
     this.addEventListener(GameEvent.SurfaceChange, this.onSurfaceChange);
