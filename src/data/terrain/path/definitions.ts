@@ -2,6 +2,12 @@ import { TileType } from "../tile";
 
 export type PathMap = Partial<Record<TileType, number>>;
 
+export const mapWithOverrides = (map: PathMap, overrides: PathMap) =>
+  ({
+    ...map,
+    ...overrides,
+  } as PathMap);
+
 export const DEFAULT_LAND_BASED_COSTS: PathMap = {
   [TileType.Grass]: 3,
   [TileType.Water]: 20,

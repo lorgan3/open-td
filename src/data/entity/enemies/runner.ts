@@ -3,9 +3,10 @@ import { staticCheckpointFactory } from "../../terrain/checkpoint/staticEntity";
 import {
   DEFAULT_LAND_BASED_COSTS,
   DEFAULT_LAND_BASED_MULTIPLIERS,
+  mapWithOverrides,
 } from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
-import Tile from "../../terrain/tile";
+import Tile, { TileType } from "../../terrain/tile";
 import Entity, {
   AgentCategory,
   DESTRUCTIBLE_ENTITIES,
@@ -25,8 +26,14 @@ const SPEED = 0.025;
 const HP = 30;
 
 class Runner implements IEnemy {
-  public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
-  public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
+  public static readonly pathCosts = mapWithOverrides(
+    DEFAULT_LAND_BASED_COSTS,
+    { [TileType.Tree]: 3 }
+  );
+  public static readonly pathMultipliers = mapWithOverrides(
+    DEFAULT_LAND_BASED_MULTIPLIERS,
+    { [TileType.Water]: 2 }
+  );
   public static readonly type = EntityType.Runner;
   public static readonly cost = 5;
 
