@@ -48,6 +48,7 @@ export enum EntityType {
   Laser = 25,
   LaserBeam = 26,
   Flier = 27,
+  Tank = 28,
 }
 
 export const BASE_ENTITIES = new Set([

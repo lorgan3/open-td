@@ -95,6 +95,8 @@ class MoneyController {
         return 3;
       case EntityType.Flier:
         return 6;
+      case EntityType.Tank:
+        return 8;
       default:
         throw new Error("Entity is not an enemy");
     }
