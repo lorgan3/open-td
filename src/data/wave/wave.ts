@@ -1,4 +1,3 @@
-import Regular from "../entity/enemies/regular";
 import Runner from "../entity/enemies/runner";
 import SpawnGroup from "./SpawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
@@ -51,7 +50,6 @@ class Wave {
           : Number.POSITIVE_INFINITY;
 
       spawnGroup.setParameters(
-        Math.random() > 0.5 ? Runner : Regular,
         energy,
         normalDistributionRandom() * SPAWN_DISTRIBUTION + MIN_SPAWN_INTERVAL,
         spawnDelay,

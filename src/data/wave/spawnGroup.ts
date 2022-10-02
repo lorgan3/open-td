@@ -28,15 +28,17 @@ class SpawnGroup {
     private surface: Surface
   ) {}
 
+  setUnit(unit: IEnemyStatics) {
+    this.unit = unit;
+  }
+
   setParameters(
-    unit: IEnemyStatics,
     energy: number,
     spawnInterval: number,
     spawnDelay: number,
     burstSize: number,
     burstInterval: number
   ) {
-    this.unit = unit;
     this.energy = energy;
     this.spawnInterval = spawnInterval;
     this.spawnDelay = spawnDelay;

@@ -3,6 +3,8 @@ import BuildController from "./buildController";
 import Controller from "./controller";
 import Base from "./entity/base";
 import { IEnemy } from "./entity/enemies";
+import Regular from "./entity/enemies/regular";
+import Runner from "./entity/enemies/runner";
 import { Agent, AgentCategory } from "./entity/entity";
 import {
   EventHandler,
@@ -142,6 +144,10 @@ class Manager {
 
       if (remainingEnemies === 0 && this.wave?.isDone()) {
         this.end();
+
+        this.spawnGroups.forEach((spawnGroup) =>
+          spawnGroup.setUnit(Math.random() > 0.5 ? Runner : Regular)
+        );
       }
 
       this.triggerStatUpdate();
