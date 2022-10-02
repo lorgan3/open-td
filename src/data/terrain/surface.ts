@@ -430,6 +430,10 @@ class Surface {
     this.deletedEntities = [];
   }
 
+  public forceRerender() {
+    this.dirty = true;
+  }
+
   public isDirty() {
     return this.dirty;
   }

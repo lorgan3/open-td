@@ -96,7 +96,9 @@ class Base implements StaticAgent {
       Manager.Instance.showMessage("You lose!", {
         closable: false,
       });
-      Manager.Instance.getSurface().despawnStatic(this);
+
+      // The entire map should now be visible
+      Manager.Instance.getSurface().forceRerender();
     } else {
       this.invincibleTime = INVINCIBLE_TIME;
       this.shockwave();

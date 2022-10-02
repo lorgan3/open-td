@@ -148,6 +148,9 @@ class Manager {
         this.spawnGroups.forEach((spawnGroup) =>
           spawnGroup.setUnit(Math.random() > 0.5 ? Runner : Regular)
         );
+
+        // Spawn group paths might  have changed
+        Manager.Instance.getSurface().forceRerender();
       }
 
       this.triggerStatUpdate();
@@ -230,7 +233,6 @@ class Manager {
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.update();
-    this.timeSinceLastExpansion++;
 
     for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
       const spawnGroup = this.spawnGroups[i];
@@ -356,6 +358,8 @@ class Manager {
   }
 
   private end() {
+    this.timeSinceLastExpansion++;
+
     this.buildController.commit();
     this.base.regenerate();
     this.unlocksController.addPoint();
