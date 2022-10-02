@@ -3,8 +3,6 @@ import BuildController from "./buildController";
 import Controller from "./controller";
 import Base from "./entity/base";
 import { IEnemy } from "./entity/enemies";
-import Regular from "./entity/enemies/regular";
-import Runner from "./entity/enemies/runner";
 import { Agent, AgentCategory } from "./entity/entity";
 import {
   EventHandler,
@@ -144,13 +142,6 @@ class Manager {
 
       if (remainingEnemies === 0 && this.wave?.isDone()) {
         this.end();
-
-        this.spawnGroups.forEach((spawnGroup) =>
-          spawnGroup.setUnit(Math.random() > 0.5 ? Runner : Regular)
-        );
-
-        // Spawn group paths might  have changed
-        Manager.Instance.getSurface().forceRerender();
       }
 
       this.triggerStatUpdate();
@@ -333,6 +324,7 @@ class Manager {
             this.base.getTile(),
             this.surface
           );
+          this.nextSpawnGroup.setUnit(Wave.getUnitForLevel(this.level));
 
           spawned = true;
           return false;
@@ -364,8 +356,15 @@ class Manager {
     this.base.regenerate();
     this.unlocksController.addPoint();
 
+    this.spawnGroups.forEach((spawnGroup) =>
+      spawnGroup.setUnit(Wave.getUnitForLevel(this.level))
+    );
+
     this.triggerStatUpdate();
     this.triggerEvent(GameEvent.EndWave);
+
+    // Spawn group paths might have changed
+    Manager.Instance.getSurface().forceRerender();
   }
 
   private onSurfaceChange = ({
