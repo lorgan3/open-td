@@ -22,20 +22,25 @@ export const NEIGHBORS = [
 // This is to prevent just going between a diagonal wall.
 export const MAX_DIAGONAL_COST = 150;
 
-export const defaultCostMultiplier = (tile: Tile) =>
-  DEFAULT_LAND_BASED_MULTIPLIERS[tile.getType()] ?? 1;
-
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class Pathfinder {
   private costFn: (tile: Tile) => number | null;
+  private costMultiplierFn: (tile: Tile) => number;
 
   constructor(
     private surface: Surface,
-    private costMultiplier = defaultCostMultiplier,
+    costMultiplier:
+      | Partial<Record<TileType, number>>
+      | ((tile: Tile) => number) = DEFAULT_LAND_BASED_MULTIPLIERS,
     costs:
       | Partial<Record<TileType, number>>
       | ((tile: Tile) => number | null) = DEFAULT_LAND_BASED_COSTS
   ) {
+    this.costMultiplierFn =
+      typeof costMultiplier === "function"
+        ? costMultiplier
+        : (tile: Tile) => costMultiplier[tile.getType()] ?? 1;
+
     this.costFn =
       typeof costs === "function"
         ? costs
@@ -47,7 +52,7 @@ class Pathfinder {
     to: Tile,
     costMultiplierOverride?: (tile: Tile) => number
   ) {
-    const costMultiplier = costMultiplierOverride ?? this.costMultiplier;
+    const costMultiplier = costMultiplierOverride ?? this.costMultiplierFn;
 
     const visitedTiles = new Set<Tile>();
 
@@ -156,7 +161,7 @@ class Pathfinder {
     const visitedTiles: Record<string, number> = {};
 
     const multiplierFn = (tile: Tile) => {
-      return (visitedTiles[tile.getHash()] ?? 1) * this.costMultiplier(tile);
+      return (visitedTiles[tile.getHash()] ?? 1) * this.costMultiplierFn(tile);
     };
 
     return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {

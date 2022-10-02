@@ -90,7 +90,11 @@ class SpawnGroup {
       this.pathData.set(
         type,
         new PathData(
-          new Pathfinder(this.surface),
+          new Pathfinder(
+            this.surface,
+            this.unit.pathMultipliers,
+            this.unit.pathCosts
+          ),
           this.spawnPoints,
           this.target
         )
