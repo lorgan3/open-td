@@ -17,6 +17,12 @@ export const getScale = (staticAgent: StaticAgent) => {
   return (staticAgent.constructor as unknown as StaticAgentStatics).scale;
 };
 
+export const getCenter = (staticAgent: StaticAgent): [number, number] => {
+  const scale = getScale(staticAgent);
+  const tile = staticAgent.getTile();
+  return [tile.getX() + scale / 2, tile.getY() + scale / 2];
+};
+
 export function isStaticAgent(agent?: Agent | null): agent is StaticAgent {
   return agent ? "getTile" in agent : false;
 }

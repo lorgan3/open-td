@@ -20,6 +20,7 @@ import PowerController, {
 import Surface from "./terrain/surface";
 import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
 import UnlocksController from "./UnlocksController";
+import SpawnAlert from "./util/spawnAlert";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave from "./wave/wave";
@@ -260,6 +261,7 @@ class Manager {
     this.level++;
 
     this.triggerStatUpdate();
+    Manager.Instance.getSurface().forceRerender();
   }
 
   showMessage: MessageFn = (...args) => {
@@ -347,6 +349,17 @@ class Manager {
 
   getIsBaseDestroyed() {
     return this.base.isDestroyed();
+  }
+
+  getSpawnAlertRanges() {
+    const spawnGroups = [...this.spawnGroups];
+
+    const nextSpawnGroup = this.getNextSpawnGroup();
+    if (nextSpawnGroup) {
+      spawnGroups.push(nextSpawnGroup);
+    }
+
+    return SpawnAlert.forSpawnGroups(spawnGroups);
   }
 
   private end() {

@@ -80,6 +80,16 @@ onUnmounted(() => (mounted = false));
 
 <template>
   <div class="wrapper">
+    <svg height="0" style="position: absolute">
+      <defs>
+        <radialGradient id="alert">
+          <stop offset="90%" stop-color="red" stop-opacity="0.8" />
+          <stop offset="95%" stop-color="red" stop-opacity="0.8" />
+          <stop offset="100%" stop-color="red" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+    </svg>
+
     <Hud :renderer="renderer" :controller="manager.getController()" />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>

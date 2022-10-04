@@ -8,7 +8,11 @@ import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
 import { IRenderer, MessageFn } from "../api";
 import { OVERRIDES } from "./overrides";
 import SimpleMessage from "../../components/SimpleMessage.vue";
-import { getScale, isStaticAgent } from "../../data/entity/staticEntity";
+import {
+  getCenter,
+  getScale,
+  isStaticAgent,
+} from "../../data/entity/staticEntity";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -43,6 +47,7 @@ class Renderer implements IRenderer {
   private target: HTMLDivElement | null = null;
   private world: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
+  private alertRanges: SVGElement[] = [];
 
   private coverageMap: HTMLDivElement | null = null;
   private coverageRows: HTMLDivElement[] = [];
@@ -228,6 +233,7 @@ class Renderer implements IRenderer {
 
     if (this.surface.isDirty() || this.hasMoved) {
       this.renderStaticAgents();
+      this.renderAlertRanges();
     }
 
     const entities = this.surface.getEntities();
@@ -416,6 +422,85 @@ class Renderer implements IRenderer {
       if (htmlElement) {
         htmlElement.style.display = "none";
       }
+    }
+  }
+
+  private renderAlertRanges() {
+    const [x, y] = getCenter(Manager.Instance.getBase());
+    const width = 20 * this.xStep;
+    const height = 20 * this.yStep;
+    const ranges = Manager.Instance.getIsStarted()
+      ? []
+      : Manager.Instance.getSpawnAlertRanges();
+
+    ranges.forEach((range, i) => {
+      const length = range.getLength();
+      const angle = range.getCenter();
+      const degrees = length / 360;
+
+      let htmlElement = this.alertRanges[i];
+      if (!htmlElement) {
+        this.alertRanges[i] = htmlElement = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
+        const circle = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "circle"
+        );
+        circle.setAttribute("cx", "50%");
+        circle.setAttribute("cy", "50%");
+        circle.setAttribute("r", "45%");
+        circle.setAttribute("stroke", "url(#alert)");
+        circle.setAttribute("stroke-linecap", "round");
+        circle.setAttribute("fill", "none");
+
+        htmlElement.appendChild(circle);
+
+        const text = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+        text.setAttribute(
+          "transform",
+          `translate(${width * 0.85} ${height * 0.5}) rotate(-${angle})`
+        );
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.innerHTML = "⚠️";
+
+        htmlElement.appendChild(text);
+
+        htmlElement.style.position = "absolute";
+        htmlElement.style.top = IS_WINDOWS ? "-.125ch" : "-.075ch";
+        htmlElement.style.left = IS_WINDOWS ? ".35ch" : "0";
+        htmlElement.style.transformOrigin = "50%";
+        this.world!.appendChild(htmlElement);
+      }
+
+      htmlElement.style.display = "block";
+      htmlElement.children[0].setAttribute(
+        "stroke-width",
+        `${this.fontSize * 2}`
+      );
+
+      const circumference = width * 0.9 * Math.PI;
+      htmlElement.children[0].setAttribute(
+        "stroke-dasharray",
+        `${(circumference * degrees) / 2} ${circumference * (1 - degrees)} ${
+          (circumference * degrees) / 2
+        } 0`
+      );
+      htmlElement.style.width = `${width}px`;
+      htmlElement.style.height = `${height}px`;
+
+      htmlElement.style.transform = `translate(${
+        x * this.xStep - width / 2
+      }px,${y * this.yStep - height / 2}px) rotate(${angle}deg)`;
+    });
+
+    for (let i = ranges.length; i < this.alertRanges.length; i++) {
+      this.alertRanges[i].style.display = "none";
     }
   }
 

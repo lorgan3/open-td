@@ -22,14 +22,28 @@ class SpawnGroup {
   private burst = 0;
   private timer = 0;
 
+  private centerX = 0;
+  private centerY = 0;
+
   constructor(
     private spawnPoints: Tile[],
     private target: Tile,
     private surface: Surface
-  ) {}
+  ) {
+    spawnPoints.forEach((spawnPoint) => {
+      this.centerX += spawnPoint.getX();
+      this.centerY += spawnPoint.getY();
+    });
+    this.centerX /= spawnPoints.length;
+    this.centerY /= spawnPoints.length;
+  }
 
   setUnit(unit: IEnemyStatics) {
     this.unit = unit;
+  }
+
+  getUnitType() {
+    return this.unit.type;
   }
 
   setParameters(
@@ -85,6 +99,10 @@ class SpawnGroup {
       const enemy = this.getNextUnit();
       Manager.Instance.spawnEnemy(enemy);
     }
+  }
+
+  getCenter() {
+    return [this.centerX, this.centerY];
   }
 
   private getPathData(type: EntityType) {
