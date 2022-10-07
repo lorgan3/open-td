@@ -54,7 +54,7 @@ class Regular implements IEnemy {
   }
 
   getDamage() {
-    return 10;
+    return 6;
   }
 
   getType(): EntityType {

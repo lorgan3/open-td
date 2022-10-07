@@ -59,7 +59,7 @@ class Runner implements IEnemy {
   }
 
   getDamage() {
-    return 6;
+    return 4;
   }
 
   getType(): EntityType {

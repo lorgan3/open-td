@@ -24,7 +24,7 @@ class Flamethrower implements ITower {
   private cooldown = 0;
   private cleanupEventListener?: () => void;
   private flame?: Flame;
-  private hp = 200;
+  private hp = 160;
   private isEnabled = true;
   private damageMultiplier = 1;
 

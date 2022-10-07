@@ -48,7 +48,9 @@ class EnemyAI {
 
   attack(target: Agent) {
     if (target.hit && this.cooldown === 0) {
-      target.hit!(this.enemy.getDamage());
+      target.hit!(
+        this.enemy.getDamage() * Manager.Instance.getDamageMultiplier()
+      );
       this.cooldown = COOLDOWN;
     }
   }

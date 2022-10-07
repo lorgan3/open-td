@@ -44,7 +44,7 @@ class Flier implements IEnemy {
   }
 
   getDamage() {
-    return 12;
+    return 7;
   }
 
   getType(): EntityType {

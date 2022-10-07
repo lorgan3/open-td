@@ -380,6 +380,18 @@ class Manager {
     Manager.Instance.getSurface().forceRerender();
   }
 
+  getDamageMultiplier() {
+    let multiplier = 1;
+    switch (this.difficulty) {
+      case Difficulty.Hard:
+        multiplier += 0.2;
+      case Difficulty.Normal:
+        multiplier += 0.2;
+    }
+
+    return multiplier;
+  }
+
   private onSurfaceChange = ({
     affectedTiles,
     removedStaticAgents,

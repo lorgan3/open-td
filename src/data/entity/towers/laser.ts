@@ -24,7 +24,7 @@ class Laser implements ITower {
   private cooldown = 0;
   private cleanupEventListener?: () => void;
   private laserBeam?: LaserBeam;
-  private hp = 100;
+  private hp = 80;
   private isEnabled = true;
   private damageMultiplier = 1;
 

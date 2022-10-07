@@ -52,7 +52,7 @@ class Tank implements IEnemy {
   }
 
   getDamage() {
-    return 15;
+    return 9;
   }
 
   getType(): EntityType {

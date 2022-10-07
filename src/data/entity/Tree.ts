@@ -8,7 +8,7 @@ class Tree implements StaticAgent {
 
   public entity: StaticEntity;
   public category = AgentCategory.Unknown;
-  private hp = 50;
+  private hp = 30;
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
