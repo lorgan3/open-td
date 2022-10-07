@@ -84,9 +84,9 @@ onUnmounted(() => (mounted = false));
     <svg height="0" style="position: absolute">
       <defs>
         <radialGradient id="alert">
-          <stop offset="90%" stop-color="red" stop-opacity="0.8" />
-          <stop offset="95%" stop-color="red" stop-opacity="0.8" />
-          <stop offset="100%" stop-color="red" stop-opacity="0" />
+          <stop offset="0%" stop-color="red" stop-opacity="0" />
+          <stop offset="95%" stop-color="red" stop-opacity="0" />
+          <stop offset="100%" stop-color="red" stop-opacity="0.8" />
         </radialGradient>
       </defs>
     </svg>
@@ -141,5 +141,15 @@ onUnmounted(() => (mounted = false));
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+@keyframes blinker {
+  to {
+    opacity: 0;
+  }
+}
+
+.alert {
+  animation: blinker 0.6s cubic-bezier(1, 0, 0, 1) infinite alternate;
 }
 </style>

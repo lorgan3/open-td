@@ -462,12 +462,9 @@ class Renderer implements IRenderer {
           "http://www.w3.org/2000/svg",
           "text"
         );
-        text.setAttribute(
-          "transform",
-          `translate(${width * 0.85} ${height * 0.5}) rotate(-${angle})`
-        );
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("dominant-baseline", "middle");
+        text.classList.add("alert");
         text.innerHTML = "⚠️";
 
         htmlElement.appendChild(text);
@@ -480,10 +477,10 @@ class Renderer implements IRenderer {
       }
 
       htmlElement.style.display = "block";
-      htmlElement.children[0].setAttribute(
-        "stroke-width",
-        `${this.fontSize * 2}`
-      );
+      htmlElement.children[0].setAttribute("stroke-width", `${this.fontSize}`);
+      (
+        htmlElement.children[1] as SVGElement
+      ).style.transform = `translate(90%, 50%) rotate(-${angle}deg)`;
 
       const circumference = width * 0.9 * Math.PI;
       htmlElement.children[0].setAttribute(
