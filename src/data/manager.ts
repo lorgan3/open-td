@@ -217,9 +217,9 @@ class Manager {
 
     this.triggerEvent(GameEvent.StartWave);
 
-    this.powerController.processPower();
-    this.moneyController.clearRecents();
-    this.visibilityController.update();
+    if (this.visibilityController.hasPendingAgents()) {
+      this.timeSinceLastExpansion = 0;
+    }
 
     for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
       const spawnGroup = this.spawnGroups[i];
@@ -236,6 +236,8 @@ class Manager {
 
     const spawnGroup = this.getNextSpawnGroup();
     if (spawnGroup) {
+      this.timeSinceLastExpansion = 0;
+
       const tile = spawnGroup.getSpawnPoints()[0].getTile(0);
       const tilesToUpdate: Tile[] = [];
       this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
@@ -254,6 +256,10 @@ class Manager {
     this.wave = Wave.fromSpawnGroups(this.level, this.spawnGroups);
 
     this.level++;
+
+    this.powerController.processPower();
+    this.moneyController.clearRecents();
+    this.visibilityController.commit();
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
@@ -283,19 +289,23 @@ class Manager {
   }
 
   getNextSpawnGroup() {
+    const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
+    const time = this.visibilityController.hasPendingAgents()
+      ? 0
+      : this.timeSinceLastExpansion;
+
+    const shouldHaveNextSpawnGroup =
+      this.spawnGroups.filter((spawnGroup) => !spawnGroup.isExposed())
+        .length === 0 || time >= timeToExpansion;
+
+    if (!shouldHaveNextSpawnGroup) {
+      return;
+    }
+
     if (this.nextSpawnGroup && !this.nextSpawnGroup.isExposed()) {
       return this.nextSpawnGroup;
     }
 
-    const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
-    if (
-      this.spawnGroups.length > 0 &&
-      this.timeSinceLastExpansion < timeToExpansion
-    ) {
-      return;
-    }
-
-    this.timeSinceLastExpansion = 0;
     let direction = Math.random() * Math.PI * 2;
     let spawned = false;
     let backOff = 3;

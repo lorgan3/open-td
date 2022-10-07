@@ -1,12 +1,12 @@
 import Base from "./entity/base";
 import { Agent, EntityType } from "./entity/entity";
-import Manager from "./manager";
 import Surface from "./terrain/surface";
 import Tile, { DiscoveryStatus } from "./terrain/tile";
 
 class VisibilityController {
   private agents = new Set<Agent>();
   private edgeMap = new Map<number, [number, number]>();
+  private pendingAgents = new Set<Agent>();
   private base?: Base;
 
   private minX?: number;
@@ -24,6 +24,8 @@ class VisibilityController {
     if (agent instanceof Base) {
       this.base = agent;
       status = DiscoveryStatus.Discovered;
+    } else {
+      this.pendingAgents.add(agent);
     }
 
     const range = this.getVisibilityRange(agent);
@@ -48,11 +50,21 @@ class VisibilityController {
     );
 
     this.agents.delete(agent);
+    this.pendingAgents.delete(agent);
     this.edgeMap.delete(agent.entity.getId());
     this.update();
   }
 
-  update() {
+  commit() {
+    if (this.pendingAgents.size === 0) {
+      return;
+    }
+
+    this.pendingAgents.clear();
+    this.update();
+  }
+
+  private update() {
     this.minX = undefined;
     this.minY = undefined;
     this.maxX = undefined;
@@ -67,7 +79,7 @@ class VisibilityController {
     });
 
     this.agents.forEach((agent) => {
-      const status = Manager.Instance.getMoneyController().isRecent(agent)
+      const status = this.pendingAgents.has(agent)
         ? DiscoveryStatus.Pending
         : DiscoveryStatus.Discovered;
 
@@ -83,6 +95,10 @@ class VisibilityController {
       [this.minX!, this.minY!],
       [this.maxX!, this.maxY!],
     ];
+  }
+
+  hasPendingAgents() {
+    return this.pendingAgents.size > 0;
   }
 
   private getVisibilityRange(agent: Agent) {
