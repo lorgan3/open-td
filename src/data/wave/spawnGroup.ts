@@ -10,7 +10,7 @@ import Tile, { DiscoveryStatus } from "../terrain/tile";
 class SpawnGroup {
   private index = 0;
   private pathData = new Map<EntityType, PathData>();
-  private strength = 1;
+  private strength = 0;
 
   private unit: IEnemyStatics = Runner;
   private energy = 25;

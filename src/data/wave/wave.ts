@@ -3,6 +3,7 @@ import Flier from "../entity/enemies/flier";
 import Regular from "../entity/enemies/regular";
 import Runner from "../entity/enemies/runner";
 import Tank from "../entity/enemies/tank";
+import Manager, { Difficulty } from "../manager";
 import SpawnGroup from "./SpawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
 
@@ -14,7 +15,11 @@ const BURST_DISTRIBUTION = 3000;
 const MIN_BURST_SIZE = 3;
 const BURST_SIZE_DISTRIBUTION = 12;
 const SPAWN_GROUP_BONUS = 1.1; // More active spawn groups means harder waves
-const SPAWN_GROUP_AGE_BONUS = 2 * Runner.cost; // Flat 2 extra runners for every wave a spawn group isn't cleared
+const SPAWN_GROUP_AGE_BONUSES: Record<Difficulty, number> = {
+  [Difficulty.Easy]: 0,
+  [Difficulty.Normal]: 1.5 * Runner.cost,
+  [Difficulty.Hard]: 3 * Runner.cost,
+};
 
 class Wave {
   constructor(private spawnGroups: SpawnGroup[]) {}
@@ -34,11 +39,13 @@ class Wave {
   static fromSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
     const totalEnergy = 2 ** level * Runner.cost;
     const energies = splitNumber(totalEnergy, spawnGroups.length);
+    const spawnGroupAgeBonus =
+      SPAWN_GROUP_AGE_BONUSES[Manager.Instance.getDifficulty()];
 
     spawnGroups.forEach((spawnGroup, i) => {
       const energy =
         energies[i] * SPAWN_GROUP_BONUS +
-        SPAWN_GROUP_AGE_BONUS * spawnGroup.getStrength();
+        spawnGroupAgeBonus * spawnGroup.getStrength();
 
       // The first wave + 50% will not be delayed
       const spawnDelay =
