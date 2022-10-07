@@ -59,6 +59,13 @@ class MoneyController {
     this.recentlyBought.add(agent);
   }
 
+  replaceBlueprint(blueprint: Blueprint, actualAgent: Agent) {
+    if (this.recentlyBought.has(blueprint)) {
+      this.recentlyBought.delete(blueprint);
+      this.recentlyBought.add(actualAgent);
+    }
+  }
+
   sell(agent: Agent) {
     if (agent instanceof Blueprint) {
       this.addMoney(TOWER_PRICES[agent.getPlaceable().entityType] ?? 0);

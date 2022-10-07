@@ -65,7 +65,9 @@ class BuildController {
       }
 
       const constructor = blueprint.getPlaceable().entity!;
-      this.surface.spawnStatic(new constructor(tile));
+      const agent = new constructor(tile);
+      this.surface.spawnStatic(agent);
+      Manager.Instance.getMoneyController().replaceBlueprint(blueprint, agent);
     });
 
     this.blueprints.clear();
