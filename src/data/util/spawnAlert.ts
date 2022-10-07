@@ -1,5 +1,6 @@
+import { Difficulty } from "../difficulty";
 import { EntityType } from "../entity/entity";
-import Manager, { Difficulty } from "../manager";
+import Manager from "../manager";
 import SpawnGroup from "../wave/SpawnGroup";
 
 class SpawnAlert {
@@ -64,10 +65,12 @@ class SpawnAlert {
 
   static forSpawnGroups(spawnGroups: SpawnGroup[]) {
     const spawnAlerts = new Map<string, SpawnAlert>();
-    spawnGroups.forEach((spawnGroup) => {
-      const alert = SpawnAlert.forSpawnGroup(spawnGroup);
-      spawnAlerts.set(alert.toString(), alert);
-    });
+    spawnGroups
+      .filter((spawnGroup) => !spawnGroup.isExposed())
+      .forEach((spawnGroup) => {
+        const alert = SpawnAlert.forSpawnGroup(spawnGroup);
+        spawnAlerts.set(alert.toString(), alert);
+      });
 
     return [...spawnAlerts.values()];
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Difficulty } from "../data/manager";
+import { difficulties, Difficulty } from "../data/difficulty";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
@@ -14,29 +14,10 @@ enum SubMenu {
   Settings,
 }
 
-const difficulties: Record<Difficulty, { label: string; description: string }> =
-  {
-    [Difficulty.Easy]: {
-      label: "Easy",
-      description:
-        "Allows checking which tiles are covered by tower sight lines. Shows the approximate path enemies will take and undiscovered nests do not become stronger.",
-    },
-    [Difficulty.Normal]: {
-      label: "Normal",
-      description:
-        "Allows checking which tiles are covered by tower sight lines. Enemies are a bit stronger and undiscovered nests slowly gain more strength.",
-    },
-    [Difficulty.Hard]: {
-      label: "Hard",
-      description:
-        "Checking tower sight lines is no longer possible, enemies are stronger and undiscovered nests gain strength more quickly",
-    },
-  };
-
 const openSubMenu = ref(SubMenu.None);
 const seed = ref("");
 const seedInput = ref<HTMLElement | null>(null);
-const difficulty = ref(Difficulty.Normal);
+const difficulty = ref(Difficulty.Easy);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {

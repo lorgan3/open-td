@@ -3,11 +3,12 @@ import { onMounted, onUnmounted, ref } from "vue";
 import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Renderer from "../renderers/emojiRenderer/renderer";
-import Manager, { Difficulty } from "../data/manager";
+import Manager from "../data/manager";
 import Controller, { Keys } from "../data/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
 import Hud from "./hud/Hud.vue";
+import { Difficulty } from "../data/difficulty";
 
 const props = defineProps<{
   seed: string;

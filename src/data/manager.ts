@@ -1,6 +1,7 @@
 import { MessageFn } from "../renderers/api";
 import BuildController from "./buildController";
 import Controller from "./controller";
+import { Difficulty } from "./difficulty";
 import Base from "./entity/base";
 import { IEnemy } from "./entity/enemies";
 import { Agent, AgentCategory } from "./entity/entity";
@@ -24,12 +25,6 @@ import SpawnAlert from "./util/spawnAlert";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
 import Wave from "./wave/wave";
-
-export enum Difficulty {
-  Easy = "easy",
-  Normal = "normal",
-  Hard = "hard",
-}
 
 class Manager {
   private static instance: Manager;

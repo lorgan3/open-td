@@ -1,9 +1,10 @@
+import { Difficulty } from "../difficulty";
 import { IEnemyStatics } from "../entity/enemies";
 import Flier from "../entity/enemies/flier";
 import Regular from "../entity/enemies/regular";
 import Runner from "../entity/enemies/runner";
 import Tank from "../entity/enemies/tank";
-import Manager, { Difficulty } from "../manager";
+import Manager from "../manager";
 import SpawnGroup from "./SpawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
 

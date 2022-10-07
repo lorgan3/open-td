@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import Controller from "../../data/controller";
 import Entity, { AgentCategory, EntityType } from "../../data/entity/entity";
-import Manager, { Difficulty } from "../../data/manager";
+import Manager from "../../data/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
@@ -13,6 +13,7 @@ import {
   getScale,
   isStaticAgent,
 } from "../../data/entity/staticEntity";
+import { Difficulty } from "../../data/difficulty";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;

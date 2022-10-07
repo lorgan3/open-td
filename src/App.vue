@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Game from "./components/Game.vue";
 import MainMenu from "./components/MainMenu.vue";
-import { Difficulty } from "./data/manager";
+import { Difficulty } from "./data/difficulty";
 
 enum State {
   Menu,
@@ -11,7 +11,7 @@ enum State {
 
 const state = ref(State.Menu);
 const gameSeed = ref("");
-const gameDifficulty = ref(Difficulty.Normal);
+const gameDifficulty = ref(Difficulty.Easy);
 
 const startGame = (seed: string, difficulty: Difficulty) => {
   state.value = State.Game;
