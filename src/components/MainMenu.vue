@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { difficulties, Difficulty } from "../data/difficulty";
+import { Constructor } from "../renderers/api";
+import EmojiRenderer from "../renderers/emojiRenderer/renderer";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
-  onPlay: (seed: string, difficulty: Difficulty) => void;
+  onPlay: (seed: string, difficulty: Difficulty, renderer: Constructor) => void;
 }>();
 
 enum SubMenu {
@@ -14,10 +16,19 @@ enum SubMenu {
   Settings,
 }
 
+const renderOptions: Array<{ label: string; value: Constructor }> = [
+  {
+    label: "Emoji renderer",
+    value: EmojiRenderer,
+  },
+  },
+];
+
 const openSubMenu = ref(SubMenu.None);
 const seed = ref("");
 const seedInput = ref<HTMLElement | null>(null);
 const difficulty = ref(Difficulty.Easy);
+const renderer = ref(renderOptions[0]);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -34,7 +45,7 @@ const onClick = (subMenu: SubMenu) => {
 const submit = (event: Event) => {
   event.preventDefault();
 
-  props.onPlay(seed.value, difficulty.value);
+  props.onPlay(seed.value, difficulty.value, renderer.value.value);
 };
 </script>
 
@@ -47,7 +58,7 @@ const submit = (event: Event) => {
         <div class="menu-main-inner">
           <button @click="onClick(SubMenu.Play)">Play</button>
           <button @click="onClick(SubMenu.Controls)">Controls</button>
-          <button disabled>Settings</button>
+          <button @click="onClick(SubMenu.Settings)">Settings</button>
         </div>
       </div>
       <div
@@ -81,8 +92,25 @@ const submit = (event: Event) => {
           'menu--hidden': openSubMenu !== SubMenu.Controls,
         }"
       >
-        <div class="menu-play-inner">
+        <div class="menu-controls-inner">
           <ControlsList />
+        </div>
+      </div>
+      <div
+        :class="{
+          'menu-settings': true,
+          'menu--hidden': openSubMenu !== SubMenu.Settings,
+        }"
+      >
+        <div class="menu-settings-inner">
+          <label>
+            Renderer
+            <select v-model="renderer">
+              <option v-for="option in renderOptions" :value="option">
+                {{ option.label }}
+              </option>
+            </select>
+          </label>
         </div>
       </div>
     </div>
@@ -169,7 +197,8 @@ const submit = (event: Event) => {
 
     &-main,
     &-play,
-    &-controls {
+    &-controls,
+    &-settings {
       &-inner {
         width: 300px;
         padding: 0 20px;
@@ -185,6 +214,9 @@ const submit = (event: Event) => {
     }
     &-controls {
       left: -4px;
+    }
+    &-settings {
+      left: -6px;
     }
   }
 }

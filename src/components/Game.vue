@@ -2,26 +2,27 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
-import Renderer from "../renderers/emojiRenderer/renderer";
 import Manager from "../data/manager";
 import Controller, { Keys } from "../data/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
+import { Constructor } from "../renderers/api";
 
 const props = defineProps<{
   seed: string;
   difficulty: Difficulty;
+  renderer: Constructor;
 }>();
 
 const canvas = ref<HTMLDivElement | null>(null);
 
-const surface = new Surface(300, 300, getGenerator(props.seed));
+const surface = new Surface(200, 200, getGenerator(props.seed));
 const controller = new Controller(surface);
-const renderer = new Renderer(surface, controller);
+const renderer = new props.renderer(surface, controller);
 
-const targetTile = surface.getTile(150, 150)!;
+const targetTile = surface.getTile(100, 100)!;
 const manager = new Manager(
   props.difficulty,
   targetTile,

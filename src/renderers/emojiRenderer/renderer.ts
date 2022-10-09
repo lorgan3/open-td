@@ -22,12 +22,6 @@ const DEFAULT_FONT_SIZE = 20;
 
 let DEBUG = false;
 
-declare global {
-  interface Window {
-    debug: () => void;
-  }
-}
-
 class Renderer implements IRenderer {
   private pool: Pool<Entity, HTMLSpanElement>;
   private selectionPool: Pool<number, HTMLSpanElement>;

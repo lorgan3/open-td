@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Game from "./components/Game.vue";
 import MainMenu from "./components/MainMenu.vue";
 import { Difficulty } from "./data/difficulty";
+import { Constructor } from "./renderers/api";
 
 enum State {
   Menu,
@@ -10,13 +11,19 @@ enum State {
 }
 
 const state = ref(State.Menu);
-const gameSeed = ref("");
-const gameDifficulty = ref(Difficulty.Easy);
+const gameSeed = ref<string>();
+const gameDifficulty = ref<Difficulty>();
+const gameRenderer = ref<Constructor>();
 
-const startGame = (seed: string, difficulty: Difficulty) => {
+const startGame = (
+  seed: string,
+  difficulty: Difficulty,
+  renderer: Constructor
+) => {
   state.value = State.Game;
   gameSeed.value = seed;
   gameDifficulty.value = difficulty;
+  gameRenderer.value = renderer;
 };
 </script>
 
@@ -24,8 +31,9 @@ const startGame = (seed: string, difficulty: Difficulty) => {
   <MainMenu v-if="state == State.Menu" :onPlay="startGame" />
   <Game
     v-if="state == State.Game"
-    :seed="gameSeed"
-    :difficulty="gameDifficulty"
+    :seed="gameSeed!"
+    :difficulty="gameDifficulty!"
+    :renderer="gameRenderer!"
   />
 </template>
 

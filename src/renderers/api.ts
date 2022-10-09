@@ -1,3 +1,6 @@
+import Controller from "../data/controller";
+import Surface from "../data/terrain/surface";
+
 export interface IRenderer {
   mount(target: HTMLDivElement): void;
   unmount(): void;
@@ -7,6 +10,11 @@ export interface IRenderer {
   showMessage: MessageFn;
   move(params: { x?: number; y?: number; zoom?: number }): void;
 }
+
+export type Constructor = new (
+  surface: Surface,
+  controller: Controller
+) => IRenderer;
 
 export type MessageFn = (
   content: string,
@@ -18,3 +26,9 @@ export type MessageFn = (
 ) => Promise<number>;
 
 export const DEFAULT_EXPIRE_TIME = 2000;
+
+declare global {
+  interface Window {
+    debug: () => void;
+  }
+}
