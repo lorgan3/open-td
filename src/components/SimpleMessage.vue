@@ -8,31 +8,30 @@ interface Message {
   content: string;
   closable: boolean;
   open: boolean;
+  removing: boolean;
 }
+
+let id = 1;
 
 const props = defineProps<{
   register: (showMessage: MessageFn) => void;
 }>();
 
-const messageQueue = ref<Message[]>([]);
+const createEmptyMessage = (): Message => ({
+  id: id++,
+  content: "",
+  closable: true,
+  open: false,
+  removing: false,
+});
+
+const messageQueue = ref<Message[]>([createEmptyMessage()]);
+
 const timers = ref(new Map<number, number>());
 const instance = getCurrentInstance();
 
 const queueMessage: MessageFn = (content, config) => {
-  const msg = {
-    id: Date.now(),
-    content,
-    closable: config?.closable ?? true,
-    open: true,
-  };
-
-  if (config?.expires) {
-    const id = window.setTimeout(() => {
-      close(msg);
-    }, config.expires);
-
-    timers.value.set(msg.id, id);
-  }
+  let msg: Message;
 
   let targetIndex = -1;
   if (config?.override) {
@@ -46,9 +45,22 @@ const queueMessage: MessageFn = (content, config) => {
     window.clearTimeout(timers.value.get(oldId));
     timers.value.delete(oldId);
 
-    messageQueue.value[targetIndex] = msg;
+    msg = messageQueue.value[targetIndex];
   } else {
-    messageQueue.value.push(msg);
+    msg = messageQueue.value.at(-1)!;
+    messageQueue.value.push(createEmptyMessage());
+  }
+
+  msg.closable = config?.closable ?? true;
+  msg.open = true;
+  msg.content = content;
+
+  if (config?.expires) {
+    const id = window.setTimeout(() => {
+      close(msg);
+    }, config.expires);
+
+    timers.value.set(msg.id, id);
   }
 
   return Promise.resolve(msg.id);
@@ -56,11 +68,12 @@ const queueMessage: MessageFn = (content, config) => {
 
 const close = (message: Message) => {
   message.open = false;
+  message.removing = true;
   instance!.proxy!.$forceUpdate();
 
   window.setTimeout(() => {
     messageQueue.value.splice(messageQueue.value.indexOf(message), 1);
-  }, 200);
+  }, 700);
 };
 
 onMounted(() => {
@@ -71,22 +84,23 @@ onMounted(() => {
 <template>
   <div class="message-wrapper">
     <div
-      v-for="index in messageQueue.length + 1"
-      :key="index"
+      v-for="message in messageQueue"
+      :key="message.id"
       :class="{
         message: true,
-        'message--visible': messageQueue[index - 1]?.open,
+        'message--visible': message.open,
+        'message--removing': message.removing,
       }"
     >
-      <div v-if="messageQueue[index - 1]">
+      <div class="message-inner">
         <button
-          v-if="messageQueue[index - 1].closable"
+          v-if="message.closable"
           class="close-button"
-          @click="() => close(messageQueue[index - 1])"
+          @click="() => close(message)"
         >
           ✖
         </button>
-        <TextWithControls :text="messageQueue[index - 1].content" />
+        <TextWithControls :text="message.content" />
       </div>
     </div>
   </div>
@@ -100,22 +114,32 @@ onMounted(() => {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .message {
   max-width: 300px;
-  padding: 16px;
   box-sizing: border-box;
-  border: 3px solid #000;
-  background: #fff;
   z-index: 1;
   box-shadow: 5px 5px 10px -5px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, max-height 0.5s ease 0.2s;
   transform: translateX(-320px);
+  max-height: 300px;
+  overflow: hidden;
+
+  &-inner {
+    position: relative;
+    background: #fff;
+    padding: 16px;
+    border: 3px solid #000;
+    margin-top: 8px;
+  }
 
   &--visible {
     transform: translateX(0px);
+  }
+
+  &--removing {
+    max-height: 0px;
   }
 
   .close-button {
