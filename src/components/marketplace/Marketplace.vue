@@ -69,7 +69,8 @@ const close = () => {
         <p class="description">
           {{ selected ? selected.description : "Select a tower below." }}
         </p>
-        <div class="buttons">
+        <div class="section">
+          {{ props.manager.getUnlocksController().getPoints() }} wave points
           <button
             v-if="
               selected &&
@@ -78,10 +79,11 @@ const close = () => {
             :disabled="!props.unlocksController.canUnlock(selected.entityType)"
             @click="unlock"
           >
-            Unlock
+            Unlock {{ selected.name }}
           </button>
-          <button @click="close">Close</button>
         </div>
+
+        <button @click="close" class="close-button">✖</button>
       </div>
       <div class="grid">
         <div v-for="group in groups" class="column">
@@ -166,14 +168,27 @@ const close = () => {
       width: 0;
     }
 
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 8px;
+    .section {
       padding: 8px;
       width: 200px;
       border-left: 2px solid #fff;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .close-button {
+      position: absolute;
+      right: 0;
+      background: 0;
+      border: 0;
+      color: #fff;
     }
   }
 
