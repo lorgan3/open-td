@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { difficulties, Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
 import EmojiRenderer from "../renderers/emojiRenderer/renderer";
+import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
@@ -21,6 +22,9 @@ const renderOptions: Array<{ label: string; value: Constructor }> = [
     label: "Emoji renderer",
     value: EmojiRenderer,
   },
+  {
+    label: "Pixi renderer",
+    value: PixiRenderer,
   },
 ];
 
