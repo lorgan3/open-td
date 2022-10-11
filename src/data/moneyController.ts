@@ -29,8 +29,8 @@ class MoneyController {
   private recentlyBought = new Set<Agent>();
 
   constructor(private money = 0, private multiplier = () => 1) {
-    Manager.Instance.addEventListener(GameEvent.Unlock, ({ type }) => {
-      if (type === EntityType.Convert) {
+    Manager.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
+      if (placeable.entityType === EntityType.Convert) {
         this.addMoney(CONVERT_MONEY_AMOUNT);
         Manager.Instance.triggerStatUpdate();
       }

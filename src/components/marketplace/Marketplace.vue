@@ -4,7 +4,7 @@ import Controller from "../../data/controller";
 import { getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { Placeable as TPlaceable } from "../../data/placeables";
 
-import { DEMOLISH, Group, SECTIONS } from "../../data/placeables";
+import { Group, SECTIONS } from "../../data/placeables";
 import Placeable from "./Placeable.vue";
 import Manager from "../../data/manager";
 import { GameEvent } from "../../data/events";
@@ -48,7 +48,7 @@ const onSelect = (item: TPlaceable) => {
 const groups = Object.values(Group);
 
 const unlock = () => {
-  props.unlocksController.unlock(selected.value!.entityType);
+  props.unlocksController.unlock(selected.value!);
   instance!.proxy!.$forceUpdate();
 };
 
@@ -74,9 +74,10 @@ const close = () => {
           <button
             v-if="
               selected &&
-              !props.unlocksController.isUnlocked(selected.entityType)
+              (!props.unlocksController.isUnlocked(selected) ||
+                selected.isRepeatable)
             "
-            :disabled="!props.unlocksController.canUnlock(selected.entityType)"
+            :disabled="!props.unlocksController.canUnlock(selected)"
             @click="unlock"
           >
             Unlock {{ selected.name }}
@@ -91,9 +92,7 @@ const close = () => {
           <div v-for="placeable in SECTIONS[group]" class="item">
             <Placeable
               :item="placeable"
-              :locked="
-                !props.unlocksController.isUnlocked(placeable.entityType)
-              "
+              :locked="!props.unlocksController.isUnlocked(placeable)"
               :selected="selected?.entityType === placeable.entityType"
               :onSelect="onSelect"
             />

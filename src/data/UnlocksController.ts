@@ -1,12 +1,12 @@
 import { EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
 import Manager from "./manager";
-import { Group, SECTIONS } from "./placeables";
+import { Group, Placeable, SECTIONS } from "./placeables";
 
 class UnlocksController {
   private unlockedTowers: Set<EntityType>;
   private availableUnlocks: Set<EntityType>;
-  private unlockLinkedMap: Map<EntityType, EntityType>;
+  private unlockLinkedMap: Map<EntityType, Placeable>;
 
   private points = 0;
 
@@ -29,10 +29,7 @@ class UnlocksController {
         }
 
         if (towers.length > index + 1) {
-          this.unlockLinkedMap.set(
-            tower.entityType,
-            towers[index + 1].entityType
-          );
+          this.unlockLinkedMap.set(tower.entityType, towers[index + 1]);
         }
       });
     });
@@ -46,28 +43,40 @@ class UnlocksController {
     return this.points;
   }
 
-  canUnlock(type: EntityType) {
-    return this.availableUnlocks.has(type) && this.points > 0;
+  canUnlock(placeable: Placeable) {
+    return this.availableUnlocks.has(placeable.entityType) && this.points > 0;
   }
 
-  isUnlocked(type: EntityType) {
-    return this.unlockedTowers.has(type);
+  isUnlocked(placeable: Placeable) {
+    return this.unlockedTowers.has(placeable.entityType);
   }
 
-  unlock(type: EntityType) {
-    if (!this.canUnlock(type)) {
-      throw new Error(`Can't unlock ${type}`);
+  unlock(placeable: Placeable) {
+    if (!this.canUnlock(placeable)) {
+      throw new Error(`Can't unlock ${placeable.entityType}`);
     }
 
     this.points--;
-    this.unlockedTowers.add(type);
-    this.availableUnlocks.delete(type);
-    const nextUnlock = this.unlockLinkedMap.get(type);
-    if (nextUnlock) {
-      this.availableUnlocks.add(nextUnlock);
+    this.makeAvailable(placeable);
+
+    Manager.Instance.triggerEvent(GameEvent.Unlock, { placeable });
+  }
+
+  private makeAvailable(placeable: Placeable) {
+    this.unlockedTowers.add(placeable.entityType);
+
+    if (!placeable.isRepeatable) {
+      this.availableUnlocks.delete(placeable.entityType);
     }
 
-    Manager.Instance.triggerEvent(GameEvent.Unlock, { type });
+    const nextUnlock = this.unlockLinkedMap.get(placeable.entityType);
+    if (nextUnlock) {
+      this.availableUnlocks.add(nextUnlock.entityType);
+
+      if (nextUnlock.isRepeatable) {
+        this.makeAvailable(nextUnlock);
+      }
+    }
   }
 }
 

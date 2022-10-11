@@ -29,9 +29,8 @@ class BuildController {
     this.freeTiles = new Set(FREE_TILES);
     this.ignoredEntities = new Set();
 
-    Manager.Instance.addEventListener(GameEvent.Unlock, ({ type }) => {
-      console.log("event", type);
-      if (type === EntityType.Excavator) {
+    Manager.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
+      if (placeable.entityType === EntityType.Excavator) {
         this.freeTiles.add(TileType.Tree);
         this.freeTiles.add(TileType.Rock);
 

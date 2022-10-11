@@ -1,5 +1,5 @@
-import { EntityType } from "./entity/entity";
 import { StaticAgent } from "./entity/staticEntity";
+import { Placeable } from "./placeables";
 import Tile from "./terrain/tile";
 
 export enum GameEvent {
@@ -50,5 +50,5 @@ export interface SurfaceChange {
 }
 
 export interface Unlock {
-  type: EntityType;
+  placeable: Placeable;
 }

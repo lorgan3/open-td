@@ -24,6 +24,7 @@ export interface Placeable {
   entity?: (new (tile: Tile) => StaticAgent) & StaticAgentStatics;
   entityType: EntityType;
   isBasePart?: boolean;
+  isRepeatable?: boolean;
 }
 
 export const FENCE: Placeable = {
@@ -186,6 +187,7 @@ export const CONVERT: Placeable = {
   description: `Convert a wave point in a flat ${CONVERT_MONEY_AMOUNT} gold.`,
   entityType: EntityType.Convert,
   htmlElement: "🪙",
+  isRepeatable: true,
 };
 
 export enum Group {
