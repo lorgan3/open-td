@@ -5,7 +5,7 @@ import { AgentCategory, EntityType } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 
 class DamageBeacon implements StaticAgent {
-  public static scale = 1;
+  public static scale = 2;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
