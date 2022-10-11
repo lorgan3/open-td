@@ -50,7 +50,10 @@ class BuildController {
       return;
     }
 
-    if (!placeableEntityTypes.has(placeable.entityType)) {
+    if (
+      !placeableEntityTypes.has(placeable.entityType) ||
+      !Manager.Instance.getUnlocksController().isUnlocked(placeable)
+    ) {
       return;
     }
 
