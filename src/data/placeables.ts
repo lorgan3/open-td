@@ -99,7 +99,7 @@ export const RAILGUN: Placeable = {
 };
 
 export const DEMOLISH: Placeable = {
-  name: "Demolish",
+  name: "Sell",
   description:
     "Sell towers or blueprints. Blueprints and towers placed before the start of a wave are fully refunded. Other towers give back half their original cost when sold.",
   entityType: EntityType.None,
@@ -173,12 +173,28 @@ export const LASER: Placeable = {
   htmlElement: "🔭",
 };
 
+export const EXCAVATOR: Placeable = {
+  name: "Excavator",
+  description: "Allows building over trees and rocks.",
+  entityType: EntityType.Excavator,
+  htmlElement: "🚜",
+};
+
+export const CONVERT_MONEY_AMOUNT = 100;
+export const CONVERT: Placeable = {
+  name: "Convert",
+  description: `Convert a wave point in a flat ${CONVERT_MONEY_AMOUNT} gold.`,
+  entityType: EntityType.Convert,
+  htmlElement: "🪙",
+};
+
 export enum Group {
   Walls = "Walls",
   BasicBuildings = "Basic buildings",
   PoweredBuildings = "Powered Buildings",
   BaseBuildings = "Base Buildings",
   WildcardBuildings = "Wildcard Buildings",
+  Misc = "Misc",
 }
 
 export const SECTIONS: Record<Group, Placeable[]> = {
@@ -187,6 +203,7 @@ export const SECTIONS: Record<Group, Placeable[]> = {
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
   [Group.BaseBuildings]: [RADAR, ARMORY, MARKET],
   [Group.WildcardBuildings]: [FREEZER, SPEED_BEACON, DAMAGE_BEACON],
+  [Group.Misc]: [DEMOLISH, EXCAVATOR, CONVERT],
 };
 
 const placeables: Placeable[] = [

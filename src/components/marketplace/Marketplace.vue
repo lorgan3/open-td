@@ -99,18 +99,6 @@ const close = () => {
             />
           </div>
         </div>
-
-        <div class="column">
-          <div class="header">Sell</div>
-          <div class="item">
-            <Placeable
-              :item="DEMOLISH"
-              :locked="false"
-              :selected="selected?.entityType === DEMOLISH.entityType"
-              :onSelect="onSelect"
-            />
-          </div>
-        </div>
       </div>
     </div>
   </div>

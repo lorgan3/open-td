@@ -1,3 +1,4 @@
+import { EntityType } from "./entity/entity";
 import { StaticAgent } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
 
@@ -10,6 +11,7 @@ export enum GameEvent {
   ToggleShowCoverage = 5,
   StartWave = 6,
   EndWave = 7,
+  Unlock = 8,
 }
 
 export interface EventParamsMap {
@@ -21,6 +23,7 @@ export interface EventParamsMap {
   [GameEvent.ToggleShowCoverage]: [];
   [GameEvent.StartWave]: [];
   [GameEvent.EndWave]: [];
+  [GameEvent.Unlock]: [Unlock];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (
@@ -44,4 +47,8 @@ export interface SurfaceChange {
   affectedTiles: Set<Tile>;
   addedStaticAgents: Set<StaticAgent>;
   removedStaticAgents: Set<StaticAgent>;
+}
+
+export interface Unlock {
+  type: EntityType;
 }

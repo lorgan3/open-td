@@ -1,6 +1,9 @@
 import Blueprint from "./entity/Blueprint";
 import { IEnemy } from "./entity/enemies";
 import { Agent, EntityType } from "./entity/entity";
+import { GameEvent } from "./events";
+import Manager from "./manager";
+import { CONVERT_MONEY_AMOUNT } from "./placeables";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
@@ -25,7 +28,14 @@ const SELL_MULTIPLIER = 0.5;
 class MoneyController {
   private recentlyBought = new Set<Agent>();
 
-  constructor(private money = 0, private multiplier = () => 1) {}
+  constructor(private money = 0, private multiplier = () => 1) {
+    Manager.Instance.addEventListener(GameEvent.Unlock, ({ type }) => {
+      if (type === EntityType.Convert) {
+        this.addMoney(CONVERT_MONEY_AMOUNT);
+        Manager.Instance.triggerStatUpdate();
+      }
+    });
+  }
 
   setMoney(amount: number) {
     this.money = amount;

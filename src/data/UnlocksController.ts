@@ -1,4 +1,6 @@
 import { EntityType } from "./entity/entity";
+import { GameEvent } from "./events";
+import Manager from "./manager";
 import { Group, SECTIONS } from "./placeables";
 
 class UnlocksController {
@@ -64,6 +66,8 @@ class UnlocksController {
     if (nextUnlock) {
       this.availableUnlocks.add(nextUnlock);
     }
+
+    Manager.Instance.triggerEvent(GameEvent.Unlock, { type });
   }
 }
 

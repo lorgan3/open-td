@@ -64,8 +64,8 @@ class Manager {
 
     this.base = new Base(basePoint);
     this.surface.getEntityTiles(this.base).map((tile) => {
-      if (basePoint.hasStaticEntity()) {
-        basePoint.clearStaticEntity();
+      if (tile.hasStaticEntity()) {
+        this.surface.despawnStatic(tile.getStaticEntity().getAgent());
       }
     });
 

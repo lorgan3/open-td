@@ -49,6 +49,11 @@ export enum EntityType {
   LaserBeam = 26,
   Flier = 27,
   Tank = 28,
+
+  // These are not entities.
+  // @TODO use a different reference so this is not necessary?
+  Excavator = 29,
+  Convert = 30,
 }
 
 export const BASE_ENTITIES = new Set([

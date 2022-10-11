@@ -1,12 +1,13 @@
 import { DEMOLISH, Placeable, placeableEntityTypes } from "./placeables";
 import Manager from "./manager";
 import Blueprint from "./entity/Blueprint";
-import Tile, { FREE_TILES } from "./terrain/tile";
+import Tile, { FREE_TILES, TileType } from "./terrain/tile";
 import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { floodFill } from "./util/baseExpansion";
 import { getScale } from "./entity/staticEntity";
 import { DEFAULT_EXPIRE_TIME } from "../renderers/api";
+import { GameEvent } from "./events";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -21,7 +22,24 @@ class BuildController {
   private pendingBaseAdditions: Blueprint[] = [];
   private pendingBaseRemovals: Blueprint[] = [];
 
-  constructor(private surface: Surface) {}
+  private freeTiles: Set<TileType>;
+  private ignoredEntities: Set<EntityType>;
+
+  constructor(private surface: Surface) {
+    this.freeTiles = new Set(FREE_TILES);
+    this.ignoredEntities = new Set();
+
+    Manager.Instance.addEventListener(GameEvent.Unlock, ({ type }) => {
+      console.log("event", type);
+      if (type === EntityType.Excavator) {
+        this.freeTiles.add(TileType.Tree);
+        this.freeTiles.add(TileType.Rock);
+
+        this.ignoredEntities.add(EntityType.Tree);
+        this.ignoredEntities.add(EntityType.Rock);
+      }
+    });
+  }
 
   build(selection: Tile[], placeable: Placeable) {
     if (placeable.entityType === EntityType.None) {
@@ -30,6 +48,10 @@ class BuildController {
       } else {
         this.sellEntities(selection);
       }
+      return;
+    }
+
+    if (!placeableEntityTypes.has(placeable.entityType)) {
       return;
     }
 
@@ -297,6 +319,13 @@ class BuildController {
 
     validTiles.forEach((tile) => {
       const agent = new placeable.entity!(tile);
+
+      this.surface.getEntityTiles(agent).map((tile) => {
+        if (tile.hasStaticEntity()) {
+          this.surface.despawnStatic(tile.getStaticEntity().getAgent());
+        }
+      });
+
       this.surface.spawnStatic(agent);
       Manager.Instance.getMoneyController().buy(agent);
     });
@@ -432,18 +461,20 @@ class BuildController {
   private checkIsFree(tile: Tile, scale: number, canOverwrite = false) {
     const tiles = this.surface.getEntityTiles(tile.getX(), tile.getY(), scale);
     return !tiles!.find((tile) => {
-      if (!FREE_TILES.has(tile.getBaseType())) {
+      if (!this.freeTiles.has(tile.getBaseType())) {
         return true;
       }
 
       if (
         tile.hasStaticEntity() &&
-        (!canOverwrite ||
-          !placeableEntityTypes.has(
-            tile.getStaticEntity().getAgent().getType()
-          ))
+        !this.ignoredEntities.has(tile.getStaticEntity().getAgent().getType())
       ) {
-        return true;
+        if (
+          !canOverwrite ||
+          !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
+        ) {
+          return true;
+        }
       }
     });
   }
