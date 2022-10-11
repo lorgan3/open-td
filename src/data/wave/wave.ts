@@ -38,7 +38,7 @@ class Wave {
   }
 
   static fromSpawnGroups(level: number, spawnGroups: SpawnGroup[]) {
-    const totalEnergy = 2 ** level * Runner.cost;
+    const totalEnergy = (1 + level ** 2) * Runner.cost;
     const energies = splitNumber(totalEnergy, spawnGroups.length);
     const spawnGroupAgeBonus =
       SPAWN_GROUP_AGE_BONUSES[Manager.Instance.getDifficulty()];
