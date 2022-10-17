@@ -206,22 +206,40 @@ class Renderer implements IRenderer {
     });
 
     this.viewport!.addListener("mousedown", (event: InteractionEvent) => {
-      const x = Math.floor((event.data.global.x - this.viewport!.x) / SCALE);
-      const y = Math.floor((event.data.global.y - this.viewport!.y) / SCALE);
+      const x = Math.floor(
+        (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
+          SCALE
+      );
+      const y = Math.floor(
+        (event.data.global.y / this.viewport!.scale.y + this.viewport!.top) /
+          SCALE
+      );
 
       this.controller.mouseDown(x, y);
     });
 
     this.viewport!.addListener("mousemove", (event: InteractionEvent) => {
-      const x = Math.floor((event.data.global.x - this.viewport!.x) / SCALE);
-      const y = Math.floor((event.data.global.y - this.viewport!.y) / SCALE);
+      const x = Math.floor(
+        (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
+          SCALE
+      );
+      const y = Math.floor(
+        (event.data.global.y / this.viewport!.scale.y + this.viewport!.top) /
+          SCALE
+      );
 
       this.controller.mouseMove(x, y);
     });
 
     this.viewport!.addListener("mouseup", (event: InteractionEvent) => {
-      const x = Math.floor((event.data.global.x - this.viewport!.x) / SCALE);
-      const y = Math.floor((event.data.global.y - this.viewport!.y) / SCALE);
+      const x = Math.floor(
+        (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
+          SCALE
+      );
+      const y = Math.floor(
+        (event.data.global.y / this.viewport!.scale.y + this.viewport!.top) /
+          SCALE
+      );
 
       this.controller.mouseUp(x, y);
     });
