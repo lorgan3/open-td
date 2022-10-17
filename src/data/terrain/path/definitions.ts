@@ -32,7 +32,7 @@ export const DEFAULT_LAND_BASED_COSTS: PathMap = {
 export const DEFAULT_LAND_BASED_MULTIPLIERS: PathMap = {
   [TileType.Fence]: 5,
   [TileType.ElectricFence]: 40,
-  [TileType.Wall]: 66.666,
+  [TileType.Wall]: 500,
   [TileType.Freezer]: 0.5,
   [TileType.Obstructed]: 500,
   [TileType.PlayerBuilding]: -10,
@@ -62,7 +62,7 @@ export const DEFAULT_SKY_BASED_COSTS: PathMap = {
 export const DEFAULT_SKY_BASED_MULTIPLIERS: PathMap = {
   [TileType.Fence]: 3,
   [TileType.ElectricFence]: 3,
-  [TileType.Wall]: 3,
+  [TileType.Wall]: 5,
   [TileType.Tree]: 4,
   [TileType.Rock]: 3,
   [TileType.Freezer]: 0.5,

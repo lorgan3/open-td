@@ -39,7 +39,7 @@ export const FENCE: Placeable = {
 export const WALL: Placeable = {
   name: "Wall",
   description:
-    "A large solid wall that land-based enemies have to walk around. If the wall is too long, enemies will attack and break it to continue their path but this less likely compared to fences. Walls block tower sight lines.",
+    "A large solid wall that land-based enemies have to walk around. A wall is equivalent to a tower that does not shoot meaning enemies will avoid them but will destroy them if left with no other option.",
   entity: Wall,
   entityType: EntityType.Wall,
   htmlElement: "🚧",
@@ -66,7 +66,7 @@ export const FREEZER: Placeable = {
 export const TOWER: Placeable = {
   name: "Tower",
   description:
-    "The cheapest and most basic tower. It has poor range and deals little damage",
+    "The cheapest and most basic tower. It has poor range and deals little damage.",
   entity: Tower,
   entityType: EntityType.Tower,
   htmlElement: "🗼",

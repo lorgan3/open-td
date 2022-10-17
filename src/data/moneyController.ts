@@ -7,7 +7,7 @@ import { CONVERT_MONEY_AMOUNT } from "./placeables";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
-  [EntityType.Wall]: 3,
+  [EntityType.Wall]: 6,
   [EntityType.ElectricFence]: 9,
   [EntityType.Freezer]: 4,
   [EntityType.Tower]: 10,
