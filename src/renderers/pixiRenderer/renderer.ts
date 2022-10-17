@@ -175,24 +175,24 @@ class Renderer implements IRenderer {
     });
 
     this.viewport!.addListener("mousedown", (event: InteractionEvent) => {
-      const x = Math.floor(event.data.global.x / SCALE);
-      const y = Math.floor(event.data.global.y / SCALE);
+      const x = Math.floor((event.data.global.x - this.viewport!.x) / SCALE);
+      const y = Math.floor((event.data.global.y - this.viewport!.y) / SCALE);
 
       this.controller.mouseDown(x, y);
     });
 
     this.viewport!.addListener("mousemove", (event: InteractionEvent) => {
-      const x = Math.floor(event.data.global.x / SCALE);
-      const y = Math.floor(event.data.global.y / SCALE);
+      const x = Math.floor((event.data.global.x - this.viewport!.x) / SCALE);
+      const y = Math.floor((event.data.global.y - this.viewport!.y) / SCALE);
 
       this.controller.mouseMove(x, y);
     });
 
     this.viewport!.addListener("mouseup", (event: InteractionEvent) => {
-      const x = Math.floor(event.data.global.x / SCALE);
-      const y = Math.floor(event.data.global.y / SCALE);
+      const x = Math.floor((event.data.global.x - this.viewport!.x) / SCALE);
+      const y = Math.floor((event.data.global.y - this.viewport!.y) / SCALE);
 
-      this.controller.mouseMove(x, y);
+      this.controller.mouseUp(x, y);
     });
 
     window.addEventListener("keydown", (event: KeyboardEvent) => {
