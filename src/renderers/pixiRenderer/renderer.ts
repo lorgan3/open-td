@@ -4,7 +4,7 @@ import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
 import SimpleMessage from "../../components/SimpleMessage.vue";
 
-import { Application, InteractionEvent, Loader } from "pixi.js";
+import { Application, Graphics, InteractionEvent, Loader } from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
 import { AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
@@ -28,6 +28,8 @@ class Renderer implements IRenderer {
   private app?: Application;
   private viewport?: Viewport;
   private tilemap?: CompositeTilemap;
+
+  private selection?: Graphics;
 
   private loader: Loader;
 
@@ -87,6 +89,8 @@ class Renderer implements IRenderer {
 
     this.tilemap = new CompositeTilemap();
     this.viewport!.addChild(this.tilemap);
+    this.selection = new Graphics();
+    this.viewport!.addChild(this.selection);
 
     if (this.loader.loading) {
       this.loader.onComplete.add(() => this.renderTilemap());
@@ -151,9 +155,36 @@ class Renderer implements IRenderer {
   }
 
   rerender(dt: number): void {
+    if (this.loader.loading) {
+      return;
+    }
+
     this.time += dt;
 
     this.app!.renderer.plugins.tilemap.tileAnim[0] += dt / 500;
+
+    this.renderSelection();
+
+  }
+
+  private renderSelection() {
+    const scale = SCALE * (this.controller.getPlacable()?.entity?.scale || 1);
+
+    this.selection!.clear();
+    this.selection!.lineStyle(2, 0x000000);
+    if (this.controller.isMouseDown()) {
+      this.controller.getSelection().forEach((tile) => {
+        this.selection!.drawRect(
+          tile.getX() * SCALE,
+          tile.getY() * SCALE,
+          scale,
+          scale
+        );
+      });
+    } else {
+      const [x, y] = this.controller.getMouse();
+      this.selection!.drawRect(x * SCALE, y * SCALE, scale, scale);
+    }
   }
 
   showCoverage(): void {}

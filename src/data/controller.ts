@@ -36,7 +36,7 @@ class Controller {
   private mouseX = 0;
   private mouseY = 0;
   private pressedKeys: Partial<Record<Keys, boolean>> = {};
-  private isMouseDown = false;
+  private _isMouseDown = false;
   private eventHandlers = new Map<Keys, Set<() => void>>();
 
   private selectedPlacable: Placeable | null = null;
@@ -55,7 +55,7 @@ class Controller {
   public mouseDown(x: number, y: number) {
     this.mouseDownX = x;
     this.mouseDownY = y;
-    this.isMouseDown = true;
+    this._isMouseDown = true;
   }
 
   public mouseMove(x: number, y: number) {
@@ -64,7 +64,7 @@ class Controller {
   }
 
   public getSelection() {
-    if (!this.isMouseDown) {
+    if (!this._isMouseDown) {
       return [];
     }
 
@@ -120,14 +120,14 @@ class Controller {
 
   public mouseUp(x: number, y: number) {
     if (!this.selectedPlacable) {
-      this.isMouseDown = false;
+      this._isMouseDown = false;
       return;
     }
 
     const tiles = this.getSelection();
     Manager.Instance.getBuildController().build(tiles, this.selectedPlacable);
 
-    this.isMouseDown = false;
+    this._isMouseDown = false;
   }
 
   public keyDown(key: string) {
@@ -173,6 +173,18 @@ class Controller {
 
   public removeKeyListener(key: Keys, fn: () => void) {
     this.eventHandlers.get(key)?.delete(fn);
+  }
+
+  isMouseDown() {
+    return this._isMouseDown;
+  }
+
+  getMouse() {
+    const scale = this.selectedPlacable?.entity?.scale || 1;
+    return [
+      Math.floor(this.mouseX / scale) * scale,
+      Math.floor(this.mouseY / scale) * scale,
+    ];
   }
 }
 
