@@ -1,15 +1,16 @@
 import { TileType } from "../../data/terrain/tile";
 
 export enum AtlasTile {
-  Grass = "32x32_tiles-47.png",
-  Sand = "32x32_tiles-122.png",
-  Water = "32x32_tiles-485.png",
-  WaterAlt = "32x32_tiles-495.png",
-  Tree = "32x32_tiles-162.png",
-  Rock = "32x32_tiles-321.png",
-  Ice = "32x32_tiles-487.png",
-  Snow = "32x32_tiles-73.png",
-  Dirt = "32x32_tiles-54.png",
+  Grass = "atlas3.png",
+  Sand = "atlas6.png",
+  Water = "atlas9.png",
+  WaterAlt = "atlas10.png",
+  Tree = "atlas7.png",
+  Rock = "atlas8.png",
+  Ice = "atlas1.png",
+  Snow = "atlas2.png",
+  Dirt = "atlas0.png",
+  Stone = "atlas11.png",
 }
 
 export const TILE_TO_ATLAS_MAP: Partial<Record<TileType, AtlasTile>> = {
@@ -21,4 +22,5 @@ export const TILE_TO_ATLAS_MAP: Partial<Record<TileType, AtlasTile>> = {
   [TileType.Dirt]: AtlasTile.Dirt,
   [TileType.Tree]: AtlasTile.Tree,
   [TileType.Rock]: AtlasTile.Rock,
+  [TileType.Stone]: AtlasTile.Stone,
 };

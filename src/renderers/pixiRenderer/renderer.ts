@@ -11,9 +11,11 @@ import { Viewport } from "pixi-viewport";
 import { settings } from "@pixi/tilemap";
 import { TileType } from "../../data/terrain/tile";
 import Manager from "../../data/manager";
+import { Default } from "./overrides/default";
+import { EntityRenderer, OVERRIDES } from "./overrides";
 
 let DEBUG = false;
-const SCALE = 32;
+export const SCALE = 32;
 const SCROLL_SPEED = 20;
 const MAX_SCALE = 3;
 const MIN_SCALE = 0.5;
@@ -29,6 +31,7 @@ class Renderer implements IRenderer {
   private viewport?: Viewport;
   private tilemap?: CompositeTilemap;
 
+  private sprites = new Map<number, EntityRenderer>();
   private selection?: Graphics;
 
   private loader: Loader;
@@ -47,7 +50,11 @@ class Renderer implements IRenderer {
     );
 
     this.loader = new Loader();
-    this.loader.add("atlas", "./src/assets/grass.json");
+    this.loader.add("atlas", "./src/assets/atlas.json");
+    this.loader.add("runner", "./src/assets/animations/runner.json");
+    this.loader.add("regular", "./src/assets/animations/regular.json");
+    this.loader.add("flier", "./src/assets/animations/flier.json");
+    this.loader.add("buildings", "./src/assets/buildings.json");
     this.loader.load();
 
     window.debug = () => {
@@ -131,7 +138,7 @@ class Renderer implements IRenderer {
           );
 
           if (tile.getBaseType() === TileType.Water) {
-            this.tilemap!.tileAnimX(64, 2);
+            this.tilemap!.tileAnimX(32, 2);
           }
         }
 
@@ -165,6 +172,28 @@ class Renderer implements IRenderer {
 
     this.renderSelection();
 
+    const entities = this.surface.getEntities();
+    for (let entity of entities) {
+      let sprite = this.sprites.get(entity.getId());
+
+      if (!sprite) {
+        const constructor = OVERRIDES[entity.getAgent().getType()] || Default;
+        sprite = new constructor(entity.getAgent(), this.loader);
+        this.viewport!.addChild(sprite);
+        this.sprites.set(entity.getId(), sprite);
+      }
+
+      sprite.sync();
+    }
+
+    const deletedEntities = this.surface.getDeletedEntities();
+    deletedEntities.forEach((entity) => {
+      const sprite = this.sprites.get(entity.getId());
+      if (sprite) {
+        this.sprites.delete(entity.getId());
+        this.viewport!.removeChild(sprite);
+      }
+    });
   }
 
   private renderSelection() {
