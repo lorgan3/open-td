@@ -203,7 +203,7 @@ export const SECTIONS: Record<Group, Placeable[]> = {
   [Group.Walls]: [FENCE, WALL, ELECTRIC_FENCE],
   [Group.BasicBuildings]: [TOWER, FLAMETHROWER, MORTAR],
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
-  [Group.BaseBuildings]: [RADAR, ARMORY, MARKET],
+  [Group.BaseBuildings]: [ARMORY, RADAR, MARKET],
   [Group.WildcardBuildings]: [FREEZER, SPEED_BEACON, DAMAGE_BEACON],
   [Group.Misc]: [DEMOLISH, EXCAVATOR, CONVERT],
 };
