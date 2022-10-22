@@ -1,5 +1,6 @@
 import Base from "./entity/base";
 import { Agent, EntityType } from "./entity/entity";
+import Manager from "./manager";
 import Surface from "./terrain/surface";
 import Tile, { DiscoveryStatus } from "./terrain/tile";
 
@@ -56,10 +57,6 @@ class VisibilityController {
   }
 
   commit() {
-    if (this.pendingAgents.size === 0) {
-      return;
-    }
-
     this.pendingAgents.clear();
     this.update();
   }
@@ -90,6 +87,17 @@ class VisibilityController {
     });
   }
 
+  updateBaseRange() {
+    if (!this.base) {
+      throw new Error("Updating base range without a base");
+    }
+
+    const range = this.getVisibilityRange(this.base);
+    const coords = this.getVisibilityEdge(this.base);
+    this.edgeMap.set(this.base.entity.getId(), coords);
+    this.updateVisibility(...coords, range, DiscoveryStatus.Pending);
+  }
+
   getBBox() {
     return [
       [this.minX!, this.minY!],
@@ -104,6 +112,7 @@ class VisibilityController {
   private getVisibilityRange(agent: Agent) {
     switch (agent.getType()) {
       case EntityType.Base:
+        return 35 + Manager.Instance.getLevel() * 2;
       case EntityType.Radar:
         return 35;
       default:

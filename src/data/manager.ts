@@ -316,7 +316,7 @@ class Manager {
         direction,
         (tile) => {
           if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
-            backOff = 4;
+            backOff = 4 + Math.floor(Math.random() * 4);
             return true;
           }
 
@@ -373,6 +373,7 @@ class Manager {
     this.buildController.commit();
     this.base.regenerate();
     this.unlocksController.addPoint();
+    this.visibilityController.updateBaseRange();
 
     this.spawnGroups.forEach((spawnGroup) =>
       spawnGroup.setUnit(Wave.getUnitForLevel(this.level))
@@ -395,6 +396,10 @@ class Manager {
     }
 
     return multiplier;
+  }
+
+  getLevel() {
+    return this.level;
   }
 
   private onSurfaceChange = ({
