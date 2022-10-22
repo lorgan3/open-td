@@ -62,7 +62,7 @@ onUnmounted(() => {
 <template>
   <div class="stats">
     <span :class="clazz">
-      🪙 {{ money }}
+      🪙 {{ naturalNumberFormatter.format(money) }}
       <span class="meta"
         >(<span class="positive">{{
           percentageFormatter.format(moneyMultiplier)

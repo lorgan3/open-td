@@ -58,7 +58,7 @@ class Manager {
     this.visibilityController = new VisibilityController(surface);
     this.powerController = new PowerController();
     this.moneyController = new MoneyController(150, () =>
-      this.base.getMoneyFactor()
+      Math.max(0.5, this.base.getMoneyFactor() - this.level / 120)
     );
     this.buildController = new BuildController(surface);
     this.unlocksController = new UnlocksController();
