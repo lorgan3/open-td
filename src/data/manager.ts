@@ -57,7 +57,7 @@ class Manager {
     this.eventHandlers = new Map();
     this.visibilityController = new VisibilityController(surface);
     this.powerController = new PowerController();
-    this.moneyController = new MoneyController(100, () =>
+    this.moneyController = new MoneyController(150, () =>
       this.base.getMoneyFactor()
     );
     this.buildController = new BuildController(surface);

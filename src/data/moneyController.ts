@@ -9,18 +9,18 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
   [EntityType.Wall]: 6,
   [EntityType.ElectricFence]: 9,
-  [EntityType.Freezer]: 4,
-  [EntityType.Tower]: 10,
-  [EntityType.Flamethrower]: 15,
-  [EntityType.Mortar]: 30,
-  [EntityType.Railgun]: 50,
+  [EntityType.Freezer]: 6,
+  [EntityType.Tower]: 14,
+  [EntityType.Flamethrower]: 21,
+  [EntityType.Mortar]: 50,
+  [EntityType.Railgun]: 70,
   [EntityType.Radar]: 50,
-  [EntityType.PowerPlant]: 20,
+  [EntityType.PowerPlant]: 25,
   [EntityType.Armory]: 50,
-  [EntityType.Market]: 20,
-  [EntityType.SpeedBeacon]: 50,
-  [EntityType.DamageBeacon]: 40,
-  [EntityType.Laser]: 30,
+  [EntityType.Market]: 30,
+  [EntityType.SpeedBeacon]: 70,
+  [EntityType.DamageBeacon]: 60,
+  [EntityType.Laser]: 40,
 };
 
 const SELL_MULTIPLIER = 0.5;
@@ -107,13 +107,12 @@ class MoneyController {
   private getEnemyValue(enemy: IEnemy): number {
     switch (enemy.getType()) {
       case EntityType.Slime:
+      case EntityType.Tank:
         return 5;
       case EntityType.Runner:
         return 3;
       case EntityType.Flier:
         return 6;
-      case EntityType.Tank:
-        return 8;
       default:
         throw new Error("Entity is not an enemy");
     }
