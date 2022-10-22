@@ -39,6 +39,7 @@ class Manager {
   private base: Base;
   private spawnGroups: SpawnGroup[] = [];
   private nextSpawnGroup: SpawnGroup | undefined;
+  private direction = Math.random() * Math.PI * 2;
 
   private level = 0;
   private wave: Wave | undefined;
@@ -234,6 +235,9 @@ class Manager {
       }
     }
 
+    this.direction +=
+      (Math.random() - 0.5) * Math.min(Math.PI * 4, this.level / 3);
+
     const spawnGroup = this.getNextSpawnGroup();
     if (spawnGroup) {
       this.timeSinceLastExpansion = 0;
@@ -255,11 +259,11 @@ class Manager {
 
     this.wave = Wave.fromSpawnGroups(this.level, this.spawnGroups);
 
-    this.level++;
-
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.commit();
+
+    this.level++;
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
@@ -306,14 +310,13 @@ class Manager {
       return this.nextSpawnGroup;
     }
 
-    let direction = Math.random() * Math.PI * 2;
     let spawned = false;
     let backOff = 3;
     for (let i = 0; i < 20; i++) {
       this.surface.forRay(
         this.base.getTile().getX(),
         this.base.getTile().getY(),
-        direction,
+        this.direction,
         (tile) => {
           if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
             backOff = 4 + Math.floor(Math.random() * 4);
@@ -339,7 +342,7 @@ class Manager {
       );
 
       if (!spawned) {
-        direction += direction + Math.PI / 10;
+        this.direction += Math.PI / 10;
       } else {
         break;
       }
