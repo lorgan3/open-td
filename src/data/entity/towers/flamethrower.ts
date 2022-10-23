@@ -13,7 +13,7 @@ import Flame from "../projectiles/flame";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
 const COOLDOWN = 1;
-const DAMAGE = 0.05;
+const DAMAGE = 0.04;
 
 class Flamethrower implements ITower {
   public static readonly scale = 2;

@@ -12,7 +12,7 @@ import { IEnemy } from "../enemies";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
 const COOLDOWN = 5000;
-const DAMAGE = 100;
+const DAMAGE = 50;
 
 class Mortar implements ITower {
   public static readonly scale = 2;
