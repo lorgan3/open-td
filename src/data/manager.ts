@@ -24,6 +24,7 @@ import UnlocksController from "./UnlocksController";
 import SpawnAlert from "./util/spawnAlert";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "./wave/SpawnGroup";
+import { normalDistributionRandom } from "./wave/util";
 import Wave from "./wave/wave";
 
 class Manager {
@@ -236,7 +237,12 @@ class Manager {
     }
 
     this.direction +=
-      (Math.random() - 0.5) * Math.min(Math.PI * 4, this.level / 3);
+      (Math.random() > 0.5 ? 1 : -1) *
+      Math.max(
+        (Math.PI / 6) *
+          normalDistributionRandom() *
+          Math.min(Math.PI * 2, (this.level + 1) / 1.5)
+      );
 
     const spawnGroup = this.getNextSpawnGroup();
     if (spawnGroup) {
