@@ -181,6 +181,14 @@ export const EXCAVATOR: Placeable = {
   htmlElement: "🚜",
 };
 
+export const TERRAFORM: Placeable = {
+  name: "Terraform",
+  description:
+    "Allows building over water, ice and enemy structures. Keep in mind a stone foundation is also built which replaces the original surface.",
+  entityType: EntityType.Terraform,
+  htmlElement: "🏗️",
+};
+
 export const CONVERT_MONEY_AMOUNT = 100;
 export const CONVERT: Placeable = {
   name: "Convert",
@@ -205,7 +213,7 @@ export const SECTIONS: Record<Group, Placeable[]> = {
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
   [Group.BaseBuildings]: [ARMORY, RADAR, MARKET],
   [Group.WildcardBuildings]: [FREEZER, SPEED_BEACON, DAMAGE_BEACON],
-  [Group.Misc]: [DEMOLISH, EXCAVATOR, CONVERT],
+  [Group.Misc]: [DEMOLISH, EXCAVATOR, TERRAFORM],
 };
 
 const placeables: Placeable[] = [

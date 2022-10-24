@@ -54,6 +54,7 @@ export enum EntityType {
   // @TODO use a different reference so this is not necessary?
   Excavator = 29,
   Convert = 30,
+  Terraform = 31,
 }
 
 export const BASE_ENTITIES = new Set([

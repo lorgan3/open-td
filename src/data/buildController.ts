@@ -5,7 +5,7 @@ import Tile, { FREE_TILES, TileType } from "./terrain/tile";
 import Surface from "./terrain/surface";
 import { EntityType } from "./entity/entity";
 import { floodFill } from "./util/baseExpansion";
-import { getScale } from "./entity/staticEntity";
+import { getScale, StaticAgent } from "./entity/staticEntity";
 import { DEFAULT_EXPIRE_TIME } from "../renderers/api";
 import { GameEvent } from "./events";
 
@@ -14,6 +14,13 @@ export const BASE_PARTS = new Set([
   EntityType.Radar,
   EntityType.Market,
   EntityType.PowerPlant,
+]);
+
+export const SURFACES_REQUIRING_FOUNDATION = new Set([
+  TileType.Water,
+  TileType.Ice,
+  TileType.Spore,
+  TileType.Bridge,
 ]);
 
 class BuildController {
@@ -36,6 +43,13 @@ class BuildController {
 
         this.ignoredEntities.add(EntityType.Tree);
         this.ignoredEntities.add(EntityType.Rock);
+      }
+
+      if (placeable.entityType === EntityType.Terraform) {
+        this.freeTiles.add(TileType.Water);
+        this.freeTiles.add(TileType.Ice);
+        this.freeTiles.add(TileType.Spore);
+        this.freeTiles.add(TileType.Bridge);
       }
     });
   }
@@ -90,7 +104,7 @@ class BuildController {
 
       const constructor = blueprint.getPlaceable().entity!;
       const agent = new constructor(tile);
-      this.surface.spawnStatic(agent);
+      this.spawn(agent);
       Manager.Instance.getMoneyController().replaceBlueprint(blueprint, agent);
     });
 
@@ -328,7 +342,7 @@ class BuildController {
         }
       });
 
-      this.surface.spawnStatic(agent);
+      this.spawn(agent);
       Manager.Instance.getMoneyController().buy(agent);
     });
 
@@ -497,6 +511,18 @@ class BuildController {
     this.surface
       .getEntityTiles(tile.getX(), tile.getY(), blueprint.getScale())
       .forEach((tile) => this.blueprints.delete(tile.getHash()));
+  }
+
+  private spawn(agent: StaticAgent) {
+    this.surface.getEntityTiles(agent).forEach((tile) => {
+      if (SURFACES_REQUIRING_FOUNDATION.has(tile.getBaseType())) {
+        this.surface.setTile(
+          new Tile(tile.getX(), tile.getY(), TileType.Stone)
+        );
+      }
+    });
+
+    this.surface.spawnStatic(agent);
   }
 }
 
