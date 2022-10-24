@@ -121,7 +121,7 @@ class Manager {
       consumption: this.powerController.getConsumption(),
       power: this.powerController.getPower(),
       remainingEnemies,
-      inProgress: remainingEnemies !== 0,
+      inProgress: this.getIsStarted(),
     });
   }
 
