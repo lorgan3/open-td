@@ -1,11 +1,12 @@
 import { AnimatedSprite, Loader } from "pixi.js";
+import { EntityRenderer } from ".";
 import RegularData from "../../../data/entity/enemies/regular";
 import { SCALE } from "../renderer";
 
 const ATLAS_NAME = "regular";
 const ANIMATION_SPEED = 0.1;
 
-class Regular extends AnimatedSprite {
+class Regular extends AnimatedSprite implements EntityRenderer {
   constructor(private data: RegularData, loader: Loader) {
     super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
     this.pivot = { x: 16, y: 16 };
