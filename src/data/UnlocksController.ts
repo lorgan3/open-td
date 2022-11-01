@@ -20,12 +20,17 @@ class UnlocksController {
 
       towers.forEach((tower, index) => {
         if (index === 0) {
+          this.availableUnlocks.add(tower.entityType);
           this.unlockedTowers.add(tower.entityType);
           return;
         }
 
-        if (index === 1) {
+        if (this.unlockedTowers.has(towers[index - 1].entityType)) {
           this.availableUnlocks.add(tower.entityType);
+
+          if (tower.isRepeatable) {
+            this.unlockedTowers.add(tower.entityType);
+          }
         }
 
         if (towers.length > index + 1) {
@@ -44,7 +49,10 @@ class UnlocksController {
   }
 
   canUnlock(placeable: Placeable) {
-    return this.availableUnlocks.has(placeable.entityType) && this.points > 0;
+    return (
+      this.availableUnlocks.has(placeable.entityType) &&
+      this.points >= (placeable.cost ?? 1)
+    );
   }
 
   isUnlocked(placeable: Placeable) {
@@ -56,7 +64,7 @@ class UnlocksController {
       throw new Error(`Can't unlock ${placeable.entityType}`);
     }
 
-    this.points--;
+    this.points -= placeable.cost ?? 1;
     this.makeAvailable(placeable);
 
     Manager.Instance.triggerEvent(GameEvent.Unlock, { placeable });

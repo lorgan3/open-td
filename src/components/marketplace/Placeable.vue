@@ -37,6 +37,9 @@ const range =
       <li v-if="!!POWER_CONSUMPTIONS[props.item.entityType]">⚡</li>
       <li v-if="props.item.isBasePart">🧱</li>
       <li v-if="props.item.isRepeatable">♻</li>
+      <li v-if="props.item.cost">
+        <span class="emoji">🚩</span> {{ props.item.cost }}
+      </li>
     </ul>
   </button>
 </template>
