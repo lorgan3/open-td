@@ -8,6 +8,7 @@ const SPEED = 0.003;
 class Shockwave implements Agent {
   public entity: Entity;
   public category = AgentCategory.Unknown;
+  public renderData = {};
 
   private time = 0;
   private travelTime: number;

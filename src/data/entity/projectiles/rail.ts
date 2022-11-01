@@ -10,6 +10,7 @@ export const LIFETIME = 1500;
 class Rail implements Agent {
   public entity: Entity;
   public category = AgentCategory.Unknown;
+  public renderData = {};
 
   public targetX: number;
   public targetY: number;

@@ -47,6 +47,7 @@ class Base implements StaticAgent {
   public category = AgentCategory.Player;
   public hp = 30;
   private invincibleTime = 0;
+  public renderData = {};
 
   private baseParts = new Set<StaticAgent>();
   private basePartsByType = new Map<EntityType, number>();

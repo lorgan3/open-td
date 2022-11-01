@@ -10,6 +10,7 @@ class DamageBeacon implements StaticAgent {
   public entity: StaticEntity;
   public category = AgentCategory.Player;
   private hp = 50;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

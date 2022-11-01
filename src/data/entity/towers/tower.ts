@@ -27,6 +27,7 @@ class Tower implements ITower {
   private isEnabled = true;
   private speedMultiplier = 1;
   private damageMultiplier = 1;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

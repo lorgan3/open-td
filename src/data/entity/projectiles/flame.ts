@@ -9,6 +9,7 @@ class Flame implements Agent {
   public entity: Entity;
   public category = AgentCategory.Unknown;
   public time = 0;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);

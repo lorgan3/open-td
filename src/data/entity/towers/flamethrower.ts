@@ -27,6 +27,7 @@ class Flamethrower implements ITower {
   private hp = 160;
   private isEnabled = true;
   private damageMultiplier = 1;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

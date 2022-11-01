@@ -7,6 +7,7 @@ class Freezer implements StaticAgent {
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

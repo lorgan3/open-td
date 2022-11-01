@@ -8,6 +8,7 @@ export const LIFETIME = 250;
 class LaserBeam implements Agent {
   public entity: Entity;
   public category = AgentCategory.Unknown;
+  public renderData = {};
 
   public time = 0;
   public targetX = 0;

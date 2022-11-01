@@ -13,6 +13,7 @@ class ElectricFence implements ITower {
   public entity: StaticEntity;
   public category = AgentCategory.Player;
   private isEnabled = true;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

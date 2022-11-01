@@ -29,6 +29,7 @@ class Regular implements IEnemy {
   public category = AgentCategory.Enemy;
   private status = Status.Normal;
   private statusDuration = 0;
+  public renderData = {};
 
   private ai: EnemyAI;
 

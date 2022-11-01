@@ -5,6 +5,7 @@ import Entity, { Agent, AgentCategory, EntityType } from "./entity";
 class Blueprint implements Agent {
   public entity: Entity;
   public category = AgentCategory.Player;
+  public renderData = {};
 
   constructor(
     private tile: Tile,

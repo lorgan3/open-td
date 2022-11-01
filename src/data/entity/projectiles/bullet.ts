@@ -8,6 +8,7 @@ const SPEED = 0.015;
 class Bullet implements Agent {
   public entity: Entity;
   public category = AgentCategory.Unknown;
+  public renderData = {};
 
   private targetX: number;
   private targetY: number;

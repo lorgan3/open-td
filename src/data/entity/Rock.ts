@@ -9,6 +9,7 @@ class Rock implements StaticAgent {
   public entity: StaticEntity;
   public category = AgentCategory.Unknown;
   private hp = 30;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

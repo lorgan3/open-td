@@ -27,6 +27,7 @@ class Laser implements ITower {
   private hp = 80;
   private isEnabled = true;
   private damageMultiplier = 1;
+  public renderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

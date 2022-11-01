@@ -17,6 +17,7 @@ export interface Agent {
   despawn?: () => void;
   hit?: (damage: number) => void;
   isVisible: () => boolean;
+  renderData: Record<string, any>;
 }
 
 export enum EntityType {
