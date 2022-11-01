@@ -11,6 +11,18 @@ export interface EntityRenderer extends Sprite {
 
 export type Constructor = new (data: any, loader: Loader) => EntityRenderer;
 
+export const init = (loader: Loader) => {
+  loader.add("runner", "./src/assets/animations/runner.json");
+  loader.add("regular", "./src/assets/animations/regular.json");
+  loader.add("flier", "./src/assets/animations/flier.json");
+  loader.add("buildings", "./src/assets/buildings.json");
+  loader.add("turret", "./src/assets/Turret.json");
+  loader.add("flamethrower", "./src/assets/Flamethrower.json");
+  loader.add("laser", "./src/assets/Laser.json");
+  loader.add("mortar", "./src/assets/Mortar.json");
+  loader.add("railgun", "./src/assets/Railgun.json");
+};
+
 export const OVERRIDES: Partial<Record<EntityType, Constructor>> = {
   [EntityType.Runner]: Runner,
   [EntityType.Slime]: Regular,

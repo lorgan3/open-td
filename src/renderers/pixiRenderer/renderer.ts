@@ -12,7 +12,7 @@ import { settings } from "@pixi/tilemap";
 import { TileType } from "../../data/terrain/tile";
 import Manager from "../../data/manager";
 import { Default } from "./overrides/default";
-import { EntityRenderer, OVERRIDES } from "./overrides";
+import { EntityRenderer, init, OVERRIDES } from "./overrides";
 
 let DEBUG = false;
 export const SCALE = 32;
@@ -51,10 +51,7 @@ class Renderer implements IRenderer {
 
     this.loader = new Loader();
     this.loader.add("atlas", "./src/assets/atlas.json");
-    this.loader.add("runner", "./src/assets/animations/runner.json");
-    this.loader.add("regular", "./src/assets/animations/regular.json");
-    this.loader.add("flier", "./src/assets/animations/flier.json");
-    this.loader.add("buildings", "./src/assets/buildings.json");
+    init(this.loader);
     this.loader.load();
 
     window.debug = () => {
