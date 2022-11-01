@@ -1,6 +1,6 @@
 import Manager from "../../manager";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
-import { AgentCategory, EntityType } from "../entity";
+import { AgentCategory, EntityType, RenderData } from "../entity";
 import {
   coverTilesWithTowerSightLines,
   getDamageMultiplier,
@@ -27,7 +27,7 @@ class Railgun implements ITower {
   private isEnabled = true;
   private speedMultiplier = 1;
   private damageMultiplier = 1;
-  public renderData = {};
+  public renderData: RenderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
@@ -57,6 +57,9 @@ class Railgun implements ITower {
     const damage = DAMAGE * this.damageMultiplier;
     const projectile = new Rail(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
+
+    this.renderData.fired = true;
+    this.entity.lookAt(target.entity);
 
     return damage;
   }

@@ -8,6 +8,7 @@ export enum AgentCategory {
   Enemy = 2,
 }
 
+export type RenderData = Record<string, any>;
 export interface Agent {
   entity: Entity;
   getType(): EntityType;
@@ -17,7 +18,7 @@ export interface Agent {
   despawn?: () => void;
   hit?: (damage: number) => void;
   isVisible: () => boolean;
-  renderData: Record<string, any>;
+  renderData: RenderData;
 }
 
 export enum EntityType {
@@ -142,7 +143,7 @@ class Entity {
     this.lookAt(to);
   }
 
-  lookAt(target: Tile) {
+  lookAt(target: Tile | Entity) {
     const xDiff = target.getX() - this.x;
     const yDiff = target.getY() - this.y;
 

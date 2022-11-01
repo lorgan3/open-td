@@ -1,6 +1,6 @@
 import Manager from "../../manager";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
-import { AgentCategory, EntityType } from "../entity";
+import { AgentCategory, EntityType, RenderData } from "../entity";
 import {
   coverTilesWithTowerSightLines,
   getDamageMultiplier,
@@ -27,7 +27,7 @@ class Laser implements ITower {
   private hp = 80;
   private isEnabled = true;
   private damageMultiplier = 1;
-  public renderData = {};
+  public renderData: RenderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
@@ -56,6 +56,9 @@ class Laser implements ITower {
     }
 
     this.laserBeam.dealDamage(target, damage);
+
+    this.renderData.fired = true;
+    this.entity.lookAt(target.entity);
 
     return damage;
   }

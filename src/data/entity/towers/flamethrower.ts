@@ -8,7 +8,7 @@ import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import { IEnemy } from "../enemies";
-import { AgentCategory, EntityType } from "../entity";
+import { AgentCategory, EntityType, RenderData } from "../entity";
 import Flame from "../projectiles/flame";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
@@ -27,7 +27,7 @@ class Flamethrower implements ITower {
   private hp = 160;
   private isEnabled = true;
   private damageMultiplier = 1;
-  public renderData = {};
+  public renderData: RenderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
@@ -57,6 +57,9 @@ class Flamethrower implements ITower {
     }
 
     this.flame.dealDamage(target, damage);
+
+    this.renderData.fired = true;
+    this.entity.lookAt(target.entity);
 
     return damage;
   }

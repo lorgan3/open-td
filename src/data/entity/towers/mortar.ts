@@ -1,6 +1,6 @@
 import Manager from "../../manager";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
-import { AgentCategory, EntityType } from "../entity";
+import { AgentCategory, EntityType, RenderData } from "../entity";
 import Rocket from "../projectiles/rocket";
 import {
   coverTilesWithTowerSightLines,
@@ -26,7 +26,7 @@ class Mortar implements ITower {
   private isEnabled = true;
   private speedMultiplier = 1;
   private damageMultiplier = 1;
-  public renderData = {};
+  public renderData: RenderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
@@ -52,6 +52,9 @@ class Mortar implements ITower {
     const damage = DAMAGE * (isPowered ? this.damageMultiplier : 0);
     const projectile = new Rocket(this.tile, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
+
+    this.renderData.fired = true;
+    this.entity.lookAt(target.entity);
 
     return damage;
   }
