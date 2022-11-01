@@ -25,6 +25,7 @@ export interface Placeable {
   entityType: EntityType;
   isBasePart?: boolean;
   isRepeatable?: boolean;
+  cost?: number;
 }
 
 export const FENCE: Placeable = {
@@ -179,6 +180,7 @@ export const EXCAVATOR: Placeable = {
   description: "Allows building over trees and rocks.",
   entityType: EntityType.Excavator,
   htmlElement: "🚜",
+  cost: 1,
 };
 
 export const TERRAFORM: Placeable = {
@@ -187,6 +189,7 @@ export const TERRAFORM: Placeable = {
     "Allows building over water, ice and enemy structures. Keep in mind a stone foundation is also built which replaces the original surface.",
   entityType: EntityType.Terraform,
   htmlElement: "🏗️",
+  cost: 1,
 };
 
 export const CONVERT_MONEY_AMOUNT = 100;
@@ -196,24 +199,46 @@ export const CONVERT: Placeable = {
   entityType: EntityType.Convert,
   htmlElement: "🪙",
   isRepeatable: true,
+  cost: 1,
+};
+
+export const WAVE_OVER_MULTIPLIER = 1.5;
+export const EMERGENCY_RECHARGE: Placeable = {
+  name: "Emerg. recharge",
+  description: `Activate all existing power plants again to generate additional power. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
+  entityType: EntityType.EmergencyRecharge,
+  htmlElement: "🔌",
+  isRepeatable: true,
+  cost: 2,
+};
+
+export const EMERGENCY_REPAIR: Placeable = {
+  name: "Emerg. repair",
+  description: `Activate all existing armories again to generate additional base health. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
+  entityType: EntityType.EmergencyRepair,
+  htmlElement: "🛠",
+  isRepeatable: true,
+  cost: 3,
 };
 
 export enum Group {
+  Construction = "Construction",
   Walls = "Walls",
   BasicBuildings = "Basic buildings",
   PoweredBuildings = "Powered Buildings",
   BaseBuildings = "Base Buildings",
   WildcardBuildings = "Wildcard Buildings",
-  Misc = "Misc",
+  Abilities = "Abilities",
 }
 
 export const SECTIONS: Record<Group, Placeable[]> = {
+  [Group.Construction]: [DEMOLISH, EXCAVATOR, TERRAFORM],
   [Group.Walls]: [FENCE, WALL, ELECTRIC_FENCE],
   [Group.BasicBuildings]: [TOWER, FLAMETHROWER, MORTAR],
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
   [Group.BaseBuildings]: [ARMORY, RADAR, MARKET],
   [Group.WildcardBuildings]: [FREEZER, SPEED_BEACON, DAMAGE_BEACON],
-  [Group.Misc]: [DEMOLISH, EXCAVATOR, TERRAFORM],
+  [Group.Abilities]: [CONVERT, EMERGENCY_RECHARGE, EMERGENCY_REPAIR],
 };
 
 const placeables: Placeable[] = [

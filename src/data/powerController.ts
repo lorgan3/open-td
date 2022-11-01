@@ -60,13 +60,16 @@ class PowerController {
     return true;
   }
 
-  processPower() {
-    this.power = this.power + this.getProduction();
-    this.consumption = 0;
+  processPower(multiplier = 1) {
+    this.power = this.power + this.getProduction() * multiplier;
     this.blackout = false;
 
     if (this.power < 0) {
       Manager.Instance.triggerEvent(GameEvent.BlackOut);
+    }
+
+    if (!Manager.Instance.getIsStarted()) {
+      this.consumption = 0;
     }
   }
 

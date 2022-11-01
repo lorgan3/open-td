@@ -107,8 +107,8 @@ class Base implements StaticAgent {
     Manager.Instance.triggerStatUpdate();
   }
 
-  regenerate() {
-    this.hp += this.getRegenerationFactor();
+  regenerate(multiplier = 1) {
+    this.hp += this.getRegenerationFactor() * multiplier;
   }
 
   isVisible() {

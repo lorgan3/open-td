@@ -4,15 +4,16 @@ import Controller from "./controller";
 import { Difficulty } from "./difficulty";
 import Base from "./entity/base";
 import { IEnemy } from "./entity/enemies";
-import { Agent, AgentCategory } from "./entity/entity";
+import { Agent, AgentCategory, EntityType } from "./entity/entity";
 import {
   EventHandler,
   EventParamsMap,
   GameEvent,
   SurfaceChange,
+  Unlock,
 } from "./events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
-import { Placeable } from "./placeables";
+import { Placeable, WAVE_OVER_MULTIPLIER } from "./placeables";
 import PowerController, {
   DAMAGE_BEACON_CONSUMPTION,
   POWER_CONSUMPTIONS,
@@ -74,6 +75,7 @@ class Manager {
     surface.spawnStatic(this.base);
 
     this.addEventListener(GameEvent.SurfaceChange, this.onSurfaceChange);
+    this.addEventListener(GameEvent.Unlock, this.onUnlock);
 
     console.log(this);
   }
@@ -450,6 +452,18 @@ class Manager {
       if (shouldRePath) {
         nextSpawnGroup!.rePath();
       }
+    }
+  };
+
+  private onUnlock = ({ placeable }: Unlock) => {
+    const inProgress = this.getIsStarted();
+
+    if (placeable.entityType === EntityType.EmergencyRecharge) {
+      this.powerController.processPower(inProgress ? 1 : WAVE_OVER_MULTIPLIER);
+    }
+
+    if (placeable.entityType === EntityType.EmergencyRepair) {
+      this.base.regenerate(inProgress ? 1 : WAVE_OVER_MULTIPLIER);
     }
   };
 

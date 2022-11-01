@@ -55,6 +55,8 @@ export enum EntityType {
   Excavator = 29,
   Convert = 30,
   Terraform = 31,
+  EmergencyRecharge = 32,
+  EmergencyRepair = 33,
 }
 
 export const BASE_ENTITIES = new Set([
