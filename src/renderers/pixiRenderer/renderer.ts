@@ -9,10 +9,12 @@ import { CompositeTilemap } from "@pixi/tilemap";
 import { AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
 import { settings } from "@pixi/tilemap";
-import { TileType } from "../../data/terrain/tile";
+import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
 import Manager from "../../data/manager";
 import { Default } from "./overrides/default";
 import { EntityRenderer, init, OVERRIDES } from "./overrides";
+import { Difficulty } from "../../data/difficulty";
+import { EntityType } from "../../data/entity/entity";
 
 let DEBUG = false;
 export const SCALE = 32;
@@ -21,6 +23,28 @@ const MAX_SCALE = 3;
 const MIN_SCALE = 0.5;
 
 settings.use32bitIndex = true;
+
+const wallCoordinates = [
+  [0, -1],
+  [-1, 0],
+  [0, 1],
+  [1, 0],
+  [1, -1],
+  [-1, -1],
+  [-1, 1],
+  [1, 1],
+];
+
+const wallTypes = new Set([
+  TileType.Fence,
+  TileType.Wall,
+  TileType.ElectricFence,
+]);
+const wallOffset: Partial<Record<EntityType, number>> = {
+  [EntityType.Fence]: 0,
+  [EntityType.Wall]: 9,
+  [EntityType.ElectricFence]: 18,
+};
 
 class Renderer implements IRenderer {
   private messageFn: Promise<MessageFn>;
@@ -51,6 +75,7 @@ class Renderer implements IRenderer {
 
     this.loader = new Loader();
     this.loader.add("atlas", "./src/assets/atlas.json");
+    this.loader.add("wall", "./src/assets/wall.json");
     init(this.loader);
     this.loader.load();
 
@@ -95,6 +120,7 @@ class Renderer implements IRenderer {
     this.viewport!.addChild(this.tilemap);
     this.selection = new Graphics();
     this.viewport!.addChild(this.selection);
+    this.viewport!.sortableChildren = true;
 
     if (this.loader.loading) {
       this.loader.onComplete.add(() => this.renderTilemap());
@@ -124,8 +150,13 @@ class Renderer implements IRenderer {
     const atlas = this.loader.resources["atlas"];
 
     const rows = this.surface.getHeight();
+    const walls: Tile[] = [];
     for (let i = 0; i < rows; i++) {
       this.surface.getRow(i).forEach((tile) => {
+        if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
+          return;
+        }
+
         let ref = TILE_TO_ATLAS_MAP[tile.getBaseType()];
         if (ref) {
           this.tilemap!.tile(
@@ -152,10 +183,126 @@ class Renderer implements IRenderer {
               tile.getX() * SCALE,
               tile.getY() * SCALE
             );
+          } else if (wallTypes.has(tile.getType())) {
+            walls.push(tile);
           }
         }
       });
     }
+
+    walls.forEach((tile) => this.renderWall(tile));
+
+    this.renderPaths();
+  }
+
+  private renderWall(tile: Tile) {
+    const offset = wallOffset[tile.getStaticEntity()!.getAgent().getType()]!;
+    let connections = 0;
+    let matchedX = 0;
+    let matchedY = 0;
+    let skipDiagonals = false;
+    wallCoordinates.forEach(([x, y], index) => {
+      // Only make diagonal connections if there aren't already cardinal connections there.
+      if (index > 3 && (skipDiagonals || x === matchedX || y === matchedY)) {
+        return;
+      }
+
+      const neighbor = this.surface.getTile(tile.getX() + x, tile.getY() + y);
+      if (neighbor && wallTypes.has(neighbor.getType())) {
+        // Store some state to know when to make diagonal connections.
+        if (index <= 3) {
+          if ((matchedX && x) || (matchedY && y)) {
+            skipDiagonals = true;
+          } else {
+            matchedX = matchedX || x;
+            matchedY = matchedY || y;
+          }
+        }
+
+        this.tilemap!.tile(
+          this.loader.resources["wall"].textures![`wall${offset + index}.png`],
+          tile.getX() * SCALE - 8,
+          tile.getY() * SCALE - 8
+        );
+        connections++;
+      }
+    });
+
+    // If there are are less than 2 connections, render a tower as well (because the whole tile is covered by a wall)
+    if (connections < 2) {
+      this.tilemap!.tile(
+        this.loader.resources["wall"].textures![`wall${offset + 8}.png`],
+        tile.getX() * SCALE - 8,
+        tile.getY() * SCALE - 8
+      );
+    }
+  }
+
+  private diffToDir(xDiff: number, yDiff: number): AtlasTile {
+    if (xDiff === 0) {
+      return yDiff > 0 ? AtlasTile.Down : AtlasTile.Up;
+    }
+
+    if (yDiff === 0) {
+      return xDiff > 0 ? AtlasTile.Right : AtlasTile.Left;
+    }
+
+    if (xDiff > 0) {
+      return yDiff > 0 ? AtlasTile.DownRight : AtlasTile.UpRight;
+    }
+
+    return yDiff > 0 ? AtlasTile.DownLeft : AtlasTile.UpLeft;
+  }
+
+  private renderPaths() {
+    const atlas = this.loader.resources["atlas"];
+    const directionMap = new Map<
+      string,
+      { tile: Tile; direction: AtlasTile }
+    >();
+
+    const mapTiles = (tiles: Tile[]) => {
+      for (let i = 0; i < tiles.length - 1; i++) {
+        const tile = tiles[i];
+        const nextTile = tiles[i + 1];
+        const dir = this.diffToDir(
+          nextTile.getX() - tile.getX(),
+          nextTile.getY() - tile.getY()
+        );
+
+        if (directionMap.has(tile.getHash())) {
+          if (directionMap.get(tile.getHash())!.direction !== dir) {
+            directionMap.set(tile.getHash(), {
+              tile,
+              direction: AtlasTile.Multi,
+            });
+          }
+        } else {
+          directionMap.set(tile.getHash(), { tile, direction: dir });
+        }
+      }
+    };
+
+    if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
+      Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
+        mapTiles(spawnGroup.getSpawnPoints()[0].getTiles())
+      );
+
+      if (!Manager.Instance.getIsStarted()) {
+        const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
+        if (nextSpawnGroup) {
+          mapTiles(nextSpawnGroup.getSpawnPoints()[0].getTiles());
+        }
+      }
+    }
+
+    directionMap.forEach(({ tile, direction }) => {
+      this.tilemap!.tile(
+        atlas.textures![direction],
+        tile.getX() * SCALE,
+        tile.getY() * SCALE
+      );
+    });
   }
 
   rerender(dt: number): void {
@@ -164,6 +311,10 @@ class Renderer implements IRenderer {
     }
 
     this.time += dt;
+
+    if (this.surface.isDirty()) {
+      this.renderTilemap();
+    }
 
     this.app!.renderer.plugins.tilemap.tileAnim[0] += dt / 500;
 
@@ -174,8 +325,13 @@ class Renderer implements IRenderer {
       let sprite = this.sprites.get(entity.getId());
 
       if (!sprite) {
-        const constructor = OVERRIDES[entity.getAgent().getType()] || Default;
-        sprite = new constructor(entity.getAgent(), this.loader);
+        const constructor = OVERRIDES[entity.getAgent().getType()];
+
+        if (constructor === null) {
+          continue;
+        }
+
+        sprite = new (constructor || Default)(entity.getAgent(), this.loader);
         this.viewport!.addChild(sprite);
         this.sprites.set(entity.getId(), sprite);
       }
@@ -191,6 +347,8 @@ class Renderer implements IRenderer {
         this.viewport!.removeChild(sprite);
       }
     });
+
+    this.surface.markPristine();
   }
 
   private renderSelection() {

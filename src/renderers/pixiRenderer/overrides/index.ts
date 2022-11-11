@@ -28,7 +28,7 @@ export const init = (loader: Loader) => {
   loader.add("projectiles", "./src/assets/Projectiles.json");
 };
 
-export const OVERRIDES: Partial<Record<EntityType, Constructor>> = {
+export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Runner]: Runner,
   [EntityType.Slime]: Regular,
   [EntityType.Flier]: Flier,
@@ -43,4 +43,7 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor>> = {
   [EntityType.Shockwave]: SimpleProjectile,
   [EntityType.LaserBeam]: LaserBeam,
   [EntityType.Rail]: Rail,
+  [EntityType.Fence]: null,
+  [EntityType.Wall]: null,
+  [EntityType.ElectricFence]: null,
 };
