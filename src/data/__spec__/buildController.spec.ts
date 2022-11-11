@@ -1,5 +1,8 @@
 import BuildController from "../buildController";
+import Controller from "../controller";
+import { Difficulty } from "../difficulty";
 import Blueprint from "../entity/Blueprint";
+import Manager from "../manager";
 import { ARMORY, DEMOLISH, TOWER } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
@@ -9,6 +12,13 @@ describe("buildController", () => {
 
   it("can add a pending tile", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
@@ -21,6 +31,13 @@ describe("buildController", () => {
 
   it("can remove a pending tile", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
@@ -33,6 +50,13 @@ describe("buildController", () => {
 
   it("can undo an existing removal by overwriting it", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
@@ -49,6 +73,13 @@ describe("buildController", () => {
 
   it("can undo an existing removal by removing it", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
@@ -65,6 +96,13 @@ describe("buildController", () => {
 
   it("can undo an existing addition by removing it", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
@@ -81,6 +119,13 @@ describe("buildController", () => {
 
   it("can overwrite an existing base blueprint", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
@@ -97,6 +142,13 @@ describe("buildController", () => {
 
   it("can overwrite an existing tower blueprint", () => {
     const surface = new Surface(5, 5);
+    new Manager(
+      Difficulty.Normal,
+      surface.getTile(2, 2)!,
+      surface,
+      new Controller(surface),
+      jest.fn()
+    );
     const controller = new BuildController(surface);
 
     const selectedTile = surface.getTile(2, 2)!;
