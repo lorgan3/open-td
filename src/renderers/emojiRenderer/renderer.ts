@@ -726,6 +726,7 @@ class Renderer implements IRenderer {
       case EntityType.Slime:
         return "🐞";
       case EntityType.Bullet:
+      case EntityType.Rocket:
         return "▪";
       case EntityType.Rail:
       case EntityType.LaserBeam:

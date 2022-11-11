@@ -75,7 +75,7 @@ class Rocket implements Agent {
   }
 
   getType(): EntityType {
-    return EntityType.Bullet;
+    return EntityType.Rocket;
   }
 
   getTile() {
