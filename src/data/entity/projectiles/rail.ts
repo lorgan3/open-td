@@ -19,16 +19,16 @@ class Rail implements Agent {
   private steps: Tile[] = [];
 
   constructor(private tile: Tile, target: IEnemy, private damage: number) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
     const direction = Math.atan2(
-      target.entity.getY() - tile.getY(),
-      target.entity.getX() - tile.getX()
+      target.entity.getY() + 0.25 - tile.getY() - 0.5,
+      target.entity.getX() + 0.25 - tile.getX() - 0.5
     );
     this.entity.setRotation((direction * 180) / Math.PI);
 
     Manager.Instance.getSurface().forRay(
-      tile.getX(),
-      tile.getY(),
+      tile.getX() + 1,
+      tile.getY() + 1,
       direction,
       (tile, i) => {
         if (i > 0 && isSolid(tile)) {

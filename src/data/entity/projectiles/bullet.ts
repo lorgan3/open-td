@@ -21,11 +21,11 @@ class Bullet implements Agent {
     private target: IEnemy,
     private damage: number
   ) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
 
     // This requires the projectile to travel fast enough as this does not consider that the travel time changes as the target moves.
-    const xDiff = tile.getX() - target.entity.getX();
-    const yDiff = tile.getY() - target.entity.getY();
+    const xDiff = tile.getX() + 0.5 - target.entity.getX() - 0.25;
+    const yDiff = tile.getY() + 0.5 - target.entity.getY() - 0.25;
     const dist = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     this.travelTime = dist / SPEED;
 
@@ -34,6 +34,7 @@ class Bullet implements Agent {
     const { x, y } = target.getPath().getCoordinates(index);
     this.targetX = x;
     this.targetY = y;
+    this.entity.lookAt(x, y);
   }
 
   tick(dt: number) {
@@ -44,8 +45,12 @@ class Bullet implements Agent {
 
     this.time = Math.min(this.time + dt, this.travelTime);
     const t = this.time / this.travelTime;
-    this.entity.setX((this.targetX - this.tile.getX()) * t + this.tile.getX());
-    this.entity.setY((this.targetY - this.tile.getY()) * t + this.tile.getY());
+
+    const x = this.tile.getX() + 1;
+    const y = this.tile.getY() + 1;
+
+    this.entity.setX((this.targetX + 0.5 - x) * t + x);
+    this.entity.setY((this.targetY + 0.5 - y) * t + y);
   }
 
   getType(): EntityType {

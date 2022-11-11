@@ -15,7 +15,7 @@ class LaserBeam implements Agent {
   public targetY = 0;
 
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
   }
 
   dealDamage(enemy: IEnemy, damage: number) {
@@ -28,8 +28,8 @@ class LaserBeam implements Agent {
     this.targetX = enemy.entity.getX();
     this.targetY = enemy.entity.getY();
     const direction = Math.atan2(
-      this.targetY - this.tile.getY(),
-      this.targetX - this.tile.getX()
+      this.targetY - this.tile.getY() - 0.5,
+      this.targetX - this.tile.getX() - 0.5
     );
     this.entity.setRotation((direction * 180) / Math.PI);
 

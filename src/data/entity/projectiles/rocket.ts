@@ -19,12 +19,16 @@ class Rocket implements Agent {
   private time = 0;
   private travelTime: number;
 
+  private prevX?: number;
+  private prevY?: number;
+
   constructor(
     private tile: Tile,
     private target: IEnemy,
     private damage: number
   ) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity.lookAt(target.entity);
 
     const xDiff = tile.getX() - target.entity.getX();
     const yDiff = tile.getY() - target.entity.getY();
@@ -72,6 +76,16 @@ class Rocket implements Agent {
     this.entity.setY(
       (this.targetY - this.tile.getY()) * t + this.tile.getY() - arc
     );
+
+    if (this.prevX && this.prevY) {
+      const xDiff = this.entity.getX() - this.prevX;
+      const yDiff = this.entity.getY() - this.prevY;
+
+      this.entity.setRotation((Math.atan2(yDiff, xDiff) * 180) / Math.PI + 90);
+    }
+
+    this.prevX = this.entity.getX();
+    this.prevY = this.entity.getY();
   }
 
   getType(): EntityType {
