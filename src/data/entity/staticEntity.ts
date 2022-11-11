@@ -14,7 +14,9 @@ export interface StaticAgentStatics {
 }
 
 export const getScale = (staticAgent: StaticAgent) => {
-  return (staticAgent.constructor as unknown as StaticAgentStatics).scale;
+  return (staticAgent.constructor as unknown as StaticAgentStatics).scale as
+    | 1
+    | 2;
 };
 
 export const getCenter = (staticAgent: StaticAgent): [number, number] => {
@@ -32,7 +34,7 @@ class StaticEntity extends Entity {
     super(x, y, agent);
   }
 
-  getAgent() {
+  getAgent(): StaticAgent {
     return this.agent as StaticAgent;
   }
 }

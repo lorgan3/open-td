@@ -1,10 +1,11 @@
 import { CompositeTilemap } from "@pixi/tilemap";
 import { Loader } from "pixi.js";
 import { EntityType } from "../../../data/entity/entity";
+import { getScale } from "../../../data/entity/staticEntity";
 import Surface from "../../../data/terrain/surface";
 import Tile from "../../../data/terrain/tile";
 import { SCALE } from "../renderer";
-import { wallCoordinates, wallTypes } from "./constants";
+import { wallCoordinates, wallSpritePadding, wallTypes } from "./constants";
 
 class WallRenderer {
   constructor(
@@ -37,19 +38,27 @@ class WallRenderer {
   }
 
   public render(tile: Tile) {
-    const type = tile.getStaticEntity()!.getAgent().getType();
+    const agent = tile.getStaticEntity()!.getAgent();
+    const type = agent.getType();
+    const scale = getScale(agent);
+
     let connections = 0;
     let matchedX = 0;
     let matchedY = 0;
     let skipDiagonals = false;
-    wallCoordinates.forEach(([x, y], index) => {
+
+    wallCoordinates[scale].forEach(([x, y], index) => {
       // Only make diagonal connections if there aren't already cardinal connections there.
       if (index > 3 && (skipDiagonals || x === matchedX || y === matchedY)) {
         return;
       }
 
       const neighbor = this.surface.getTile(tile.getX() + x, tile.getY() + y);
-      if (neighbor && wallTypes.has(neighbor.getType())) {
+      if (
+        neighbor &&
+        wallTypes.has(neighbor.getType()) &&
+        getScale(neighbor.getStaticEntity()!.getAgent()) === scale
+      ) {
         // Store some state to know when to make diagonal connections.
         if (index <= 3) {
           if ((matchedX && x) || (matchedY && y)) {
@@ -62,8 +71,8 @@ class WallRenderer {
 
         this.tilemap.tile(
           this.getWallSprite(type, index),
-          tile.getX() * SCALE - 8,
-          tile.getY() * SCALE - 8
+          tile.getX() * SCALE - wallSpritePadding * scale,
+          tile.getY() * SCALE - wallSpritePadding * scale
         );
         connections++;
       }
@@ -73,8 +82,8 @@ class WallRenderer {
     if (connections < 2) {
       this.tilemap.tile(
         this.getWallSprite(type, 8),
-        tile.getX() * SCALE - 8,
-        tile.getY() * SCALE - 8
+        tile.getX() * SCALE - wallSpritePadding * scale,
+        tile.getY() * SCALE - wallSpritePadding * scale
       );
     }
   }
