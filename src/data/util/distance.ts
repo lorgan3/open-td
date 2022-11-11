@@ -1,3 +1,5 @@
+import Entity, { EntityType } from "../entity/entity";
+
 const mod = (value: number, modulo: number) =>
   ((value % modulo) + modulo) % modulo;
 
@@ -20,4 +22,13 @@ export const getRayDistance = (
     Math.cos(rayDirection) * (rayY - pointY) -
       Math.sin(rayDirection) * (rayX - pointX)
   );
+};
+
+export const getSquareDistance = (
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+) => {
+  return (x1 - x2) ** 2 + (y1 - y2) ** 2;
 };

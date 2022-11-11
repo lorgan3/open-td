@@ -1,4 +1,4 @@
-import { getRayDistance } from "../distance";
+import { getRayDistance, getSquareDistance } from "../distance";
 
 describe("distance", () => {
   const table = [
@@ -84,4 +84,8 @@ describe("distance", () => {
       ).toApproximate(result);
     }
   );
+
+  it("calculates the square distance between 2 points", () => {
+    expect(getSquareDistance(3, 3, 5, 6)).toEqual(13);
+  });
 });
