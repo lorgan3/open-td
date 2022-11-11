@@ -168,7 +168,10 @@ class Renderer implements IRenderer {
               tile.getX() * SCALE,
               tile.getY() * SCALE
             );
-          } else if (wallTypes.has(tile.getType())) {
+          } else if (
+            wallTypes.has(tile.getType()) &&
+            tile.isStaticEntityRoot()
+          ) {
             walls.push(tile);
           }
         }

@@ -149,6 +149,10 @@ class Tile {
     this.actualType = this.type;
   }
 
+  isStaticEntityRoot() {
+    return this.staticEntity?.getAgent().getTile() === this;
+  }
+
   addTower(tower: ITower) {
     if (!this.towers.includes(tower)) {
       this.towers.push(tower);
