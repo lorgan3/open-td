@@ -1,5 +1,7 @@
 import Tile from "../../terrain/tile";
 import Base from "../base";
+import Entity from "../entity";
+import Tower from "../towers/tower";
 
 describe("entity", () => {
   describe("move", () => {
@@ -72,8 +74,29 @@ describe("entity", () => {
       },
     ];
 
-    it.each(table)("Looks at the target $#", ({ target, expected }) => {
+    it.each(table)("Looks at the target tile $#", ({ target, expected }) => {
       agent.entity.lookAt(target);
+      expect(agent.entity.getRotation()).toEqual(expected);
+    });
+
+    it.each(
+      table.map(({ target, expected }) => ({
+        target: new Entity(target.getX(), target.getY(), new Tower(target)),
+        expected,
+      }))
+    )("Looks at the target entity $#", ({ target, expected }) => {
+      agent.entity.lookAt(target);
+      expect(agent.entity.getRotation()).toEqual(expected);
+    });
+
+    it.each(
+      table.map(({ target, expected }) => ({
+        x: target.getX(),
+        y: target.getY(),
+        expected,
+      }))
+    )("Looks at the target coordinates $#", ({ x, y, expected }) => {
+      agent.entity.lookAt(x, y);
       expect(agent.entity.getRotation()).toEqual(expected);
     });
   });

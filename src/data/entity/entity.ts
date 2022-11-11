@@ -144,9 +144,17 @@ class Entity {
     this.lookAt(to);
   }
 
-  lookAt(target: Tile | Entity) {
-    const xDiff = target.getX() - this.x;
-    const yDiff = target.getY() - this.y;
+  lookAt(x: number, y: number): void;
+  lookAt(target: Tile | Entity): void;
+  lookAt(target: Tile | Entity | number, y?: number) {
+    let xDiff: number, yDiff: number;
+    if (y !== undefined) {
+      xDiff = (target as number) - this.x;
+      yDiff = y - this.y;
+    } else {
+      xDiff = (target as Tile | Entity).getX() - this.x;
+      yDiff = (target as Tile | Entity).getY() - this.y;
+    }
 
     if (xDiff || yDiff) {
       this.setRotation((Math.atan2(yDiff, xDiff) * 180) / Math.PI + 90);
