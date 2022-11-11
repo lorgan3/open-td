@@ -22,6 +22,10 @@ class Tower extends AnimatedSprite implements EntityRenderer {
     this.pivot = { x: 32, y: 32 };
     this.animationSpeed = ANIMATION_SPEED;
     this.loop = false;
+
+    this.onComplete = () => {
+      this.gotoAndStop(0);
+    };
   }
 
   sync() {
