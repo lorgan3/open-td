@@ -1,11 +1,15 @@
-import { Loader, Sprite } from "pixi.js";
+import { Container, Loader } from "pixi.js";
 import { EntityType } from "../../../data/entity/entity";
+import { Flame } from "./flame";
 import { Flier } from "./flier";
+import { LaserBeam } from "./laserBeam";
+import { Rail } from "./rail";
 import { Regular } from "./regular";
 import { Runner } from "./runner";
+import { SimpleProjectile } from "./simpleProjectile";
 import { Tower } from "./tower";
 
-export interface EntityRenderer extends Sprite {
+export interface EntityRenderer extends Container {
   sync: () => void;
 }
 
@@ -21,6 +25,7 @@ export const init = (loader: Loader) => {
   loader.add("laser", "./src/assets/Laser.json");
   loader.add("mortar", "./src/assets/Mortar.json");
   loader.add("railgun", "./src/assets/Railgun.json");
+  loader.add("projectiles", "./src/assets/Projectiles.json");
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor>> = {
@@ -32,4 +37,10 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor>> = {
   [EntityType.Laser]: Tower,
   [EntityType.Mortar]: Tower,
   [EntityType.Railgun]: Tower,
+  [EntityType.Bullet]: SimpleProjectile,
+  [EntityType.Flame]: Flame,
+  [EntityType.Rocket]: SimpleProjectile,
+  [EntityType.Shockwave]: SimpleProjectile,
+  [EntityType.LaserBeam]: LaserBeam,
+  [EntityType.Rail]: Rail,
 };
