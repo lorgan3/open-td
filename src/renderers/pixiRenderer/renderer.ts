@@ -14,7 +14,8 @@ import Manager from "../../data/manager";
 import { Default } from "./overrides/default";
 import { EntityRenderer, init, OVERRIDES } from "./overrides";
 import { Difficulty } from "../../data/difficulty";
-import { EntityType } from "../../data/entity/entity";
+import { WallRenderer } from "./tilemap/wallRenderer";
+import { wallTypes } from "./tilemap/constants";
 
 let DEBUG = false;
 export const SCALE = 32;
@@ -24,28 +25,6 @@ const MIN_SCALE = 0.5;
 
 settings.use32bitIndex = true;
 
-const wallCoordinates = [
-  [0, -1],
-  [-1, 0],
-  [0, 1],
-  [1, 0],
-  [1, -1],
-  [-1, -1],
-  [-1, 1],
-  [1, 1],
-];
-
-const wallTypes = new Set([
-  TileType.Fence,
-  TileType.Wall,
-  TileType.ElectricFence,
-]);
-const wallOffset: Partial<Record<EntityType, number>> = {
-  [EntityType.Fence]: 0,
-  [EntityType.Wall]: 9,
-  [EntityType.ElectricFence]: 18,
-};
-
 class Renderer implements IRenderer {
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
@@ -53,12 +32,13 @@ class Renderer implements IRenderer {
   private target?: HTMLElement;
   private app?: Application;
   private viewport?: Viewport;
-  private tilemap?: CompositeTilemap;
+  private tilemap: CompositeTilemap;
 
   private sprites = new Map<number, EntityRenderer>();
   private selection?: Graphics;
 
   private loader: Loader;
+  private wallRenderer: WallRenderer;
 
   public x = 0;
   public y = 0;
@@ -73,9 +53,15 @@ class Renderer implements IRenderer {
       (resolve) => (this.resolveMessageFn = resolve)
     );
 
+    this.tilemap = new CompositeTilemap();
+
     this.loader = new Loader();
     this.loader.add("atlas", "./src/assets/atlas.json");
-    this.loader.add("wall", "./src/assets/wall.json");
+    this.wallRenderer = new WallRenderer(
+      this.loader,
+      this.tilemap,
+      this.surface
+    );
     init(this.loader);
     this.loader.load();
 
@@ -116,7 +102,6 @@ class Renderer implements IRenderer {
 
     this.app.stage.addChild(this.viewport);
 
-    this.tilemap = new CompositeTilemap();
     this.viewport!.addChild(this.tilemap);
     this.selection = new Graphics();
     this.viewport!.addChild(this.selection);
@@ -145,7 +130,7 @@ class Renderer implements IRenderer {
   }
 
   private renderTilemap() {
-    this.tilemap!.clear();
+    this.tilemap.clear();
 
     const atlas = this.loader.resources["atlas"];
 
@@ -159,26 +144,26 @@ class Renderer implements IRenderer {
 
         let ref = TILE_TO_ATLAS_MAP[tile.getBaseType()];
         if (ref) {
-          this.tilemap!.tile(
+          this.tilemap.tile(
             atlas.textures![ref],
             tile.getX() * SCALE,
             tile.getY() * SCALE
           );
 
           if (tile.getBaseType() === TileType.Water) {
-            this.tilemap!.tileAnimX(32, 2);
+            this.tilemap.tileAnimX(32, 2);
           }
         }
 
         if (tile.hasStaticEntity()) {
           if (tile.getType() === TileType.Tree) {
-            this.tilemap!.tile(
+            this.tilemap.tile(
               atlas.textures![AtlasTile.Tree],
               tile.getX() * SCALE,
               tile.getY() * SCALE
             );
           } else if (tile.getType() === TileType.Rock) {
-            this.tilemap!.tile(
+            this.tilemap.tile(
               atlas.textures![AtlasTile.Rock],
               tile.getX() * SCALE,
               tile.getY() * SCALE
@@ -190,52 +175,9 @@ class Renderer implements IRenderer {
       });
     }
 
-    walls.forEach((tile) => this.renderWall(tile));
+    walls.forEach((tile) => this.wallRenderer.render(tile));
 
     this.renderPaths();
-  }
-
-  private renderWall(tile: Tile) {
-    const offset = wallOffset[tile.getStaticEntity()!.getAgent().getType()]!;
-    let connections = 0;
-    let matchedX = 0;
-    let matchedY = 0;
-    let skipDiagonals = false;
-    wallCoordinates.forEach(([x, y], index) => {
-      // Only make diagonal connections if there aren't already cardinal connections there.
-      if (index > 3 && (skipDiagonals || x === matchedX || y === matchedY)) {
-        return;
-      }
-
-      const neighbor = this.surface.getTile(tile.getX() + x, tile.getY() + y);
-      if (neighbor && wallTypes.has(neighbor.getType())) {
-        // Store some state to know when to make diagonal connections.
-        if (index <= 3) {
-          if ((matchedX && x) || (matchedY && y)) {
-            skipDiagonals = true;
-          } else {
-            matchedX = matchedX || x;
-            matchedY = matchedY || y;
-          }
-        }
-
-        this.tilemap!.tile(
-          this.loader.resources["wall"].textures![`wall${offset + index}.png`],
-          tile.getX() * SCALE - 8,
-          tile.getY() * SCALE - 8
-        );
-        connections++;
-      }
-    });
-
-    // If there are are less than 2 connections, render a tower as well (because the whole tile is covered by a wall)
-    if (connections < 2) {
-      this.tilemap!.tile(
-        this.loader.resources["wall"].textures![`wall${offset + 8}.png`],
-        tile.getX() * SCALE - 8,
-        tile.getY() * SCALE - 8
-      );
-    }
   }
 
   private diffToDir(xDiff: number, yDiff: number): AtlasTile {
@@ -297,7 +239,7 @@ class Renderer implements IRenderer {
     }
 
     directionMap.forEach(({ tile, direction }) => {
-      this.tilemap!.tile(
+      this.tilemap.tile(
         atlas.textures![direction],
         tile.getX() * SCALE,
         tile.getY() * SCALE
