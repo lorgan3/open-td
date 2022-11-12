@@ -16,6 +16,7 @@ import { EntityRenderer, init, OVERRIDES } from "./overrides";
 import { Difficulty } from "../../data/difficulty";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
+import { CoverageRenderer } from "./tilemap/coverageRenderer";
 
 let DEBUG = false;
 export const SCALE = 32;
@@ -39,6 +40,7 @@ class Renderer implements IRenderer {
 
   private loader: Loader;
   private wallRenderer: WallRenderer;
+  private coverageRenderer?: CoverageRenderer;
 
   public x = 0;
   public y = 0;
@@ -103,6 +105,12 @@ class Renderer implements IRenderer {
     this.app.stage.addChild(this.viewport);
 
     this.viewport!.addChild(this.tilemap);
+    this.coverageRenderer = new CoverageRenderer(
+      this.loader,
+      this.viewport,
+      this.surface
+    );
+
     this.selection = new Graphics();
     this.viewport!.addChild(this.selection);
     this.viewport!.sortableChildren = true;
@@ -181,6 +189,7 @@ class Renderer implements IRenderer {
     walls.forEach((tile) => this.wallRenderer.render(tile));
 
     this.renderPaths();
+    this.coverageRenderer!.render();
   }
 
   private diffToDir(xDiff: number, yDiff: number): AtlasTile {
@@ -293,6 +302,7 @@ class Renderer implements IRenderer {
       }
     });
 
+    this.coverageRenderer!.update();
     this.surface.markPristine();
   }
 
