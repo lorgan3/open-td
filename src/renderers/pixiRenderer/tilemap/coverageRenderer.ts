@@ -33,6 +33,7 @@ class CoverageRenderer {
 
   private towers = new Map<string, Sprite[]>();
   private hoveredTile?: Tile;
+  private visible = false;
 
   constructor(
     private loader: Loader,
@@ -60,7 +61,23 @@ class CoverageRenderer {
     this.viewport.addChild(this.pathContainer);
   }
 
+  public show() {
+    this.visible = true;
+    this.render();
+  }
+
+  public hide() {
+    this.visible = false;
+
+    this.coverageContainer.removeChildren();
+    this.pathContainer.removeChildren();
+  }
+
   public render() {
+    if (!this.visible) {
+      return;
+    }
+
     this.renderCoverage();
 
     if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
@@ -128,9 +145,17 @@ class CoverageRenderer {
   }
 
   public update() {
-    (this.pathContainer.children as Marker[]).forEach((marker) =>
-      marker.move()
-    );
+    if (!this.visible) {
+      return;
+    }
+
+    if (Manager.Instance.getIsStarted()) {
+      this.pathContainer.removeChildren();
+    } else {
+      (this.pathContainer.children as Marker[]).forEach((marker) =>
+        marker.move()
+      );
+    }
 
     const [x, y] = Manager.Instance.getController().getMouse();
     const newHoveredTile = this.surface.getTile(x, y);

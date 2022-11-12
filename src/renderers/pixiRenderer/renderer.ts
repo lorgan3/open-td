@@ -13,7 +13,6 @@ import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
 import Manager from "../../data/manager";
 import { Default } from "./overrides/default";
 import { EntityRenderer, init, OVERRIDES } from "./overrides";
-import { Difficulty } from "../../data/difficulty";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
@@ -258,9 +257,13 @@ class Renderer implements IRenderer {
     }
   }
 
-  showCoverage(): void {}
+  showCoverage(): void {
+    this.coverageRenderer!.show();
+  }
 
-  hideCoverage(): void {}
+  hideCoverage(): void {
+    this.coverageRenderer!.hide();
+  }
 
   unmount(): void {
     throw new Error("Method not implemented.");
