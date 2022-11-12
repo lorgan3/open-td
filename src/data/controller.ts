@@ -179,8 +179,8 @@ class Controller {
     return this._isMouseDown;
   }
 
-  getMouse() {
-    const scale = this.selectedPlacable?.entity?.scale || 1;
+  getMouse(scaleOverride?: number) {
+    const scale = scaleOverride || this.selectedPlacable?.entity?.scale || 1;
     return [
       Math.floor(this.mouseX / scale) * scale,
       Math.floor(this.mouseY / scale) * scale,

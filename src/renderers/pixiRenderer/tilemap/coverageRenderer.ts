@@ -157,7 +157,7 @@ class CoverageRenderer {
       );
     }
 
-    const [x, y] = Manager.Instance.getController().getMouse();
+    const [x, y] = Manager.Instance.getController().getMouse(2);
     const newHoveredTile = this.surface.getTile(x, y);
 
     if (newHoveredTile === this.hoveredTile) {
