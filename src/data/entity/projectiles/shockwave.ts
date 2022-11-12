@@ -3,7 +3,7 @@ import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 
-const SPEED = 0.003;
+const SPEED = 0.002;
 
 class Shockwave implements Agent {
   public entity: Entity;
@@ -24,6 +24,9 @@ class Shockwave implements Agent {
     const yDiff = tile.getY() - target.getY();
     const dist = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     this.travelTime = dist / SPEED;
+    this.time = this.travelTime / 4; // start at .25 of the way there to prevent multiple shockwaves being clumped up
+
+    this.entity.lookAt(target);
   }
 
   tick(dt: number) {
