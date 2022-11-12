@@ -188,75 +188,7 @@ class Renderer implements IRenderer {
 
     walls.forEach((tile) => this.wallRenderer.render(tile));
 
-    this.renderPaths();
     this.coverageRenderer!.render();
-  }
-
-  private diffToDir(xDiff: number, yDiff: number): AtlasTile {
-    if (xDiff === 0) {
-      return yDiff > 0 ? AtlasTile.Down : AtlasTile.Up;
-    }
-
-    if (yDiff === 0) {
-      return xDiff > 0 ? AtlasTile.Right : AtlasTile.Left;
-    }
-
-    if (xDiff > 0) {
-      return yDiff > 0 ? AtlasTile.DownRight : AtlasTile.UpRight;
-    }
-
-    return yDiff > 0 ? AtlasTile.DownLeft : AtlasTile.UpLeft;
-  }
-
-  private renderPaths() {
-    const atlas = this.loader.resources[ATLAS];
-    const directionMap = new Map<
-      string,
-      { tile: Tile; direction: AtlasTile }
-    >();
-
-    const mapTiles = (tiles: Tile[]) => {
-      for (let i = 0; i < tiles.length - 1; i++) {
-        const tile = tiles[i];
-        const nextTile = tiles[i + 1];
-        const dir = this.diffToDir(
-          nextTile.getX() - tile.getX(),
-          nextTile.getY() - tile.getY()
-        );
-
-        if (directionMap.has(tile.getHash())) {
-          if (directionMap.get(tile.getHash())!.direction !== dir) {
-            directionMap.set(tile.getHash(), {
-              tile,
-              direction: AtlasTile.Multi,
-            });
-          }
-        } else {
-          directionMap.set(tile.getHash(), { tile, direction: dir });
-        }
-      }
-    };
-
-    if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
-      Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
-        mapTiles(spawnGroup.getSpawnPoints()[0].getTiles())
-      );
-
-      if (!Manager.Instance.getIsStarted()) {
-        const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
-        if (nextSpawnGroup) {
-          mapTiles(nextSpawnGroup.getSpawnPoints()[0].getTiles());
-        }
-      }
-    }
-
-    directionMap.forEach(({ tile, direction }) => {
-      this.tilemap.tile(
-        atlas.textures![direction],
-        tile.getX() * SCALE,
-        tile.getY() * SCALE
-      );
-    });
   }
 
   rerender(dt: number): void {
