@@ -3,7 +3,7 @@ import { Loader, ParticleContainer, Sprite } from "pixi.js";
 import Manager from "../../../data/manager";
 import Surface from "../../../data/terrain/surface";
 import Tile from "../../../data/terrain/tile";
-import { AtlasTile } from "../atlas";
+import { ATLAS, AtlasTile } from "../atlas";
 import { SCALE } from "../renderer";
 
 class CoverageRenderer {
@@ -43,7 +43,7 @@ class CoverageRenderer {
         }
 
         const sprite = new Sprite(
-          this.loader.resources["atlas"].textures![AtlasTile.Coverage]
+          this.loader.resources[ATLAS].textures![AtlasTile.Coverage]
         );
         sprite.alpha = Math.min(0.1 + 0.2 * tileTowers.length, 0.8);
         sprite.position.set(tile.getX() * SCALE, tile.getY() * SCALE);
@@ -69,14 +69,14 @@ class CoverageRenderer {
     if (this.hoveredTile) {
       this.towers.get(this.hoveredTile.getHash())?.forEach((sprite) => {
         sprite.texture =
-          this.loader.resources["atlas"].textures![AtlasTile.Coverage];
+          this.loader.resources[ATLAS].textures![AtlasTile.Coverage];
       });
     }
 
     if (newHoveredTile) {
       this.towers.get(newHoveredTile.getHash())?.forEach((sprite) => {
         sprite.texture =
-          this.loader.resources["atlas"].textures![AtlasTile.ActiveCoverage];
+          this.loader.resources[ATLAS].textures![AtlasTile.ActiveCoverage];
       });
     }
 

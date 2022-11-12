@@ -6,7 +6,7 @@ import SimpleMessage from "../../components/SimpleMessage.vue";
 
 import { Application, Graphics, InteractionEvent, Loader } from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
-import { AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
+import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
 import { settings } from "@pixi/tilemap";
 import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
@@ -58,7 +58,7 @@ class Renderer implements IRenderer {
     this.tilemap = new CompositeTilemap();
 
     this.loader = new Loader();
-    this.loader.add("atlas", "./src/assets/atlas.json");
+    this.loader.add(ATLAS, "./src/assets/atlas.json");
     this.wallRenderer = new WallRenderer(
       this.loader,
       this.tilemap,
@@ -140,7 +140,7 @@ class Renderer implements IRenderer {
   private renderTilemap() {
     this.tilemap.clear();
 
-    const atlas = this.loader.resources["atlas"];
+    const atlas = this.loader.resources[ATLAS];
 
     const rows = this.surface.getHeight();
     const walls: Tile[] = [];
@@ -209,7 +209,7 @@ class Renderer implements IRenderer {
   }
 
   private renderPaths() {
-    const atlas = this.loader.resources["atlas"];
+    const atlas = this.loader.resources[ATLAS];
     const directionMap = new Map<
       string,
       { tile: Tile; direction: AtlasTile }

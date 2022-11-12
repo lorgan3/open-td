@@ -1,5 +1,7 @@
 import { TileType } from "../../data/terrain/tile";
 
+export const ATLAS = "atlas";
+
 export enum AtlasTile {
   Grass = "atlas3.png",
   Sand = "atlas6.png",
