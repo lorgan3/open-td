@@ -25,6 +25,7 @@ export enum AtlasTile {
   Multi = "atlas21.png",
   ActiveCoverage = "atlas22.png",
   Coverage = "atlas23.png",
+  Alert = "atlas24.png",
 }
 
 export const TILE_TO_ATLAS_MAP: Partial<Record<TileType, AtlasTile>> = {

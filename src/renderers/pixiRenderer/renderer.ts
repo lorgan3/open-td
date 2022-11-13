@@ -16,6 +16,8 @@ import { EntityRenderer, init, OVERRIDES } from "./overrides";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
+import { AlertRenderer } from "./tilemap/alertRenderer";
+import { getCenter } from "../../data/entity/staticEntity";
 
 let DEBUG = false;
 export const SCALE = 32;
@@ -40,6 +42,7 @@ class Renderer implements IRenderer {
   private loader: Loader;
   private wallRenderer: WallRenderer;
   private coverageRenderer?: CoverageRenderer;
+  private alertRenderer?: AlertRenderer;
 
   public x = 0;
   public y = 0;
@@ -109,6 +112,8 @@ class Renderer implements IRenderer {
       this.viewport,
       this.surface
     );
+
+    this.alertRenderer = new AlertRenderer(this.loader, this.viewport);
 
     this.selection = new Graphics();
     this.viewport!.addChild(this.selection);
@@ -188,6 +193,10 @@ class Renderer implements IRenderer {
     walls.forEach((tile) => this.wallRenderer.render(tile));
 
     this.coverageRenderer!.render();
+
+    const center = getCenter(Manager.Instance.getBase());
+    const alerts = Manager.Instance.getSpawnAlertRanges();
+    this.alertRenderer!.render(center, alerts);
   }
 
   rerender(dt: number): void {
@@ -234,6 +243,7 @@ class Renderer implements IRenderer {
     });
 
     this.coverageRenderer!.update();
+    this.alertRenderer!.update(dt, Manager.Instance.getIsStarted());
     this.surface.markPristine();
   }
 
