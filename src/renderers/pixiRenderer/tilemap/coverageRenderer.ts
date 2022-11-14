@@ -137,7 +137,7 @@ class CoverageRenderer {
           new Marker(
             index * 2 + i * 5,
             path,
-            this.loader.resources[ATLAS].textures![AtlasTile.Multi]
+            this.loader.resources[ATLAS].textures![AtlasTile.Entity]
           )
         );
       }
