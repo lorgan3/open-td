@@ -14,6 +14,7 @@ const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Market, "buildings4.png"],
   [EntityType.DamageBeacon, "buildings5.png"],
   [EntityType.SpeedBeacon, "buildings6.png"],
+  [EntityType.Freezer, "buildings12.png"],
 ]);
 
 class Default extends Sprite implements EntityRenderer {
