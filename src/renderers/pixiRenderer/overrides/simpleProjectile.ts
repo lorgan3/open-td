@@ -5,12 +5,12 @@ import { Agent, EntityType } from "../../../data/entity/entity";
 import { SCALE } from "../renderer";
 
 const ATLAS_NAME = "projectiles";
-const DEFAULT_SPRITE = "Projectiles0.png";
+const DEFAULT_SPRITE = "projectiles0.png";
 const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
-  [EntityType.Bullet, "Projectiles0.png"],
-  [EntityType.Flame, "Projectiles1.png"],
-  [EntityType.Rocket, "Projectiles2.png"],
-  [EntityType.Shockwave, "Projectiles5.png"],
+  [EntityType.Bullet, "projectiles0.png"],
+  [EntityType.Flame, "projectiles1.png"],
+  [EntityType.Rocket, "projectiles2.png"],
+  [EntityType.Shockwave, "projectiles5.png"],
 ]);
 
 class SimpleProjectile extends Sprite implements EntityRenderer {

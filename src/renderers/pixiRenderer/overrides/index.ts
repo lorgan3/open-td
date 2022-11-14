@@ -20,13 +20,13 @@ export const init = (loader: Loader) => {
   loader.add("runner", "./src/assets/animations/runner.json");
   loader.add("regular", "./src/assets/animations/regular.json");
   loader.add("flier", "./src/assets/animations/flier.json");
-  loader.add("buildings", "./src/assets/buildings.json");
-  loader.add("turret", "./src/assets/Turret.json");
-  loader.add("flamethrower", "./src/assets/Flamethrower.json");
-  loader.add("laser", "./src/assets/Laser.json");
-  loader.add("mortar", "./src/assets/Mortar.json");
-  loader.add("railgun", "./src/assets/Railgun.json");
-  loader.add("projectiles", "./src/assets/Projectiles.json");
+  loader.add("buildings", "./src/assets/tiles/buildings.json");
+  loader.add("turret", "./src/assets/animations/turret.json");
+  loader.add("flamethrower", "./src/assets/animations/flamethrower.json");
+  loader.add("laser", "./src/assets/animations/laser.json");
+  loader.add("mortar", "./src/assets/animations/mortar.json");
+  loader.add("railgun", "./src/assets/animations/railgun.json");
+  loader.add("projectiles", "./src/assets/tiles/projectiles.json");
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {

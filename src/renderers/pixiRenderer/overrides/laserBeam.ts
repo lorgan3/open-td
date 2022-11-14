@@ -7,7 +7,7 @@ import LaserBeamData, {
 import { SCALE } from "../renderer";
 
 const ATLAS_NAME = "projectiles";
-const SPRITE = "Projectiles3.png";
+const SPRITE = "projectiles3.png";
 const SPRITE_SCALE = 16;
 
 class LaserBeam extends TilingSprite implements EntityRenderer {

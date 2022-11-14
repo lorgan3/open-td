@@ -5,7 +5,7 @@ import RailData, { LIFETIME } from "../../../data/entity/projectiles/rail";
 import { SCALE } from "../renderer";
 
 const ATLAS_NAME = "projectiles";
-const SPRITE = "Projectiles4.png";
+const SPRITE = "projectiles4.png";
 const SPRITE_SCALE = 16;
 
 class Rail extends TilingSprite implements EntityRenderer {

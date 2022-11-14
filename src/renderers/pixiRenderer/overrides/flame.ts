@@ -6,7 +6,7 @@ import FlameData from "../../../data/entity/projectiles/flame";
 import { SCALE } from "../renderer";
 
 export const FIRE_ATLAS_NAME = "projectiles";
-export const FIRE_SPRITE = "Projectiles1.png";
+export const FIRE_SPRITE = "projectiles1.png";
 
 const MAX_FLAMES = 20;
 
@@ -37,6 +37,9 @@ class Flame extends ParticleContainer implements EntityRenderer {
       particle.lifetime = Math.floor(Math.random() * 25);
       particle.x = (this.data.getTile().getX() + 1) * SCALE;
       particle.y = (this.data.getTile().getY() + 1) * SCALE;
+      particle.direction =
+        ((this.data.entity.getRotation() + 20 - Math.random() * 40) * Math.PI) /
+        180;
 
       this.addChild(particle);
     }
