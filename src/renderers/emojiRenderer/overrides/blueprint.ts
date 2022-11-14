@@ -1,6 +1,5 @@
 import { RenderFn } from ".";
 import Blueprint from "../../../data/entity/Blueprint";
-import { StaticAgentStatics } from "../../../data/entity/staticEntity";
 
 const render: RenderFn<Blueprint> = (renderer, blueprint, htmlElement) => {
   const entity = blueprint.entity;

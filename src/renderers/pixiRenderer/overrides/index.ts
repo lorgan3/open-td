@@ -1,5 +1,6 @@
 import { Container, Loader } from "pixi.js";
 import { EntityType } from "../../../data/entity/entity";
+import { Blueprint } from "./blueprint";
 import { Flame } from "./flame";
 import { Flier } from "./flier";
 import { LaserBeam } from "./laserBeam";
@@ -46,4 +47,5 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Fence]: null,
   [EntityType.Wall]: null,
   [EntityType.ElectricFence]: null,
+  [EntityType.Blueprint]: Blueprint,
 };
