@@ -10,7 +10,7 @@ import { SimpleProjectile } from "./simpleProjectile";
 import { Tower } from "./tower";
 
 export interface EntityRenderer extends Container {
-  sync: () => void;
+  sync: (full: boolean) => void;
 }
 
 export type Constructor = new (data: any, loader: Loader) => EntityRenderer;

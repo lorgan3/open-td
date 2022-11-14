@@ -206,7 +206,8 @@ class Renderer implements IRenderer {
 
     this.time += dt;
 
-    if (this.surface.isDirty()) {
+    let full = this.surface.isDirty();
+    if (full) {
       this.renderTilemap();
     }
 
@@ -230,7 +231,7 @@ class Renderer implements IRenderer {
         this.sprites.set(entity.getId(), sprite);
       }
 
-      sprite.sync();
+      sprite.sync(full);
     }
 
     const deletedEntities = this.surface.getDeletedEntities();

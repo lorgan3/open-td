@@ -4,7 +4,7 @@ import { EntityRenderer } from ".";
 import { Agent, EntityType } from "../../../data/entity/entity";
 import { SCALE } from "../renderer";
 
-const ATLAS_NAME = "buildings";
+export const ATLAS_NAME = "buildings";
 const DEFAULT_SPRITE = "buildings0.png";
 const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Base, "buildings0.png"],
