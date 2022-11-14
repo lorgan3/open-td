@@ -62,6 +62,14 @@ class ElectricFence implements ITower {
   isVisible() {
     return true;
   }
+
+  isSpeedBoosted() {
+    return false;
+  }
+
+  isDamageBoosted() {
+    return false;
+  }
 }
 
 export default ElectricFence;
