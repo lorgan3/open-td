@@ -1,4 +1,4 @@
-import Blueprint from "./entity/Blueprint";
+import Blueprint, { isBlueprint } from "./entity/Blueprint";
 import { IEnemy } from "./entity/enemies";
 import { Agent, EntityType } from "./entity/entity";
 import { GameEvent } from "./events";
@@ -59,7 +59,12 @@ class MoneyController {
   }
 
   buy(agent: Agent) {
-    const cost = TOWER_PRICES[agent.getType()] ?? 0;
+    let type = agent.getType();
+    if (isBlueprint(agent)) {
+      type = agent.getPlaceable().entityType;
+    }
+
+    const cost = TOWER_PRICES[type] ?? 0;
 
     if (cost > this.money) {
       throw new Error("Not enough money!");

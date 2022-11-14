@@ -45,3 +45,7 @@ class Blueprint implements Agent {
 }
 
 export default Blueprint;
+
+export const isBlueprint = (agent: Agent): agent is Blueprint => {
+  return agent.getType() === EntityType.Blueprint;
+};
