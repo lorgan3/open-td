@@ -26,6 +26,7 @@ class Flamethrower implements ITower {
   private flame?: Flame;
   private hp = 160;
   private isEnabled = true;
+  private speedMultiplier = 1;
   private damageMultiplier = 1;
   public renderData: RenderData = {};
 
@@ -47,10 +48,13 @@ class Flamethrower implements ITower {
     const isPowered = Manager.Instance.consumeContinuous(
       this,
       dt,
-      this.damageMultiplier
+      this.damageMultiplier * this.speedMultiplier
     );
 
-    const damage = DAMAGE * (isPowered ? this.damageMultiplier : 1) * dt;
+    const damage =
+      DAMAGE *
+      (isPowered ? this.damageMultiplier * this.speedMultiplier : 1) *
+      dt;
     if (!this.flame) {
       this.flame = new Flame(this.tile);
       Manager.Instance.getSurface().spawn(this.flame);
@@ -77,8 +81,8 @@ class Flamethrower implements ITower {
   }
 
   updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
-    this.damageMultiplier =
-      getSpeedMultiplier(linkedAgents) * getDamageMultiplier(linkedAgents);
+    this.speedMultiplier = getSpeedMultiplier(linkedAgents);
+    this.damageMultiplier = getDamageMultiplier(linkedAgents);
   }
 
   getCooldown() {
@@ -116,6 +120,14 @@ class Flamethrower implements ITower {
   disable() {
     this.cooldown = COOLDOWN;
     this.isEnabled = false;
+  }
+
+  isSpeedBoosted() {
+    return this.speedMultiplier > 1;
+  }
+
+  isDamageBoosted() {
+    return this.damageMultiplier > 1;
   }
 }
 

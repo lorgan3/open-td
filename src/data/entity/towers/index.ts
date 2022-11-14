@@ -13,6 +13,8 @@ export interface ITower extends StaticAgent {
   getTile(): TileWithStaticEntity;
   enable(): void;
   disable(): void;
+  isSpeedBoosted(): boolean;
+  isDamageBoosted(): boolean;
 }
 
 export interface ITowerStatics extends StaticAgentStatics {

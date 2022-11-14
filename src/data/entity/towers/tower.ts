@@ -113,6 +113,14 @@ class Tower implements ITower {
     this.cooldown = COOLDOWN;
     this.isEnabled = false;
   }
+
+  isSpeedBoosted() {
+    return this.speedMultiplier > 1;
+  }
+
+  isDamageBoosted() {
+    return this.damageMultiplier > 1;
+  }
 }
 
 export default Tower;

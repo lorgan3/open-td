@@ -26,6 +26,7 @@ class Laser implements ITower {
   private laserBeam?: LaserBeam;
   private hp = 80;
   private isEnabled = true;
+  private speedMultiplier = 1;
   private damageMultiplier = 1;
   public renderData: RenderData = {};
 
@@ -44,11 +45,17 @@ class Laser implements ITower {
   fire(target: IEnemy, dt: number) {
     this.cooldown = COOLDOWN;
 
-    if (!Manager.Instance.consumeContinuous(this, dt, this.damageMultiplier)) {
+    if (
+      !Manager.Instance.consumeContinuous(
+        this,
+        dt,
+        this.damageMultiplier * this.speedMultiplier
+      )
+    ) {
       return 0;
     }
 
-    const damage = DAMAGE * this.damageMultiplier * dt;
+    const damage = DAMAGE * this.damageMultiplier * this.speedMultiplier * dt;
 
     if (!this.laserBeam) {
       this.laserBeam = new LaserBeam(this.tile);
@@ -76,8 +83,8 @@ class Laser implements ITower {
   }
 
   updateLinkedAgents(linkedAgents: Set<StaticAgent>) {
-    this.damageMultiplier =
-      getSpeedMultiplier(linkedAgents) * getDamageMultiplier(linkedAgents);
+    this.speedMultiplier = getSpeedMultiplier(linkedAgents);
+    this.damageMultiplier = getDamageMultiplier(linkedAgents);
   }
 
   getCooldown() {
@@ -115,6 +122,14 @@ class Laser implements ITower {
   disable() {
     this.cooldown = COOLDOWN;
     this.isEnabled = false;
+  }
+
+  isSpeedBoosted() {
+    return this.speedMultiplier > 1;
+  }
+
+  isDamageBoosted() {
+    return this.damageMultiplier > 1;
   }
 }
 
