@@ -8,6 +8,7 @@ import { Rail } from "./rail";
 import { Regular } from "./regular";
 import { Runner } from "./runner";
 import { SimpleProjectile } from "./simpleProjectile";
+import { Tank } from "./tank";
 import { Tower } from "./tower";
 
 export interface EntityRenderer extends Container {
@@ -20,6 +21,7 @@ export const init = (loader: Loader) => {
   loader.add("runner", "./src/assets/animations/runner.json");
   loader.add("regular", "./src/assets/animations/regular.json");
   loader.add("flier", "./src/assets/animations/flier.json");
+  loader.add("tank", "./src/assets/animations/tank.json");
   loader.add("buildings", "./src/assets/tiles/buildings.json");
   loader.add("turret", "./src/assets/animations/turret.json");
   loader.add("flamethrower", "./src/assets/animations/flamethrower.json");
@@ -33,6 +35,7 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Runner]: Runner,
   [EntityType.Slime]: Regular,
   [EntityType.Flier]: Flier,
+  [EntityType.Tank]: Tank,
   [EntityType.Tower]: Tower,
   [EntityType.Flamethrower]: Tower,
   [EntityType.Laser]: Tower,
