@@ -1,0 +1,137 @@
+{
+  "frames": {
+    "fenceCombined0.png": {
+      "frame": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined1.png": {
+      "frame": { "x": 48, "y": 0, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined2.png": {
+      "frame": { "x": 96, "y": 0, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined3.png": {
+      "frame": { "x": 144, "y": 0, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined4.png": {
+      "frame": { "x": 0, "y": 48, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined5.png": {
+      "frame": { "x": 48, "y": 48, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined6.png": {
+      "frame": { "x": 96, "y": 48, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined7.png": {
+      "frame": { "x": 144, "y": 48, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined8.png": {
+      "frame": { "x": 0, "y": 96, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined9.png": {
+      "frame": { "x": 48, "y": 96, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined10.png": {
+      "frame": { "x": 96, "y": 96, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined11.png": {
+      "frame": { "x": 144, "y": 96, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined12.png": {
+      "frame": { "x": 0, "y": 144, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined13.png": {
+      "frame": { "x": 48, "y": 144, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined14.png": {
+      "frame": { "x": 96, "y": 144, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined15.png": {
+      "frame": { "x": 144, "y": 144, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined16.png": {
+      "frame": { "x": 0, "y": 192, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    },
+    "fenceCombined17.png": {
+      "frame": { "x": 48, "y": 192, "w": 48, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 },
+      "sourceSize": { "w": 48, "h": 48 }
+    }
+  },
+  "meta": {
+    "app": "https://github.com/piskelapp/piskel/",
+    "version": "1.0",
+    "image": "fenceCombined.png",
+    "format": "RGBA8888",
+    "size": { "w": 192, "h": 240 }
+  }
+}
