@@ -154,6 +154,15 @@ class Renderer implements IRenderer {
           return;
         }
 
+        if (tile.getDiscoveryStatus() === DiscoveryStatus.Pending) {
+          this.tilemap.tile(
+            atlas.textures![AtlasTile.Unknown],
+            tile.getX() * SCALE,
+            tile.getY() * SCALE
+          );
+          return;
+        }
+
         let ref = TILE_TO_ATLAS_MAP[tile.getBaseType()];
         if (ref) {
           this.tilemap.tile(
