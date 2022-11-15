@@ -240,7 +240,7 @@ class Renderer implements IRenderer {
         this.sprites.set(entity.getId(), sprite);
       }
 
-      sprite.sync(full);
+      sprite.sync(dt, full);
     }
 
     const deletedEntities = this.surface.getDeletedEntities();

@@ -4,6 +4,7 @@ import { EntityRenderer } from ".";
 import { EntityType } from "../../../data/entity/entity";
 import { getCenter } from "../../../data/entity/staticEntity";
 import { ITower } from "../../../data/entity/towers";
+import { clampDegrees } from "../../../data/util/math";
 import { SCALE } from "../renderer";
 import { ATLAS_NAME } from "./default";
 
@@ -16,6 +17,7 @@ const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
 ]);
 
 const ANIMATION_SPEED = 0.1;
+const ROTATION_SPEED = 0.6;
 
 const BASE_SPEED_DAMAGE_BOOST = "buildings8.png";
 const BASE_SPEED_BOOST = "buildings9.png";
@@ -65,7 +67,7 @@ class Tower extends Sprite implements EntityRenderer {
     this.addChild(this.turret);
   }
 
-  sync(full: boolean) {
+  sync(dt: number, full: boolean) {
     if (full) {
       this.texture =
         this.loader.resources[ATLAS_NAME].spritesheet!.textures[
@@ -73,7 +75,11 @@ class Tower extends Sprite implements EntityRenderer {
         ];
     }
 
-    this.turret.angle = this.data.entity.getRotation();
+    this.turret.angle = clampDegrees(
+      this.turret.angle,
+      this.data.entity.getRotation(),
+      ROTATION_SPEED * dt
+    );
 
     if (this.data.renderData.fired) {
       this.data.renderData.fired = false;

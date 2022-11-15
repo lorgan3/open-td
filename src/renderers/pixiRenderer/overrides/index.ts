@@ -12,7 +12,7 @@ import { Tank } from "./tank";
 import { Tower } from "./tower";
 
 export interface EntityRenderer extends Container {
-  sync: (full: boolean) => void;
+  sync: (dt: number, full: boolean) => void;
 }
 
 export type Constructor = new (data: any, loader: Loader) => EntityRenderer;
