@@ -1,7 +1,4 @@
-import Entity, { EntityType } from "../entity/entity";
-
-const mod = (value: number, modulo: number) =>
-  ((value % modulo) + modulo) % modulo;
+import { mod } from "./math";
 
 // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 export const getRayDistance = (
