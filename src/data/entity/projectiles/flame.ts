@@ -1,5 +1,4 @@
 import Manager from "../../manager";
-import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
 import Entity, {
   Agent,
@@ -7,6 +6,8 @@ import Entity, {
   EntityType,
   RenderData,
 } from "../entity";
+import { getCenter } from "../staticEntity";
+import { ITower } from "../towers";
 
 export const LIFETIME = 250;
 
@@ -16,8 +17,14 @@ class Flame implements Agent {
   public time = 0;
   public renderData: RenderData = {};
 
-  constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
+  public sourceX: number;
+  public sourceY: number;
+
+  constructor(private source: ITower) {
+    const [x, y] = getCenter(source);
+    this.entity = new Entity(x, y, this);
+    this.sourceX = x;
+    this.sourceY = y;
   }
 
   dealDamage(enemy: IEnemy, damage: number) {
@@ -30,10 +37,12 @@ class Flame implements Agent {
     this.time = 0;
 
     const direction = Math.atan2(
-      enemy.entity.getX() + 0.25 - (this.tile.getX() + 0.5),
-      enemy.entity.getY() + 0.25 - (this.tile.getY() + 0.5)
+      enemy.entity.getX() + 0.5 - this.sourceX,
+      enemy.entity.getY() + 0.5 - this.sourceY
     );
     this.entity.setRotation((direction * 180) / Math.PI);
+    this.source.entity.setRotation(this.entity.getRotation());
+
     this.entity.setX(enemy.entity.getAlignedX());
     this.entity.setY(enemy.entity.getAlignedY());
 
@@ -50,10 +59,6 @@ class Flame implements Agent {
 
   getType(): EntityType {
     return EntityType.Flame;
-  }
-
-  getTile() {
-    return this.tile;
   }
 
   isVisible() {

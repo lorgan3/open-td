@@ -35,8 +35,8 @@ class Flame extends ParticleContainer implements EntityRenderer {
       particle.speed = (4 + Math.random() * 2) * 0.02;
       particle.alpha = 0.8;
       particle.lifetime = Math.floor(Math.random() * 25);
-      particle.x = (this.data.getTile().getX() + 1) * SCALE;
-      particle.y = (this.data.getTile().getY() + 1) * SCALE;
+      particle.x = this.data.sourceX * SCALE;
+      particle.y = this.data.sourceY * SCALE;
       particle.direction =
         ((this.data.entity.getRotation() + 20 - Math.random() * 40) * Math.PI) /
         180;
@@ -53,8 +53,8 @@ class Flame extends ParticleContainer implements EntityRenderer {
       if (particle.lifetime > 25) {
         if (this.data.renderData.update) {
           particle.lifetime = 0;
-          particle.x = (this.data.getTile().getX() + 1) * SCALE;
-          particle.y = (this.data.getTile().getY() + 1) * SCALE;
+          particle.x = this.data.sourceX * SCALE;
+          particle.y = this.data.sourceY * SCALE;
 
           particle.direction =
             ((this.data.entity.getRotation() + 20 - Math.random() * 40) *

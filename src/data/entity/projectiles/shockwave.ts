@@ -1,5 +1,6 @@
 import Manager from "../../manager";
 import Tile from "../../terrain/tile";
+import { lerp } from "../../util/math";
 import { IEnemy } from "../enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";
 
@@ -18,7 +19,7 @@ class Shockwave implements Agent {
     private target: Tile,
     private damage: number
   ) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
 
     const xDiff = tile.getX() - target.getX();
     const yDiff = tile.getY() - target.getY();
@@ -50,12 +51,9 @@ class Shockwave implements Agent {
 
     this.time = Math.min(this.time + dt, this.travelTime);
     const t = this.time / this.travelTime;
-    this.entity.setX(
-      (this.target.getX() - this.tile.getX()) * t + this.tile.getX()
-    );
-    this.entity.setY(
-      (this.target.getY() - this.tile.getY()) * t + this.tile.getY()
-    );
+
+    this.entity.setX(lerp(this.tile.getX(), this.target.getX(), t) + 0.5);
+    this.entity.setY(lerp(this.tile.getY(), this.target.getY(), t) + 0.5);
   }
 
   getType(): EntityType {

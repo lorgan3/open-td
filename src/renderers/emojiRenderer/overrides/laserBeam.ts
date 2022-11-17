@@ -5,11 +5,11 @@ import LaserBeam, {
 
 const render: RenderFn<LaserBeam> = (renderer, laserBeam, htmlElement) => {
   const entity = laserBeam.entity;
-  const x = entity.getX() + 0.5;
-  const y = entity.getY() + 0.5;
+  const x = entity.getX();
+  const y = entity.getY();
 
   const scale = Math.sqrt(
-    (x - laserBeam.targetX - 0.5) ** 2 + (y - laserBeam.targetY - 0.5) ** 2
+    (x - laserBeam.targetX) ** 2 + (y - laserBeam.targetY) ** 2
   );
 
   htmlElement.style.color = "transparent";

@@ -56,14 +56,13 @@ class Flamethrower implements ITower {
       (isPowered ? this.damageMultiplier * this.speedMultiplier : 1) *
       dt;
     if (!this.flame) {
-      this.flame = new Flame(this.tile);
+      this.flame = new Flame(this);
       Manager.Instance.getSurface().spawn(this.flame);
     }
 
     this.flame.dealDamage(target, damage);
 
     this.renderData.fired = true;
-    this.entity.lookAt(target.entity);
 
     return damage;
   }

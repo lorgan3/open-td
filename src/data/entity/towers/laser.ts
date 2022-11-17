@@ -58,14 +58,13 @@ class Laser implements ITower {
     const damage = DAMAGE * this.damageMultiplier * this.speedMultiplier * dt;
 
     if (!this.laserBeam) {
-      this.laserBeam = new LaserBeam(this.tile);
+      this.laserBeam = new LaserBeam(this);
       Manager.Instance.getSurface().spawn(this.laserBeam);
     }
 
     this.laserBeam.dealDamage(target, damage);
 
     this.renderData.fired = true;
-    this.entity.lookAt(target.entity);
 
     return damage;
   }

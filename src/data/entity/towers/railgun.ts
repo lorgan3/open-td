@@ -55,11 +55,10 @@ class Railgun implements ITower {
     }
 
     const damage = DAMAGE * this.damageMultiplier;
-    const projectile = new Rail(this.tile, target, damage);
+    const projectile = new Rail(this, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
 
     this.renderData.fired = true;
-    this.entity.lookAt(target.entity);
 
     return damage;
   }

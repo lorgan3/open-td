@@ -1,9 +1,10 @@
 import Manager from "../../manager";
 import { isSolid } from "../../terrain/collision";
-import Tile from "../../terrain/tile";
 import { getRayDistance, getSquareDistance } from "../../util/distance";
 import { IEnemy } from "../enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";
+import { getCenter } from "../staticEntity";
+import { ITower } from "../towers";
 
 export const LIFETIME = 1500;
 
@@ -12,40 +13,40 @@ class Rail implements Agent {
   public category = AgentCategory.Unknown;
   public renderData = {};
 
-  public targetX: number;
-  public targetY: number;
+  public targetX!: number;
+  public targetY!: number;
 
   public time = 0;
 
-  constructor(private tile: Tile, target: IEnemy, private damage: number) {
-    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
+  constructor(private source: ITower, target: IEnemy, private damage: number) {
+    const [x, y] = getCenter(source);
+    this.entity = new Entity(x, y, this);
     const direction = Math.atan2(
-      target.entity.getY() + 0.25 - tile.getY() - 0.5,
-      target.entity.getX() + 0.25 - tile.getX() - 0.5
+      target.entity.getY() + 0.5 - this.entity.getY(),
+      target.entity.getX() + 0.5 - this.entity.getX()
     );
     this.entity.setRotation((direction * 180) / Math.PI);
+    this.source.entity.setRotation(this.entity.getRotation() + 90);
 
-    this.targetX = target.entity.getX();
-    this.targetY = target.entity.getY();
     Manager.Instance.getSurface().forRay(
       target.entity.getX(),
       target.entity.getY(),
       direction,
-      (tile, i) => {
+      (tile) => {
+        this.targetX = tile.getX();
+        this.targetY = tile.getY();
+
         if (isSolid(tile)) {
           return false;
         }
 
-        this.targetX = tile.getX();
-        this.targetY = tile.getY();
         return true;
       }
     );
 
-    let hits = 0;
     const squaredDistance = getSquareDistance(
-      tile.getX() + 1,
-      tile.getY() + 1,
+      this.entity.getX(),
+      this.entity.getY(),
       this.targetX,
       this.targetY
     );
@@ -58,27 +59,27 @@ class Rail implements Agent {
       .filter(
         (enemy) =>
           getSquareDistance(
-            tile.getX() + 1,
-            tile.getY() + 1,
-            enemy.getX(),
-            enemy.getY()
+            this.entity.getX(),
+            this.entity.getY(),
+            enemy.getX() + 0.5,
+            enemy.getY() + 0.5
           ) <=
           squaredDistance + 1
       )
       .filter((enemy) => {
         const dist = getRayDistance(
-          tile.getX(),
-          tile.getY(),
+          this.entity.getX(),
+          this.entity.getY(),
           direction,
-          enemy.getX(),
-          enemy.getY()
+          enemy.getX() + 0.5,
+          enemy.getY() + 0.5
         );
 
+        console.log(dist);
         return dist <= 0.5;
       })
       .forEach((enemy) => {
         (enemy.getAgent() as IEnemy).AI.hit(this.damage);
-        hits++;
       });
   }
 
@@ -91,10 +92,6 @@ class Rail implements Agent {
 
   getType(): EntityType {
     return EntityType.Rail;
-  }
-
-  getTile() {
-    return this.tile;
   }
 
   isVisible() {

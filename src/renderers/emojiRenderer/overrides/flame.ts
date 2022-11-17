@@ -9,7 +9,7 @@ const render: RenderFn<Flame> = (renderer, flame, htmlElement) => {
     (entity.getX() + Math.random() * 0.3 - 0.15) * renderer.xStep
   }px, ${
     (entity.getY() + Math.random() * 0.3 - 0.15) * renderer.yStep
-  }px) rotate(${entity.getRotation() + Math.random() * 10 - 5 + 90}deg)`;
+  }px) rotate(${-entity.getRotation() + 180 + Math.random() * 10 - 5}deg)`;
 };
 
 export default render;

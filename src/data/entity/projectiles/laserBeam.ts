@@ -1,7 +1,8 @@
 import Manager from "../../manager";
-import Tile from "../../terrain/tile";
 import { IEnemy } from "../enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";
+import { getCenter } from "../staticEntity";
+import { ITower } from "../towers";
 
 export const LIFETIME = 250;
 
@@ -14,8 +15,9 @@ class LaserBeam implements Agent {
   public targetX = 0;
   public targetY = 0;
 
-  constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
+  constructor(private source: ITower) {
+    const [x, y] = getCenter(source);
+    this.entity = new Entity(x, y, this);
   }
 
   dealDamage(enemy: IEnemy, damage: number) {
@@ -25,13 +27,14 @@ class LaserBeam implements Agent {
 
     this.time = 0;
 
-    this.targetX = enemy.entity.getX();
-    this.targetY = enemy.entity.getY();
+    this.targetX = enemy.entity.getX() + 0.5;
+    this.targetY = enemy.entity.getY() + 0.5;
     const direction = Math.atan2(
-      this.targetY - this.tile.getY() - 0.5,
-      this.targetX - this.tile.getX() - 0.5
+      this.targetY - this.entity.getY(),
+      this.targetX - this.entity.getX()
     );
     this.entity.setRotation((direction * 180) / Math.PI);
+    this.source.entity.setRotation(this.entity.getRotation() + 90);
 
     enemy.AI.hit(damage);
     enemy.lightOnFire && enemy.lightOnFire();
@@ -46,10 +49,6 @@ class LaserBeam implements Agent {
 
   getType(): EntityType {
     return EntityType.LaserBeam;
-  }
-
-  getTile() {
-    return this.tile;
   }
 
   isVisible() {

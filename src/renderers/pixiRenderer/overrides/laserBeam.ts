@@ -26,19 +26,19 @@ class LaserBeam extends TilingSprite implements EntityRenderer {
     this.tilePosition.y = this.tileOffset;
     this.tileOffset += 0.5;
 
-    const x = this.data.entity.getX() + 0.5;
-    const y = this.data.entity.getY() + 0.5;
+    const x = this.data.entity.getX();
+    const y = this.data.entity.getY();
 
     const scale = Math.sqrt(
-      (x - this.data.targetX - 0.5) ** 2 + (y - this.data.targetY - 0.5) ** 2
+      (x - this.data.targetX) ** 2 + (y - this.data.targetY) ** 2
     );
     this.height = scale * SCALE;
 
     this.alpha = Math.min(1, 1 - this.data.time / LIFETIME + 0.1);
 
     this.position.set(
-      (this.data.entity.getX() + 0.5) * SCALE,
-      (this.data.entity.getY() + 0.5) * SCALE
+      this.data.entity.getX() * SCALE,
+      this.data.entity.getY() * SCALE
     );
     this.angle = this.data.entity.getRotation() - 90;
   }
