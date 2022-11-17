@@ -6,6 +6,7 @@ import renderEnemy from "./genericEnemy";
 import renderFlier from "./flier";
 import renderBlueprint from "./blueprint";
 import renderLaserBeam from "./laserBeam";
+import renderProjectile from "./genericProjectile";
 
 export type RenderFn<T extends Agent> = (
   renderer: Renderer,
@@ -22,4 +23,7 @@ export const OVERRIDES: Partial<Record<EntityType, RenderFn<any>>> = {
   [EntityType.Tank]: renderEnemy,
   [EntityType.Blueprint]: renderBlueprint,
   [EntityType.LaserBeam]: renderLaserBeam,
+  [EntityType.Bullet]: renderProjectile,
+  [EntityType.Rocket]: renderProjectile,
+  [EntityType.Shockwave]: renderProjectile,
 };
