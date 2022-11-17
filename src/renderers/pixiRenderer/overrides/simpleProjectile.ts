@@ -25,8 +25,8 @@ class SimpleProjectile extends Sprite implements EntityRenderer {
 
   sync() {
     this.position.set(
-      (this.data.entity.getX() + 0.5) * SCALE,
-      (this.data.entity.getY() + 0.5) * SCALE
+      this.data.entity.getX() * SCALE,
+      this.data.entity.getY() * SCALE
     );
     this.angle = this.data.entity.getRotation();
   }

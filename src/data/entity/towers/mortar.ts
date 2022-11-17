@@ -50,11 +50,10 @@ class Mortar implements ITower {
     );
 
     const damage = DAMAGE * (isPowered ? this.damageMultiplier : 0);
-    const projectile = new Rocket(this.tile, target, damage);
+    const projectile = new Rocket(this, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
 
     this.renderData.fired = true;
-    this.entity.lookAt(target.entity);
 
     return damage;
   }

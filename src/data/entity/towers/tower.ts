@@ -51,11 +51,10 @@ class Tower implements ITower {
     );
 
     const damage = DAMAGE * (isPowered ? this.damageMultiplier : 1);
-    const bullet = new Bullet(this.tile, target, damage);
+    const bullet = new Bullet(this, target, damage);
     Manager.Instance.getSurface().spawn(bullet);
 
     this.renderData.fired = true;
-    this.entity.lookAt(target.entity);
 
     return damage;
   }

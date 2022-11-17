@@ -1,44 +1,40 @@
+import { aim, Projectile } from ".";
 import Manager from "../../manager";
-import Tile from "../../terrain/tile";
+import { lerp } from "../../util/math";
 import { IEnemy } from "../enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";
+import { ITower } from "../towers";
 
 const SPEED = 0.01;
 const ARC_HEIGHT = 5;
 const RANGE = 2;
 const RANGE_SQUARED = RANGE * RANGE;
 
-class Rocket implements Agent {
+class Rocket extends Projectile implements Agent {
   public entity: Entity;
   public category = AgentCategory.Unknown;
   public renderData = {};
 
-  private targetX: number;
-  private targetY: number;
-
   private time = 0;
-  private travelTime: number;
 
   private prevX?: number;
   private prevY?: number;
 
   constructor(
-    private tile: Tile,
-    private target: IEnemy,
+    protected source: ITower,
+    protected target: IEnemy,
     private damage: number
   ) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
-    this.entity.lookAt(target.entity);
+    super();
+    aim.call(this, SPEED, ARC_HEIGHT * 2);
 
-    const xDiff = tile.getX() - target.entity.getX();
-    const yDiff = tile.getY() - target.entity.getY();
-    const dist = ARC_HEIGHT * 2 + Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-    this.travelTime = dist / SPEED;
+    this.entity = new Entity(this.sourceX, this.sourceY, this);
+    this.entity.lookAt(this.targetX, this.targetY);
+    this.source.entity.setRotation(this.entity.getRotation());
 
-    const index = this.target.AI.getFuturePosition(this.travelTime);
-    const { x, y } = target.getPath().getCoordinates(index);
-    this.targetX = x;
-    this.targetY = y;
+    this.entity = new Entity(this.sourceX, this.sourceY, this);
+    this.entity.lookAt(this.targetX, this.targetY);
+    this.source.entity.setRotation(this.entity.getRotation());
   }
 
   tick(dt: number) {
@@ -70,12 +66,10 @@ class Rocket implements Agent {
 
     this.time = Math.min(this.time + dt, this.travelTime);
     const t = this.time / this.travelTime;
-    this.entity.setX((this.targetX - this.tile.getX()) * t + this.tile.getX());
 
     const arc = Math.sin(t * Math.PI) * ARC_HEIGHT;
-    this.entity.setY(
-      (this.targetY - this.tile.getY()) * t + this.tile.getY() - arc
-    );
+    this.entity.setX(lerp(this.sourceX, this.targetX, t));
+    this.entity.setY(lerp(this.sourceY, this.targetY, t) - arc);
 
     if (this.prevX && this.prevY) {
       const xDiff = this.entity.getX() - this.prevX;
@@ -90,10 +84,6 @@ class Rocket implements Agent {
 
   getType(): EntityType {
     return EntityType.Rocket;
-  }
-
-  getTile() {
-    return this.tile;
   }
 
   isVisible() {
