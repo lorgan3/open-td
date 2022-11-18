@@ -8,4 +8,19 @@ export default defineConfig({
     port: 3000,
   },
   base: "/open-td/",
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("pixi")) {
+              return "pixi";
+            }
+
+            return "vendor";
+          }
+        },
+      },
+    },
+  },
 });
