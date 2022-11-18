@@ -66,7 +66,7 @@ class Renderer implements IRenderer {
     this.tilemap = new CompositeTilemap();
 
     this.loader = new Loader();
-    this.loader.add(ATLAS, "./src/assets/tiles/atlas.json");
+    this.loader.add(ATLAS, ".//tiles/atlas.json");
     this.wallRenderer = new WallRenderer(
       this.loader,
       this.tilemap,

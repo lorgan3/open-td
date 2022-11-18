@@ -23,17 +23,17 @@ export type Constructor = (new (data: any, loader: Loader) => EntityRenderer) &
   EntityRendererStatics;
 
 export const init = (loader: Loader) => {
-  loader.add("runner", "./src/assets/animations/runner.json");
-  loader.add("regular", "./src/assets/animations/regular.json");
-  loader.add("flier", "./src/assets/animations/flier.json");
-  loader.add("tank", "./src/assets/animations/tank.json");
-  loader.add("buildings", "./src/assets/tiles/buildings.json");
-  loader.add("turret", "./src/assets/animations/turret.json");
-  loader.add("flamethrower", "./src/assets/animations/flamethrower.json");
-  loader.add("laser", "./src/assets/animations/laser.json");
-  loader.add("mortar", "./src/assets/animations/mortar.json");
-  loader.add("railgun", "./src/assets/animations/railgun.json");
-  loader.add("projectiles", "./src/assets/tiles/projectiles.json");
+  loader.add("runner", ".//animations/runner.json");
+  loader.add("regular", ".//animations/regular.json");
+  loader.add("flier", ".//animations/flier.json");
+  loader.add("tank", ".//animations/tank.json");
+  loader.add("buildings", ".//tiles/buildings.json");
+  loader.add("turret", ".//animations/turret.json");
+  loader.add("flamethrower", ".//animations/flamethrower.json");
+  loader.add("laser", ".//animations/laser.json");
+  loader.add("mortar", ".//animations/mortar.json");
+  loader.add("railgun", ".//animations/railgun.json");
+  loader.add("projectiles", ".//tiles/projectiles.json");
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
