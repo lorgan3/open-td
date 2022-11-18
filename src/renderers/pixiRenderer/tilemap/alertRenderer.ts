@@ -13,9 +13,9 @@ class AlertRenderer {
   private alertSymbols: Sprite[] = [];
   private time = 0;
 
-  constructor(private loader: Loader, private viewport: Viewport) {
+  constructor(private loader: Loader, private parent: Container) {
     this.container = new Container();
-    this.viewport.addChild(this.container);
+    this.parent.addChild(this.container);
   }
 
   public render(center: [number, number], alerts: SpawnAlert[]) {

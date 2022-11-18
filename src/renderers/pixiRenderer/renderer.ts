@@ -12,12 +12,18 @@ import { settings } from "@pixi/tilemap";
 import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
 import Manager from "../../data/manager";
 import { Default } from "./overrides/default";
-import { EntityRenderer, init, OVERRIDES } from "./overrides";
+import {
+  EntityRenderer,
+  EntityRendererStatics,
+  init,
+  OVERRIDES,
+} from "./overrides";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
+import { LAYERS, UI } from "./layer";
 
 let DEBUG = false;
 export const SCALE = 32;
@@ -106,18 +112,13 @@ class Renderer implements IRenderer {
 
     this.app.stage.addChild(this.viewport);
 
-    this.viewport!.addChild(this.tilemap);
-    this.coverageRenderer = new CoverageRenderer(
-      this.loader,
-      this.viewport,
-      this.surface
-    );
+    this.viewport!.addChild(this.tilemap, ...LAYERS);
 
-    this.alertRenderer = new AlertRenderer(this.loader, this.viewport);
+    this.coverageRenderer = new CoverageRenderer(this.loader, UI, this.surface);
+    this.alertRenderer = new AlertRenderer(this.loader, UI);
 
     this.selection = new Graphics();
-    this.viewport!.addChild(this.selection);
-    this.viewport!.sortableChildren = true;
+    UI.addChild(this.selection);
 
     if (this.loader.loading) {
       this.loader.onComplete.add(() => this.renderTilemap());
@@ -229,14 +230,17 @@ class Renderer implements IRenderer {
       let sprite = this.sprites.get(entity.getId());
 
       if (!sprite) {
-        const constructor = OVERRIDES[entity.getAgent().getType()];
+        const override = OVERRIDES[entity.getAgent().getType()];
 
-        if (constructor === null) {
+        if (override === null) {
           continue;
         }
 
-        sprite = new (constructor || Default)(entity.getAgent(), this.loader);
-        this.viewport!.addChild(sprite);
+        const constructor = override || Default;
+
+        sprite = new constructor(entity.getAgent(), this.loader);
+        constructor.layer.addChild(sprite);
+
         this.sprites.set(entity.getId(), sprite);
       }
 
@@ -248,7 +252,10 @@ class Renderer implements IRenderer {
       const sprite = this.sprites.get(entity.getId());
       if (sprite) {
         this.sprites.delete(entity.getId());
-        this.viewport!.removeChild(sprite);
+
+        const layer = (sprite.constructor as unknown as EntityRendererStatics)
+          .layer;
+        layer.removeChild(sprite);
       }
     });
 

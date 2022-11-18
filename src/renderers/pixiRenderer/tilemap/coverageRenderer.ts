@@ -1,5 +1,4 @@
-import { Viewport } from "pixi-viewport";
-import { Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { Container, Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
 import { Difficulty } from "../../../data/difficulty";
 import Manager from "../../../data/manager";
 import Path from "../../../data/terrain/path/path";
@@ -37,7 +36,7 @@ class CoverageRenderer {
 
   constructor(
     private loader: Loader,
-    private viewport: Viewport,
+    private container: Container,
     private surface: Surface
   ) {
     this.coverageContainer = new ParticleContainer(
@@ -48,7 +47,7 @@ class CoverageRenderer {
       undefined,
       true
     );
-    this.viewport.addChild(this.coverageContainer);
+    this.container.addChild(this.coverageContainer);
 
     this.pathContainer = new ParticleContainer(
       undefined,
@@ -58,7 +57,7 @@ class CoverageRenderer {
       undefined,
       true
     );
-    this.viewport.addChild(this.pathContainer);
+    this.container.addChild(this.pathContainer);
   }
 
   public show() {

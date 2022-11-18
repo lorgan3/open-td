@@ -41,7 +41,7 @@ class Flame implements Agent {
       enemy.entity.getY() + 0.5 - this.sourceY
     );
     this.entity.setRotation((direction * 180) / Math.PI);
-    this.source.entity.setRotation(this.entity.getRotation());
+    this.source.entity.setRotation(-this.entity.getRotation() + 180);
 
     this.entity.setX(enemy.entity.getAlignedX());
     this.entity.setY(enemy.entity.getAlignedY());

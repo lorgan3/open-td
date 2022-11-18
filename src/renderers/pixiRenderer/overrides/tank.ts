@@ -2,6 +2,7 @@ import { AnimatedSprite, Loader, Sprite } from "pixi.js";
 import { EntityRenderer } from ".";
 import { Status } from "../../../data/entity/enemies";
 import TankData from "../../../data/entity/enemies/tank";
+import { BASE } from "../layer";
 import { SCALE } from "../renderer";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
 
@@ -9,6 +10,8 @@ const ATLAS_NAME = "tank";
 const ANIMATION_SPEED = 0.1;
 
 class Tank extends AnimatedSprite implements EntityRenderer {
+  public static readonly layer = BASE;
+
   private flames: Sprite[] = [];
 
   constructor(private data: TankData, private loader: Loader) {

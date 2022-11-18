@@ -5,6 +5,7 @@ import { EntityType } from "../../../data/entity/entity";
 import { getCenter } from "../../../data/entity/staticEntity";
 import { ITower } from "../../../data/entity/towers";
 import { clampDegrees } from "../../../data/util/math";
+import { BASE, TOWERS } from "../layer";
 import { SCALE } from "../renderer";
 import { ATLAS_NAME } from "./default";
 
@@ -19,43 +20,28 @@ const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
 const ANIMATION_SPEED = 0.1;
 const ROTATION_SPEED = 0.6;
 
-const BASE_SPEED_DAMAGE_BOOST = "buildings8.png";
-const BASE_SPEED_BOOST = "buildings9.png";
-const BASE_DAMAGE_BOOST = "buildings10.png";
-const BASE = "buildings11.png";
+const FRAME_SPEED_DAMAGE_BOOST = "buildings8.png";
+const FRAME_SPEED_BOOST = "buildings9.png";
+const FRAME_DAMAGE_BOOST = "buildings10.png";
+const FRAME = "buildings11.png";
 
-const getBaseSprite = (isSpeedBoosted: boolean, isDamagedBoosted: boolean) => {
+const getFrameSprite = (isSpeedBoosted: boolean, isDamagedBoosted: boolean) => {
   if (isSpeedBoosted) {
-    return isDamagedBoosted ? BASE_SPEED_DAMAGE_BOOST : BASE_SPEED_BOOST;
+    return isDamagedBoosted ? FRAME_SPEED_DAMAGE_BOOST : FRAME_SPEED_BOOST;
   }
 
-  return isDamagedBoosted ? BASE_DAMAGE_BOOST : BASE;
-};
-
-const createTurretSprite = (data: ITower, loader: Loader) => {
-  const atlasName = TOWER_TO_ATLAS_MAP.get(data.getType())!;
-  const turret = new AnimatedSprite(
-    Object.values(loader.resources[atlasName].spritesheet!.textures)
-  );
-  turret.pivot = { x: SCALE, y: SCALE };
-  turret.animationSpeed = ANIMATION_SPEED;
-  turret.loop = false;
-  turret.position.set(SCALE, SCALE);
-
-  turret.onComplete = () => {
-    turret.gotoAndStop(0);
-  };
-
-  return turret;
+  return isDamagedBoosted ? FRAME_DAMAGE_BOOST : FRAME;
 };
 
 class Tower extends Sprite implements EntityRenderer {
-  private turret: AnimatedSprite;
+  public static readonly layer = BASE;
+
+  private turret!: AnimatedSprite;
 
   constructor(private data: ITower, private loader: Loader) {
     super(
       loader.resources[ATLAS_NAME].spritesheet!.textures[
-        getBaseSprite(data.isSpeedBoosted(), data.isDamageBoosted())
+        getFrameSprite(data.isSpeedBoosted(), data.isDamageBoosted())
       ]
     );
 
@@ -63,15 +49,36 @@ class Tower extends Sprite implements EntityRenderer {
     this.position.set(x * SCALE, y * SCALE);
     this.pivot = { x: SCALE, y: SCALE };
 
-    this.turret = createTurretSprite(data, loader);
-    this.addChild(this.turret);
+    this.createTurret();
+  }
+
+  private createTurret() {
+    const atlasName = TOWER_TO_ATLAS_MAP.get(this.data.getType())!;
+    this.turret = new AnimatedSprite(
+      Object.values(this.loader.resources[atlasName].spritesheet!.textures)
+    );
+
+    this.turret.position.set(this.x, this.y);
+    this.turret.pivot = { x: SCALE, y: SCALE };
+    this.turret.animationSpeed = ANIMATION_SPEED;
+    this.turret.loop = false;
+
+    this.turret.onComplete = () => {
+      this.turret.gotoAndStop(0);
+    };
+
+    TOWERS.addChild(this.turret);
+    this.on("removed", () => TOWERS.removeChild(this.turret));
   }
 
   sync(dt: number, full: boolean) {
     if (full) {
       this.texture =
         this.loader.resources[ATLAS_NAME].spritesheet!.textures[
-          getBaseSprite(this.data.isSpeedBoosted(), this.data.isDamageBoosted())
+          getFrameSprite(
+            this.data.isSpeedBoosted(),
+            this.data.isDamageBoosted()
+          )
         ];
     }
 

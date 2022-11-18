@@ -4,6 +4,7 @@ import { EntityRenderer } from ".";
 import LaserBeamData, {
   LIFETIME,
 } from "../../../data/entity/projectiles/laserBeam";
+import { PROJECTILES } from "../layer";
 import { SCALE } from "../renderer";
 
 const ATLAS_NAME = "projectiles";
@@ -11,6 +12,8 @@ const SPRITE = "projectiles3.png";
 const SPRITE_SCALE = 16;
 
 class LaserBeam extends TilingSprite implements EntityRenderer {
+  public static readonly layer = PROJECTILES;
+
   private tileOffset = 0;
 
   constructor(private data: LaserBeamData, loader: Loader) {

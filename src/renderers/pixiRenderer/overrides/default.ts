@@ -2,6 +2,7 @@ import { Loader, Sprite } from "pixi.js";
 import { EntityRenderer } from ".";
 
 import { Agent, EntityType } from "../../../data/entity/entity";
+import { BASE } from "../layer";
 import { SCALE } from "../renderer";
 
 export const ATLAS_NAME = "buildings";
@@ -18,6 +19,8 @@ const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
 ]);
 
 class Default extends Sprite implements EntityRenderer {
+  public static readonly layer = BASE;
+
   constructor(private data: Agent, loader: Loader) {
     super(
       loader.resources[ATLAS_NAME].spritesheet!.textures[

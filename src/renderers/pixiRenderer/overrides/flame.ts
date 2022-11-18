@@ -2,6 +2,7 @@ import { Loader, ParticleContainer, Sprite } from "pixi.js";
 import { EntityRenderer } from ".";
 
 import FlameData from "../../../data/entity/projectiles/flame";
+import { PROJECTILES } from "../layer";
 
 import { SCALE } from "../renderer";
 
@@ -17,6 +18,8 @@ class FireParticle extends Sprite {
 }
 
 class Flame extends ParticleContainer implements EntityRenderer {
+  public static readonly layer = PROJECTILES;
+
   constructor(private data: FlameData, loader: Loader) {
     super(MAX_FLAMES, {
       position: true,

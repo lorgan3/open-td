@@ -4,6 +4,7 @@ import BlueprintData from "../../../data/entity/Blueprint";
 
 import { EntityType } from "../../../data/entity/entity";
 import { ATLAS, AtlasTile } from "../atlas";
+import { BASE } from "../layer";
 import { SCALE } from "../renderer";
 
 const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
@@ -25,6 +26,8 @@ const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
 ]);
 
 class Blueprint extends Sprite implements EntityRenderer {
+  public static readonly layer = BASE;
+
   constructor(private data: BlueprintData, loader: Loader) {
     const type = data.getPlaceable().entityType;
 

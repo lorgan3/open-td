@@ -2,6 +2,7 @@ import { Loader, TilingSprite } from "pixi.js";
 import { EntityRenderer } from ".";
 
 import RailData, { LIFETIME } from "../../../data/entity/projectiles/rail";
+import { PROJECTILES } from "../layer";
 import { SCALE } from "../renderer";
 
 const ATLAS_NAME = "projectiles";
@@ -9,6 +10,8 @@ const SPRITE = "projectiles4.png";
 const SPRITE_SCALE = 16;
 
 class Rail extends TilingSprite implements EntityRenderer {
+  public static readonly layer = PROJECTILES;
+
   constructor(private data: RailData, loader: Loader) {
     super(
       loader.resources[ATLAS_NAME].spritesheet!.textures[SPRITE],
