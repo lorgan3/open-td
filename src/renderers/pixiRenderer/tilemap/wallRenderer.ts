@@ -13,8 +13,8 @@ class WallRenderer {
     private tilemap: CompositeTilemap,
     private surface: Surface
   ) {
-    loader.add("fences", ".//tiles/fenceCombined.json");
-    loader.add("wall", ".//tiles/bigWall.json");
+    loader.add("fences", `${import.meta.env.BASE_URL}tiles/fenceCombined.json`);
+    loader.add("wall", `${import.meta.env.BASE_URL}tiles/bigWall.json`);
   }
 
   private getWallSprite(type: EntityType, index: number) {

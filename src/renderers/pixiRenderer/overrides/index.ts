@@ -23,17 +23,23 @@ export type Constructor = (new (data: any, loader: Loader) => EntityRenderer) &
   EntityRendererStatics;
 
 export const init = (loader: Loader) => {
-  loader.add("runner", ".//animations/runner.json");
-  loader.add("regular", ".//animations/regular.json");
-  loader.add("flier", ".//animations/flier.json");
-  loader.add("tank", ".//animations/tank.json");
-  loader.add("buildings", ".//tiles/buildings.json");
-  loader.add("turret", ".//animations/turret.json");
-  loader.add("flamethrower", ".//animations/flamethrower.json");
-  loader.add("laser", ".//animations/laser.json");
-  loader.add("mortar", ".//animations/mortar.json");
-  loader.add("railgun", ".//animations/railgun.json");
-  loader.add("projectiles", ".//tiles/projectiles.json");
+  loader.add("runner", `${import.meta.env.BASE_URL}animations/runner.json`);
+  loader.add("regular", `${import.meta.env.BASE_URL}animations/regular.json`);
+  loader.add("flier", `${import.meta.env.BASE_URL}animations/flier.json`);
+  loader.add("tank", `${import.meta.env.BASE_URL}animations/tank.json`);
+  loader.add("buildings", `${import.meta.env.BASE_URL}tiles/buildings.json`);
+  loader.add("turret", `${import.meta.env.BASE_URL}animations/turret.json`);
+  loader.add(
+    "flamethrower",
+    `${import.meta.env.BASE_URL}animations/flamethrower.json`
+  );
+  loader.add("laser", `${import.meta.env.BASE_URL}animations/laser.json`);
+  loader.add("mortar", `${import.meta.env.BASE_URL}animations/mortar.json`);
+  loader.add("railgun", `${import.meta.env.BASE_URL}animations/railgun.json`);
+  loader.add(
+    "projectiles",
+    `${import.meta.env.BASE_URL}tiles/projectiles.json`
+  );
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
