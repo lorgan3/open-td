@@ -2,6 +2,7 @@ import { AnimatedSprite, Loader, Sprite } from "pixi.js";
 import { EntityRenderer } from ".";
 import { Status } from "../../../data/entity/enemies";
 import FlierData from "../../../data/entity/enemies/flier";
+import { Explosion } from "../explosion";
 import { BASE } from "../layer";
 import { SCALE } from "../renderer";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
@@ -20,6 +21,16 @@ class Flier extends AnimatedSprite implements EntityRenderer {
     this.animationSpeed = ANIMATION_SPEED;
 
     this.play();
+
+    this.on(
+      "removed",
+      () =>
+        new Explosion(
+          loader,
+          data.entity.getX() + 0.5,
+          data.entity.getY() + 0.5
+        )
+    );
   }
 
   sync() {

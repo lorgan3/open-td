@@ -7,7 +7,7 @@ import { LaserBeam } from "./laserBeam";
 import { Rail } from "./rail";
 import { Regular } from "./regular";
 import { Runner } from "./runner";
-import { SimpleProjectile } from "./genericProjectile";
+import { GenericProjectile } from "./genericProjectile";
 import { Tank } from "./tank";
 import { Tower } from "./tower";
 import { Rocket } from "./rocket";
@@ -41,6 +41,10 @@ export const init = (loader: Loader) => {
     "projectiles",
     `${import.meta.env.BASE_URL}tiles/projectiles.json`
   );
+  loader.add(
+    "explosion",
+    `${import.meta.env.BASE_URL}animations/explosion.json`
+  );
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
@@ -53,10 +57,10 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Laser]: Tower,
   [EntityType.Mortar]: Tower,
   [EntityType.Railgun]: Tower,
-  [EntityType.Bullet]: SimpleProjectile,
+  [EntityType.Bullet]: GenericProjectile,
   [EntityType.Flame]: Flame,
   [EntityType.Rocket]: Rocket,
-  [EntityType.Shockwave]: SimpleProjectile,
+  [EntityType.Shockwave]: GenericProjectile,
   [EntityType.LaserBeam]: LaserBeam,
   [EntityType.Rail]: Rail,
   [EntityType.Fence]: null,

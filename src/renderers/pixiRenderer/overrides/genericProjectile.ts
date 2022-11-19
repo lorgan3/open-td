@@ -14,7 +14,7 @@ const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Shockwave, "projectiles5.png"],
 ]);
 
-class SimpleProjectile extends Sprite implements EntityRenderer {
+class GenericProjectile extends Sprite implements EntityRenderer {
   public static readonly layer = PROJECTILES;
 
   constructor(private data: Agent, loader: Loader) {
@@ -35,4 +35,4 @@ class SimpleProjectile extends Sprite implements EntityRenderer {
   }
 }
 
-export { SimpleProjectile };
+export { GenericProjectile };

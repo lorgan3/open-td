@@ -2,6 +2,7 @@ import { AnimatedSprite, Loader, Sprite } from "pixi.js";
 import { EntityRenderer } from ".";
 import { Status } from "../../../data/entity/enemies";
 import TankData from "../../../data/entity/enemies/tank";
+import { Explosion } from "../explosion";
 import { BASE } from "../layer";
 import { SCALE } from "../renderer";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
@@ -18,6 +19,16 @@ class Tank extends AnimatedSprite implements EntityRenderer {
     super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
+
+    this.on(
+      "removed",
+      () =>
+        new Explosion(
+          loader,
+          data.entity.getX() + 0.5,
+          data.entity.getY() + 0.5
+        )
+    );
   }
 
   sync() {
