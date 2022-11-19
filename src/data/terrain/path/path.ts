@@ -92,6 +92,29 @@ class Path {
     return index;
   }
 
+  // Fast forward pathing to the first discovered or checkpoint tile.
+  fastForward(agent: Agent) {
+    let checkpoint = this.checkpoints[0];
+
+    for (let index = (this.index | 0) + 1; index < this.tiles.length; index++) {
+      if (checkpoint && index >= checkpoint.index) {
+        if (checkpoint.isCleared(this.tiles, agent)) {
+          this.checkpoints.shift();
+          checkpoint = this.checkpoints[0];
+        } else {
+          break;
+        }
+      }
+
+      const tile = this.getTile(index);
+      if (tile.isDiscovered()) {
+        break;
+      }
+
+      this.index = index;
+    }
+  }
+
   clone() {
     return new Path(
       this.pathfinder,

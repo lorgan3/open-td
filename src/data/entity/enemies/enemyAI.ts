@@ -38,9 +38,13 @@ class EnemyAI {
     if (this.isBusy()) {
       this.getTargeted(this.enemy.getPath().getCurrentTile(), dt);
     } else {
+      if (!this.enemy.isVisible()) {
+        this.enemy.getPath().fastForward(this.enemy);
+      }
+
       const { from, to, step } = this.enemy
         .getPath()
-        .performStep(this.enemy, this.enemy.isVisible() ? dt : dt * 10);
+        .performStep(this.enemy, dt);
       this.enemy.entity.move(from, to, step);
       this.getTargeted(from, dt);
     }

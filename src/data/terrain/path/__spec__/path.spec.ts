@@ -7,7 +7,8 @@ import {
 import Path from "../path";
 import Pathfinder from "../pathfinder";
 import Surface from "../../surface";
-import Tile, { TileType } from "../../tile";
+import Tile, { DiscoveryStatus, TileType } from "../../tile";
+import { DirtCheckpoint } from "../../checkpoint/dirt";
 
 describe("path", () => {
   const speed = 1;
@@ -241,5 +242,29 @@ describe("path", () => {
         ],
       })
     );
+  });
+
+  it("fast forwards to the first discovered or checkpoint tile", () => {
+    const surface = new Surface(5, 5, (x, y) => {
+      const tile = new Tile(x, y, TileType.Grass);
+      if (x > 3) {
+        tile.setDiscoveryStatus(DiscoveryStatus.Discovered);
+      }
+      return tile;
+    });
+
+    const pathfinder = new Pathfinder(surface, () => 1, costs);
+    const path = Path.fromTiles(pathfinder, surface.getRow(3), speed);
+
+    const agent1 = new Enemy(path.getTile(), path.clone());
+    expect(agent1.getPath().getIndex()).toEqual(0);
+    agent1.getPath().fastForward(agent1);
+    expect(agent1.getPath().getIndex()).toEqual(3);
+
+    const agent2 = new Enemy(path.getTile(), path.clone());
+    agent2.getPath().setCheckpoints([new DirtCheckpoint(3)]);
+    expect(agent2.getPath().getIndex()).toEqual(0);
+    agent2.getPath().fastForward(agent2);
+    expect(agent2.getPath().getIndex()).toEqual(2);
   });
 });
