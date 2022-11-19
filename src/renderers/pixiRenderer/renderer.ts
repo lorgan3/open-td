@@ -77,6 +77,7 @@ class Renderer implements IRenderer {
 
     window.debug = () => {
       DEBUG = !DEBUG;
+      this.renderTilemap();
     };
   }
 
@@ -145,23 +146,25 @@ class Renderer implements IRenderer {
   private renderTilemap() {
     this.tilemap.clear();
 
+    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
     const atlas = this.loader.resources[ATLAS];
-
     const rows = this.surface.getHeight();
     const walls: Tile[] = [];
     for (let i = 0; i < rows; i++) {
       this.surface.getRow(i).forEach((tile) => {
-        if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
-          return;
-        }
+        if (!revealEverything) {
+          if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
+            return;
+          }
 
-        if (tile.getDiscoveryStatus() === DiscoveryStatus.Pending) {
-          this.tilemap.tile(
-            atlas.textures![AtlasTile.Unknown],
-            tile.getX() * SCALE,
-            tile.getY() * SCALE
-          );
-          return;
+          if (tile.getDiscoveryStatus() === DiscoveryStatus.Pending) {
+            this.tilemap.tile(
+              atlas.textures![AtlasTile.Unknown],
+              tile.getX() * SCALE,
+              tile.getY() * SCALE
+            );
+            return;
+          }
         }
 
         let ref = TILE_TO_ATLAS_MAP[tile.getBaseType()];
@@ -215,8 +218,8 @@ class Renderer implements IRenderer {
     }
 
     this.time += dt;
-
-    let full = this.surface.isDirty();
+    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+    const full = this.surface.isDirty();
     if (full) {
       this.renderTilemap();
     }
@@ -244,7 +247,12 @@ class Renderer implements IRenderer {
         this.sprites.set(entity.getId(), sprite);
       }
 
-      sprite.sync(dt, full);
+      if (entity.getAgent().isVisible() || revealEverything) {
+        sprite.sync(dt, full);
+        sprite.visible = true;
+      } else {
+        sprite.visible = false;
+      }
     }
 
     const deletedEntities = this.surface.getDeletedEntities();
