@@ -100,11 +100,22 @@ class EnemyAI {
   }
 
   getFuturePosition(time: number) {
-    if (this.cooldown > time) {
-      return this.enemy.getPath().getIndex();
+    const index = this.enemy.getPath().getFuturePosition(time);
+
+    const checkpoints = this.enemy.getPath().getCheckpoints();
+    for (let i = 0; i < checkpoints.length; i++) {
+      let checkpoint = checkpoints[i];
+
+      if (checkpoint.index > index) {
+        return index;
+      }
+
+      if (checkpoint.isBlocking) {
+        return checkpoint.index;
+      }
     }
 
-    return this.enemy.getPath().getFuturePosition(time - this.cooldown);
+    return index;
   }
 }
 

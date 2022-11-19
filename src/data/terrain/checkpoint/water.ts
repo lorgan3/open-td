@@ -4,6 +4,8 @@ import Manager from "../../manager";
 import Tile, { TileType } from "../tile";
 
 export class WaterCheckpoint implements Checkpoint {
+  public readonly isBlocking = true;
+
   constructor(public index: number) {}
 
   isCleared(tiles: Tile[], agent: IEnemy): boolean {

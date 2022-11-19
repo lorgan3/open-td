@@ -5,6 +5,7 @@ export interface Checkpoint {
   isCleared(tiles: Tile[], agent: Agent): boolean;
   process(tiles: Tile[], agent: Agent, dt: number): void;
   index: number;
+  readonly isBlocking: boolean;
 }
 
 export type CheckpointFn = (tiles: Tile[]) => Checkpoint[];

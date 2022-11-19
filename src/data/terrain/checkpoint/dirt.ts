@@ -6,6 +6,8 @@ import Tile, { TileType } from "../tile";
 const CONVERTIBLE_TILES = new Set([TileType.Grass, TileType.Snow]);
 
 export class DirtCheckpoint implements Checkpoint {
+  public readonly isBlocking = false;
+
   constructor(public index: number) {}
 
   isCleared(tiles: Tile[], agent: IEnemy): boolean {

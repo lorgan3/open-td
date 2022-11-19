@@ -4,6 +4,8 @@ import { Agent, DESTRUCTIBLE_ENTITIES } from "../../entity/entity";
 import Tile from "../tile";
 
 export class StaticEntityCheckpoint implements Checkpoint {
+  public readonly isBlocking = true;
+
   constructor(public index: number) {}
 
   isCleared(tiles: Tile[]): boolean {
