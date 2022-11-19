@@ -20,7 +20,12 @@ import PowerController, {
   SPEED_BEACON_CONSUMPTION,
 } from "./powerController";
 import Surface from "./terrain/surface";
-import Tile, { DiscoveryStatus, FREE_TILES, TileType } from "./terrain/tile";
+import Tile, {
+  DiscoveryStatus,
+  FREE_TILES,
+  FREE_TILES_INCLUDING_WATER,
+  TileType,
+} from "./terrain/tile";
 import UnlocksController from "./UnlocksController";
 import SpawnAlert from "./util/spawnAlert";
 import VisibilityController from "./visibilityController";
@@ -253,7 +258,7 @@ class Manager {
       const tile = spawnGroup.getSpawnPoints()[0].getTile(0);
       const tilesToUpdate: Tile[] = [];
       this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
-        if (FREE_TILES.has(tile.getType())) {
+        if (FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
           tilesToUpdate.push(
             new Tile(tile.getX(), tile.getY(), TileType.Spore)
           );

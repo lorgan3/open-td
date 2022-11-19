@@ -23,6 +23,7 @@ const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
   [EntityType.Mortar, ["mortar", "mortar0.png"]],
   [EntityType.Laser, ["laser", "laser0.png"]],
   [EntityType.Railgun, ["railgun", "railgun0.png"]],
+  [EntityType.None, [ATLAS, AtlasTile.None]],
 ]);
 
 class Blueprint extends Sprite implements EntityRenderer {
@@ -37,6 +38,10 @@ class Blueprint extends Sprite implements EntityRenderer {
 
     const [atlas, texture] = BLUEPRINT_MAP.get(type)!;
     super(loader.resources[atlas].spritesheet!.textures[texture]);
+
+    if (type === EntityType.None) {
+      this.scale.set(data.getScale());
+    }
 
     this.alpha = 0.7;
     this.position.set(
