@@ -55,14 +55,14 @@ class EnemyAI {
       target.hit!(
         this.enemy.getDamage() * Manager.Instance.getDamageMultiplier()
       );
-      this.cooldown = COOLDOWN;
+      this.cooldown = this.enemy.isVisible() ? COOLDOWN : 0;
     }
   }
 
   interact(callback?: () => void, cooldown = COOLDOWN) {
     this.callback = callback;
 
-    if (this.cooldown === 0) {
+    if (this.cooldown === 0 && this.enemy.isVisible()) {
       this.cooldown = cooldown;
     }
   }
