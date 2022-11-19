@@ -27,6 +27,11 @@ describe("path", () => {
     surface.getTile(3, 1)!,
   ];
   const path = Path.fromTiles(pathfinder, tiles, speed);
+  path.setCheckpoints([
+    new DirtCheckpoint(0),
+    new DirtCheckpoint(1),
+    new DirtCheckpoint(3),
+  ]);
 
   it("constructs from an array of tiles", () => {
     expect(path).toEqual(
@@ -266,5 +271,24 @@ describe("path", () => {
     expect(agent2.getPath().getIndex()).toEqual(0);
     agent2.getPath().fastForward(agent2);
     expect(agent2.getPath().getIndex()).toEqual(2);
+  });
+
+  it("slices a path", () => {
+    const expectedPath = Path.fromTiles(
+      pathfinder,
+      [surface.getTile(1, 0)!, surface.getTile(2, 0)!],
+      speed
+    );
+    expectedPath.setCheckpoints([new DirtCheckpoint(1)]);
+
+    const slice = path.slice(1, 3);
+    expect(slice.getCheckpoints()).toEqual(expectedPath.getCheckpoints());
+    expect(slice.getTiles()).toEqual(expectedPath.getTiles());
+  });
+
+  test("slicing without arguments is equivalent to cloning", () => {
+    const clone = path.slice();
+    expect(clone).toEqual(path);
+    expect(clone).not.toBe(path);
   });
 });

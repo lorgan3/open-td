@@ -126,6 +126,24 @@ class Path {
     );
   }
 
+  slice(start = 0, end = Number.MAX_VALUE) {
+    const tiles = this.tiles.slice(start, end);
+    const costs = this.costs.slice(start, end);
+    const sections = Path.calculateSections(tiles, costs);
+    const checkpoints = this.checkpoints.filter(
+      (checkpoint) => checkpoint.index >= start && checkpoint.index < end
+    );
+
+    return new Path(
+      this.pathfinder,
+      tiles,
+      sections,
+      this.speed,
+      costs,
+      checkpoints
+    );
+  }
+
   setIndex(index: number) {
     this.index = Math.max(Math.min(index, this.tiles.length - 1), 0);
     this.sectionIndex = this.sections.findIndex(
