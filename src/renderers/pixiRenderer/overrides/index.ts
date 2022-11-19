@@ -7,9 +7,10 @@ import { LaserBeam } from "./laserBeam";
 import { Rail } from "./rail";
 import { Regular } from "./regular";
 import { Runner } from "./runner";
-import { SimpleProjectile } from "./simpleProjectile";
+import { SimpleProjectile } from "./genericProjectile";
 import { Tank } from "./tank";
 import { Tower } from "./tower";
+import { Rocket } from "./rocket";
 
 export interface EntityRenderer extends Container {
   sync: (dt: number, full: boolean) => void;
@@ -54,7 +55,7 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Railgun]: Tower,
   [EntityType.Bullet]: SimpleProjectile,
   [EntityType.Flame]: Flame,
-  [EntityType.Rocket]: SimpleProjectile,
+  [EntityType.Rocket]: Rocket,
   [EntityType.Shockwave]: SimpleProjectile,
   [EntityType.LaserBeam]: LaserBeam,
   [EntityType.Rail]: Rail,
