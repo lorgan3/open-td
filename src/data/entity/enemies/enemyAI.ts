@@ -111,7 +111,7 @@ class EnemyAI {
       }
 
       if (checkpoint.isBlocking) {
-        return checkpoint.index;
+        return checkpoint.index - 1;
       }
     }
 

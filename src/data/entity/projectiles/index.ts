@@ -27,6 +27,6 @@ export function aim(this: Projectile, speed: number, delay = 0) {
   const index = this.target.AI.getFuturePosition(this.travelTime);
 
   const { x, y } = this.target.getPath().getCoordinates(index);
-  this.targetX = x;
-  this.targetY = y;
+  this.targetX = x + 0.5;
+  this.targetY = y + 0.5;
 }
