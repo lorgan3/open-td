@@ -1,5 +1,6 @@
 import { Container, Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
 import { Difficulty } from "../../../data/difficulty";
+import { BASE_ENTITIES } from "../../../data/entity/entity";
 import Manager from "../../../data/manager";
 import Path from "../../../data/terrain/path/path";
 import Surface from "../../../data/terrain/surface";
@@ -118,9 +119,11 @@ class CoverageRenderer {
     this.pathContainer.removeChildren();
     const paths: Path[] = [];
 
-    Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
-      spawnGroup.getSpawnPoints().forEach((path) => paths.push(path))
-    );
+    Manager.Instance.getSpawnGroups()
+      .filter((spawnGroup) => !spawnGroup.isExposed())
+      .forEach((spawnGroup) =>
+        spawnGroup.getSpawnPoints().forEach((path) => paths.push(path))
+      );
 
     if (!Manager.Instance.getIsStarted()) {
       const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
@@ -130,17 +133,41 @@ class CoverageRenderer {
     }
 
     paths.forEach((path, index) => {
-      const markers = Math.max(1, Math.floor(path.getLength() / 5));
+      const slicedPath = this.slicePath(path);
+      const markers = Math.max(1, Math.floor(slicedPath.getLength() / 5));
+
       for (let i = 0; i < markers; i++) {
         this.pathContainer.addChild(
           new Marker(
             index * 2 + i * 5,
-            path,
+            slicedPath,
             this.loader.resources[ATLAS].textures![AtlasTile.Entity]
           )
         );
       }
     });
+  }
+
+  private slicePath(path: Path) {
+    let start: number;
+    let end: number;
+
+    for (let i = 0; i < path.getLength(); i++) {
+      const tile = path.getTile(i);
+      if (!tile.isDiscovered()) {
+        start = i + 1;
+      }
+
+      if (
+        tile.hasStaticEntity() &&
+        BASE_ENTITIES.has(tile.getStaticEntity().getAgent().getType())
+      ) {
+        end = i;
+        break;
+      }
+    }
+
+    return path.slice(start!, end!);
   }
 
   public update() {
