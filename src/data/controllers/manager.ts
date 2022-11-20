@@ -172,14 +172,6 @@ class Manager {
     return this.base;
   }
 
-  getWave() {
-    return this.waveController.getWave();
-  }
-
-  getMoney() {
-    return this.moneyController.getMoney();
-  }
-
   getIsStarted() {
     return this.waveController.isWaveInProgress();
   }
@@ -201,10 +193,10 @@ class Manager {
 
     this.triggerEvent(GameEvent.StartWave);
 
-    this.waveController.startNewWave();
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.commit();
+    this.waveController.startNewWave();
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
@@ -229,20 +221,12 @@ class Manager {
     );
   }
 
-  getSpawnGroups() {
-    return this.waveController.getSpawnGroups();
-  }
-
   getDifficulty() {
     return this.difficulty;
   }
 
   getIsBaseDestroyed() {
     return this.base.isDestroyed();
-  }
-
-  getSpawnAlertRanges() {
-    return SpawnAlert.forSpawnGroups(this.waveController.getSpawnGroups());
   }
 
   private end() {
@@ -268,10 +252,6 @@ class Manager {
     }
 
     return multiplier;
-  }
-
-  getLevel() {
-    return this.waveController.getLevel();
   }
 
   private onUnlock = ({ placeable }: Unlock) => {

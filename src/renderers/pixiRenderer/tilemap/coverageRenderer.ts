@@ -119,7 +119,8 @@ class CoverageRenderer {
     this.pathContainer.removeChildren();
     const paths: Path[] = [];
 
-    Manager.Instance.getSpawnGroups()
+    Manager.Instance.getWaveController()
+      .getSpawnGroups()
       .filter((spawnGroup) => !spawnGroup.isExposed())
       .forEach((spawnGroup) => paths.push(...spawnGroup.getSpawnPoints()));
 

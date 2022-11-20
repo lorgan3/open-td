@@ -8,6 +8,7 @@ import Tile, {
   FREE_TILES_INCLUDING_WATER,
   TileType,
 } from "../terrain/tile";
+import SpawnAlert from "../util/spawnAlert";
 import SpawnGroup from "../wave/SpawnGroup";
 import { normalDistributionRandom } from "../wave/util";
 import Wave from "../wave/wave";
@@ -125,6 +126,10 @@ class WaveController {
     }
 
     return [...this.spawnGroups];
+  }
+
+  getSpawnAlertRanges() {
+    return SpawnAlert.forSpawnGroups(this.getSpawnGroups());
   }
 
   isWaveInProgress() {

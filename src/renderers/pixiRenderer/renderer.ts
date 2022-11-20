@@ -208,7 +208,7 @@ class Renderer implements IRenderer {
     this.coverageRenderer!.render();
 
     const center = getCenter(Manager.Instance.getBase());
-    const alerts = Manager.Instance.getSpawnAlertRanges();
+    const alerts = Manager.Instance.getWaveController().getSpawnAlertRanges();
     this.alertRenderer!.render(center, alerts);
   }
 

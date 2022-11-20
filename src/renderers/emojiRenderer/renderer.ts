@@ -345,12 +345,14 @@ class Renderer implements IRenderer {
 
     const tiles = new Set<Tile>();
     if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
-      Manager.Instance.getSpawnGroups().forEach((spawnGroup) =>
-        spawnGroup
-          .getSpawnPoints()[0]
-          .getTiles()
-          .forEach((tile) => tiles.add(tile))
-      );
+      Manager.Instance.getWaveController()
+        .getSpawnGroups()
+        .forEach((spawnGroup) =>
+          spawnGroup
+            .getSpawnPoints()[0]
+            .getTiles()
+            .forEach((tile) => tiles.add(tile))
+        );
     }
 
     const rows = this.surface.getHeight();
@@ -416,7 +418,7 @@ class Renderer implements IRenderer {
     const height = 20 * this.yStep;
     const ranges = Manager.Instance.getIsStarted()
       ? []
-      : Manager.Instance.getSpawnAlertRanges();
+      : Manager.Instance.getWaveController().getSpawnAlertRanges();
 
     ranges.forEach((range, i) => {
       const length = range.getLength();

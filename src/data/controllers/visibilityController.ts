@@ -112,7 +112,7 @@ class VisibilityController {
   private getVisibilityRange(agent: Agent) {
     switch (agent.getType()) {
       case EntityType.Base:
-        return 35 + Manager.Instance.getLevel() * 2;
+        return 35 + Manager.Instance.getWaveController().getLevel() * 2;
       case EntityType.Radar:
         return 35;
       default:
