@@ -1,15 +1,15 @@
 import Controller from "../../controllers/controller";
 import { Difficulty } from "../../difficulty";
 import Armory from "../../entity/armory";
-import Manager from "../../controllers/manager";
 import Surface from "../../terrain/surface";
 import Tile, { TileType } from "../../terrain/tile";
 import { floodFill } from "../baseExpansion";
+import TestManager from "../../controllers/__spec__/testManager";
 
 describe("baseExpansion", () => {
   const surface = new Surface(8, 8);
   const basePoint = surface.getTile(2, 2)!;
-  const manager = new Manager(
+  const manager = new TestManager(
     Difficulty.Normal,
     basePoint,
     surface,

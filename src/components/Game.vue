@@ -2,13 +2,13 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
-import Manager from "../data/controllers/manager";
 import Controller, { Keys } from "../data/controllers/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
+import DefaultManager from "../data/controllers/defaultManager";
 
 const props = defineProps<{
   seed: string;
@@ -23,7 +23,7 @@ const controller = new Controller(surface);
 const renderer = new props.renderer(surface, controller);
 
 const targetTile = surface.getTile(100, 100)!;
-const manager = new Manager(
+const manager = new DefaultManager(
   props.difficulty,
   targetTile,
   surface,
