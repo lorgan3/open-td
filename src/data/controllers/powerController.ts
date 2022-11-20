@@ -1,4 +1,5 @@
-import { Agent, EntityType } from "../entity/entity";
+import { EntityType } from "../entity/constants";
+import { Agent } from "../entity/entity";
 import { GameEvent } from "../events";
 import Manager from "./manager";
 

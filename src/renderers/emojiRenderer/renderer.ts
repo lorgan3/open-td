@@ -1,10 +1,10 @@
 import { createApp } from "vue";
 import Controller from "../../data/controllers/controller";
-import Entity, { AgentCategory, EntityType } from "../../data/entity/entity";
+import Entity from "../../data/entity/entity";
 import Manager from "../../data/controllers/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
-import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
+import Tile from "../../data/terrain/tile";
 import { IRenderer, MessageFn } from "../api";
 import { OVERRIDES } from "./overrides";
 import SimpleMessage from "../../components/SimpleMessage.vue";
@@ -14,6 +14,8 @@ import {
   isStaticAgent,
 } from "../../data/entity/staticEntity";
 import { Difficulty } from "../../data/difficulty";
+import { AgentCategory, EntityType } from "../../data/entity/constants";
+import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;

@@ -1,8 +1,9 @@
 import Manager from "../../controllers/manager";
 import Tile from "../../terrain/tile";
 import { lerp } from "../../util/math";
+import { AgentCategory, EntityType } from "../constants";
 import { IEnemy } from "../enemies";
-import Entity, { Agent, AgentCategory, EntityType } from "../entity";
+import Entity, { Agent } from "../entity";
 
 const SPEED = 0.002;
 

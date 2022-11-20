@@ -1,4 +1,5 @@
-import Tile, { TileType } from "./tile";
+import { TileType } from "./constants";
+import Tile from "./tile";
 
 export const SOLID_TILES = new Set<TileType>([
   TileType.Obstructed,

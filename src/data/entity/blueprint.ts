@@ -1,6 +1,7 @@
 import { Placeable } from "../placeables";
 import Tile from "../terrain/tile";
-import Entity, { Agent, AgentCategory, EntityType } from "./entity";
+import { AgentCategory, EntityType } from "./constants";
+import Entity, { Agent } from "./entity";
 
 class Blueprint implements Agent {
   public entity: Entity;

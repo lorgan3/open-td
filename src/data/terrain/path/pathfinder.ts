@@ -1,11 +1,12 @@
 import Surface from "../surface";
-import Tile, { TileType } from "../tile";
+import Tile from "../tile";
 import Heap from "heap";
 import Path from "./path";
 import {
   DEFAULT_LAND_BASED_COSTS,
   DEFAULT_LAND_BASED_MULTIPLIERS,
 } from "./definitions";
+import { TileType } from "../constants";
 
 export const NEIGHBORS = [
   [0, -1],

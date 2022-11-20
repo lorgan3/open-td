@@ -1,4 +1,4 @@
-import { TileType } from "../tile";
+import { TileType } from "../constants";
 
 export type PathMap = Partial<Record<TileType, number>>;
 

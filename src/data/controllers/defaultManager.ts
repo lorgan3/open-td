@@ -3,7 +3,7 @@ import BuildController from "./buildController";
 import Controller from "./controller";
 import { Difficulty } from "../difficulty";
 import { IEnemy } from "../entity/enemies";
-import { Agent, AgentCategory, EntityType } from "../entity/entity";
+import { Agent } from "../entity/entity";
 import { GameEvent, Unlock } from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable, WAVE_OVER_MULTIPLIER } from "../placeables";
@@ -16,6 +16,7 @@ import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import UnlocksController from "./unlocksController";
 import Manager from "./manager";
+import { AgentCategory, EntityType } from "../entity/constants";
 
 class DefaultManager extends Manager {
   constructor(

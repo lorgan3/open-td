@@ -1,13 +1,12 @@
 import { AnimatedSprite, Loader, Sprite } from "pixi.js";
-import { EntityRenderer } from ".";
-
-import { EntityType } from "../../../data/entity/entity";
+import { EntityType } from "../../../data/entity/constants";
 import { getCenter } from "../../../data/entity/staticEntity";
 import { ITower } from "../../../data/entity/towers";
 import { clampDegrees } from "../../../data/util/math";
 import { BASE, TOWERS } from "../layer";
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
 import { ATLAS_NAME } from "./default";
+import { EntityRenderer } from "./types";
 
 const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Tower, "turret"],

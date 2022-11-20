@@ -1,11 +1,7 @@
 import Manager from "../../controllers/manager";
+import { AgentCategory, EntityType } from "../constants";
 import { IEnemy } from "../enemies";
-import Entity, {
-  Agent,
-  AgentCategory,
-  EntityType,
-  RenderData,
-} from "../entity";
+import Entity, { Agent, RenderData } from "../entity";
 import { getCenter } from "../staticEntity";
 import { ITower } from "../towers";
 

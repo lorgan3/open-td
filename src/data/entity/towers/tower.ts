@@ -9,8 +9,9 @@ import { isSolid } from "../../terrain/collision";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import Bullet from "../projectiles/bullet";
 import { IEnemy } from "../enemies";
-import { AgentCategory, EntityType, RenderData } from "../entity";
+import { RenderData } from "../entity";
 import StaticEntity, { StaticAgent } from "../staticEntity";
+import { AgentCategory, EntityType } from "../constants";
 
 const COOLDOWN = 500;
 const DAMAGE = 10;

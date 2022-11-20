@@ -8,7 +8,8 @@ import {
 } from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
 import Tile from "../../terrain/tile";
-import Entity, { AgentCategory, EntityType } from "../entity";
+import { AgentCategory, EntityType } from "../constants";
+import Entity from "../entity";
 import EnemyAI from "./enemyAI";
 
 const getStaticEntityCheckpoints = staticCheckpointFactory();

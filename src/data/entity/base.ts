@@ -1,10 +1,8 @@
 import Manager from "../controllers/manager";
+import { FREE_TILES_INCLUDING_BUILDINGS } from "../terrain/constants";
 import { createStoneSurface } from "../terrain/fill";
-import Tile, {
-  FREE_TILES_INCLUDING_BUILDINGS,
-  TileWithStaticEntity,
-} from "../terrain/tile";
-import { AgentCategory, EntityType } from "./entity";
+import Tile, { TileWithStaticEntity } from "../terrain/tile";
+import { AgentCategory, EntityType } from "./constants";
 import Shockwave from "./projectiles/shockwave";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 

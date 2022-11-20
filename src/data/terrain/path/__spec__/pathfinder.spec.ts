@@ -1,6 +1,7 @@
 import PathFinder from "../pathFinder";
 import Surface from "../../surface";
-import Tile, { TileType } from "../../tile";
+import Tile from "../../tile";
+import { TileType } from "../../constants";
 
 describe("pathfinder", () => {
   const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));

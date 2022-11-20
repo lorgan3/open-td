@@ -1,6 +1,7 @@
 import { Checkpoint, CheckpointFn } from ".";
+import { DESTRUCTIBLE_ENTITIES } from "../../entity/constants";
 import { IEnemy } from "../../entity/enemies";
-import { Agent, DESTRUCTIBLE_ENTITIES } from "../../entity/entity";
+import { Agent } from "../../entity/entity";
 import Tile from "../tile";
 
 export class StaticEntityCheckpoint implements Checkpoint {

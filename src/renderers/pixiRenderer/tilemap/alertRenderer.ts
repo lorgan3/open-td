@@ -1,10 +1,7 @@
-import { Viewport } from "pixi-viewport";
 import { Container, Graphics, LINE_CAP, Loader, Sprite } from "pixi.js";
-
 import SpawnAlert from "../../../data/util/spawnAlert";
 import { ATLAS, AtlasTile } from "../atlas";
-
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
 
 class AlertRenderer {
   static DISPLAY_DURATION = 10 * 1000;

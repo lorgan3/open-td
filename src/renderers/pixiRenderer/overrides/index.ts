@@ -1,5 +1,5 @@
-import { Container, Loader } from "pixi.js";
-import { EntityType } from "../../../data/entity/entity";
+import { Loader } from "pixi.js";
+import { EntityType } from "../../../data/entity/constants";
 import { Blueprint } from "./blueprint";
 import { Flame } from "./flame";
 import { Flier } from "./flier";
@@ -11,17 +11,7 @@ import { GenericProjectile } from "./genericProjectile";
 import { Tank } from "./tank";
 import { Tower } from "./tower";
 import { Rocket } from "./rocket";
-
-export interface EntityRenderer extends Container {
-  sync: (dt: number, full: boolean) => void;
-}
-
-export interface EntityRendererStatics {
-  readonly layer: Container;
-}
-
-export type Constructor = (new (data: any, loader: Loader) => EntityRenderer) &
-  EntityRendererStatics;
+import { Constructor } from "./types";
 
 export const init = (loader: Loader) => {
   loader.add("runner", `${import.meta.env.BASE_URL}animations/runner.json`);

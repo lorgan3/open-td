@@ -2,7 +2,8 @@ import { aim, Projectile } from ".";
 import Manager from "../../controllers/manager";
 import { lerp } from "../../util/math";
 import { IEnemy } from "../enemies";
-import Entity, { Agent, AgentCategory, EntityType } from "../entity";
+import Entity, { Agent } from "../entity";
+import { AgentCategory, EntityType } from "../constants";
 
 import Tower from "../towers/tower";
 

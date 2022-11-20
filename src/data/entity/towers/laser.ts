@@ -1,6 +1,7 @@
 import Manager from "../../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
-import { AgentCategory, EntityType, RenderData } from "../entity";
+import { RenderData } from "../entity";
+import { AgentCategory, EntityType } from "../constants";
 import {
   coverTilesWithTowerSightLines,
   getDamageMultiplier,

@@ -8,7 +8,8 @@ import Manager from "../../controllers/manager";
 import { isSolid } from "../../terrain/collision";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import { IEnemy } from "../enemies";
-import { AgentCategory, EntityType, RenderData } from "../entity";
+import { RenderData } from "../entity";
+import { AgentCategory, EntityType } from "../constants";
 import Flame from "../projectiles/flame";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 

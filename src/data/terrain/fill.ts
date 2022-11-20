@@ -1,7 +1,8 @@
-import { AgentCategory } from "../entity/entity";
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import Manager from "../controllers/manager";
-import Tile, { FREE_TILES_INCLUDING_WATER, TileType } from "./tile";
+import Tile from "./tile";
+import { AgentCategory } from "../entity/constants";
+import { FREE_TILES_INCLUDING_WATER, TileType } from "./constants";
 
 export const createStoneSurface = (agent: StaticAgent, radius: number) => {
   const tilesToUpdate: Tile[] = [];

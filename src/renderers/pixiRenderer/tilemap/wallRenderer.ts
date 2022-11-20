@@ -1,10 +1,10 @@
 import { CompositeTilemap } from "@pixi/tilemap";
 import { Loader } from "pixi.js";
-import { EntityType } from "../../../data/entity/entity";
+import { EntityType } from "../../../data/entity/constants";
 import { getScale } from "../../../data/entity/staticEntity";
 import Surface from "../../../data/terrain/surface";
 import Tile from "../../../data/terrain/tile";
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
 import { wallCoordinates, wallSpritePadding, wallTypes } from "./constants";
 
 class WallRenderer {

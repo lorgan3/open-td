@@ -6,7 +6,8 @@ import {
 } from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
 import Tile from "../../terrain/tile";
-import Entity, { AgentCategory, BASE_ENTITIES, EntityType } from "../entity";
+import { AgentCategory, BASE_ENTITIES, EntityType } from "../constants";
+import Entity from "../entity";
 import EnemyAI from "./enemyAI";
 
 const getStaticEntityCheckpoints = staticCheckpointFactory(BASE_ENTITIES);

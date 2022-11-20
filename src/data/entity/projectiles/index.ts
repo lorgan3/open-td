@@ -1,5 +1,5 @@
 import { IEnemy } from "../enemies";
-import { getCenter, StaticAgent } from "../staticEntity";
+import { getCenter } from "../staticEntity";
 import { ITower } from "../towers";
 
 export abstract class Projectile {

@@ -1,7 +1,6 @@
 import Armory from "./entity/armory";
 import SpeedBeacon from "./entity/speedBeacon";
 import ElectricFence from "./entity/electricFence";
-import { EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
 import Freezer from "./entity/freezer";
 import Market from "./entity/market";
@@ -16,6 +15,7 @@ import DamageBeacon from "./entity/damageBeacon";
 import Laser from "./entity/towers/Laser";
 import { StaticAgent, StaticAgentStatics } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
+import { EntityType } from "./entity/constants";
 
 export interface Placeable {
   name: string;

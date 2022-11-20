@@ -1,7 +1,8 @@
 import { Checkpoint, CheckpointFn } from ".";
 import { IEnemy } from "../../entity/enemies";
 import Manager from "../../controllers/manager";
-import Tile, { TileType } from "../tile";
+import Tile from "../tile";
+import { TileType } from "../constants";
 
 const CONVERTIBLE_TILES = new Set([TileType.Grass, TileType.Snow]);
 

@@ -1,9 +1,9 @@
 import { Loader, Sprite } from "pixi.js";
-import { EntityRenderer } from ".";
-
-import { Agent, EntityType } from "../../../data/entity/entity";
+import { Agent } from "../../../data/entity/entity";
 import { BASE } from "../layer";
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
+import { EntityRenderer } from "./types";
+import { EntityType } from "../../../data/entity/constants";
 
 export const ATLAS_NAME = "buildings";
 const DEFAULT_SPRITE = "buildings0.png";

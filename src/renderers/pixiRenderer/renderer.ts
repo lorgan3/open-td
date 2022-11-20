@@ -3,30 +3,26 @@ import Controller from "../../data/controllers/controller";
 import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
 import SimpleMessage from "../../components/SimpleMessage.vue";
-
 import { Application, Graphics, InteractionEvent, Loader } from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
 import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
 import { settings } from "@pixi/tilemap";
-import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
+import Tile from "../../data/terrain/tile";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
-import {
-  EntityRenderer,
-  EntityRendererStatics,
-  init,
-  OVERRIDES,
-} from "./overrides";
+import { init, OVERRIDES } from "./overrides";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
 import { LAYERS, UI } from "./layer";
+import { EntityRenderer, EntityRendererStatics } from "./overrides/types";
+import { SCALE } from "./constants";
+import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 
 let DEBUG = false;
-export const SCALE = 32;
 const SCROLL_SPEED = 20;
 const MAX_SCALE = 3;
 const MIN_SCALE = 0.5;

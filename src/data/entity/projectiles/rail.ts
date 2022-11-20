@@ -2,7 +2,8 @@ import Manager from "../../controllers/manager";
 import { isSolid } from "../../terrain/collision";
 import { getRayDistance, getSquareDistance } from "../../util/distance";
 import { IEnemy } from "../enemies";
-import Entity, { Agent, AgentCategory, EntityType } from "../entity";
+import Entity, { Agent } from "../entity";
+import { AgentCategory, EntityType } from "../constants";
 import { getCenter } from "../staticEntity";
 import { ITower } from "../towers";
 

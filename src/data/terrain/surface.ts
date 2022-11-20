@@ -1,9 +1,10 @@
-import Entity, { Agent, AgentCategory } from "../entity/entity";
+import Entity, { Agent } from "../entity/entity";
 import Manager from "../controllers/manager";
 import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";
 import { getScale, StaticAgent } from "../entity/staticEntity";
+import { AgentCategory } from "../entity/constants";
 
 class Surface {
   public map!: Tile[];

@@ -1,5 +1,6 @@
+import { TileType } from "../constants";
 import Surface from "../surface";
-import Tile, { TileType } from "../tile";
+import Tile from "../tile";
 
 describe("surface", () => {
   const surface = new Surface(10, 5);

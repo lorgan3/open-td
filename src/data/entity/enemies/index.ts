@@ -1,7 +1,8 @@
 import { PathMap } from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
 import Tile from "../../terrain/tile";
-import { Agent, EntityType } from "../entity";
+import { EntityType } from "../constants";
+import { Agent } from "../entity";
 import EnemyAI from "./enemyAI";
 
 export interface IEnemy extends Agent {

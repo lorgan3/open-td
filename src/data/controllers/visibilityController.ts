@@ -1,8 +1,10 @@
 import Base from "../entity/base";
-import { Agent, EntityType } from "../entity/entity";
+import { Agent } from "../entity/entity";
 import Manager from "./manager";
 import Surface from "../terrain/surface";
-import Tile, { DiscoveryStatus } from "../terrain/tile";
+import Tile from "../terrain/tile";
+import { DiscoveryStatus } from "../terrain/constants";
+import { EntityType } from "../entity/constants";
 
 class VisibilityController {
   private agents = new Set<Agent>();

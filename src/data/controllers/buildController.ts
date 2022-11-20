@@ -1,13 +1,14 @@
 import { DEMOLISH, Placeable, placeableEntityTypes } from "../placeables";
 import Manager from "./manager";
 import Blueprint from "../entity/blueprint";
-import Tile, { FREE_TILES, TileType } from "../terrain/tile";
+import Tile from "../terrain/tile";
 import Surface from "../terrain/surface";
-import { EntityType } from "../entity/entity";
 import { floodFill } from "../util/baseExpansion";
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import { DEFAULT_EXPIRE_TIME } from "../../renderers/api";
 import { GameEvent } from "../events";
+import { EntityType } from "../entity/constants";
+import { FREE_TILES, TileType } from "../terrain/constants";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,

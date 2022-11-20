@@ -1,11 +1,10 @@
 import { Loader, TilingSprite } from "pixi.js";
-import { EntityRenderer } from ".";
-
 import LaserBeamData, {
   LIFETIME,
 } from "../../../data/entity/projectiles/laserBeam";
 import { PROJECTILES } from "../layer";
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
+import { EntityRenderer } from "./types";
 
 const ATLAS_NAME = "projectiles";
 const SPRITE = "projectiles3.png";

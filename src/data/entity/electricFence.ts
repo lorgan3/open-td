@@ -1,7 +1,7 @@
 import Manager from "../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { IEnemy } from "./enemies";
-import { AgentCategory, EntityType } from "./entity";
+import { AgentCategory, EntityType } from "./constants";
 import StaticEntity from "./staticEntity";
 import { ITower } from "./towers";
 

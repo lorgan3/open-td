@@ -1,4 +1,4 @@
-import { Agent, EntityType } from "../../../data/entity/entity";
+import { Agent } from "../../../data/entity/entity";
 import Renderer from "../renderer";
 import renderRail from "./rail";
 import renderFlame from "./flame";
@@ -7,6 +7,7 @@ import renderFlier from "./flier";
 import renderBlueprint from "./blueprint";
 import renderLaserBeam from "./laserBeam";
 import renderProjectile from "./genericProjectile";
+import { EntityType } from "../../../data/entity/constants";
 
 export type RenderFn<T extends Agent> = (
   renderer: Renderer,

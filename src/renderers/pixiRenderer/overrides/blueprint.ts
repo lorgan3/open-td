@@ -1,11 +1,10 @@
 import { Loader, Sprite } from "pixi.js";
-import { EntityRenderer } from ".";
 import BlueprintData from "../../../data/entity/blueprint";
-
-import { EntityType } from "../../../data/entity/entity";
+import { EntityType } from "../../../data/entity/constants";
 import { ATLAS, AtlasTile } from "../atlas";
 import { BASE } from "../layer";
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
+import { EntityRenderer } from "./types";
 
 const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
   [EntityType.Armory, ["buildings", "buildings1.png"]],

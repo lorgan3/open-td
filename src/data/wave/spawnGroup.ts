@@ -1,11 +1,12 @@
 import { IEnemyStatics } from "../entity/enemies";
 import Runner from "../entity/enemies/runner";
-import { EntityType } from "../entity/entity";
 import Manager from "../controllers/manager";
 import PathData from "../terrain/path/pathData";
 import Pathfinder from "../terrain/path/pathfinder";
 import Surface from "../terrain/surface";
-import Tile, { DiscoveryStatus } from "../terrain/tile";
+import Tile from "../terrain/tile";
+import { EntityType } from "../entity/constants";
+import { DiscoveryStatus } from "../terrain/constants";
 
 class SpawnGroup {
   private index = 0;

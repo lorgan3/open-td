@@ -2,9 +2,10 @@ import Controller from "../../controllers/controller";
 import { Difficulty } from "../../difficulty";
 import Armory from "../../entity/armory";
 import Surface from "../../terrain/surface";
-import Tile, { TileType } from "../../terrain/tile";
+import Tile from "../../terrain/tile";
 import { floodFill } from "../baseExpansion";
 import TestManager from "../../controllers/__spec__/testManager";
+import { TileType } from "../../terrain/constants";
 
 describe("baseExpansion", () => {
   const surface = new Surface(8, 8);

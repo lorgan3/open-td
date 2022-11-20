@@ -1,10 +1,8 @@
 import { Loader, ParticleContainer, Sprite } from "pixi.js";
-import { EntityRenderer } from ".";
-
 import FlameData from "../../../data/entity/projectiles/flame";
 import { PROJECTILES } from "../layer";
-
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
+import { EntityRenderer } from "./types";
 
 export const FIRE_ATLAS_NAME = "projectiles";
 export const FIRE_SPRITE = "projectiles1.png";

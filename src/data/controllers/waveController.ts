@@ -1,13 +1,14 @@
 import Base from "../entity/base";
-import { Agent, AgentCategory, EntityType } from "../entity/entity";
+import { AgentCategory } from "../entity/constants";
 import { GameEvent, SurfaceChange } from "../events";
-import Surface from "../terrain/surface";
-import Tile, {
+import {
   DiscoveryStatus,
   FREE_TILES,
   FREE_TILES_INCLUDING_WATER,
   TileType,
-} from "../terrain/tile";
+} from "../terrain/constants";
+import Surface from "../terrain/surface";
+import Tile from "../terrain/tile";
 import SpawnAlert from "../util/spawnAlert";
 import SpawnGroup from "../wave/SpawnGroup";
 import { normalDistributionRandom } from "../wave/util";

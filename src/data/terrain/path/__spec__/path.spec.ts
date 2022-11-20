@@ -7,8 +7,9 @@ import {
 import Path from "../path";
 import Pathfinder from "../pathfinder";
 import Surface from "../../surface";
-import Tile, { DiscoveryStatus, TileType } from "../../tile";
+import Tile from "../../tile";
 import { DirtCheckpoint } from "../../checkpoint/dirt";
+import { DiscoveryStatus, TileType } from "../../constants";
 
 describe("path", () => {
   const speed = 1;

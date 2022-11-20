@@ -1,11 +1,11 @@
 import { AnimatedSprite, Loader, Sprite } from "pixi.js";
-import { EntityRenderer } from ".";
 import { Status } from "../../../data/entity/enemies";
 import RegularData from "../../../data/entity/enemies/regular";
 import { Explosion } from "../explosion";
 import { BASE } from "../layer";
-import { SCALE } from "../renderer";
+import { SCALE } from "../constants";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
+import { EntityRenderer } from "./types";
 
 const ATLAS_NAME = "regular";
 const ANIMATION_SPEED = 0.1;

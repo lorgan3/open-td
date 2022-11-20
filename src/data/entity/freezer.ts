@@ -1,5 +1,5 @@
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
-import { AgentCategory, EntityType } from "./entity";
+import { AgentCategory, EntityType } from "./constants";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 
 class Freezer implements StaticAgent {

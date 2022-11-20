@@ -1,6 +1,6 @@
 import { AnimatedSprite, Loader } from "pixi.js";
 import { TOWERS } from "./layer";
-import { SCALE } from "./renderer";
+import { SCALE } from "./constants";
 
 const ATLAS_NAME = "explosion";
 const ANIMATION_SPEED = 0.2;

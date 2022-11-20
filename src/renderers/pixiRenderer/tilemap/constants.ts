@@ -1,4 +1,4 @@
-import { TileType } from "../../../data/terrain/tile";
+import { TileType } from "../../../data/terrain/constants";
 
 export const wallCoordinates = {
   1: [

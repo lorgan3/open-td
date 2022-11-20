@@ -1,17 +1,15 @@
 import { IEnemy, Status } from ".";
 import { staticCheckpointFactory } from "../../terrain/checkpoint/staticEntity";
+import { TileType } from "../../terrain/constants";
 import {
   DEFAULT_LAND_BASED_COSTS,
   DEFAULT_LAND_BASED_MULTIPLIERS,
   mapWithOverrides,
 } from "../../terrain/path/definitions";
 import Path from "../../terrain/path/path";
-import Tile, { TileType } from "../../terrain/tile";
-import Entity, {
-  AgentCategory,
-  DESTRUCTIBLE_ENTITIES,
-  EntityType,
-} from "../entity";
+import Tile from "../../terrain/tile";
+import { AgentCategory, DESTRUCTIBLE_ENTITIES, EntityType } from "../constants";
+import Entity from "../entity";
 import EnemyAI from "./enemyAI";
 
 const destructibleEntitiesCopy = new Set(DESTRUCTIBLE_ENTITIES);
