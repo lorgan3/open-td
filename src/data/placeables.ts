@@ -1,10 +1,10 @@
-import Armory from "./entity/Armory";
+import Armory from "./entity/armory";
 import SpeedBeacon from "./entity/speedBeacon";
 import ElectricFence from "./entity/electricFence";
 import { EntityType } from "./entity/entity";
 import Fence from "./entity/fence";
 import Freezer from "./entity/freezer";
-import Market from "./entity/Market";
+import Market from "./entity/market";
 import PowerPlant from "./entity/powerPlant";
 import Radar from "./entity/radar";
 import Flamethrower from "./entity/towers/flamethrower";

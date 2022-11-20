@@ -1,7 +1,7 @@
 import Tile, { TileType } from "./tile";
 import { createNoise2D } from "simplex-noise";
-import Tree from "../entity/Tree";
-import Rock from "../entity/Rock";
+import Tree from "../entity/tree";
+import Rock from "../entity/rock";
 import Alea from "alea";
 
 export type Generator = (x: number, y: number) => Tile;

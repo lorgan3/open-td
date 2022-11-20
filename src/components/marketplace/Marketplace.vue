@@ -8,7 +8,7 @@ import { Group, SECTIONS } from "../../data/placeables";
 import Placeable from "./Placeable.vue";
 import Manager from "../../data/controllers/manager";
 import { GameEvent } from "../../data/events";
-import UnlocksController from "../../data/controllers/UnlocksController";
+import UnlocksController from "../../data/controllers/unlocksController";
 
 const props = defineProps<{
   controller: Controller;

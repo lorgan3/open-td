@@ -1,6 +1,6 @@
 import { DEMOLISH, Placeable, placeableEntityTypes } from "../placeables";
 import Manager from "./manager";
-import Blueprint from "../entity/Blueprint";
+import Blueprint from "../entity/blueprint";
 import Tile, { FREE_TILES, TileType } from "../terrain/tile";
 import Surface from "../terrain/surface";
 import { EntityType } from "../entity/entity";

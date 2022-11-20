@@ -1,6 +1,6 @@
 import { Loader, Sprite } from "pixi.js";
 import { EntityRenderer } from ".";
-import BlueprintData from "../../../data/entity/Blueprint";
+import BlueprintData from "../../../data/entity/blueprint";
 
 import { EntityType } from "../../../data/entity/entity";
 import { ATLAS, AtlasTile } from "../atlas";

@@ -1,4 +1,4 @@
-import Blueprint, { isBlueprint } from "../entity/Blueprint";
+import Blueprint, { isBlueprint } from "../entity/blueprint";
 import { IEnemy } from "../entity/enemies";
 import { Agent, EntityType } from "../entity/entity";
 import { GameEvent } from "../events";

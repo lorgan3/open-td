@@ -1,7 +1,7 @@
 import BuildController from "../controllers/buildController";
 import Controller from "../controllers/controller";
 import { Difficulty } from "../difficulty";
-import Blueprint from "../entity/Blueprint";
+import Blueprint from "../entity/blueprint";
 import Manager from "../controllers/manager";
 import { ARMORY, DEMOLISH, TOWER } from "../placeables";
 import Surface from "../terrain/surface";

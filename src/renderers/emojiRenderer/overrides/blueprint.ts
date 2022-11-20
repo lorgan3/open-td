@@ -1,5 +1,5 @@
 import { RenderFn } from ".";
-import Blueprint from "../../../data/entity/Blueprint";
+import Blueprint from "../../../data/entity/blueprint";
 
 const render: RenderFn<Blueprint> = (renderer, blueprint, htmlElement) => {
   const entity = blueprint.entity;

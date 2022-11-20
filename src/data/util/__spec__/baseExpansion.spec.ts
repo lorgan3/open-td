@@ -1,6 +1,6 @@
 import Controller from "../../controllers/controller";
 import { Difficulty } from "../../difficulty";
-import Armory from "../../entity/Armory";
+import Armory from "../../entity/armory";
 import Manager from "../../controllers/manager";
 import Surface from "../../terrain/surface";
 import Tile, { TileType } from "../../terrain/tile";

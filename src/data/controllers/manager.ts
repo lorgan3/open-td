@@ -26,7 +26,7 @@ import Tile, {
   FREE_TILES_INCLUDING_WATER,
   TileType,
 } from "../terrain/tile";
-import UnlocksController from "./UnlocksController";
+import UnlocksController from "./unlocksController";
 import SpawnAlert from "../util/spawnAlert";
 import VisibilityController from "./visibilityController";
 import SpawnGroup from "../wave/SpawnGroup";
