@@ -1,4 +1,4 @@
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import { isSolid } from "../../terrain/collision";
 import { getRayDistance, getSquareDistance } from "../../util/distance";
 import { IEnemy } from "../enemies";

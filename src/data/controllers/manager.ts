@@ -1,37 +1,37 @@
-import { MessageFn } from "../renderers/api";
+import { MessageFn } from "../../renderers/api";
 import BuildController from "./buildController";
 import Controller from "./controller";
-import { Difficulty } from "./difficulty";
-import Base from "./entity/base";
-import { IEnemy } from "./entity/enemies";
-import { Agent, AgentCategory, EntityType } from "./entity/entity";
+import { Difficulty } from "../difficulty";
+import Base from "../entity/base";
+import { IEnemy } from "../entity/enemies";
+import { Agent, AgentCategory, EntityType } from "../entity/entity";
 import {
   EventHandler,
   EventParamsMap,
   GameEvent,
   SurfaceChange,
   Unlock,
-} from "./events";
+} from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
-import { Placeable, WAVE_OVER_MULTIPLIER } from "./placeables";
+import { Placeable, WAVE_OVER_MULTIPLIER } from "../placeables";
 import PowerController, {
   DAMAGE_BEACON_CONSUMPTION,
   POWER_CONSUMPTIONS,
   SPEED_BEACON_CONSUMPTION,
 } from "./powerController";
-import Surface from "./terrain/surface";
+import Surface from "../terrain/surface";
 import Tile, {
   DiscoveryStatus,
   FREE_TILES,
   FREE_TILES_INCLUDING_WATER,
   TileType,
-} from "./terrain/tile";
+} from "../terrain/tile";
 import UnlocksController from "./UnlocksController";
-import SpawnAlert from "./util/spawnAlert";
+import SpawnAlert from "../util/spawnAlert";
 import VisibilityController from "./visibilityController";
-import SpawnGroup from "./wave/SpawnGroup";
-import { normalDistributionRandom } from "./wave/util";
-import Wave from "./wave/wave";
+import SpawnGroup from "../wave/SpawnGroup";
+import { normalDistributionRandom } from "../wave/util";
+import Wave from "../wave/wave";
 
 class Manager {
   private static instance: Manager;

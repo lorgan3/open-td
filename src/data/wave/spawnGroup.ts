@@ -1,7 +1,7 @@
 import { IEnemyStatics } from "../entity/enemies";
 import Runner from "../entity/enemies/runner";
 import { EntityType } from "../entity/entity";
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 import PathData from "../terrain/path/pathData";
 import Pathfinder from "../terrain/path/pathfinder";
 import Surface from "../terrain/surface";

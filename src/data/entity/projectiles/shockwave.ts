@@ -1,4 +1,4 @@
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import Tile from "../../terrain/tile";
 import { lerp } from "../../util/math";
 import { IEnemy } from "../enemies";

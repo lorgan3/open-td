@@ -1,8 +1,8 @@
-import BuildController from "../buildController";
-import Controller from "../controller";
+import BuildController from "../controllers/buildController";
+import Controller from "../controllers/controller";
 import { Difficulty } from "../difficulty";
 import Blueprint from "../entity/Blueprint";
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 import { ARMORY, DEMOLISH, TOWER } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";

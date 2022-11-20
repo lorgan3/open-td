@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import Controller, { Keys } from "../data/controller";
+import Controller, { Keys } from "../data/controllers/controller";
 import { GameEvent } from "../data/events";
-import Manager from "../data/manager";
-import { TOWER_PRICES } from "../data/moneyController";
+import Manager from "../data/controllers/manager";
+import { TOWER_PRICES } from "../data/controllers/moneyController";
 import placeables, { Placeable } from "../data/placeables";
 
 const props = defineProps<{

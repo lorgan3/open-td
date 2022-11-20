@@ -1,5 +1,5 @@
 import { IEnemy } from ".";
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 
 import Tile from "../../terrain/tile";
 import { Agent } from "../entity";

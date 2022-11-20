@@ -1,4 +1,4 @@
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import { AgentCategory, EntityType, RenderData } from "../entity";
 import Rocket from "../projectiles/rocket";

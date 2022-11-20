@@ -4,7 +4,7 @@ import {
   getSpeedMultiplier,
   ITower,
 } from ".";
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import { isSolid } from "../../terrain/collision";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import Bullet from "../projectiles/bullet";

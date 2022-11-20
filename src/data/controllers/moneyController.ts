@@ -1,9 +1,9 @@
-import Blueprint, { isBlueprint } from "./entity/Blueprint";
-import { IEnemy } from "./entity/enemies";
-import { Agent, EntityType } from "./entity/entity";
-import { GameEvent } from "./events";
+import Blueprint, { isBlueprint } from "../entity/Blueprint";
+import { IEnemy } from "../entity/enemies";
+import { Agent, EntityType } from "../entity/entity";
+import { GameEvent } from "../events";
 import Manager from "./manager";
-import { CONVERT_MONEY_AMOUNT } from "./placeables";
+import { CONVERT_MONEY_AMOUNT } from "../placeables";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,

@@ -1,6 +1,6 @@
 import { Difficulty } from "../difficulty";
 import { EventParamsMap, GameEvent } from "../events";
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 
 export type TutorialMessage = (override: number) => Promise<number>;
 

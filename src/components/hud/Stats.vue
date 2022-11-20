@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { GameEvent, StatUpdate } from "../../data/events";
-import Manager from "../../data/manager";
+import Manager from "../../data/controllers/manager";
 
 const props = defineProps<{
   expanded: boolean;

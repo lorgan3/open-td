@@ -1,6 +1,6 @@
 import { Difficulty } from "../difficulty";
 import { EntityType } from "../entity/entity";
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 import SpawnGroup from "../wave/SpawnGroup";
 
 class SpawnAlert {

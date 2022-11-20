@@ -1,7 +1,7 @@
 import { Container, Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
 import { Difficulty } from "../../../data/difficulty";
 import { BASE_ENTITIES } from "../../../data/entity/entity";
-import Manager from "../../../data/manager";
+import Manager from "../../../data/controllers/manager";
 import Path from "../../../data/terrain/path/path";
 import Surface from "../../../data/terrain/surface";
 import Tile from "../../../data/terrain/tile";

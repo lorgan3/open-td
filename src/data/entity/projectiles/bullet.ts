@@ -1,5 +1,5 @@
 import { aim, Projectile } from ".";
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import { lerp } from "../../util/math";
 import { IEnemy } from "../enemies";
 import Entity, { Agent, AgentCategory, EntityType } from "../entity";

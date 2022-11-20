@@ -1,8 +1,8 @@
-import { GameEvent } from "./events";
+import { GameEvent } from "../events";
 import Manager from "./manager";
-import { Placeable } from "./placeables";
-import Surface from "./terrain/surface";
-import Tile from "./terrain/tile";
+import { Placeable } from "../placeables";
+import Surface from "../terrain/surface";
+import Tile from "../terrain/tile";
 
 export enum Keys {
   Shift = "Shift",

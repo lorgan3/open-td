@@ -1,6 +1,6 @@
 import { Checkpoint, CheckpointFn } from ".";
 import { IEnemy } from "../../entity/enemies";
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import Tile, { TileType } from "../tile";
 
 export class WaterCheckpoint implements Checkpoint {

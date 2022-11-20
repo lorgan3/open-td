@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
-import Controller from "../../data/controller";
+import Controller from "../../data/controllers/controller";
 import { Difficulty } from "../../data/difficulty";
 import { GameEvent, StatUpdate } from "../../data/events";
-import Manager from "../../data/manager";
+import Manager from "../../data/controllers/manager";
 import { IRenderer } from "../../renderers/api";
 import Stats from "./Stats.vue";
 

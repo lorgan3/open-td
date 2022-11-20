@@ -1,5 +1,5 @@
 import { GameEvent, SurfaceChange } from "../../events";
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../../terrain/tile";
 import DamageBeacon from "../damageBeacon";
 import { IEnemy } from "../enemies";

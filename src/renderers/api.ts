@@ -1,4 +1,4 @@
-import Controller from "../data/controller";
+import Controller from "../data/controllers/controller";
 import Surface from "../data/terrain/surface";
 
 export interface IRenderer {

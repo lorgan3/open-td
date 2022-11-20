@@ -4,7 +4,7 @@ import Flier from "../entity/enemies/flier";
 import Regular from "../entity/enemies/regular";
 import Runner from "../entity/enemies/runner";
 import Tank from "../entity/enemies/tank";
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 import SpawnGroup from "./SpawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
 

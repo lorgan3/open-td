@@ -1,7 +1,7 @@
-import { EntityType } from "./entity/entity";
-import { GameEvent } from "./events";
+import { EntityType } from "../entity/entity";
+import { GameEvent } from "../events";
 import Manager from "./manager";
-import { Group, Placeable, SECTIONS } from "./placeables";
+import { Group, Placeable, SECTIONS } from "../placeables";
 
 class UnlocksController {
   private unlockedTowers: Set<EntityType>;

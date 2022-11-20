@@ -1,7 +1,7 @@
 import { createApp } from "vue";
-import Controller from "../../data/controller";
+import Controller from "../../data/controllers/controller";
 import Entity, { AgentCategory, EntityType } from "../../data/entity/entity";
-import Manager from "../../data/manager";
+import Manager from "../../data/controllers/manager";
 import Pool, { PoolType } from "../../data/pool";
 import Surface from "../../data/terrain/surface";
 import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";

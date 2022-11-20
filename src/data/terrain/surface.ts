@@ -1,5 +1,5 @@
 import Entity, { Agent, AgentCategory } from "../entity/entity";
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";

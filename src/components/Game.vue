@@ -2,8 +2,8 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
-import Manager from "../data/manager";
-import Controller, { Keys } from "../data/controller";
+import Manager from "../data/controllers/manager";
+import Controller, { Keys } from "../data/controllers/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
 import Hud from "./hud/Hud.vue";

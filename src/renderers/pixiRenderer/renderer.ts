@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import Controller from "../../data/controller";
+import Controller from "../../data/controllers/controller";
 import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
 import SimpleMessage from "../../components/SimpleMessage.vue";
@@ -10,7 +10,7 @@ import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
 import { settings } from "@pixi/tilemap";
 import Tile, { DiscoveryStatus, TileType } from "../../data/terrain/tile";
-import Manager from "../../data/manager";
+import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import {
   EntityRenderer,

@@ -1,5 +1,5 @@
-import { Agent, EntityType } from "./entity/entity";
-import { GameEvent } from "./events";
+import { Agent, EntityType } from "../entity/entity";
+import { GameEvent } from "../events";
 import Manager from "./manager";
 
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {

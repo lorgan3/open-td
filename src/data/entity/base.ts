@@ -1,4 +1,4 @@
-import Manager from "../manager";
+import Manager from "../controllers/manager";
 import { createStoneSurface } from "../terrain/fill";
 import Tile, {
   FREE_TILES_INCLUDING_BUILDINGS,

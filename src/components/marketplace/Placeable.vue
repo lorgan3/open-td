@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ITowerStatics } from "../../data/entity/towers";
-import { TOWER_PRICES } from "../../data/moneyController";
+import { TOWER_PRICES } from "../../data/controllers/moneyController";
 import { Placeable } from "../../data/placeables";
-import { POWER_CONSUMPTIONS } from "../../data/powerController";
+import { POWER_CONSUMPTIONS } from "../../data/controllers/powerController";
 
 const props = defineProps<{
   item: Placeable;

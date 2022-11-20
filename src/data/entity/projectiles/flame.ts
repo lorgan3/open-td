@@ -1,4 +1,4 @@
-import Manager from "../../manager";
+import Manager from "../../controllers/manager";
 import { IEnemy } from "../enemies";
 import Entity, {
   Agent,
