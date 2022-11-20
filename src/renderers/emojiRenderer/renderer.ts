@@ -351,17 +351,6 @@ class Renderer implements IRenderer {
           .getTiles()
           .forEach((tile) => tiles.add(tile))
       );
-
-      if (!Manager.Instance.getIsStarted()) {
-        const nextSpawnGroup =
-          Manager.Instance.getWaveController().getNextSpawnGroup();
-        if (nextSpawnGroup) {
-          nextSpawnGroup
-            .getSpawnPoints()[0]
-            .getTiles()
-            .forEach((tile) => tiles.add(tile));
-        }
-      }
     }
 
     const rows = this.surface.getHeight();

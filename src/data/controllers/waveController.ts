@@ -114,7 +114,17 @@ class WaveController {
   }
 
   getSpawnGroups() {
-    return this.spawnGroups;
+    let nextSpawnGroup: SpawnGroup | undefined;
+
+    if (!this.isWaveInProgress()) {
+      nextSpawnGroup = this.getNextSpawnGroup();
+    }
+
+    if (nextSpawnGroup) {
+      return [...this.spawnGroups, nextSpawnGroup];
+    }
+
+    return [...this.spawnGroups];
   }
 
   isWaveInProgress() {
@@ -129,7 +139,7 @@ class WaveController {
     return remainingEnemies > 0;
   }
 
-  getNextSpawnGroup() {
+  private getNextSpawnGroup() {
     const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
     const time = this.visibilityController.hasPendingAgents()
       ? 0

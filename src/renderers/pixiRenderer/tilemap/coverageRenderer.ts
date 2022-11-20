@@ -121,17 +121,7 @@ class CoverageRenderer {
 
     Manager.Instance.getSpawnGroups()
       .filter((spawnGroup) => !spawnGroup.isExposed())
-      .forEach((spawnGroup) =>
-        spawnGroup.getSpawnPoints().forEach((path) => paths.push(path))
-      );
-
-    if (!Manager.Instance.getIsStarted()) {
-      const nextSpawnGroup =
-        Manager.Instance.getWaveController().getNextSpawnGroup();
-      if (nextSpawnGroup) {
-        paths.push(...nextSpawnGroup.getSpawnPoints());
-      }
-    }
+      .forEach((spawnGroup) => paths.push(...spawnGroup.getSpawnPoints()));
 
     paths.forEach((path, index) => {
       const slicedPath = this.slicePath(path);

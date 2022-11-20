@@ -242,14 +242,7 @@ class Manager {
   }
 
   getSpawnAlertRanges() {
-    const spawnGroups = [...this.waveController.getSpawnGroups()];
-
-    const nextSpawnGroup = this.waveController.getNextSpawnGroup();
-    if (nextSpawnGroup) {
-      spawnGroups.push(nextSpawnGroup);
-    }
-
-    return SpawnAlert.forSpawnGroups(spawnGroups);
+    return SpawnAlert.forSpawnGroups(this.waveController.getSpawnGroups());
   }
 
   private end() {
