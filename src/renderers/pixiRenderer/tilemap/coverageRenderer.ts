@@ -126,7 +126,8 @@ class CoverageRenderer {
       );
 
     if (!Manager.Instance.getIsStarted()) {
-      const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
+      const nextSpawnGroup =
+        Manager.Instance.getWaveController().getNextSpawnGroup();
       if (nextSpawnGroup) {
         paths.push(...nextSpawnGroup.getSpawnPoints());
       }

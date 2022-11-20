@@ -353,7 +353,8 @@ class Renderer implements IRenderer {
       );
 
       if (!Manager.Instance.getIsStarted()) {
-        const nextSpawnGroup = Manager.Instance.getNextSpawnGroup();
+        const nextSpawnGroup =
+          Manager.Instance.getWaveController().getNextSpawnGroup();
         if (nextSpawnGroup) {
           nextSpawnGroup
             .getSpawnPoints()[0]

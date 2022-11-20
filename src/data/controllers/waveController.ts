@@ -1,0 +1,234 @@
+import Base from "../entity/base";
+import { Agent, AgentCategory, EntityType } from "../entity/entity";
+import { GameEvent, SurfaceChange } from "../events";
+import Surface from "../terrain/surface";
+import Tile, {
+  DiscoveryStatus,
+  FREE_TILES,
+  FREE_TILES_INCLUDING_WATER,
+  TileType,
+} from "../terrain/tile";
+import SpawnGroup from "../wave/SpawnGroup";
+import { normalDistributionRandom } from "../wave/util";
+import Wave from "../wave/wave";
+import Manager from "./manager";
+import VisibilityController from "./visibilityController";
+
+class WaveController {
+  private spawnGroups: SpawnGroup[] = [];
+  private nextSpawnGroup: SpawnGroup | undefined;
+  private direction = Math.random() * Math.PI * 2;
+
+  private wave?: Wave;
+  private timeSinceLastExpansion = 0;
+  private level = 0;
+
+  constructor(
+    private base: Base,
+    private surface: Surface,
+    private visibilityController: VisibilityController
+  ) {
+    Manager.Instance.addEventListener(
+      GameEvent.SurfaceChange,
+      this.onSurfaceChange
+    );
+  }
+
+  tick(dt: number) {
+    if (!this.wave) {
+      return;
+    }
+
+    this.wave.tick(dt);
+  }
+
+  startNewWave() {
+    if (this.visibilityController.hasPendingAgents()) {
+      this.timeSinceLastExpansion = 0;
+    }
+
+    for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
+      const spawnGroup = this.spawnGroups[i];
+
+      if (spawnGroup.isExposed()) {
+        // Clean up exposed spawn locations
+        this.spawnGroups.splice(i, 1);
+      } else {
+        // ...and make the others stronger
+        spawnGroup.grow();
+        spawnGroup.rePath();
+      }
+    }
+
+    this.direction +=
+      (Math.random() > 0.5 ? 1 : -1) *
+      Math.max(
+        (Math.PI / 6) *
+          normalDistributionRandom() *
+          Math.min(Math.PI * 2, (this.level + 1) / 1.5)
+      );
+
+    const spawnGroup = this.getNextSpawnGroup();
+    if (spawnGroup) {
+      this.timeSinceLastExpansion = 0;
+
+      const tile = spawnGroup.getSpawnPoints()[0].getTile(0);
+      const tilesToUpdate: Tile[] = [];
+      this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
+        if (FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
+          tilesToUpdate.push(
+            new Tile(tile.getX(), tile.getY(), TileType.Spore)
+          );
+        }
+      });
+      this.surface.setTiles(tilesToUpdate);
+
+      this.spawnGroups.push(spawnGroup);
+      this.nextSpawnGroup = undefined;
+    }
+
+    this.wave = Wave.fromSpawnGroups(this.level, this.spawnGroups);
+    this.level++;
+  }
+
+  processWave() {
+    if (this.isWaveInProgress()) {
+      return false;
+    }
+
+    this.timeSinceLastExpansion++;
+
+    this.spawnGroups.forEach((spawnGroup) =>
+      spawnGroup.setUnit(Wave.getUnitForLevel(this.level))
+    );
+
+    return true;
+  }
+
+  getLevel() {
+    return this.level;
+  }
+
+  getWave() {
+    return this.wave;
+  }
+
+  getSpawnGroups() {
+    return this.spawnGroups;
+  }
+
+  isWaveInProgress() {
+    if (this.wave && !this.wave.isDone()) {
+      return true;
+    }
+
+    const remainingEnemies = this.surface.getEntitiesForCategory(
+      AgentCategory.Enemy
+    ).size;
+
+    return remainingEnemies > 0;
+  }
+
+  getNextSpawnGroup() {
+    const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
+    const time = this.visibilityController.hasPendingAgents()
+      ? 0
+      : this.timeSinceLastExpansion;
+
+    const shouldHaveNextSpawnGroup =
+      this.spawnGroups.filter((spawnGroup) => !spawnGroup.isExposed())
+        .length === 0 || time >= timeToExpansion;
+
+    if (!shouldHaveNextSpawnGroup) {
+      return;
+    }
+
+    if (this.nextSpawnGroup && !this.nextSpawnGroup.isExposed()) {
+      return this.nextSpawnGroup;
+    }
+
+    let spawned = false;
+    let backOff = 3;
+    for (let i = 0; i < 20; i++) {
+      this.surface.forRay(
+        this.base.getTile().getX(),
+        this.base.getTile().getY(),
+        this.direction,
+        (tile) => {
+          if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
+            backOff = 4 + Math.floor(Math.random() * 4);
+            return true;
+          }
+
+          backOff--;
+
+          if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
+            return true;
+          }
+
+          this.nextSpawnGroup = SpawnGroup.fromTiles(
+            [tile, tile, tile, tile],
+            this.base.getTile(),
+            this.surface
+          );
+          this.nextSpawnGroup.setUnit(Wave.getUnitForLevel(this.level));
+
+          spawned = true;
+          return false;
+        }
+      );
+
+      if (!spawned) {
+        this.direction += Math.PI / 10;
+      } else {
+        break;
+      }
+    }
+
+    return this.nextSpawnGroup;
+  }
+
+  private onSurfaceChange = ({
+    affectedTiles,
+    removedStaticAgents,
+  }: SurfaceChange) => {
+    const inProgress = this.isWaveInProgress();
+
+    this.spawnGroups.forEach((spawnGroup) => {
+      if (inProgress) {
+        spawnGroup.getSpawnPoints().forEach((path) => {
+          if (path.isAffectedByTiles(affectedTiles)) {
+            path.recompute();
+          }
+        });
+      } else {
+        // If an agent was removed a better route may be available
+        const shouldRePath =
+          removedStaticAgents.size > 0 ||
+          !!spawnGroup
+            .getSpawnPoints()
+            .find((path) => path.isAffectedByTiles(affectedTiles));
+
+        if (!!shouldRePath) {
+          spawnGroup.rePath();
+        }
+      }
+    });
+
+    const nextSpawnGroup = this.getNextSpawnGroup();
+    if (!inProgress && nextSpawnGroup) {
+      // If an agent was removed a better route may be available
+      const shouldRePath =
+        removedStaticAgents.size > 0 ||
+        !!nextSpawnGroup
+          .getSpawnPoints()
+          .find((path) => path.isAffectedByTiles(affectedTiles));
+
+      if (shouldRePath) {
+        nextSpawnGroup!.rePath();
+      }
+    }
+  };
+}
+
+export default WaveController;

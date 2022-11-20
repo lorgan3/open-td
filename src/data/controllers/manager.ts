@@ -5,13 +5,7 @@ import { Difficulty } from "../difficulty";
 import Base from "../entity/base";
 import { IEnemy } from "../entity/enemies";
 import { Agent, AgentCategory, EntityType } from "../entity/entity";
-import {
-  EventHandler,
-  EventParamsMap,
-  GameEvent,
-  SurfaceChange,
-  Unlock,
-} from "../events";
+import { EventHandler, EventParamsMap, GameEvent, Unlock } from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable, WAVE_OVER_MULTIPLIER } from "../placeables";
 import PowerController, {
@@ -20,18 +14,12 @@ import PowerController, {
   SPEED_BEACON_CONSUMPTION,
 } from "./powerController";
 import Surface from "../terrain/surface";
-import Tile, {
-  DiscoveryStatus,
-  FREE_TILES,
-  FREE_TILES_INCLUDING_WATER,
-  TileType,
-} from "../terrain/tile";
+import Tile from "../terrain/tile";
 import UnlocksController from "./unlocksController";
 import SpawnAlert from "../util/spawnAlert";
 import VisibilityController from "./visibilityController";
-import SpawnGroup from "../wave/SpawnGroup";
-import { normalDistributionRandom } from "../wave/util";
-import Wave from "../wave/wave";
+
+import WaveController from "./waveController";
 
 class Manager {
   private static instance: Manager;
@@ -42,15 +30,9 @@ class Manager {
   private moneyController: MoneyController;
   private buildController: BuildController;
   private unlocksController: UnlocksController;
+  private waveController: WaveController;
 
   private base: Base;
-  private spawnGroups: SpawnGroup[] = [];
-  private nextSpawnGroup: SpawnGroup | undefined;
-  private direction = Math.random() * Math.PI * 2;
-
-  private level = 0;
-  private wave: Wave | undefined;
-  private timeSinceLastExpansion = 0;
 
   constructor(
     private difficulty: Difficulty,
@@ -63,14 +45,24 @@ class Manager {
 
     this.eventHandlers = new Map();
     this.visibilityController = new VisibilityController(surface);
+    this.base = new Base(basePoint);
+
+    this.waveController = new WaveController(
+      this.base,
+      this.surface,
+      this.visibilityController
+    );
+
     this.powerController = new PowerController();
     this.moneyController = new MoneyController(150, () =>
-      Math.max(0.5, this.base.getMoneyFactor() - this.level / 120)
+      Math.max(
+        0.5,
+        this.base.getMoneyFactor() - this.waveController.getLevel() / 120
+      )
     );
     this.buildController = new BuildController(surface);
     this.unlocksController = new UnlocksController();
 
-    this.base = new Base(basePoint);
     this.surface.getEntityTiles(this.base).map((tile) => {
       if (tile.hasStaticEntity()) {
         this.surface.despawnStatic(tile.getStaticEntity().getAgent());
@@ -79,7 +71,6 @@ class Manager {
 
     surface.spawnStatic(this.base);
 
-    this.addEventListener(GameEvent.SurfaceChange, this.onSurfaceChange);
     this.addEventListener(GameEvent.Unlock, this.onUnlock);
 
     console.log(this);
@@ -106,11 +97,7 @@ class Manager {
       }
     }
 
-    if (!this.wave) {
-      return;
-    }
-
-    this.wave.tick(dt);
+    this.waveController.tick(dt);
   }
 
   triggerStatUpdate() {
@@ -121,7 +108,7 @@ class Manager {
     this.triggerEvent(GameEvent.StatUpdate, {
       integrity: this.base.getHp(),
       regeneration: this.base.getRegenerationFactor(),
-      level: this.level,
+      level: this.waveController.getLevel(),
       money: this.moneyController.getMoney(),
       moneyMultiplier: this.moneyController.getMultiplier(),
       production: this.powerController.getProduction(),
@@ -141,15 +128,11 @@ class Manager {
     if (this.surface.despawn(enemy)) {
       this.moneyController.registerEnemyKill(enemy);
 
-      const remainingEnemies = this.getSurface().getEntitiesForCategory(
-        AgentCategory.Enemy
-      ).size;
-
-      if (remainingEnemies === 0 && this.wave?.isDone()) {
+      if (this.waveController.processWave()) {
         this.end();
+      } else {
+        this.triggerStatUpdate();
       }
-
-      this.triggerStatUpdate();
     }
   }
 
@@ -181,12 +164,16 @@ class Manager {
     return this.unlocksController;
   }
 
+  getWaveController() {
+    return this.waveController;
+  }
+
   getBase() {
     return this.base;
   }
 
   getWave() {
-    return this.wave;
+    return this.waveController.getWave();
   }
 
   getMoney() {
@@ -194,19 +181,7 @@ class Manager {
   }
 
   getIsStarted() {
-    if (!this.wave) {
-      return false;
-    }
-
-    if (!this.wave.isDone()) {
-      return true;
-    }
-
-    const remainingEnemies = this.getSurface().getEntitiesForCategory(
-      AgentCategory.Enemy
-    ).size;
-
-    return remainingEnemies > 0;
+    return this.waveController.isWaveInProgress();
   }
 
   canBuy(placeable: Placeable, amount = 1) {
@@ -226,57 +201,10 @@ class Manager {
 
     this.triggerEvent(GameEvent.StartWave);
 
-    if (this.visibilityController.hasPendingAgents()) {
-      this.timeSinceLastExpansion = 0;
-    }
-
-    for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
-      const spawnGroup = this.spawnGroups[i];
-
-      if (spawnGroup.isExposed()) {
-        // Clean up exposed spawn locations
-        this.spawnGroups.splice(i, 1);
-      } else {
-        // ...and make the others stronger
-        spawnGroup.grow();
-        spawnGroup.rePath();
-      }
-    }
-
-    this.direction +=
-      (Math.random() > 0.5 ? 1 : -1) *
-      Math.max(
-        (Math.PI / 6) *
-          normalDistributionRandom() *
-          Math.min(Math.PI * 2, (this.level + 1) / 1.5)
-      );
-
-    const spawnGroup = this.getNextSpawnGroup();
-    if (spawnGroup) {
-      this.timeSinceLastExpansion = 0;
-
-      const tile = spawnGroup.getSpawnPoints()[0].getTile(0);
-      const tilesToUpdate: Tile[] = [];
-      this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
-        if (FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
-          tilesToUpdate.push(
-            new Tile(tile.getX(), tile.getY(), TileType.Spore)
-          );
-        }
-      });
-      this.surface.setTiles(tilesToUpdate);
-
-      this.spawnGroups.push(spawnGroup);
-      this.nextSpawnGroup = undefined;
-    }
-
-    this.wave = Wave.fromSpawnGroups(this.level, this.spawnGroups);
-
+    this.waveController.startNewWave();
     this.powerController.processPower();
     this.moneyController.clearRecents();
     this.visibilityController.commit();
-
-    this.level++;
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
@@ -302,66 +230,7 @@ class Manager {
   }
 
   getSpawnGroups() {
-    return this.spawnGroups;
-  }
-
-  getNextSpawnGroup() {
-    const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
-    const time = this.visibilityController.hasPendingAgents()
-      ? 0
-      : this.timeSinceLastExpansion;
-
-    const shouldHaveNextSpawnGroup =
-      this.spawnGroups.filter((spawnGroup) => !spawnGroup.isExposed())
-        .length === 0 || time >= timeToExpansion;
-
-    if (!shouldHaveNextSpawnGroup) {
-      return;
-    }
-
-    if (this.nextSpawnGroup && !this.nextSpawnGroup.isExposed()) {
-      return this.nextSpawnGroup;
-    }
-
-    let spawned = false;
-    let backOff = 3;
-    for (let i = 0; i < 20; i++) {
-      this.surface.forRay(
-        this.base.getTile().getX(),
-        this.base.getTile().getY(),
-        this.direction,
-        (tile) => {
-          if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
-            backOff = 4 + Math.floor(Math.random() * 4);
-            return true;
-          }
-
-          backOff--;
-
-          if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
-            return true;
-          }
-
-          this.nextSpawnGroup = SpawnGroup.fromTiles(
-            [tile, tile, tile, tile],
-            this.base.getTile(),
-            this.surface
-          );
-          this.nextSpawnGroup.setUnit(Wave.getUnitForLevel(this.level));
-
-          spawned = true;
-          return false;
-        }
-      );
-
-      if (!spawned) {
-        this.direction += Math.PI / 10;
-      } else {
-        break;
-      }
-    }
-
-    return this.nextSpawnGroup;
+    return this.waveController.getSpawnGroups();
   }
 
   getDifficulty() {
@@ -373,9 +242,9 @@ class Manager {
   }
 
   getSpawnAlertRanges() {
-    const spawnGroups = [...this.spawnGroups];
+    const spawnGroups = [...this.waveController.getSpawnGroups()];
 
-    const nextSpawnGroup = this.getNextSpawnGroup();
+    const nextSpawnGroup = this.waveController.getNextSpawnGroup();
     if (nextSpawnGroup) {
       spawnGroups.push(nextSpawnGroup);
     }
@@ -384,16 +253,10 @@ class Manager {
   }
 
   private end() {
-    this.timeSinceLastExpansion++;
-
     this.buildController.commit();
     this.base.regenerate();
     this.unlocksController.addPoint();
     this.visibilityController.updateBaseRange();
-
-    this.spawnGroups.forEach((spawnGroup) =>
-      spawnGroup.setUnit(Wave.getUnitForLevel(this.level))
-    );
 
     this.triggerStatUpdate();
     this.triggerEvent(GameEvent.EndWave);
@@ -415,50 +278,8 @@ class Manager {
   }
 
   getLevel() {
-    return this.level;
+    return this.waveController.getLevel();
   }
-
-  private onSurfaceChange = ({
-    affectedTiles,
-    removedStaticAgents,
-  }: SurfaceChange) => {
-    const isStarted = this.getIsStarted();
-
-    this.spawnGroups.forEach((spawnGroup) => {
-      if (isStarted) {
-        spawnGroup.getSpawnPoints().forEach((path) => {
-          if (path.isAffectedByTiles(affectedTiles)) {
-            path.recompute();
-          }
-        });
-      } else {
-        // If an agent was removed a better route may be available
-        const shouldRePath =
-          removedStaticAgents.size > 0 ||
-          !!spawnGroup
-            .getSpawnPoints()
-            .find((path) => path.isAffectedByTiles(affectedTiles));
-
-        if (!!shouldRePath) {
-          spawnGroup.rePath();
-        }
-      }
-    });
-
-    const nextSpawnGroup = this.getNextSpawnGroup();
-    if (!isStarted && nextSpawnGroup) {
-      // If an agent was removed a better route may be available
-      const shouldRePath =
-        removedStaticAgents.size > 0 ||
-        !!nextSpawnGroup
-          .getSpawnPoints()
-          .find((path) => path.isAffectedByTiles(affectedTiles));
-
-      if (shouldRePath) {
-        nextSpawnGroup!.rePath();
-      }
-    }
-  };
 
   private onUnlock = ({ placeable }: Unlock) => {
     const inProgress = this.getIsStarted();
