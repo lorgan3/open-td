@@ -1,10 +1,14 @@
-import Base from "../entity/base";
+import type Base from "../entity/base";
 import { Agent } from "../entity/entity";
 import Manager from "./manager";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import { DiscoveryStatus } from "../terrain/constants";
 import { EntityType } from "../entity/constants";
+
+const isBase = (agent: Agent): agent is Base => {
+  return agent.getType() === EntityType.Base;
+};
 
 class VisibilityController {
   private agents = new Set<Agent>();
@@ -24,7 +28,7 @@ class VisibilityController {
 
     let status = DiscoveryStatus.Pending;
 
-    if (agent instanceof Base) {
+    if (isBase(agent)) {
       this.base = agent;
       status = DiscoveryStatus.Discovered;
     } else {
@@ -42,7 +46,7 @@ class VisibilityController {
       return;
     }
 
-    if (agent instanceof Base) {
+    if (isBase(agent)) {
       this.base = undefined;
     }
 
@@ -123,7 +127,7 @@ class VisibilityController {
   }
 
   private getVisibilityEdge(agent: Agent): [number, number] {
-    if (agent instanceof Base || !this.base) {
+    if (isBase(agent) || !this.base) {
       return [agent.entity.getAlignedX(), agent.entity.getAlignedY()];
     }
 
