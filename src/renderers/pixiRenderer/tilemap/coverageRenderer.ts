@@ -1,4 +1,4 @@
-import { Container, Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
 import { Difficulty } from "../../../data/difficulty";
 import Manager from "../../../data/controllers/manager";
 import Path from "../../../data/terrain/path/path";
@@ -7,6 +7,7 @@ import Tile from "../../../data/terrain/tile";
 import { ATLAS, AtlasTile } from "../atlas";
 import { SCALE } from "../constants";
 import { BASE_ENTITIES } from "../../../data/entity/constants";
+import { FLOOR, UI } from "../layer";
 
 class Marker extends Sprite {
   constructor(private offset: number, private path: Path, texture: Texture) {
@@ -35,11 +36,7 @@ class CoverageRenderer {
   private hoveredTile?: Tile;
   private visible = false;
 
-  constructor(
-    private loader: Loader,
-    private container: Container,
-    private surface: Surface
-  ) {
+  constructor(private loader: Loader, private surface: Surface) {
     this.coverageContainer = new ParticleContainer(
       undefined,
       {
@@ -48,7 +45,7 @@ class CoverageRenderer {
       undefined,
       true
     );
-    this.container.addChild(this.coverageContainer);
+    FLOOR.addChild(this.coverageContainer);
 
     this.pathContainer = new ParticleContainer(
       undefined,
@@ -58,7 +55,7 @@ class CoverageRenderer {
       undefined,
       true
     );
-    this.container.addChild(this.pathContainer);
+    UI.addChild(this.pathContainer);
   }
 
   public show() {

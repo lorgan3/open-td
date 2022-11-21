@@ -17,7 +17,7 @@ import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
-import { LAYERS, UI } from "./layer";
+import { FLOOR, LAYERS, UI } from "./layer";
 import { EntityRenderer, EntityRendererStatics } from "./overrides/types";
 import { SCALE } from "./constants";
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
@@ -111,8 +111,12 @@ class Renderer implements IRenderer {
 
     this.viewport!.addChild(this.tilemap, ...LAYERS);
 
-    this.coverageRenderer = new CoverageRenderer(this.loader, UI, this.surface);
-    this.alertRenderer = new AlertRenderer(this.loader, UI);
+    this.coverageRenderer = new CoverageRenderer(
+      this.loader,
+
+      this.surface
+    );
+    this.alertRenderer = new AlertRenderer(this.loader);
 
     this.selection = new Graphics();
     UI.addChild(this.selection);

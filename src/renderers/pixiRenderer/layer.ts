@@ -1,5 +1,8 @@
 import { Container } from "pixi.js";
 
+export const FLOOR = new Container();
+FLOOR.name = "Floor";
+
 export const BASE = new Container();
 BASE.name = "Base";
 
@@ -12,4 +15,4 @@ TOWERS.name = "Towers";
 export const UI = new Container();
 UI.name = "UI";
 
-export const LAYERS = [BASE, PROJECTILES, TOWERS, UI];
+export const LAYERS = [FLOOR, BASE, PROJECTILES, TOWERS, UI];

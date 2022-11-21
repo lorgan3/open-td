@@ -2,6 +2,7 @@ import { Container, Graphics, LINE_CAP, Loader, Sprite } from "pixi.js";
 import SpawnAlert from "../../../data/util/spawnAlert";
 import { ATLAS, AtlasTile } from "../atlas";
 import { SCALE } from "../constants";
+import { UI } from "../layer";
 
 class AlertRenderer {
   static DISPLAY_DURATION = 10 * 1000;
@@ -10,9 +11,9 @@ class AlertRenderer {
   private alertSymbols: Sprite[] = [];
   private time = 0;
 
-  constructor(private loader: Loader, private parent: Container) {
+  constructor(private loader: Loader) {
     this.container = new Container();
-    this.parent.addChild(this.container);
+    UI.addChild(this.container);
   }
 
   public render(center: [number, number], alerts: SpawnAlert[]) {
