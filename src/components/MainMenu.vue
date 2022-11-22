@@ -4,6 +4,7 @@ import { difficulties, Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
 import EmojiRenderer from "../renderers/emojiRenderer/renderer";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
+import { get, set } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
@@ -28,11 +29,17 @@ const renderOptions: Array<{ label: string; value: Constructor }> = [
   },
 ];
 
+const storedData = get("settings");
+
 const openSubMenu = ref(SubMenu.None);
 const seed = ref("");
 const seedInput = ref<HTMLElement | null>(null);
-const difficulty = ref(Difficulty.Easy);
-const renderer = ref(renderOptions[0]);
+const difficulty = ref(storedData?.difficulty || Difficulty.Easy);
+const renderer = ref(
+  (storedData &&
+    renderOptions.find(({ value }) => value === storedData.renderer)) ||
+    renderOptions[0]
+);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -48,6 +55,11 @@ const onClick = (subMenu: SubMenu) => {
 
 const submit = (event: Event) => {
   event.preventDefault();
+
+  set("settings", {
+    renderer: renderer.value.value,
+    difficulty: difficulty.value,
+  });
 
   props.onPlay(seed.value, difficulty.value, renderer.value.value);
 };
