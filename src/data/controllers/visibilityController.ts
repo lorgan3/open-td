@@ -1,10 +1,10 @@
 import type Base from "../entity/base";
 import { Agent } from "../entity/entity";
-import Manager from "./manager";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import { DiscoveryStatus } from "../terrain/constants";
 import { EntityType } from "../entity/constants";
+import WaveController from "./waveController";
 
 const isBase = (agent: Agent): agent is Base => {
   return agent.getType() === EntityType.Base;
@@ -122,7 +122,7 @@ class VisibilityController {
   private getVisibilityRange(agent: Agent) {
     switch (agent.getType()) {
       case EntityType.Base:
-        return 35 + Manager.Instance.getWaveController().getLevel() * 2;
+        return 35 + WaveController.Instance.getLevel() * 2;
       case EntityType.Radar:
         return 35;
       default:

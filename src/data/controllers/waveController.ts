@@ -17,6 +17,8 @@ import Wave from "../wave/wave";
 import VisibilityController from "./visibilityController";
 
 class WaveController {
+  private static instance: WaveController;
+
   private spawnGroups: SpawnGroup[] = [];
   private nextSpawnGroup: SpawnGroup | undefined;
   private direction = Math.random() * Math.PI * 2;
@@ -30,6 +32,8 @@ class WaveController {
     private surface: Surface,
     private visibilityController: VisibilityController
   ) {
+    WaveController.instance = this;
+
     EventSystem.Instance.addEventListener(
       GameEvent.SurfaceChange,
       this.onSurfaceChange
@@ -245,6 +249,10 @@ class WaveController {
       }
     }
   };
+
+  static get Instance() {
+    return this.instance;
+  }
 }
 
 export default WaveController;

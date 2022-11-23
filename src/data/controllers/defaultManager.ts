@@ -120,10 +120,6 @@ class DefaultManager extends Manager {
     return this.controller;
   }
 
-  getWaveController() {
-    return this.waveController;
-  }
-
   getBase() {
     return this.base;
   }

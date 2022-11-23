@@ -17,10 +17,11 @@ import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
-import { FLOOR, LAYERS, UI } from "./layer";
+import { LAYERS, UI } from "./layer";
 import { EntityRenderer, EntityRendererStatics } from "./overrides/types";
 import { SCALE } from "./constants";
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
+import WaveController from "../../data/controllers/waveController";
 
 let DEBUG = false;
 const SCROLL_SPEED = 20;
@@ -208,7 +209,7 @@ class Renderer implements IRenderer {
     this.coverageRenderer!.render();
 
     const center = getCenter(Manager.Instance.getBase());
-    const alerts = Manager.Instance.getWaveController().getSpawnAlertRanges();
+    const alerts = WaveController.Instance.getSpawnAlertRanges();
     this.alertRenderer!.render(center, alerts);
   }
 

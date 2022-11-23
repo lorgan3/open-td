@@ -8,6 +8,7 @@ import { ATLAS, AtlasTile } from "../atlas";
 import { SCALE } from "../constants";
 import { BASE_ENTITIES } from "../../../data/entity/constants";
 import { FLOOR, UI } from "../layer";
+import WaveController from "../../../data/controllers/waveController";
 
 class Marker extends Sprite {
   constructor(private offset: number, private path: Path, texture: Texture) {
@@ -116,8 +117,7 @@ class CoverageRenderer {
     this.pathContainer.removeChildren();
     const paths: Path[] = [];
 
-    Manager.Instance.getWaveController()
-      .getSpawnGroups()
+    WaveController.Instance.getSpawnGroups()
       .filter((spawnGroup) => !spawnGroup.isExposed())
       .forEach((spawnGroup) => paths.push(...spawnGroup.getSpawnPoints()));
 

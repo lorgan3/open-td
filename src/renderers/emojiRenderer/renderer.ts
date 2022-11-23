@@ -17,6 +17,7 @@ import { Difficulty } from "../../data/difficulty";
 import { AgentCategory, EntityType } from "../../data/entity/constants";
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 import VisibilityController from "../../data/controllers/visibilityController";
+import WaveController from "../../data/controllers/waveController";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -348,14 +349,12 @@ class Renderer implements IRenderer {
 
     const tiles = new Set<Tile>();
     if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
-      Manager.Instance.getWaveController()
-        .getSpawnGroups()
-        .forEach((spawnGroup) =>
-          spawnGroup
-            .getSpawnPoints()[0]
-            .getTiles()
-            .forEach((tile) => tiles.add(tile))
-        );
+      WaveController.Instance.getSpawnGroups().forEach((spawnGroup) =>
+        spawnGroup
+          .getSpawnPoints()[0]
+          .getTiles()
+          .forEach((tile) => tiles.add(tile))
+      );
     }
 
     const rows = this.surface.getHeight();
@@ -421,7 +420,7 @@ class Renderer implements IRenderer {
     const height = 20 * this.yStep;
     const ranges = Manager.Instance.getIsStarted()
       ? []
-      : Manager.Instance.getWaveController().getSpawnAlertRanges();
+      : WaveController.Instance.getSpawnAlertRanges();
 
     ranges.forEach((range, i) => {
       const length = range.getLength();
