@@ -1,7 +1,7 @@
 import BuildController from "../controllers/buildController";
-import Controller from "../controllers/controller";
 import TestManager from "../controllers/__spec__/testManager";
 import { Difficulty } from "../difficulty";
+import Base from "../entity/base";
 import Blueprint from "../entity/blueprint";
 import { ARMORY, DEMOLISH, TOWER } from "../placeables";
 import Surface from "../terrain/surface";
@@ -12,16 +12,14 @@ describe("buildController", () => {
 
   it("can add a pending tile", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     expect(controller.getPendingTiles([selectedTile])).toEqual({
       pendingBaseAdditions: new Set([selectedTile]),
@@ -31,16 +29,14 @@ describe("buildController", () => {
 
   it("can remove a pending tile", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     expect(controller.getPendingTiles([selectedTile], true)).toEqual({
       pendingBaseAdditions: emptySet,
@@ -50,16 +46,14 @@ describe("buildController", () => {
 
   it("can undo an existing removal by overwriting it", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     const blueprint = new Blueprint(selectedTile, DEMOLISH);
     controller["pendingBaseRemovals"] = [blueprint];
@@ -73,16 +67,14 @@ describe("buildController", () => {
 
   it("can undo an existing removal by removing it", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     const blueprint = new Blueprint(selectedTile, DEMOLISH);
     controller["pendingBaseRemovals"] = [blueprint];
@@ -96,16 +88,14 @@ describe("buildController", () => {
 
   it("can undo an existing addition by removing it", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     const blueprint = new Blueprint(selectedTile, ARMORY);
     controller["pendingBaseAdditions"] = [blueprint];
@@ -119,16 +109,14 @@ describe("buildController", () => {
 
   it("can overwrite an existing base blueprint", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     const blueprint = new Blueprint(selectedTile, ARMORY);
     controller["pendingBaseAdditions"] = [blueprint];
@@ -142,16 +130,14 @@ describe("buildController", () => {
 
   it("can overwrite an existing tower blueprint", () => {
     const surface = new Surface(5, 5);
+    const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
-      surface.getTile(2, 2)!,
+      new Base(selectedTile),
       surface,
-      new Controller(surface),
       jest.fn()
     );
     const controller = new BuildController(surface);
-
-    const selectedTile = surface.getTile(2, 2)!;
 
     const blueprint = new Blueprint(selectedTile, TOWER);
     controller["blueprints"].set(selectedTile.getHash(), blueprint);

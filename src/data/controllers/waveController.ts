@@ -27,11 +27,7 @@ class WaveController {
   private timeSinceLastExpansion = 0;
   private level = 0;
 
-  constructor(
-    private base: Base,
-    private surface: Surface,
-    private visibilityController: VisibilityController
-  ) {
+  constructor(private base: Base, private surface: Surface) {
     WaveController.instance = this;
 
     EventSystem.Instance.addEventListener(
@@ -49,7 +45,7 @@ class WaveController {
   }
 
   startNewWave() {
-    if (this.visibilityController.hasPendingAgents()) {
+    if (VisibilityController.Instance.hasPendingAgents()) {
       this.timeSinceLastExpansion = 0;
     }
 
@@ -151,7 +147,7 @@ class WaveController {
 
   private getNextSpawnGroup() {
     const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
-    const time = this.visibilityController.hasPendingAgents()
+    const time = VisibilityController.Instance.hasPendingAgents()
       ? 0
       : this.timeSinceLastExpansion;
 

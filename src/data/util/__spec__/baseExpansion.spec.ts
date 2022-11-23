@@ -1,4 +1,3 @@
-import Controller from "../../controllers/controller";
 import { Difficulty } from "../../difficulty";
 import Armory from "../../entity/armory";
 import Surface from "../../terrain/surface";
@@ -6,15 +5,15 @@ import Tile from "../../terrain/tile";
 import { floodFill } from "../baseExpansion";
 import TestManager from "../../controllers/__spec__/testManager";
 import { TileType } from "../../terrain/constants";
+import Base from "../../entity/base";
 
 describe("baseExpansion", () => {
   const surface = new Surface(8, 8);
   const basePoint = surface.getTile(2, 2)!;
   const manager = new TestManager(
     Difficulty.Normal,
-    basePoint,
+    new Base(basePoint),
     surface,
-    new Controller(surface),
     jest.fn()
   );
 

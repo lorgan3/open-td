@@ -1,50 +1,24 @@
 import { MessageFn } from "../../renderers/api";
-import BuildController from "./buildController";
-import Controller from "./controller";
+
 import { Difficulty } from "../difficulty";
 import Base from "../entity/base";
 import { IEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
-import MoneyController from "./moneyController";
-import { Placeable } from "../placeables";
-import PowerController from "./powerController";
-import Surface from "../terrain/surface";
-import Tile from "../terrain/tile";
-import UnlocksController from "./unlocksController";
-import VisibilityController from "./visibilityController";
-import WaveController from "./waveController";
 import EventSystem from "../eventSystem";
+import { Placeable } from "../placeables";
+import Surface from "../terrain/surface";
 
 abstract class Manager {
   protected static instance: Manager;
 
-  protected visibilityController!: VisibilityController;
-  protected powerController!: PowerController;
-  protected moneyController!: MoneyController;
-  protected buildController!: BuildController;
-  protected unlocksController!: UnlocksController;
-  protected waveController: WaveController;
-
-  protected base: Base;
-
   constructor(
     protected difficulty: Difficulty,
-    basePoint: Tile,
+    protected base: Base,
     protected surface: Surface,
-    protected controller: Controller,
     protected messageFn: MessageFn
   ) {
     Manager.instance = this;
-
     new EventSystem();
-
-    this.visibilityController = new VisibilityController(surface);
-    this.base = new Base(basePoint);
-    this.waveController = new WaveController(
-      this.base,
-      this.surface,
-      this.visibilityController
-    );
   }
 
   abstract tick(dt: number): void;

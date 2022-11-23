@@ -1,23 +1,27 @@
 import { MessageFn } from "../../../renderers/api";
 import { Difficulty } from "../../difficulty";
+import Base from "../../entity/base";
 import { IEnemy } from "../../entity/enemies";
 import { Agent } from "../../entity/entity";
 import { Placeable } from "../../placeables";
 import Surface from "../../terrain/surface";
-import Tile from "../../terrain/tile";
-import Controller from "../controller";
 import Manager from "../manager";
+import VisibilityController from "../visibilityController";
+import WaveController from "../waveController";
 
 class TestManager extends Manager {
   constructor(
     difficulty: Difficulty,
-    basePoint: Tile,
+    base: Base,
     surface: Surface,
-    controller: Controller,
     messageFn: MessageFn
   ) {
-    super(difficulty, basePoint, surface, controller, messageFn);
-    surface.spawnStatic(this.base);
+    super(difficulty, base, surface, messageFn);
+
+    new VisibilityController(surface);
+    new WaveController(base, surface);
+
+    surface.spawnStatic(base);
   }
 
   tick(dt: number): void {

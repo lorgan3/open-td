@@ -1,6 +1,5 @@
 import { MessageFn } from "../../renderers/api";
 import BuildController from "./buildController";
-import Controller from "./controller";
 import { Difficulty } from "../difficulty";
 import { IEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
@@ -13,31 +12,22 @@ import PowerController, {
   SPEED_BEACON_CONSUMPTION,
 } from "./powerController";
 import Surface from "../terrain/surface";
-import Tile from "../terrain/tile";
 import UnlocksController from "./unlocksController";
 import Manager from "./manager";
 import { AgentCategory, EntityType } from "../entity/constants";
 import EventSystem from "../eventSystem";
+import Base from "../entity/base";
+import WaveController from "./waveController";
+import VisibilityController from "./visibilityController";
 
 class DefaultManager extends Manager {
   constructor(
     difficulty: Difficulty,
-    basePoint: Tile,
+    base: Base,
     surface: Surface,
-    controller: Controller,
     messageFn: MessageFn
   ) {
-    super(difficulty, basePoint, surface, controller, messageFn);
-
-    this.powerController = new PowerController();
-    this.moneyController = new MoneyController(150, () =>
-      Math.max(
-        0.5,
-        this.base.getMoneyFactor() - this.waveController.getLevel() / 120
-      )
-    );
-    this.buildController = new BuildController(surface);
-    this.unlocksController = new UnlocksController();
+    super(difficulty, base, surface, messageFn);
 
     this.surface.getEntityTiles(this.base).map((tile) => {
       if (tile.hasStaticEntity()) {
@@ -73,7 +63,7 @@ class DefaultManager extends Manager {
       }
     }
 
-    this.waveController.tick(dt);
+    WaveController.Instance.tick(dt);
   }
 
   triggerStatUpdate() {
@@ -84,12 +74,12 @@ class DefaultManager extends Manager {
     EventSystem.Instance.triggerEvent(GameEvent.StatUpdate, {
       integrity: this.base.getHp(),
       regeneration: this.base.getRegenerationFactor(),
-      level: this.waveController.getLevel(),
-      money: this.moneyController.getMoney(),
-      moneyMultiplier: this.moneyController.getMultiplier(),
-      production: this.powerController.getProduction(),
-      consumption: this.powerController.getConsumption(),
-      power: this.powerController.getPower(),
+      level: WaveController.Instance.getLevel(),
+      money: MoneyController.Instance.getMoney(),
+      moneyMultiplier: MoneyController.Instance.getMultiplier(),
+      production: PowerController.Instance.getProduction(),
+      consumption: PowerController.Instance.getConsumption(),
+      power: PowerController.Instance.getPower(),
       remainingEnemies,
       inProgress: this.getIsStarted(),
     });
@@ -102,9 +92,9 @@ class DefaultManager extends Manager {
 
   despawnEnemy(enemy: IEnemy) {
     if (this.surface.despawn(enemy)) {
-      this.moneyController.registerEnemyKill(enemy);
+      MoneyController.Instance.registerEnemyKill(enemy);
 
-      if (this.waveController.processWave()) {
+      if (WaveController.Instance.processWave()) {
         this.end();
       } else {
         this.triggerStatUpdate();
@@ -121,12 +111,12 @@ class DefaultManager extends Manager {
   }
 
   getIsStarted() {
-    return this.waveController.isWaveInProgress();
+    return WaveController.Instance.isWaveInProgress();
   }
 
   canBuy(placeable: Placeable, amount = 1) {
     const cost = (TOWER_PRICES[placeable.entityType] ?? 0) * amount;
-    if (cost > this.moneyController.getMoney()) {
+    if (cost > MoneyController.Instance.getMoney()) {
       this.showMessage(`You do not have enough money. This costs 🪙 ${cost}`);
       return false;
     }
@@ -141,10 +131,10 @@ class DefaultManager extends Manager {
 
     EventSystem.Instance.triggerEvent(GameEvent.StartWave);
 
-    this.powerController.processPower();
-    this.moneyController.clearRecents();
-    this.visibilityController.commit();
-    this.waveController.startNewWave();
+    PowerController.Instance.processPower();
+    MoneyController.Instance.clearRecents();
+    VisibilityController.Instance.commit();
+    WaveController.Instance.startNewWave();
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
@@ -155,7 +145,7 @@ class DefaultManager extends Manager {
   };
 
   consume(agent: Agent, speedMultiplier = 1, damageMultiplier = 1) {
-    return this.powerController.consume(
+    return PowerController.Instance.consume(
       (POWER_CONSUMPTIONS[agent.getType()] ?? 0) +
         (speedMultiplier - 1) * SPEED_BEACON_CONSUMPTION +
         (damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION
@@ -163,7 +153,7 @@ class DefaultManager extends Manager {
   }
 
   consumeContinuous(agent: Agent, dt: number, damageMultiplier = 1) {
-    return this.powerController.consume(
+    return PowerController.Instance.consume(
       (POWER_CONSUMPTIONS[agent.getType()] ?? 0) * dt +
         ((damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION * dt) / 16
     );
@@ -178,10 +168,10 @@ class DefaultManager extends Manager {
   }
 
   private end() {
-    this.buildController.commit();
+    BuildController.Instance.commit();
     this.base.regenerate();
-    this.unlocksController.addPoint();
-    this.visibilityController.updateBaseRange();
+    UnlocksController.Instance.addPoint();
+    VisibilityController.Instance.updateBaseRange();
 
     this.triggerStatUpdate();
     EventSystem.Instance.triggerEvent(GameEvent.EndWave);
@@ -206,7 +196,9 @@ class DefaultManager extends Manager {
     const inProgress = this.getIsStarted();
 
     if (placeable.entityType === EntityType.EmergencyRecharge) {
-      this.powerController.processPower(inProgress ? 1 : WAVE_OVER_MULTIPLIER);
+      PowerController.Instance.processPower(
+        inProgress ? 1 : WAVE_OVER_MULTIPLIER
+      );
     }
 
     if (placeable.entityType === EntityType.EmergencyRepair) {

@@ -8,7 +8,7 @@ import Marketplace from "./marketplace/Marketplace.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
-import DefaultManager from "../data/controllers/defaultManager";
+import { init } from "../data/controllers";
 import EventSystem from "../data/eventSystem";
 import UnlocksController from "../data/controllers/unlocksController";
 
@@ -25,11 +25,10 @@ const controller = new Controller(surface);
 const renderer = new props.renderer(surface, controller);
 
 const targetTile = surface.getTile(100, 100)!;
-const manager = new DefaultManager(
+const manager = init(
   props.difficulty,
   targetTile,
   surface,
-  controller,
   renderer.showMessage
 );
 
