@@ -21,10 +21,10 @@ export const init = (
   const manager = new DefaultManager(difficulty, base, surface, messageFn);
 
   new VisibilityController(surface);
-  const waveController = new WaveController(base, surface);
+  new WaveController(base, surface);
   new PowerController();
   new MoneyController(150, () =>
-    Math.max(0.5, base.getMoneyFactor() - waveController.getLevel() / 120)
+    Math.max(0.5, base.getMoneyFactor() - manager.getLevel() / 120)
   );
   new BuildController(surface);
   new UnlocksController();

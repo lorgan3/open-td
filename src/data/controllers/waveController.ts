@@ -14,6 +14,7 @@ import SpawnAlert from "../util/spawnAlert";
 import SpawnGroup from "../wave/SpawnGroup";
 import { normalDistributionRandom } from "../wave/util";
 import Wave from "../wave/wave";
+import Manager from "./manager";
 import VisibilityController from "./visibilityController";
 
 class WaveController {
@@ -25,7 +26,6 @@ class WaveController {
 
   private wave?: Wave;
   private timeSinceLastExpansion = 0;
-  private level = 0;
 
   constructor(private base: Base, private surface: Surface) {
     WaveController.instance = this;
@@ -45,6 +45,7 @@ class WaveController {
   }
 
   startNewWave() {
+    const level = Manager.Instance.getLevel();
     if (VisibilityController.Instance.hasPendingAgents()) {
       this.timeSinceLastExpansion = 0;
     }
@@ -67,7 +68,7 @@ class WaveController {
       Math.max(
         (Math.PI / 6) *
           normalDistributionRandom() *
-          Math.min(Math.PI * 2, (this.level + 1) / 1.5)
+          Math.min(Math.PI * 2, (level + 1) / 1.5)
       );
 
     const spawnGroup = this.getNextSpawnGroup();
@@ -89,8 +90,7 @@ class WaveController {
       this.nextSpawnGroup = undefined;
     }
 
-    this.wave = Wave.fromSpawnGroups(this.level, this.spawnGroups);
-    this.level++;
+    this.wave = Wave.fromSpawnGroups(level, this.spawnGroups);
   }
 
   processWave() {
@@ -101,14 +101,10 @@ class WaveController {
     this.timeSinceLastExpansion++;
 
     this.spawnGroups.forEach((spawnGroup) =>
-      spawnGroup.setUnit(Wave.getUnitForLevel(this.level))
+      spawnGroup.setUnit(Wave.getUnitForLevel(Manager.Instance.getLevel()))
     );
 
     return true;
-  }
-
-  getLevel() {
-    return this.level;
   }
 
   getWave() {
@@ -187,7 +183,9 @@ class WaveController {
             this.base.getTile(),
             this.surface
           );
-          this.nextSpawnGroup.setUnit(Wave.getUnitForLevel(this.level));
+          this.nextSpawnGroup.setUnit(
+            Wave.getUnitForLevel(Manager.Instance.getLevel())
+          );
 
           spawned = true;
           return false;

@@ -11,6 +11,8 @@ import Surface from "../terrain/surface";
 abstract class Manager {
   protected static instance: Manager;
 
+  protected level = 0;
+
   constructor(
     protected difficulty: Difficulty,
     protected base: Base,
@@ -35,6 +37,10 @@ abstract class Manager {
 
   getBase() {
     return this.base;
+  }
+
+  getLevel() {
+    return this.level;
   }
 
   abstract getIsStarted(): boolean;

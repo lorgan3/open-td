@@ -74,7 +74,7 @@ class DefaultManager extends Manager {
     EventSystem.Instance.triggerEvent(GameEvent.StatUpdate, {
       integrity: this.base.getHp(),
       regeneration: this.base.getRegenerationFactor(),
-      level: WaveController.Instance.getLevel(),
+      level: this.level,
       money: MoneyController.Instance.getMoney(),
       moneyMultiplier: MoneyController.Instance.getMultiplier(),
       production: PowerController.Instance.getProduction(),
@@ -102,14 +102,6 @@ class DefaultManager extends Manager {
     }
   }
 
-  getSurface() {
-    return this.surface;
-  }
-
-  getBase() {
-    return this.base;
-  }
-
   getIsStarted() {
     return WaveController.Instance.isWaveInProgress();
   }
@@ -135,6 +127,8 @@ class DefaultManager extends Manager {
     MoneyController.Instance.clearRecents();
     VisibilityController.Instance.commit();
     WaveController.Instance.startNewWave();
+
+    this.level++;
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
