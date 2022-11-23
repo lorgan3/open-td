@@ -120,10 +120,6 @@ class DefaultManager extends Manager {
     return this.controller;
   }
 
-  getPowerController() {
-    return this.powerController;
-  }
-
   getBuildController() {
     return this.buildController;
   }

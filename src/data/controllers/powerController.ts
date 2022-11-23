@@ -15,12 +15,18 @@ export const SPEED_BEACON_CONSUMPTION = 2;
 export const DAMAGE_BEACON_CONSUMPTION = 1.25;
 
 class PowerController {
+  private static instance: PowerController;
+
   private generators = new Set<Agent>();
 
   private consumption = 0;
   private blackout = false;
 
   private power = 0;
+
+  constructor() {
+    PowerController.instance = this;
+  }
 
   registerGenerator(agent: Agent) {
     this.generators.add(agent);
@@ -77,6 +83,10 @@ class PowerController {
 
   getPower() {
     return this.power;
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 
