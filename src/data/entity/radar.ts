@@ -1,4 +1,5 @@
 import Manager from "../controllers/manager";
+import VisibilityController from "../controllers/visibilityController";
 import { createStoneSurface } from "../terrain/fill";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { AgentCategory, EntityType } from "./constants";
@@ -28,13 +29,13 @@ class Radar implements StaticAgent {
   }
 
   spawn() {
-    Manager.Instance.getVisibilityController().registerAgent(this);
+    VisibilityController.Instance.registerAgent(this);
     Manager.Instance.getBase().addPart(this);
     createStoneSurface(this, 3);
   }
 
   despawn() {
-    Manager.Instance.getVisibilityController().removeAgent(this);
+    VisibilityController.Instance.removeAgent(this);
     Manager.Instance.getBase().removePart(this);
   }
 

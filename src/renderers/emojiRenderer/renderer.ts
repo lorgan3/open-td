@@ -16,6 +16,7 @@ import {
 import { Difficulty } from "../../data/difficulty";
 import { AgentCategory, EntityType } from "../../data/entity/constants";
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
+import VisibilityController from "../../data/controllers/visibilityController";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -505,7 +506,7 @@ class Renderer implements IRenderer {
     }
 
     const bbox = this.getBBox();
-    const constraints = Manager.Instance.getVisibilityController().getBBox();
+    const constraints = VisibilityController.Instance.getBBox();
 
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       if (deltaX < 0 && bbox[0][0] <= constraints[0][0]) {
@@ -541,7 +542,7 @@ class Renderer implements IRenderer {
       }
 
       const bbox = this.getBBox();
-      const constraints = Manager.Instance.getVisibilityController().getBBox();
+      const constraints = VisibilityController.Instance.getBBox();
 
       if (!this.canMove(deltaX, deltaY)) {
         event.preventDefault();

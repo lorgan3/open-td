@@ -18,7 +18,7 @@ import EventSystem from "../eventSystem";
 abstract class Manager {
   protected static instance: Manager;
 
-  protected visibilityController: VisibilityController;
+  protected visibilityController!: VisibilityController;
   protected powerController!: PowerController;
   protected moneyController!: MoneyController;
   protected buildController!: BuildController;
@@ -61,10 +61,6 @@ abstract class Manager {
 
   getController() {
     return this.controller;
-  }
-
-  getVisibilityController() {
-    return this.visibilityController;
   }
 
   getPowerController() {

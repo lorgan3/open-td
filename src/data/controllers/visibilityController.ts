@@ -11,6 +11,8 @@ const isBase = (agent: Agent): agent is Base => {
 };
 
 class VisibilityController {
+  private static instance: VisibilityController;
+
   private agents = new Set<Agent>();
   private edgeMap = new Map<number, [number, number]>();
   private pendingAgents = new Set<Agent>();
@@ -21,7 +23,9 @@ class VisibilityController {
   private maxX?: number;
   private maxY?: number;
 
-  constructor(private surface: Surface) {}
+  constructor(private surface: Surface) {
+    VisibilityController.instance = this;
+  }
 
   registerAgent(agent: Agent) {
     this.agents.add(agent);
@@ -181,6 +185,10 @@ class VisibilityController {
 
       tile.setDiscoveryStatus(status);
     });
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 

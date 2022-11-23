@@ -1,4 +1,5 @@
 import Manager from "../controllers/manager";
+import VisibilityController from "../controllers/visibilityController";
 import { FREE_TILES_INCLUDING_BUILDINGS } from "../terrain/constants";
 import { createStoneSurface } from "../terrain/fill";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
@@ -76,12 +77,12 @@ class Base implements StaticAgent {
   }
 
   spawn() {
-    Manager.Instance.getVisibilityController().registerAgent(this);
+    VisibilityController.Instance.registerAgent(this);
     createStoneSurface(this, 4);
   }
 
   despawn() {
-    Manager.Instance.getVisibilityController().removeAgent(this);
+    VisibilityController.Instance.removeAgent(this);
   }
 
   hit(damage: number) {

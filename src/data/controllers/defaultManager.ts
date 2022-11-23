@@ -120,10 +120,6 @@ class DefaultManager extends Manager {
     return this.controller;
   }
 
-  getVisibilityController() {
-    return this.visibilityController;
-  }
-
   getPowerController() {
     return this.powerController;
   }
