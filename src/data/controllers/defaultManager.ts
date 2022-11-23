@@ -124,10 +124,6 @@ class DefaultManager extends Manager {
     return this.buildController;
   }
 
-  getMoneyController() {
-    return this.moneyController;
-  }
-
   getUnlocksController() {
     return this.unlocksController;
   }

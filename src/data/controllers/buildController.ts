@@ -10,6 +10,7 @@ import { GameEvent } from "../events";
 import { EntityType } from "../entity/constants";
 import { FREE_TILES, TileType } from "../terrain/constants";
 import EventSystem from "../eventSystem";
+import MoneyController from "./moneyController";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -96,7 +97,7 @@ class BuildController {
         }
 
         const agent = tile.getStaticEntity().getAgent();
-        Manager.Instance.getMoneyController().sell(agent);
+        MoneyController.Instance.sell(agent);
         this.surface.despawnStatic(agent);
       });
 
@@ -107,7 +108,7 @@ class BuildController {
       const constructor = blueprint.getPlaceable().entity!;
       const agent = new constructor(tile);
       this.spawn(agent);
-      Manager.Instance.getMoneyController().replaceBlueprint(blueprint, agent);
+      MoneyController.Instance.replaceBlueprint(blueprint, agent);
     });
 
     this.blueprints.clear();
@@ -156,7 +157,7 @@ class BuildController {
           return;
         }
 
-        Manager.Instance.getMoneyController().sell(currentBlueprint);
+        MoneyController.Instance.sell(currentBlueprint);
         this.freeBlueprint(currentBlueprint);
 
         if (currentBlueprint.isBasePart()) {
@@ -187,7 +188,7 @@ class BuildController {
       });
 
       const blueprint = new Blueprint(tile, placeable);
-      Manager.Instance.getMoneyController().buy(blueprint);
+      MoneyController.Instance.buy(blueprint);
       this.reserveBlueprint(blueprint);
 
       if (
@@ -252,7 +253,7 @@ class BuildController {
         const blueprint = this.blueprints.get(tile.getHash());
         if (blueprint) {
           if (!blueprint.isDelete()) {
-            Manager.Instance.getMoneyController().sell(blueprint);
+            MoneyController.Instance.sell(blueprint);
 
             if (
               tile.hasStaticEntity() &&
@@ -345,7 +346,7 @@ class BuildController {
       });
 
       this.spawn(agent);
-      Manager.Instance.getMoneyController().buy(agent);
+      MoneyController.Instance.buy(agent);
     });
 
     Manager.Instance.triggerStatUpdate();
@@ -389,7 +390,7 @@ class BuildController {
       if (tile.hasStaticEntity()) {
         const agent = tile.getStaticEntity().getAgent();
         this.surface.despawnStatic(agent);
-        Manager.Instance.getMoneyController().sell(agent);
+        MoneyController.Instance.sell(agent);
       }
     });
 

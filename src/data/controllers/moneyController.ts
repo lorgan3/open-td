@@ -28,9 +28,13 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
 const SELL_MULTIPLIER = 0.5;
 
 class MoneyController {
+  private static instance: MoneyController;
+
   private recentlyBought = new Set<Agent>();
 
   constructor(private money = 0, private multiplier = () => 1) {
+    MoneyController.instance = this;
+
     EventSystem.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
       if (placeable.entityType === EntityType.Convert) {
         this.addMoney(CONVERT_MONEY_AMOUNT);
@@ -123,6 +127,10 @@ class MoneyController {
       default:
         throw new Error("Entity is not an enemy");
     }
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 

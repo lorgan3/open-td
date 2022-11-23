@@ -67,10 +67,6 @@ abstract class Manager {
     return this.buildController;
   }
 
-  getMoneyController() {
-    return this.moneyController;
-  }
-
   getUnlocksController() {
     return this.unlocksController;
   }
