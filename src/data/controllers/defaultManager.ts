@@ -120,10 +120,6 @@ class DefaultManager extends Manager {
     return this.controller;
   }
 
-  getBuildController() {
-    return this.buildController;
-  }
-
   getUnlocksController() {
     return this.unlocksController;
   }

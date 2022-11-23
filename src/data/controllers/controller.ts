@@ -1,9 +1,9 @@
 import { GameEvent } from "../events";
-import Manager from "./manager";
 import { Placeable } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import EventSystem from "../eventSystem";
+import BuildController from "./buildController";
 
 export enum Keys {
   Shift = "Shift",
@@ -126,7 +126,7 @@ class Controller {
     }
 
     const tiles = this.getSelection();
-    Manager.Instance.getBuildController().build(tiles, this.selectedPlacable);
+    BuildController.Instance.build(tiles, this.selectedPlacable);
 
     this._isMouseDown = false;
   }

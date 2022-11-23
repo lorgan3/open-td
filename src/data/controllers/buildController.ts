@@ -27,6 +27,8 @@ export const SURFACES_REQUIRING_FOUNDATION = new Set([
 ]);
 
 class BuildController {
+  private static instance: BuildController;
+
   private blueprints = new Map<string, Blueprint>();
 
   private pendingBaseAdditions: Blueprint[] = [];
@@ -36,6 +38,8 @@ class BuildController {
   private ignoredEntities: Set<EntityType>;
 
   constructor(private surface: Surface) {
+    BuildController.instance = this;
+
     this.freeTiles = new Set(FREE_TILES);
     this.ignoredEntities = new Set();
 
@@ -526,6 +530,10 @@ class BuildController {
     });
 
     this.surface.spawnStatic(agent);
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 
