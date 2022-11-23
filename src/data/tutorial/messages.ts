@@ -1,6 +1,7 @@
 import { Difficulty } from "../difficulty";
 import { EventParamsMap, GameEvent } from "../events";
 import Manager from "../controllers/manager";
+import EventSystem from "../eventSystem";
 
 export type TutorialMessage = (override: number) => Promise<number>;
 
@@ -10,7 +11,7 @@ const continueAfterEvent = <E extends GameEvent>(
   condition?: (...args: EventParamsMap[E]) => boolean | void
 ) => {
   return new Promise<void>((resolve) => {
-    const removeEventListener = Manager.Instance.addEventListener(
+    const removeEventListener = EventSystem.Instance.addEventListener(
       event,
       (...args) => {
         if (!condition || condition(...args)) {
@@ -28,7 +29,7 @@ const continueAfterEvents = (
   condition?: (args: any) => boolean | void
 ) => {
   return new Promise<void>((resolve) => {
-    const removeEventListeners = Manager.Instance.addEventListeners(
+    const removeEventListeners = EventSystem.Instance.addEventListeners(
       events,
       (args) => {
         if (!condition || condition(args)) {

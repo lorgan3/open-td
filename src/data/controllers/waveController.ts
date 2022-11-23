@@ -1,6 +1,7 @@
 import Base from "../entity/base";
 import { AgentCategory } from "../entity/constants";
 import { GameEvent, SurfaceChange } from "../events";
+import EventSystem from "../eventSystem";
 import {
   DiscoveryStatus,
   FREE_TILES,
@@ -13,7 +14,6 @@ import SpawnAlert from "../util/spawnAlert";
 import SpawnGroup from "../wave/SpawnGroup";
 import { normalDistributionRandom } from "../wave/util";
 import Wave from "../wave/wave";
-import Manager from "./manager";
 import VisibilityController from "./visibilityController";
 
 class WaveController {
@@ -30,7 +30,7 @@ class WaveController {
     private surface: Surface,
     private visibilityController: VisibilityController
   ) {
-    Manager.Instance.addEventListener(
+    EventSystem.Instance.addEventListener(
       GameEvent.SurfaceChange,
       this.onSurfaceChange
     );

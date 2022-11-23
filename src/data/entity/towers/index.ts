@@ -6,6 +6,7 @@ import { IEnemy } from "../enemies";
 import { Agent } from "../entity";
 import SpeedBeacon from "../speedBeacon";
 import { StaticAgent, StaticAgentStatics } from "../staticEntity";
+import EventSystem from "../../eventSystem";
 
 export interface ITower extends StaticAgent {
   getCooldown(): number;
@@ -75,7 +76,7 @@ export const coverTilesWithTowerSightLines = (
 
   run();
 
-  const removeEventListener = Manager.Instance.addEventListener(
+  const removeEventListener = EventSystem.Instance.addEventListener(
     GameEvent.SurfaceChange,
     ({ affectedTiles }: SurfaceChange) => {
       for (const tile of affectedTiles) {

@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { GameEvent, StatUpdate } from "../data/events";
 import Manager from "../data/controllers/manager";
 import { IRenderer } from "../renderers/api";
+import EventSystem from "../data/eventSystem";
 
 const props = defineProps<{
   renderer: IRenderer;
@@ -45,12 +46,12 @@ const eventHandler = (stats: StatUpdate) => {
 };
 
 onMounted(() => {
-  Manager.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
+  EventSystem.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
   Manager.Instance.triggerStatUpdate();
 });
 
 onUnmounted(() => {
-  Manager.Instance.removeEventListener(GameEvent.StatUpdate, eventHandler);
+  EventSystem.Instance.removeEventListener(GameEvent.StatUpdate, eventHandler);
 });
 
 function start() {

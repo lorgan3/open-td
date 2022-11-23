@@ -9,6 +9,7 @@ import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
 import DefaultManager from "../data/controllers/defaultManager";
+import EventSystem from "../data/eventSystem";
 
 const props = defineProps<{
   seed: string;
@@ -98,7 +99,7 @@ onUnmounted(() => (mounted = false));
       <Marketplace
         :controller="manager.getController()"
         :unlocksController="manager.getUnlocksController()"
-        :manager="manager"
+        :eventSystem="EventSystem.Instance"
       />
     </div>
   </div>

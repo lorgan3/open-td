@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { GameEvent, StatUpdate } from "../../data/events";
 import Manager from "../../data/controllers/manager";
+import EventSystem from "../../data/eventSystem";
 
 const props = defineProps<{
   expanded: boolean;
@@ -50,12 +51,12 @@ const clazz = computed(() => {
 });
 
 onMounted(() => {
-  Manager.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
+  EventSystem.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
   Manager.Instance.triggerStatUpdate();
 });
 
 onUnmounted(() => {
-  Manager.Instance.removeEventListener(GameEvent.StatUpdate, eventHandler);
+  EventSystem.Instance.removeEventListener(GameEvent.StatUpdate, eventHandler);
 });
 </script>
 

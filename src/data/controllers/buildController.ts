@@ -9,6 +9,7 @@ import { DEFAULT_EXPIRE_TIME } from "../../renderers/api";
 import { GameEvent } from "../events";
 import { EntityType } from "../entity/constants";
 import { FREE_TILES, TileType } from "../terrain/constants";
+import EventSystem from "../eventSystem";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -37,7 +38,7 @@ class BuildController {
     this.freeTiles = new Set(FREE_TILES);
     this.ignoredEntities = new Set();
 
-    Manager.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
+    EventSystem.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
       if (placeable.entityType === EntityType.Excavator) {
         this.freeTiles.add(TileType.Tree);
         this.freeTiles.add(TileType.Rock);

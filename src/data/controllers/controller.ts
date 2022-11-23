@@ -3,6 +3,7 @@ import Manager from "./manager";
 import { Placeable } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
+import EventSystem from "../eventSystem";
 
 export enum Keys {
   Shift = "Shift",
@@ -151,9 +152,9 @@ class Controller {
   public toggleBuildMenu() {
     this.buildMenuOpen = !this.buildMenuOpen;
     if (this.buildMenuOpen) {
-      Manager.Instance.triggerEvent(GameEvent.OpenBuildMenu);
+      EventSystem.Instance.triggerEvent(GameEvent.OpenBuildMenu);
     } else {
-      Manager.Instance.triggerEvent(GameEvent.CloseBuildMenu);
+      EventSystem.Instance.triggerEvent(GameEvent.CloseBuildMenu);
     }
   }
 

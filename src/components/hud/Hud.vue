@@ -6,6 +6,7 @@ import { GameEvent, StatUpdate } from "../../data/events";
 import Manager from "../../data/controllers/manager";
 import { IRenderer } from "../../renderers/api";
 import Stats from "./Stats.vue";
+import EventSystem from "../../data/eventSystem";
 
 const props = defineProps<{
   renderer: IRenderer;
@@ -23,12 +24,12 @@ const eventHandler = (stats: StatUpdate) => {
 };
 
 onMounted(() => {
-  Manager.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
+  EventSystem.Instance.addEventListener(GameEvent.StatUpdate, eventHandler);
   Manager.Instance.triggerStatUpdate();
 });
 
 onUnmounted(() => {
-  Manager.Instance.removeEventListener(GameEvent.StatUpdate, eventHandler);
+  EventSystem.Instance.removeEventListener(GameEvent.StatUpdate, eventHandler);
 });
 
 function start() {
@@ -44,7 +45,7 @@ function toggleCoverage() {
     ? props.renderer.hideCoverage()
     : props.renderer.showCoverage();
 
-  Manager.Instance.triggerEvent(GameEvent.ToggleShowCoverage);
+  EventSystem.Instance.triggerEvent(GameEvent.ToggleShowCoverage);
 
   showCoverage.value = !showCoverage.value;
 }

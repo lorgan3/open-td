@@ -6,14 +6,14 @@ import { Placeable as TPlaceable } from "../../data/placeables";
 
 import { Group, SECTIONS } from "../../data/placeables";
 import Placeable from "./Placeable.vue";
-import Manager from "../../data/controllers/manager";
 import { GameEvent } from "../../data/events";
 import UnlocksController from "../../data/controllers/unlocksController";
+import EventSystem from "../../data/eventSystem";
 
 const props = defineProps<{
   controller: Controller;
   unlocksController: UnlocksController;
-  manager: Manager;
+  eventSystem: EventSystem;
 }>();
 
 const selected = ref(props.controller.getPlacable());
@@ -23,11 +23,11 @@ const instance = getCurrentInstance();
 let removeOpenMenuEventListener: () => void;
 let removeCloseMenuEventListener: () => void;
 onMounted(() => {
-  removeOpenMenuEventListener = props.manager.addEventListener(
+  removeOpenMenuEventListener = props.eventSystem.addEventListener(
     GameEvent.OpenBuildMenu,
     () => (visible.value = true)
   );
-  removeCloseMenuEventListener = props.manager.addEventListener(
+  removeCloseMenuEventListener = props.eventSystem.addEventListener(
     GameEvent.CloseBuildMenu,
     () => (visible.value = false)
   );
@@ -70,7 +70,7 @@ const close = () => {
           {{ selected ? selected.description : "Select a tower below." }}
         </p>
         <div class="section">
-          {{ props.manager.getUnlocksController().getPoints() }} wave points
+          {{ props.unlocksController.getPoints() }} wave points
           <button
             v-if="
               selected &&

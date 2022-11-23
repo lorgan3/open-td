@@ -1,10 +1,10 @@
 import Entity, { Agent } from "../entity/entity";
-import Manager from "../controllers/manager";
 import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import { AgentCategory } from "../entity/constants";
+import EventSystem from "../eventSystem";
 
 class Surface {
   public map!: Tile[];
@@ -135,7 +135,7 @@ class Surface {
       return;
     }
 
-    Manager.Instance.triggerEvent(GameEvent.SurfaceChange, {
+    EventSystem.Instance.triggerEvent(GameEvent.SurfaceChange, {
       affectedTiles: this.changedTiles,
       addedStaticAgents: this.addedAgents,
       removedStaticAgents: this.removedAgents,

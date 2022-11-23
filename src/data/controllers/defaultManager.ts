@@ -17,6 +17,7 @@ import Tile from "../terrain/tile";
 import UnlocksController from "./unlocksController";
 import Manager from "./manager";
 import { AgentCategory, EntityType } from "../entity/constants";
+import EventSystem from "../eventSystem";
 
 class DefaultManager extends Manager {
   constructor(
@@ -46,7 +47,7 @@ class DefaultManager extends Manager {
 
     surface.spawnStatic(this.base);
 
-    this.addEventListener(GameEvent.Unlock, this.onUnlock);
+    EventSystem.Instance.addEventListener(GameEvent.Unlock, this.onUnlock);
 
     console.log(this);
   }
@@ -80,7 +81,7 @@ class DefaultManager extends Manager {
       AgentCategory.Enemy
     ).size;
 
-    this.triggerEvent(GameEvent.StatUpdate, {
+    EventSystem.Instance.triggerEvent(GameEvent.StatUpdate, {
       integrity: this.base.getHp(),
       regeneration: this.base.getRegenerationFactor(),
       level: this.waveController.getLevel(),
@@ -166,7 +167,7 @@ class DefaultManager extends Manager {
       throw new Error("Wave already in progress!");
     }
 
-    this.triggerEvent(GameEvent.StartWave);
+    EventSystem.Instance.triggerEvent(GameEvent.StartWave);
 
     this.powerController.processPower();
     this.moneyController.clearRecents();
@@ -211,7 +212,7 @@ class DefaultManager extends Manager {
     this.visibilityController.updateBaseRange();
 
     this.triggerStatUpdate();
-    this.triggerEvent(GameEvent.EndWave);
+    EventSystem.Instance.triggerEvent(GameEvent.EndWave);
 
     // Spawn group paths might have changed
     Manager.Instance.getSurface().forceRerender();

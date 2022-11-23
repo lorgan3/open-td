@@ -5,7 +5,6 @@ import { Difficulty } from "../difficulty";
 import Base from "../entity/base";
 import { IEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
-import { EventHandler, EventParamsMap, GameEvent } from "../events";
 import MoneyController from "./moneyController";
 import { Placeable } from "../placeables";
 import PowerController from "./powerController";
@@ -13,13 +12,12 @@ import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import UnlocksController from "./unlocksController";
 import VisibilityController from "./visibilityController";
-
 import WaveController from "./waveController";
+import EventSystem from "../eventSystem";
 
 abstract class Manager {
   protected static instance: Manager;
 
-  protected eventHandlers: Map<GameEvent, Set<EventHandler<any>>>;
   protected visibilityController: VisibilityController;
   protected powerController!: PowerController;
   protected moneyController!: MoneyController;
@@ -37,7 +35,8 @@ abstract class Manager {
     protected messageFn: MessageFn
   ) {
     Manager.instance = this;
-    this.eventHandlers = new Map();
+
+    new EventSystem();
 
     this.visibilityController = new VisibilityController(surface);
     this.base = new Base(basePoint);
@@ -119,41 +118,6 @@ abstract class Manager {
   abstract getIsBaseDestroyed(): boolean;
 
   abstract getDamageMultiplier(): number;
-
-  addEventListener<E extends keyof EventParamsMap>(
-    event: E,
-    fn: EventHandler<E>
-  ) {
-    if (this.eventHandlers.has(event)) {
-      this.eventHandlers.get(event)!.add(fn);
-    } else {
-      this.eventHandlers.set(event, new Set([fn]));
-    }
-
-    return () => this.removeEventListener(event, fn);
-  }
-
-  addEventListeners(events: GameEvent[], fn: EventHandler<any>) {
-    const removeEventListeners = events.map((event) =>
-      this.addEventListener(event, fn)
-    );
-
-    return () => removeEventListeners.forEach((fn) => fn());
-  }
-
-  removeEventListener<E extends keyof EventParamsMap>(
-    event: E,
-    fn: EventHandler<E>
-  ) {
-    this.eventHandlers.get(event)?.delete(fn);
-  }
-
-  triggerEvent<E extends keyof EventParamsMap>(
-    event: E,
-    ...params: EventParamsMap[E]
-  ) {
-    this.eventHandlers.get(event)?.forEach((fn) => fn(...params));
-  }
 
   static get Instance() {
     return this.instance;

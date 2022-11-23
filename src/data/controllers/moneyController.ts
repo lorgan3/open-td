@@ -5,6 +5,7 @@ import { GameEvent } from "../events";
 import Manager from "./manager";
 import { CONVERT_MONEY_AMOUNT } from "../placeables";
 import { EntityType } from "../entity/constants";
+import EventSystem from "../eventSystem";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
@@ -30,7 +31,7 @@ class MoneyController {
   private recentlyBought = new Set<Agent>();
 
   constructor(private money = 0, private multiplier = () => 1) {
-    Manager.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
+    EventSystem.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
       if (placeable.entityType === EntityType.Convert) {
         this.addMoney(CONVERT_MONEY_AMOUNT);
         Manager.Instance.triggerStatUpdate();

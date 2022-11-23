@@ -1,7 +1,7 @@
 import { GameEvent } from "../events";
-import Manager from "./manager";
 import { Group, Placeable, SECTIONS } from "../placeables";
 import { EntityType } from "../entity/constants";
+import EventSystem from "../eventSystem";
 
 class UnlocksController {
   private unlockedTowers: Set<EntityType>;
@@ -67,7 +67,7 @@ class UnlocksController {
     this.points -= placeable.cost ?? 1;
     this.makeAvailable(placeable);
 
-    Manager.Instance.triggerEvent(GameEvent.Unlock, { placeable });
+    EventSystem.Instance.triggerEvent(GameEvent.Unlock, { placeable });
   }
 
   private makeAvailable(placeable: Placeable) {

@@ -1,6 +1,7 @@
 import { EntityType } from "../entity/constants";
 import { Agent } from "../entity/entity";
 import { GameEvent } from "../events";
+import EventSystem from "../eventSystem";
 import Manager from "./manager";
 
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
@@ -51,7 +52,7 @@ class PowerController {
     if (this.power < 0) {
       this.power = 0;
       this.blackout = true;
-      Manager.Instance.triggerEvent(GameEvent.BlackOut);
+      EventSystem.Instance.triggerEvent(GameEvent.BlackOut);
       Manager.Instance.triggerStatUpdate();
 
       return false;
@@ -66,7 +67,7 @@ class PowerController {
     this.blackout = false;
 
     if (this.power < 0) {
-      Manager.Instance.triggerEvent(GameEvent.BlackOut);
+      EventSystem.Instance.triggerEvent(GameEvent.BlackOut);
     }
 
     if (!Manager.Instance.getIsStarted()) {
