@@ -11,6 +11,7 @@ import { EntityType } from "../entity/constants";
 import { FREE_TILES, TileType } from "../terrain/constants";
 import EventSystem from "../eventSystem";
 import MoneyController from "./moneyController";
+import UnlocksController from "./unlocksController";
 
 export const BASE_PARTS = new Set([
   EntityType.Armory,
@@ -73,7 +74,7 @@ class BuildController {
 
     if (
       !placeableEntityTypes.has(placeable.entityType) ||
-      !Manager.Instance.getUnlocksController().isUnlocked(placeable)
+      !UnlocksController.Instance.isUnlocked(placeable)
     ) {
       return;
     }

@@ -4,6 +4,8 @@ import { EntityType } from "../entity/constants";
 import EventSystem from "../eventSystem";
 
 class UnlocksController {
+  private static instance: UnlocksController;
+
   private unlockedTowers: Set<EntityType>;
   private availableUnlocks: Set<EntityType>;
   private unlockLinkedMap: Map<EntityType, Placeable>;
@@ -11,6 +13,8 @@ class UnlocksController {
   private points = 0;
 
   constructor() {
+    UnlocksController.instance = this;
+
     this.unlockedTowers = new Set();
     this.availableUnlocks = new Set();
     this.unlockLinkedMap = new Map();
@@ -85,6 +89,10 @@ class UnlocksController {
         this.makeAvailable(nextUnlock);
       }
     }
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 

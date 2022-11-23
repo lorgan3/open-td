@@ -63,10 +63,6 @@ abstract class Manager {
     return this.controller;
   }
 
-  getUnlocksController() {
-    return this.unlocksController;
-  }
-
   getWaveController() {
     return this.waveController;
   }

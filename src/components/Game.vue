@@ -10,6 +10,7 @@ import { Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
 import DefaultManager from "../data/controllers/defaultManager";
 import EventSystem from "../data/eventSystem";
+import UnlocksController from "../data/controllers/unlocksController";
 
 const props = defineProps<{
   seed: string;
@@ -98,7 +99,7 @@ onUnmounted(() => (mounted = false));
       <div class="render-target" ref="canvas"></div>
       <Marketplace
         :controller="manager.getController()"
-        :unlocksController="manager.getUnlocksController()"
+        :unlocksController="UnlocksController.Instance"
         :eventSystem="EventSystem.Instance"
       />
     </div>
