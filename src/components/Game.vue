@@ -94,11 +94,11 @@ onUnmounted(() => (mounted = false));
       </defs>
     </svg>
 
-    <Hud :renderer="renderer" :controller="manager.getController()" />
+    <Hud :renderer="renderer" :controller="Controller.Instance" />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
       <Marketplace
-        :controller="manager.getController()"
+        :controller="Controller.Instance"
         :unlocksController="UnlocksController.Instance"
         :eventSystem="EventSystem.Instance"
       />

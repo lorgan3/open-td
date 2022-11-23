@@ -59,10 +59,6 @@ abstract class Manager {
     return this.surface;
   }
 
-  getController() {
-    return this.controller;
-  }
-
   getBase() {
     return this.base;
   }

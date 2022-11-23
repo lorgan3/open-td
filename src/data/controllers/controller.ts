@@ -32,6 +32,8 @@ function isKey(key: string): key is Keys {
 }
 
 class Controller {
+  private static instance: Controller;
+
   private mouseDownX = 0;
   private mouseDownY = 0;
   private mouseX = 0;
@@ -43,7 +45,9 @@ class Controller {
   private selectedPlacable: Placeable | null = null;
   private buildMenuOpen = false;
 
-  constructor(private surface: Surface) {}
+  constructor(private surface: Surface) {
+    Controller.instance = this;
+  }
 
   public getPlacable() {
     return this.selectedPlacable;
@@ -186,6 +190,10 @@ class Controller {
       Math.floor(this.mouseX / scale) * scale,
       Math.floor(this.mouseY / scale) * scale,
     ];
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 

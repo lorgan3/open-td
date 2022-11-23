@@ -9,6 +9,7 @@ import { SCALE } from "../constants";
 import { BASE_ENTITIES } from "../../../data/entity/constants";
 import { FLOOR, UI } from "../layer";
 import WaveController from "../../../data/controllers/waveController";
+import Controller from "../../../data/controllers/controller";
 
 class Marker extends Sprite {
   constructor(private offset: number, private path: Path, texture: Texture) {
@@ -172,7 +173,7 @@ class CoverageRenderer {
       );
     }
 
-    const [x, y] = Manager.Instance.getController().getMouse(2);
+    const [x, y] = Controller.Instance.getMouse(2);
     const newHoveredTile = this.surface.getTile(x, y);
 
     if (newHoveredTile === this.hoveredTile) {

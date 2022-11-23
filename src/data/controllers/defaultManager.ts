@@ -116,10 +116,6 @@ class DefaultManager extends Manager {
     return this.surface;
   }
 
-  getController() {
-    return this.controller;
-  }
-
   getBase() {
     return this.base;
   }
