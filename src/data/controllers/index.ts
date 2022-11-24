@@ -17,10 +17,11 @@ export const init = (
   surface: Surface,
   messageFn: MessageFn
 ) => {
+  new VisibilityController(surface);
+
   const base = new Base(basePoint);
   const manager = new DefaultManager(difficulty, base, surface, messageFn);
 
-  new VisibilityController(surface);
   new WaveController(base, surface);
   new PowerController();
   new MoneyController(150, () =>

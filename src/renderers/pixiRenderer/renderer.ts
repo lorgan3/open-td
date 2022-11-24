@@ -295,10 +295,12 @@ class Renderer implements IRenderer {
 
   showCoverage(): void {
     this.coverageRenderer!.show();
+    this.alertRenderer!.enable();
   }
 
   hideCoverage(): void {
     this.coverageRenderer!.hide();
+    this.alertRenderer!.disable();
   }
 
   unmount(): void {

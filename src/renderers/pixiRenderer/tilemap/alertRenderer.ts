@@ -1,4 +1,6 @@
 import { Container, Graphics, LINE_CAP, Loader, Sprite } from "pixi.js";
+import { GameEvent } from "../../../data/events";
+import EventSystem from "../../../data/eventSystem";
 import SpawnAlert from "../../../data/util/spawnAlert";
 import { ATLAS, AtlasTile } from "../atlas";
 import { SCALE } from "../constants";
@@ -10,17 +12,36 @@ class AlertRenderer {
   private container: Container;
   private alertSymbols: Sprite[] = [];
   private time = 0;
+  private permanent = false;
 
   constructor(private loader: Loader) {
     this.container = new Container();
     UI.addChild(this.container);
+
+    EventSystem.Instance.addEventListener(GameEvent.EndWave, () =>
+      this.reset()
+    );
+  }
+
+  enable() {
+    this.permanent = true;
+    this.container.alpha = 1;
+    this.time = AlertRenderer.DISPLAY_DURATION;
+  }
+
+  disable() {
+    this.permanent = false;
+    this.time = AlertRenderer.DISPLAY_DURATION;
+  }
+
+  private reset() {
+    this.time = 0;
+    this.container.alpha = 1;
   }
 
   public render(center: [number, number], alerts: SpawnAlert[]) {
-    this.time = 0;
     this.alertSymbols = [];
     this.container.removeChildren();
-    this.container.alpha = 1;
 
     const [x, y] = center;
     const buffer = Math.PI / 128;
@@ -68,7 +89,10 @@ class AlertRenderer {
       return;
     }
 
-    if (this.time > AlertRenderer.DISPLAY_DURATION || isStarted) {
+    if (
+      !this.permanent &&
+      (this.time > AlertRenderer.DISPLAY_DURATION || isStarted)
+    ) {
       this.container.alpha -= dt / 500;
     }
 
