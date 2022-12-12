@@ -12,9 +12,9 @@
     "@pixi/tilemap": "^3.2.2",
     "alea": "^1.0.1",
     "heap": "^0.2.7",
-    "pixi-viewport": "^4.35.1",
+    "pixi-viewport": "^4.38.0",
     "pixi.js": "^6.0.4",
-    "simplex-noise": "^4.0.0",
+    "simplex-noise": "^4.0.1",
     "vue": "^3.2.45"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
-    "sass": "^1.50.0",
+    "sass": "^1.56.2",
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.4",
     "vite": "^4.0.0",

@@ -3065,10 +3065,10 @@ pirates@^4.0.4:
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.5.tgz#feec352ea5c3268fb23a37c702ab1699f35a5f3b"
   integrity sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==
 
-pixi-viewport@^4.35.1:
-  version "4.35.1"
-  resolved "https://registry.yarnpkg.com/pixi-viewport/-/pixi-viewport-4.35.1.tgz#e803216f010c4bdb2db11dce4c66ee922d2d523a"
-  integrity sha512-IQ7dBPe93T7b3rxIC09RAfm2cze+BQCp/CdqGeoKhjx4nwFxJQ6JcTa2Hg+uJJEr7EvJBqvbywhfyL6bcPPp0g==
+pixi-viewport@^4.38.0:
+  version "4.38.0"
+  resolved "https://registry.yarnpkg.com/pixi-viewport/-/pixi-viewport-4.38.0.tgz#7deeec65a75046315638999d0379ff54ec26bdc3"
+  integrity sha512-TGj6Ymk/BU0wZcW4c1eP4e96aETJmB7jhjBflMjQU06/ZHPy7qHw8JyDqZ+C84SEg0ewCHjDNZ2vgR3Kjk74BQ==
 
 pixi.js@^6.0.4:
   version "6.5.5"
@@ -3272,10 +3272,10 @@ safe-buffer@~5.1.1:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-sass@^1.50.0:
-  version "1.50.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.50.0.tgz#3e407e2ebc53b12f1e35ce45efb226ea6063c7c8"
-  integrity sha512-cLsD6MEZ5URXHStxApajEh7gW189kkjn4Rc8DQweMyF+o5HF5nfEz8QYLMlPsTOD88DknatTmBWkOcw5/LnJLQ==
+sass@^1.56.2:
+  version "1.56.2"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.56.2.tgz#9433b345ab3872996c82a53a58c014fd244fd095"
+  integrity sha512-ciEJhnyCRwzlBCB+h5cCPM6ie/6f8HrhZMQOf5vlU60Y1bI1rx5Zb0vlDZvaycHsg/MqFfF1Eq2eokAa32iw8w==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -3317,10 +3317,10 @@ signal-exit@^3.0.3, signal-exit@^3.0.7:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.7.tgz#a9a1767f8af84155114eaabd73f99273c8f59ad9"
   integrity sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==
 
-simplex-noise@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/simplex-noise/-/simplex-noise-4.0.0.tgz#d9ea9773be3d74cd042184e724f6fbc22e68dd61"
-  integrity sha512-ciRAxJnRdQhFhZ7+yZKxk8bQJoIq2J2UPO2pbzy1vcrWFq70P4hNCCmcCTkBKDCIeXZVd/yKjL8Fmh8Aeu5+6g==
+simplex-noise@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/simplex-noise/-/simplex-noise-4.0.1.tgz#1573a4eaa46ce488bdf5f1e7ab3a1f798126781f"
+  integrity sha512-zl/+bdSqW7HJOQ0oDbxrNYaF4F5ik0i7M6YOYmEoIJNtg16NpvWaTTM1Y7oV/7T0jFljawLgYPS81Uu2rsfo1A==
 
 sisteransi@^1.0.5:
   version "1.0.5"
