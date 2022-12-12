@@ -12,6 +12,7 @@ export enum GameEvent {
   StartWave = 6,
   EndWave = 7,
   Unlock = 8,
+  Discover = 9,
 }
 
 export interface EventParamsMap {
@@ -24,6 +25,7 @@ export interface EventParamsMap {
   [GameEvent.StartWave]: [];
   [GameEvent.EndWave]: [];
   [GameEvent.Unlock]: [Unlock];
+  [GameEvent.Discover]: [Discover];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (
@@ -51,4 +53,9 @@ export interface SurfaceChange {
 
 export interface Unlock {
   placeable: Placeable;
+}
+
+export interface Discover {
+  x: number;
+  y: number;
 }

@@ -1,5 +1,6 @@
 import Base from "../entity/base";
 import { AgentCategory } from "../entity/constants";
+import WavePoint from "../entity/wavePoint";
 import { GameEvent, SurfaceChange } from "../events";
 import EventSystem from "../eventSystem";
 import {
@@ -53,9 +54,16 @@ class WaveController {
     for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
       const spawnGroup = this.spawnGroups[i];
 
-      if (spawnGroup.isExposed()) {
+      if (spawnGroup.isExposed() > 0) {
         // Clean up exposed spawn locations
         this.spawnGroups.splice(i, 1);
+        VisibilityController.Instance.uncoverSpawnGroup(spawnGroup);
+
+        const wavePoint = new WavePoint(
+          this.surface.getTile(...spawnGroup.getCenter())!
+        );
+        this.surface.spawn(wavePoint);
+        wavePoint.discover();
       } else {
         // ...and make the others stronger
         spawnGroup.grow();
@@ -168,7 +176,11 @@ class WaveController {
         this.direction,
         (tile) => {
           if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
-            backOff = 4 + Math.floor(Math.random() * 4);
+            backOff =
+              4 +
+              (Manager.Instance.getLevel() === 0
+                ? 0
+                : Math.floor(Math.random() * 4));
             return true;
           }
 

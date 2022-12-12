@@ -5,6 +5,9 @@ import Tile from "../terrain/tile";
 import { DiscoveryStatus } from "../terrain/constants";
 import { EntityType } from "../entity/constants";
 import Manager from "./manager";
+import EventSystem from "../eventSystem";
+import { GameEvent } from "../events";
+import SpawnGroup from "../wave/SpawnGroup";
 
 const isBase = (agent: Agent): agent is Base => {
   return agent.getType() === EntityType.Base;
@@ -13,6 +16,7 @@ const isBase = (agent: Agent): agent is Base => {
 class VisibilityController {
   private static instance: VisibilityController;
 
+  private discoveredSpawnGroups = new Set<SpawnGroup>();
   private agents = new Set<Agent>();
   private edgeMap = new Map<number, [number, number]>();
   private pendingAgents = new Set<Agent>();
@@ -95,6 +99,17 @@ class VisibilityController {
       this.edgeMap.set(agent.entity.getId(), coords);
       this.updateVisibility(...coords, range, status);
     });
+
+    const removedSpawnGroups: SpawnGroup[] = [];
+    this.discoveredSpawnGroups.forEach((spawnGroup) => {
+      if (spawnGroup.isExposed() === 0) {
+        removedSpawnGroups.push(spawnGroup);
+        return;
+      }
+
+      const center = spawnGroup.getCenter();
+      this.updateVisibility(...center, 5, DiscoveryStatus.Discovered);
+    });
   }
 
   updateBaseRange() {
@@ -117,6 +132,18 @@ class VisibilityController {
 
   hasPendingAgents() {
     return this.pendingAgents.size > 0;
+  }
+
+  uncoverSpawnGroup(spawnGroup: SpawnGroup) {
+    this.discoveredSpawnGroups.add(spawnGroup);
+
+    const [x, y] = spawnGroup.getCenter();
+    this.updateVisibility(x, y, 5, DiscoveryStatus.Discovered);
+
+    EventSystem.Instance.triggerEvent(GameEvent.Discover, {
+      x,
+      y,
+    });
   }
 
   private getVisibilityRange(agent: Agent) {

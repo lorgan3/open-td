@@ -35,14 +35,15 @@ export enum EntityType {
   Flier = 27,
   Tank = 28,
   Rocket = 29,
+  WavePoint = 30,
 
   // These are not entities.
   // @TODO use a different reference so this is not necessary?
-  Excavator = 30,
-  Convert = 31,
-  Terraform = 32,
-  EmergencyRecharge = 33,
-  EmergencyRepair = 34,
+  Excavator = 31,
+  Convert = 32,
+  Terraform = 33,
+  EmergencyRecharge = 34,
+  EmergencyRepair = 35,
 }
 
 export const BASE_ENTITIES = new Set([

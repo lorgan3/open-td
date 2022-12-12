@@ -6,7 +6,6 @@ import Pathfinder from "../terrain/path/pathfinder";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import { EntityType } from "../entity/constants";
-import { DiscoveryStatus } from "../terrain/constants";
 
 class SpawnGroup {
   private index = 0;
@@ -102,7 +101,7 @@ class SpawnGroup {
     }
   }
 
-  getCenter() {
+  getCenter(): [number, number] {
     return [this.centerX, this.centerY];
   }
 
@@ -155,16 +154,16 @@ class SpawnGroup {
 
   // Returns a number [0, 1] based on how many of its tiles are already discovered
   isExposed() {
-    const spawnPoints = this.getSpawnPoints();
-    const exposedTiles = spawnPoints.reduce(
-      (sum, path) =>
-        path.getTile(0).getDiscoveryStatus() !== DiscoveryStatus.Undiscovered
-          ? sum + 1
-          : sum,
-      0
-    );
+    let tiles = 0;
+    let exposedTiles = 0;
+    this.surface.forCircle(this.centerX, this.centerY, 5, (tile) => {
+      tiles++;
+      if (tile.isDiscovered()) {
+        exposedTiles++;
+      }
+    });
 
-    return exposedTiles / spawnPoints.length;
+    return exposedTiles / tiles;
   }
 
   rePath() {

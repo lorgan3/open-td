@@ -735,6 +735,8 @@ class Renderer implements IRenderer {
         return "🐝";
       case EntityType.Tank:
         return "🦀";
+      case EntityType.WavePoint:
+        return "🪙";
       default:
         return "";
     }
