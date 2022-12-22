@@ -45,7 +45,7 @@ const createTutorialMessage =
   (message: string, ...events: GameEvent[]): TutorialMessage =>
   (override) =>
     continueAfterEvents(
-      Manager.Instance.showMessage(message, { override }),
+      Manager.Instance.showMessage(message, { override, expires: 0 }),
       events
     );
 
@@ -58,7 +58,7 @@ export const BUILD_TOWERS: TutorialMessage = (override) =>
   continueAfterEvent(
     Manager.Instance.showMessage(
       "Build towers and walls near your base to protect it from enemies lurking in undiscovered areas",
-      { override }
+      { override, expires: 0 }
     ),
     GameEvent.SurfaceChange,
     ({ affectedTiles }) => !!affectedTiles.size
@@ -77,7 +77,7 @@ export const CHECK_COVERAGE: TutorialMessage = (override) =>
         `Click the {key: 🎯} button to view tower sight lines${
           difficulty === Difficulty.Easy ? " and enemy paths" : " "
         } to check how effective your layout is`,
-        { override }
+        { override, expires: 0 }
       ),
       [GameEvent.ToggleShowCoverage, GameEvent.StartWave]
     ).then(resolve);
@@ -93,7 +93,7 @@ export const START_WAVE: TutorialMessage = (override) =>
     continueAfterEvent(
       Manager.Instance.showMessage(
         "Start the wave when you are ready. Good luck!",
-        { override }
+        { override, expires: 0 }
       ),
       GameEvent.EndWave
     ).then(resolve);

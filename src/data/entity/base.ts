@@ -95,6 +95,7 @@ class Base implements StaticAgent {
     if (this.hp <= 0) {
       Manager.Instance.showMessage("You lose!", {
         closable: false,
+        expires: 0,
       });
 
       // The entire map should now be visible

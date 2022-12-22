@@ -138,9 +138,7 @@ class BuildController {
           this.surface
         )
       ) {
-        Manager.Instance.showMessage("Not all tiles connect to the base", {
-          expires: DEFAULT_EXPIRE_TIME,
-        });
+        Manager.Instance.showMessage("Not all tiles connect to the base");
 
         return [];
       }
@@ -247,9 +245,7 @@ class BuildController {
       ) {
         validTiles = otherTiles;
 
-        Manager.Instance.showMessage("Not all base parts can be sold", {
-          expires: DEFAULT_EXPIRE_TIME,
-        });
+        Manager.Instance.showMessage("Not all base parts can be sold");
       }
     }
 
@@ -331,9 +327,7 @@ class BuildController {
         this.surface
       )
     ) {
-      Manager.Instance.showMessage("Not all tiles connect to the base", {
-        expires: DEFAULT_EXPIRE_TIME,
-      });
+      Manager.Instance.showMessage("Not all tiles connect to the base");
       return [];
     }
 
@@ -385,9 +379,7 @@ class BuildController {
       ) {
         validTiles = otherTiles;
 
-        Manager.Instance.showMessage("Not all base parts can be sold", {
-          expires: DEFAULT_EXPIRE_TIME,
-        });
+        Manager.Instance.showMessage("Not all base parts can be sold");
       }
     }
 

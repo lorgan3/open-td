@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getCurrentInstance, onMounted, ref } from "vue";
-import { MessageFn } from "../renderers/api";
+import { DEFAULT_EXPIRE_TIME, MessageFn } from "../renderers/api";
 import TextWithControls from "./controls/TextWithControls.vue";
 
 interface Message {
@@ -55,10 +55,11 @@ const queueMessage: MessageFn = (content, config) => {
   msg.open = true;
   msg.content = content;
 
-  if (config?.expires) {
+  const expires = config?.expires ?? DEFAULT_EXPIRE_TIME;
+  if (expires) {
     const id = window.setTimeout(() => {
       close(msg);
-    }, config.expires);
+    }, expires);
 
     timers.value.set(msg.id, id);
   }
