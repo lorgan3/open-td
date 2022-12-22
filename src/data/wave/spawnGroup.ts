@@ -6,6 +6,7 @@ import Pathfinder from "../terrain/path/pathfinder";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import { EntityType } from "../entity/constants";
+import { DiscoveryStatus } from "../terrain/constants";
 
 class SpawnGroup {
   private index = 0;
@@ -158,7 +159,7 @@ class SpawnGroup {
     let exposedTiles = 0;
     this.surface.forCircle(this.centerX, this.centerY, 5, (tile) => {
       tiles++;
-      if (tile.isDiscovered()) {
+      if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
         exposedTiles++;
       }
     });
