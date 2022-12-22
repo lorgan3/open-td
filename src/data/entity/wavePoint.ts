@@ -15,8 +15,13 @@ class WavePoint implements Agent {
   private travelTime = 0;
   private time = 0;
 
+  sourceX = 0;
+  sourceY = 0;
+
   constructor(private tile: Tile) {
-    this.entity = new Entity(tile.getX(), tile.getY(), this);
+    this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
+    this.sourceX = this.entity.getX();
+    this.sourceY = this.entity.getY();
   }
 
   tick(dt: number) {

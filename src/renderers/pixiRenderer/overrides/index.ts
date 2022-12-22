@@ -12,6 +12,7 @@ import { Tank } from "./tank";
 import { Tower } from "./tower";
 import { Rocket } from "./rocket";
 import { Constructor } from "./types";
+import { WavePoint } from "./wavePoint";
 
 export const init = (loader: Loader) => {
   loader.add("runner", `${import.meta.env.BASE_URL}animations/runner.json`);
@@ -57,4 +58,5 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Wall]: null,
   [EntityType.ElectricFence]: null,
   [EntityType.Blueprint]: Blueprint,
+  [EntityType.WavePoint]: WavePoint,
 };

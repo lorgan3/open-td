@@ -14,6 +14,7 @@ export enum AtlasTile {
   Dirt = "atlas1.png",
   Stone = "atlas12.png",
   Spore = "atlas13.png",
+  SporeParticle = "atlas30.png",
   Up = "atlas14.png",
   Left = "atlas15.png",
   Down = "atlas16.png",
@@ -32,6 +33,7 @@ export enum AtlasTile {
   Unknown = "atlas29.png",
   Bridge = "atlas5.png",
   None = "atlas0.png",
+  Coin = "atlas31.png",
 }
 
 export const TILE_TO_ATLAS_MAP: Partial<Record<TileType, AtlasTile>> = {
