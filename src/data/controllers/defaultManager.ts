@@ -170,6 +170,11 @@ class DefaultManager extends Manager {
     this.triggerStatUpdate();
     EventSystem.Instance.triggerEvent(GameEvent.EndWave);
 
+    if (WaveController.Instance.shouldAddSpawnGroup()) {
+      EventSystem.Instance.triggerEvent(GameEvent.Spawn);
+      this.showMessage("Another spawn point has appeared!");
+    }
+
     // Spawn group paths might have changed
     Manager.Instance.getSurface().forceRerender();
   }

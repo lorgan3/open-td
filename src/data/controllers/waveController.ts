@@ -95,9 +95,9 @@ class WaveController {
       this.surface.setTiles(tilesToUpdate);
 
       this.spawnGroups.push(spawnGroup);
-      this.nextSpawnGroup = undefined;
     }
 
+    this.nextSpawnGroup = undefined;
     this.wave = Wave.fromSpawnGroups(level, this.spawnGroups);
   }
 
@@ -150,17 +150,21 @@ class WaveController {
     return remainingEnemies > 0;
   }
 
-  private getNextSpawnGroup() {
+  shouldAddSpawnGroup() {
     const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
     const time = VisibilityController.Instance.hasPendingAgents()
       ? 0
       : this.timeSinceLastExpansion;
 
     const shouldHaveNextSpawnGroup =
-      this.spawnGroups.filter((spawnGroup) => !spawnGroup.isExposed())
+      this.spawnGroups.filter((spawnGroup) => spawnGroup.isExposed() === 0)
         .length === 0 || time >= timeToExpansion;
 
-    if (!shouldHaveNextSpawnGroup) {
+    return shouldHaveNextSpawnGroup;
+  }
+
+  private getNextSpawnGroup() {
+    if (!this.shouldAddSpawnGroup()) {
       return;
     }
 

@@ -13,6 +13,7 @@ export enum GameEvent {
   EndWave = 7,
   Unlock = 8,
   Discover = 9,
+  Spawn = 10,
 }
 
 export interface EventParamsMap {
@@ -26,6 +27,7 @@ export interface EventParamsMap {
   [GameEvent.EndWave]: [];
   [GameEvent.Unlock]: [Unlock];
   [GameEvent.Discover]: [Discover];
+  [GameEvent.Spawn]: [];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (
