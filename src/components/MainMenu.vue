@@ -173,6 +173,7 @@ const submit = (event: Event) => {
     font-size: 30px;
     text-align: center;
     font-family: JupiterCrash;
+    flex-shrink: 0;
   }
 
   select {
@@ -180,6 +181,9 @@ const submit = (event: Event) => {
     font-size: 30px;
     text-align: center;
     font-family: JupiterCrash;
+    -webkit-appearance: menulist-button;
+    line-height: 42px;
+    flex-shrink: 0;
   }
 
   .difficulty-description {
@@ -217,7 +221,20 @@ const submit = (event: Event) => {
     &-settings {
       &-inner {
         width: 300px;
-        padding: 0 20px;
+        padding: 20px;
+        overflow: auto;
+
+        scrollbar-width: thin;
+        scrollbar-color: black transparent;
+
+        &::-webkit-scrollbar {
+          width: 5px;
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: black;
+        }
 
         display: flex;
         flex-direction: column;
