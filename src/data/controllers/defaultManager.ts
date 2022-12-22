@@ -38,6 +38,7 @@ class DefaultManager extends Manager {
     surface.spawnStatic(this.base);
 
     EventSystem.Instance.addEventListener(GameEvent.Unlock, this.onUnlock);
+    EventSystem.Instance.addEventListener(GameEvent.Discover, this.onDiscover);
 
     console.log(this);
   }
@@ -164,7 +165,6 @@ class DefaultManager extends Manager {
   private end() {
     BuildController.Instance.commit();
     this.base.regenerate();
-    UnlocksController.Instance.addPoint();
     VisibilityController.Instance.updateBaseRange();
 
     this.triggerStatUpdate();
@@ -198,6 +198,10 @@ class DefaultManager extends Manager {
     if (placeable.entityType === EntityType.EmergencyRepair) {
       this.base.regenerate(inProgress ? 1 : WAVE_OVER_MULTIPLIER);
     }
+  };
+
+  private onDiscover = () => {
+    UnlocksController.Instance.addPoint();
   };
 }
 
