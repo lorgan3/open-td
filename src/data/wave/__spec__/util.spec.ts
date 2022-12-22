@@ -1,4 +1,4 @@
-import { normalDistributionRandom, splitNumber } from "../util";
+import { splitNumber } from "../util";
 
 describe("Wave utils", () => {
   it("returns the original number if there is only 1 part", () => {
