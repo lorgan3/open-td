@@ -179,16 +179,23 @@ class WaveController {
           if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {
             backOff =
               4 +
-              (Manager.Instance.getLevel() === 0
-                ? 0
-                : Math.floor(Math.random() * 4));
+              Math.min(
+                Manager.Instance.getLevel(),
+                Math.floor(Math.random() * 4)
+              );
+
             return true;
           }
 
           backOff--;
 
-          if (backOff > 0 || !FREE_TILES.has(tile.getType())) {
+          if (backOff > 0) {
             return true;
+          }
+
+          if (!FREE_TILES.has(tile.getType())) {
+            // For the first 10 attempts in the first wave, try putting the spawn point as close as possible.
+            return !(Manager.Instance.getLevel() === 0 && i < 10);
           }
 
           this.nextSpawnGroup = SpawnGroup.fromTiles(
