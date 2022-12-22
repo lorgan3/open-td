@@ -16,7 +16,7 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Flamethrower]: 21,
   [EntityType.Mortar]: 50,
   [EntityType.Railgun]: 70,
-  [EntityType.Radar]: 50,
+  [EntityType.Radar]: 20,
   [EntityType.PowerPlant]: 25,
   [EntityType.Armory]: 50,
   [EntityType.Market]: 30,

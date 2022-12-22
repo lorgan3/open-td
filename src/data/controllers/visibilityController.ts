@@ -170,7 +170,7 @@ class VisibilityController {
           (Manager.Instance.getLevel() - (this.pendingRadius > 0 ? 1 : 0)) * 2
         );
       case EntityType.Radar:
-        return 35;
+        return 17;
       default:
         throw new Error("Entity has no visibility defined");
     }
