@@ -120,17 +120,18 @@ class WaveController {
   }
 
   getSpawnGroups() {
-    let nextSpawnGroup: SpawnGroup | undefined;
+    const activeSpawnGroups = this.spawnGroups.filter(
+      (spawnGroup) => spawnGroup.isExposed() === 0
+    );
 
     if (!this.isWaveInProgress()) {
-      nextSpawnGroup = this.getNextSpawnGroup();
+      const nextSpawnGroup = this.getNextSpawnGroup();
+      if (nextSpawnGroup) {
+        activeSpawnGroups.push(nextSpawnGroup);
+      }
     }
 
-    if (nextSpawnGroup) {
-      return [...this.spawnGroups, nextSpawnGroup];
-    }
-
-    return [...this.spawnGroups];
+    return activeSpawnGroups;
   }
 
   getSpawnAlertRanges() {

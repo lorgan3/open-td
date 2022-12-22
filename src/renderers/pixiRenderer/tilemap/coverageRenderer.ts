@@ -118,9 +118,9 @@ class CoverageRenderer {
     this.pathContainer.removeChildren();
     const paths: Path[] = [];
 
-    WaveController.Instance.getSpawnGroups()
-      .filter((spawnGroup) => !spawnGroup.isExposed())
-      .forEach((spawnGroup) => paths.push(...spawnGroup.getSpawnPoints()));
+    WaveController.Instance.getSpawnGroups().forEach((spawnGroup) =>
+      paths.push(...spawnGroup.getSpawnPoints())
+    );
 
     paths.forEach((path, index) => {
       const slicedPath = this.slicePath(path);
