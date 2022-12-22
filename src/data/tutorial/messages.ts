@@ -99,7 +99,12 @@ export const START_WAVE: TutorialMessage = (override) =>
     ).then(resolve);
   });
 
+export const EXPAND_RADIUS = createTutorialMessage(
+  "After every wave your visible radius will increase. When enemy spawn points are discovered they are disabled and you receive a point to unlock new technologies.",
+  GameEvent.Discover
+);
+
 export const BUY_UPGRADE = createTutorialMessage(
-  "After beating a wave you can unlock a new building in the build menu strengthen your defense, take a look!",
+  "You gained a wave point by discovering a spawn point! You can spend it in the build menu. You can build radars to discover spawn points more quickly.",
   GameEvent.OpenBuildMenu
 );

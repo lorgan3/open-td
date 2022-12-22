@@ -6,6 +6,7 @@ const TUTORIALS: TutorialMessage[] = [
   messages.BUILD_TOWERS,
   messages.CHECK_COVERAGE,
   messages.START_WAVE,
+  messages.EXPAND_RADIUS,
   messages.BUY_UPGRADE,
 ];
 
