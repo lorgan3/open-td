@@ -8,7 +8,12 @@ import { get, set } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
 
 const props = defineProps<{
-  onPlay: (seed: string, difficulty: Difficulty, renderer: Constructor) => void;
+  onPlay: (
+    seed: string,
+    difficulty: Difficulty,
+    renderer: Constructor,
+    showTutorial: boolean
+  ) => void;
 }>();
 
 enum SubMenu {
@@ -40,6 +45,7 @@ const renderer = ref(
     renderOptions.find(({ value }) => value === storedData.renderer)) ||
     renderOptions[0]
 );
+const showTutorial = ref(storedData?.showTutorial ?? true);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -59,9 +65,15 @@ const submit = (event: Event) => {
   set("settings", {
     renderer: renderer.value.value,
     difficulty: difficulty.value,
+    showTutorial: showTutorial.value,
   });
 
-  props.onPlay(seed.value, difficulty.value, renderer.value.value);
+  props.onPlay(
+    seed.value,
+    difficulty.value,
+    renderer.value.value,
+    showTutorial.value
+  );
 };
 </script>
 
@@ -127,6 +139,10 @@ const submit = (event: Event) => {
               </option>
             </select>
           </label>
+          <label class="horizontal">
+            <input type="checkbox" v-model="showTutorial" />
+            Show tutorial
+          </label>
         </div>
       </div>
     </div>
@@ -163,6 +179,10 @@ const submit = (event: Event) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    &.horizontal {
+      flex-direction: row;
+    }
   }
 
   button,
@@ -174,6 +194,12 @@ const submit = (event: Event) => {
     text-align: center;
     font-family: JupiterCrash;
     flex-shrink: 0;
+  }
+
+  input[type="checkbox"] {
+    width: 30px;
+    margin: 0;
+    height: auto;
   }
 
   select {

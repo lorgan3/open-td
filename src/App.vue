@@ -14,16 +14,19 @@ const state = ref(State.Menu);
 const gameSeed = ref<string>();
 const gameDifficulty = ref<Difficulty>();
 const gameRenderer = ref<Constructor>();
+const gameShowTutorial = ref<boolean>();
 
 const startGame = (
   seed: string,
   difficulty: Difficulty,
-  renderer: Constructor
+  renderer: Constructor,
+  showTutorial: boolean
 ) => {
   state.value = State.Game;
   gameSeed.value = seed;
   gameDifficulty.value = difficulty;
   gameRenderer.value = renderer;
+  gameShowTutorial.value = showTutorial;
 };
 </script>
 
@@ -34,6 +37,7 @@ const startGame = (
     :seed="gameSeed!"
     :difficulty="gameDifficulty!"
     :renderer="gameRenderer!"
+    :showTutorial="gameShowTutorial!"
   />
 </template>
 

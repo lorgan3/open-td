@@ -16,6 +16,7 @@ const props = defineProps<{
   seed: string;
   difficulty: Difficulty;
   renderer: Constructor;
+  showTutorial: boolean;
 }>();
 
 const canvas = ref<HTMLDivElement | null>(null);
@@ -32,8 +33,10 @@ const manager = init(
   renderer.showMessage
 );
 
-const tutorialManager = new TutorialManager();
-tutorialManager.start();
+if (props.showTutorial) {
+  const tutorialManager = new TutorialManager();
+  tutorialManager.start();
+}
 
 let mounted = false;
 let oldTimestamp = 0;

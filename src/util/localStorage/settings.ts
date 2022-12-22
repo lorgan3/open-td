@@ -2,11 +2,12 @@ import { Difficulty } from "../../data/difficulty";
 import { Constructor } from "../../renderers/api";
 import EmojiRenderer from "../../renderers/emojiRenderer/renderer";
 import PixiRenderer from "../../renderers/pixiRenderer/renderer";
-import { assertValue, getKey } from "../object";
+import { assertValue, Bool, getKey } from "../object";
 
 export interface Settings {
   renderer: Constructor;
   difficulty: Difficulty;
+  showTutorial: boolean;
 }
 
 const RENDERER_MAP = {
@@ -29,6 +30,10 @@ export const settingsReviver = <K extends keyof Settings>(
 
   if (key === "difficulty") {
     return assertValue(Difficulty, value);
+  }
+
+  if (key === "showTutorial") {
+    return assertValue(Bool, value);
   }
 
   return value;

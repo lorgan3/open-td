@@ -1,3 +1,8 @@
+export const Bool = {
+  True: true,
+  False: false,
+};
+
 // Returns the key of object for value.
 export const getKey = <V, O extends { [key: string]: V }>(
   object: O,
@@ -17,7 +22,7 @@ export const assertValue = <V, O extends { [key: string]: V }>(
   fallback?: O[string]
 ): V | undefined => {
   return (
-    Object.values(object).find((objectValue) => objectValue === value) ||
+    Object.values(object).find((objectValue) => objectValue === value) ??
     fallback
   );
 };
