@@ -21,6 +21,7 @@ class VisibilityController {
   private edgeMap = new Map<number, [number, number]>();
   private pendingAgents = new Set<Agent>();
   private base?: Base;
+  private pendingRadius = 0;
 
   private minX?: number;
   private minY?: number;
@@ -72,6 +73,7 @@ class VisibilityController {
 
   commit() {
     this.pendingAgents.clear();
+    this.pendingRadius = 0;
     this.update();
   }
 
@@ -88,6 +90,14 @@ class VisibilityController {
         tile.setDiscoveryStatus(DiscoveryStatus.Undiscovered)
       );
     });
+
+    if (this.pendingRadius > 0 && this.base) {
+      this.updateVisibility(
+        ...this.getVisibilityEdge(this.base),
+        this.pendingRadius,
+        DiscoveryStatus.Pending
+      );
+    }
 
     this.agents.forEach((agent) => {
       const status = this.pendingAgents.has(agent)
@@ -110,6 +120,10 @@ class VisibilityController {
       const center = spawnGroup.getCenter();
       this.updateVisibility(...center, 5, DiscoveryStatus.Discovered);
     });
+
+    removedSpawnGroups.forEach((spawnGroup) =>
+      this.discoveredSpawnGroups.delete(spawnGroup)
+    );
   }
 
   updateBaseRange() {
@@ -117,10 +131,12 @@ class VisibilityController {
       throw new Error("Updating base range without a base");
     }
 
-    const range = this.getVisibilityRange(this.base);
-    const coords = this.getVisibilityEdge(this.base);
-    this.edgeMap.set(this.base.entity.getId(), coords);
-    this.updateVisibility(...coords, range, DiscoveryStatus.Pending);
+    this.pendingRadius = this.getVisibilityRange(this.base);
+    this.updateVisibility(
+      ...this.getVisibilityEdge(this.base),
+      this.pendingRadius,
+      DiscoveryStatus.Pending
+    );
   }
 
   getBBox() {
@@ -149,7 +165,10 @@ class VisibilityController {
   private getVisibilityRange(agent: Agent) {
     switch (agent.getType()) {
       case EntityType.Base:
-        return 35 + Manager.Instance.getLevel() * 2;
+        return (
+          35 +
+          (Manager.Instance.getLevel() - (this.pendingRadius > 0 ? 1 : 0)) * 2
+        );
       case EntityType.Radar:
         return 35;
       default:
