@@ -7,8 +7,11 @@ import WavePointData from "../../../data/entity/wavePoint";
 import { ATLAS, AtlasTile } from "../atlas";
 
 const PARTICLE_COUNT = 75;
-const PARTICLE_SPEED = 0.002;
 const PARTICLE_LIFETIME = 1000;
+
+class SmokeParticle extends Sprite {
+  public speed = Math.random() * 0.002;
+}
 
 class WavePoint extends Container implements EntityRenderer {
   public static readonly layer = UI;
@@ -27,12 +30,12 @@ class WavePoint extends Container implements EntityRenderer {
 
     this.container = new ParticleContainer(PARTICLE_COUNT, { alpha: true });
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const particle = new Sprite(
+      const particle = new SmokeParticle(
         loader.resources[ATLAS].spritesheet!.textures[AtlasTile.SporeParticle]
       );
 
       const angle = ((i % 25) / 25) * Math.PI * 2;
-      const length = Math.floor(i / 25) * 0.75;
+      const length = Math.floor(i / 25) * 0.75 + 0.25;
 
       particle.anchor.set(0.5);
       particle.alpha = 0.9;
@@ -52,11 +55,11 @@ class WavePoint extends Container implements EntityRenderer {
     );
     this.sprite.angle = this.data.entity.getRotation();
 
-    this.container.children.forEach((particle, i) => {
+    (this.container.children as SmokeParticle[]).forEach((particle, i) => {
       const angle = ((i % 25) / 25) * Math.PI * 2;
 
-      particle.x += Math.sin(angle) * PARTICLE_SPEED * dt * SCALE;
-      particle.y += Math.cos(angle) * PARTICLE_SPEED * dt * SCALE;
+      particle.x += Math.sin(angle) * particle.speed * dt * SCALE;
+      particle.y += Math.cos(angle) * particle.speed * dt * SCALE;
       particle.alpha = 0.9 - (this.time / PARTICLE_LIFETIME) * 0.8;
     });
 
