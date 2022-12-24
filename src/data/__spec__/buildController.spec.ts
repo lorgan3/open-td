@@ -6,6 +6,7 @@ import Blueprint from "../entity/blueprint";
 import { ARMORY, DEMOLISH, TOWER } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
+import { vi } from "vitest";
 
 describe("buildController", () => {
   const emptySet = new Set<Tile>();
@@ -17,7 +18,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 
@@ -34,7 +35,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 
@@ -51,7 +52,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 
@@ -72,7 +73,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 
@@ -93,7 +94,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 
@@ -114,7 +115,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 
@@ -135,7 +136,7 @@ describe("buildController", () => {
       Difficulty.Normal,
       new Base(selectedTile),
       surface,
-      jest.fn()
+      vi.fn()
     );
     const controller = new BuildController(surface);
 

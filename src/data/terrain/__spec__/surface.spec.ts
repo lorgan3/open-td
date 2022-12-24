@@ -1,6 +1,7 @@
 import { TileType } from "../constants";
 import Surface from "../surface";
 import Tile from "../tile";
+import { vi } from "vitest";
 
 describe("surface", () => {
   const surface = new Surface(10, 5);
@@ -216,7 +217,7 @@ describe("surface", () => {
   it.each(lineTable)(
     "runs a function for every tile in a $case line from [$sourceX, $sourceY] to [$targetX, $targetY]",
     ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
-      const fn = jest.fn();
+      const fn = vi.fn();
       surface.forLine(sourceX, sourceY, targetX, targetY, fn, { scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
@@ -236,7 +237,7 @@ describe("surface", () => {
       const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
 
       // Abort the ray when the target has been reached
-      const fn = jest.fn(
+      const fn = vi.fn(
         (tile: Tile) => tile.getX() !== targetX || tile.getY() !== targetY
       );
       surface.forRay(sourceX, sourceY, direction, fn, { scale });
@@ -367,7 +368,7 @@ describe("surface", () => {
   it.each(connectedLineTable)(
     "runs a function for every tile in a connected $case line from [$sourceX, $sourceY] to [$targetX, $targetY]",
     ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
-      const fn = jest.fn();
+      const fn = vi.fn();
       surface.forLine(sourceX, sourceY, targetX, targetY, fn, {
         connected: true,
         scale,
@@ -390,7 +391,7 @@ describe("surface", () => {
       const direction = Math.atan2(targetY - sourceY, targetX - sourceX);
 
       // Abort the ray when the target has been reached
-      const fn = jest.fn(
+      const fn = vi.fn(
         (tile: Tile) => tile.getX() !== targetX || tile.getY() !== targetY
       );
       surface.forRay(sourceX, sourceY, direction, fn, {
@@ -475,7 +476,7 @@ describe("surface", () => {
   it.each(rectTable)(
     "runs a function for every tile in a $case rectangle from [$sourceX, $sourceY] to [$targetX, $targetY]",
     ({ sourceX, sourceY, targetX, targetY, scale, steps }) => {
-      const fn = jest.fn();
+      const fn = vi.fn();
       surface.forRect(sourceX, sourceY, targetX, targetY, fn, { scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);
@@ -635,7 +636,7 @@ describe("surface", () => {
   it.each(circleTable)(
     "runs a function for every tile in a $case circle at [$x, $y] with d $d",
     ({ x, y, d, edgeOnly, scale, steps }) => {
-      const fn = jest.fn();
+      const fn = vi.fn();
       surface.forCircle(x, y, d, fn, { edgeOnly, scale });
 
       expect(fn).toHaveBeenCalledTimes(steps.length);

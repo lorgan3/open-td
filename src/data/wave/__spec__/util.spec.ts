@@ -1,4 +1,5 @@
 import { splitNumber } from "../util";
+import { vi } from "vitest";
 
 describe("Wave utils", () => {
   it("returns the original number if there is only 1 part", () => {
@@ -6,19 +7,19 @@ describe("Wave utils", () => {
   });
 
   it("splits a number in equal parts if all weights are the same", () => {
-    jest.spyOn(Math, "random").mockReturnValue(0.5);
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
 
     expect(splitNumber(10, 4)).toEqual([2.5, 2.5, 2.5, 2.5]);
   });
 
   it("splits a number according to the weights", () => {
     let count = 0;
-    jest.spyOn(Math, "random").mockImplementation(() => ++count / 5);
+    vi.spyOn(Math, "random").mockImplementation(() => ++count / 5);
 
     expect(splitNumber(10, 4)).toEqual([1, 2, 3, 4]);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 });

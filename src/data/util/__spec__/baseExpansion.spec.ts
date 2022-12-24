@@ -6,6 +6,7 @@ import { floodFill } from "../baseExpansion";
 import TestManager from "../../controllers/__spec__/testManager";
 import { TileType } from "../../terrain/constants";
 import Base from "../../entity/base";
+import { vi } from "vitest";
 
 describe("baseExpansion", () => {
   const surface = new Surface(8, 8);
@@ -14,7 +15,7 @@ describe("baseExpansion", () => {
     Difficulty.Normal,
     new Base(basePoint),
     surface,
-    jest.fn()
+    vi.fn()
   );
 
   surface.spawnStatic(new Armory(surface.getTile(2, 4)!));

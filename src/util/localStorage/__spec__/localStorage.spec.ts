@@ -1,21 +1,20 @@
 import { get, set } from "..";
 import renderer from "../../../renderers/pixiRenderer/renderer";
+import { vi } from "vitest";
 
-jest.mock("../../../renderers/pixiRenderer/renderer", () => ({
-  __esModule: true,
-  default: jest.fn(),
+vi.mock("../../../renderers/pixiRenderer/renderer", () => ({
+  default: vi.fn(),
 }));
-jest.mock("../../../renderers/emojiRenderer/renderer", () => ({
-  __esModule: true,
-  default: jest.fn(),
+vi.mock("../../../renderers/emojiRenderer/renderer", () => ({
+  default: vi.fn(),
 }));
 
 describe("localStorage", () => {
-  jest.spyOn(window.localStorage.__proto__, "setItem");
-  const getItem = jest.spyOn(window.localStorage.__proto__, "getItem");
+  vi.spyOn(window.localStorage.__proto__, "setItem");
+  const getItem = vi.spyOn(window.localStorage.__proto__, "getItem");
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   it("Gets values", () => {

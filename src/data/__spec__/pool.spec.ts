@@ -1,8 +1,10 @@
 import Pool, { PoolType } from "../pool";
 
+import { vi } from "vitest";
+
 describe("pool", () => {
   it("initializes a growing pool", () => {
-    const initializer = jest.fn(() => "");
+    const initializer = vi.fn(() => "");
     const pool = new Pool<number, string>(initializer, PoolType.Growing, 2);
 
     expect(pool.getSize()).toEqual(2);
@@ -23,7 +25,7 @@ describe("pool", () => {
   });
 
   it("initializes a fixed pool", () => {
-    const initializer = jest.fn(() => "");
+    const initializer = vi.fn(() => "");
     const pool = new Pool<number, string>(initializer, PoolType.Fixed, 2);
 
     expect(pool.getSize()).toEqual(2);
