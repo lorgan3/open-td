@@ -12,6 +12,7 @@ import Tile from "../../data/terrain/tile";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { init, OVERRIDES } from "./overrides";
+import { init as initSound, Sound } from "./sound";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
@@ -19,18 +20,24 @@ import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
 import { LAYERS, UI } from "./layer";
 import { EntityRenderer, EntityRendererStatics } from "./overrides/types";
-import { SCALE } from "./constants";
+import {
+  DEFAULT_SCALE,
+  MAX_SCALE,
+  MIN_SCALE,
+  SCALE,
+  SCROLL_SPEED,
+} from "./constants";
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 import WaveController from "../../data/controllers/waveController";
+import { sound } from "@pixi/sound";
 
 let DEBUG = false;
-const SCROLL_SPEED = 20;
-const MAX_SCALE = 3;
-const MIN_SCALE = 0.5;
 
 settings.use32bitIndex = true;
 
 class Renderer implements IRenderer {
+  private static instance: Renderer;
+
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
 
@@ -49,13 +56,19 @@ class Renderer implements IRenderer {
 
   public x = 0;
   public y = 0;
-  private scale = 1;
+  private scale = DEFAULT_SCALE;
   private width = 0;
   private height = 0;
 
   private time = 0;
 
+  static get Instance() {
+    return this.instance;
+  }
+
   constructor(private surface: Surface, private controller: Controller) {
+    Renderer.instance = this;
+
     this.messageFn = new Promise(
       (resolve) => (this.resolveMessageFn = resolve)
     );
@@ -71,6 +84,8 @@ class Renderer implements IRenderer {
     );
     init(this.loader);
     this.loader.load();
+
+    initSound();
 
     window.debug = () => {
       DEBUG = !DEBUG;
@@ -403,5 +418,16 @@ class Renderer implements IRenderer {
       scale: this.scale,
     });
   }
+
+  getViewport() {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.viewport?.worldScreenWidth || 0,
+      height: this.viewport?.worldScreenHeight || 0,
+      scale: this.scale,
+    };
+  }
 }
+
 export default Renderer;
