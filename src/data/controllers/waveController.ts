@@ -51,25 +51,11 @@ class WaveController {
       this.timeSinceLastExpansion = 0;
     }
 
-    for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
-      const spawnGroup = this.spawnGroups[i];
-
-      if (spawnGroup.isExposed() > 0) {
-        // Clean up exposed spawn locations
-        this.spawnGroups.splice(i, 1);
-        VisibilityController.Instance.uncoverSpawnGroup(spawnGroup);
-
-        const wavePoint = new WavePoint(
-          this.surface.getTile(...spawnGroup.getCenter())!
-        );
-        this.surface.spawn(wavePoint);
-        wavePoint.discover();
-      } else {
-        // ...and make the others stronger
-        spawnGroup.grow();
-        spawnGroup.rePath();
-      }
-    }
+    this.cleanupSpawnGroups();
+    this.spawnGroups.forEach((spawnGroup) => {
+      spawnGroup.grow();
+      spawnGroup.rePath();
+    });
 
     this.direction +=
       (Math.random() > 0.5 ? 1 : -1) *
@@ -113,6 +99,24 @@ class WaveController {
     );
 
     return true;
+  }
+
+  cleanupSpawnGroups() {
+    for (let i = this.spawnGroups.length - 1; i >= 0; i--) {
+      const spawnGroup = this.spawnGroups[i];
+
+      if (spawnGroup.isExposed() > 0) {
+        // Clean up exposed spawn locations
+        this.spawnGroups.splice(i, 1);
+        VisibilityController.Instance.uncoverSpawnGroup(spawnGroup);
+
+        const wavePoint = new WavePoint(
+          this.surface.getTile(...spawnGroup.getCenter())!
+        );
+        this.surface.spawn(wavePoint);
+        wavePoint.discover();
+      }
+    }
   }
 
   getWave() {

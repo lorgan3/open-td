@@ -126,10 +126,10 @@ class DefaultManager extends Manager {
 
     PowerController.Instance.processPower();
     MoneyController.Instance.clearRecents();
-    VisibilityController.Instance.commit();
     WaveController.Instance.startNewWave();
 
     this.level++;
+    VisibilityController.Instance.updateBaseRange();
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();
@@ -164,8 +164,9 @@ class DefaultManager extends Manager {
 
   private end() {
     BuildController.Instance.commit();
+    VisibilityController.Instance.commit();
+    WaveController.Instance.cleanupSpawnGroups();
     this.base.regenerate();
-    VisibilityController.Instance.updateBaseRange();
 
     this.triggerStatUpdate();
     EventSystem.Instance.triggerEvent(GameEvent.EndWave);

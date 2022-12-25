@@ -382,6 +382,7 @@ class Renderer implements IRenderer {
       event.preventDefault();
     });
 
+    playSoundOnEvent(GameEvent.StartWave, Sound.Sonar);
     playSoundOnEvent(GameEvent.Buy, Sound.Place);
     playSoundOnEvent(GameEvent.Sell, Sound.Destroy);
     playSoundOnEvent(GameEvent.HitBase, Sound.Destroy);

@@ -14,6 +14,7 @@ export enum Sound {
   Place = "place",
   Destroy = "destroy",
   Hit = "hit",
+  Sonar = "sonar",
 }
 
 const preload = (alias: Sound, path: string, volume = 1) => {
@@ -36,6 +37,7 @@ export const init = () => {
   preload(Sound.Place, "sounds/place.wav", 0.7);
   preload(Sound.Destroy, "sounds/destroy.wav", 0.7);
   preload(Sound.Hit, "sounds/hit.wav");
+  preload(Sound.Sonar, "sounds/sonar.wav");
 };
 
 export const playSoundOnEvent = (

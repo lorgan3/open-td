@@ -44,3 +44,4 @@ Check `package.json`, there are also commands available to run tests and check t
 - [firework.wav](https://freesound.org/people/TimoSchmied/sounds/530972/) by [Timo Schmied](https://freesound.org/people/TimoSchmied/)
 - [place.wav](https://freesound.org/people/Robinhood76/sounds/254079/) and [destroy.wav](https://freesound.org/people/Robinhood76/sounds/503554/) by [FxProSound](https://freesound.org/people/Robinhood76/)
 - [hit.wav](https://freesound.org/people/BMacZero/sounds/96138/) by [BMacZero](https://freesound.org/people/BMacZero/)
+- [sonar.wav](https://freesound.org/people/SamsterBirdies/sounds/371178/) by [SamsterBirdies](https://freesound.org/people/SamsterBirdies/)
