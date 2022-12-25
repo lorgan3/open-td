@@ -44,8 +44,7 @@ class WavePoint implements Agent {
     this.targetX = x;
     this.targetY = y;
     this.travelTime =
-      Math.sqrt((x - this.tile.getX()) ** 2 + (y - this.tile.getY()) ** 2) *
-      100;
+      Math.sqrt((x - this.tile.getX()) ** 2 + (y - this.tile.getY()) ** 2) * 60;
   }
 
   getType(): EntityType {

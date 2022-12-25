@@ -116,10 +116,16 @@ class BuildController {
       MoneyController.Instance.replaceBlueprint(blueprint, agent);
     });
 
-    this.blueprints.clear();
     this.pendingBaseAdditions = [];
     this.pendingBaseRemovals = [];
+
+    if (this.blueprints.size === 0) {
+      return;
+    }
+
+    this.blueprints.clear();
     Manager.Instance.triggerStatUpdate();
+    EventSystem.Instance.triggerEvent(GameEvent.Buy);
   }
 
   private placeBlueprints(selection: Tile[], placeable: Placeable) {
@@ -140,12 +146,15 @@ class BuildController {
       ) {
         Manager.Instance.showMessage("Not all tiles connect to the base");
 
-        return [];
+        return;
       }
     }
 
-    if (!Manager.Instance.canBuy(placeable, validTiles.length)) {
-      return [];
+    if (
+      validTiles.length === 0 ||
+      !Manager.Instance.canBuy(placeable, validTiles.length)
+    ) {
+      return;
     }
 
     validTiles.forEach((tile) => {
@@ -249,6 +258,10 @@ class BuildController {
       }
     }
 
+    if (validTiles.length === 0) {
+      return;
+    }
+
     validTiles.forEach((tile) => {
       if (hasBlueprints) {
         const blueprint = this.blueprints.get(tile.getHash());
@@ -328,17 +341,20 @@ class BuildController {
       )
     ) {
       Manager.Instance.showMessage("Not all tiles connect to the base");
-      return [];
+      return;
     }
 
-    if (!Manager.Instance.canBuy(placeable, validTiles.length)) {
-      return [];
+    if (
+      validTiles.length === 0 ||
+      !Manager.Instance.canBuy(placeable, validTiles.length)
+    ) {
+      return;
     }
 
     validTiles.forEach((tile) => {
       const agent = new placeable.entity!(tile);
 
-      this.surface.getEntityTiles(agent).map((tile) => {
+      this.surface.getEntityTiles(agent).forEach((tile) => {
         if (tile.hasStaticEntity()) {
           this.surface.despawnStatic(tile.getStaticEntity().getAgent());
         }
@@ -349,6 +365,7 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
+    EventSystem.Instance.triggerEvent(GameEvent.Buy);
   }
 
   private sellEntities(selection: Tile[]) {
@@ -383,6 +400,10 @@ class BuildController {
       }
     }
 
+    if (validTiles.length === 0) {
+      return;
+    }
+
     validTiles.forEach((tile) => {
       if (tile.hasStaticEntity()) {
         const agent = tile.getStaticEntity().getAgent();
@@ -392,6 +413,7 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
+    EventSystem.Instance.triggerEvent(GameEvent.Sell);
   }
 
   private splitTiles(tiles: Tile[]) {

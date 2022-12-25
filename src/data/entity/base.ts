@@ -1,5 +1,7 @@
 import Manager from "../controllers/manager";
 import VisibilityController from "../controllers/visibilityController";
+import { GameEvent } from "../events";
+import EventSystem from "../eventSystem";
 import { FREE_TILES_INCLUDING_BUILDINGS } from "../terrain/constants";
 import { createStoneSurface } from "../terrain/fill";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
@@ -100,12 +102,14 @@ class Base implements StaticAgent {
 
       // The entire map should now be visible
       Manager.Instance.getSurface().forceRerender();
+      EventSystem.Instance.triggerEvent(GameEvent.Lose);
     } else {
       this.invincibleTime = INVINCIBLE_TIME;
       this.shockwave();
     }
 
     Manager.Instance.triggerStatUpdate();
+    EventSystem.Instance.triggerEvent(GameEvent.HitBase);
   }
 
   regenerate(multiplier = 1) {

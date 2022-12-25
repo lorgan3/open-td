@@ -12,7 +12,7 @@ import Tile from "../../data/terrain/tile";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { init, OVERRIDES } from "./overrides";
-import { init as initSound, Sound } from "./sound";
+import { init as initSound, playSoundOnEvent, Sound } from "./sound";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
@@ -30,6 +30,7 @@ import {
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 import WaveController from "../../data/controllers/waveController";
 import { sound } from "@pixi/sound";
+import { GameEvent } from "../../data/events";
 
 let DEBUG = false;
 
@@ -380,10 +381,16 @@ class Renderer implements IRenderer {
       this.controller.keyUp(event.key);
       event.preventDefault();
     });
+
+    playSoundOnEvent(GameEvent.Buy, Sound.Place);
+    playSoundOnEvent(GameEvent.Sell, Sound.Destroy);
+    playSoundOnEvent(GameEvent.HitBase, Sound.Destroy);
   }
 
   showMessage: MessageFn = async (...args) => {
     const fn = await this.messageFn;
+
+    sound.play(Sound.Notification);
     return fn(...args);
   };
 

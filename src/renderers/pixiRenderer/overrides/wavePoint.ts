@@ -5,6 +5,8 @@ import { UI } from "../layer";
 import { EntityRenderer } from "./types";
 import WavePointData from "../../../data/entity/wavePoint";
 import { ATLAS, AtlasTile } from "../atlas";
+import { ControllableSound } from "../sound/controllableSound";
+import { Sound } from "../sound";
 
 const PARTICLE_COUNT = 75;
 const PARTICLE_LIFETIME = 1000;
@@ -46,6 +48,8 @@ class WavePoint extends Container implements EntityRenderer {
     }
 
     this.addChild(this.sprite, this.container);
+
+    ControllableSound.fromEntity(this.data.entity, Sound.Firework);
   }
 
   sync(dt: number) {

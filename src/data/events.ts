@@ -14,6 +14,10 @@ export enum GameEvent {
   Unlock = 8,
   Discover = 9,
   Spawn = 10,
+  Buy = 11,
+  Sell = 12,
+  HitBase = 13,
+  Lose = 14,
 }
 
 export interface EventParamsMap {
@@ -28,6 +32,10 @@ export interface EventParamsMap {
   [GameEvent.Unlock]: [Unlock];
   [GameEvent.Discover]: [Discover];
   [GameEvent.Spawn]: [];
+  [GameEvent.Buy]: [];
+  [GameEvent.Sell]: [];
+  [GameEvent.HitBase]: [];
+  [GameEvent.Lose]: [];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (

@@ -7,6 +7,8 @@ import { BASE, TOWERS } from "../layer";
 import { SCALE } from "../constants";
 import { ATLAS_NAME } from "./default";
 import { EntityRenderer } from "./types";
+import { Sound } from "../sound";
+import { ControllableSound } from "../sound/controllableSound";
 
 const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Tower, "turret"],
@@ -15,6 +17,16 @@ const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Mortar, "mortar"],
   [EntityType.Railgun, "railgun"],
 ]);
+
+const TOWER_TO_SOUND_MAP = new Map<EntityType, Sound>([
+  [EntityType.Tower, Sound.Shot],
+  [EntityType.Flamethrower, Sound.Flamethrower],
+  [EntityType.Laser, Sound.Laser],
+  [EntityType.Mortar, Sound.Mortar],
+  [EntityType.Railgun, Sound.Railgun],
+]);
+
+const LOOPING_TOWERS = new Set([EntityType.Flamethrower, EntityType.Laser]);
 
 const ANIMATION_SPEED = 0.1;
 const ROTATION_SPEED = 0.6;
@@ -36,6 +48,7 @@ class Tower extends Sprite implements EntityRenderer {
   public static readonly layer = BASE;
 
   private turret!: AnimatedSprite;
+  private sound?: ControllableSound;
 
   constructor(private data: ITower, private loader: Loader) {
     super(
@@ -90,6 +103,29 @@ class Tower extends Sprite implements EntityRenderer {
     if (this.data.renderData.fired) {
       this.data.renderData.fired = false;
       this.turret.play();
+
+      if (LOOPING_TOWERS.has(this.data.getType())) {
+        if (!this.sound) {
+          this.sound = ControllableSound.fromEntity(
+            this.data.entity,
+            TOWER_TO_SOUND_MAP.get(this.data.getType())!,
+            {
+              loop: true,
+            }
+          );
+        } else {
+          this.sound.update(this.data.entity);
+        }
+      } else {
+        ControllableSound.fromEntity(
+          this.data.entity,
+          TOWER_TO_SOUND_MAP.get(this.data.getType())!
+        );
+      }
+    } else if (this.sound) {
+      if (this.sound.fade(dt)) {
+        this.sound = undefined;
+      }
     }
   }
 }

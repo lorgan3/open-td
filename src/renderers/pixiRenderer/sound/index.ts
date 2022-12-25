@@ -1,6 +1,19 @@
-import { sound } from "@pixi/sound";
+import { PlayOptions, sound } from "@pixi/sound";
+import { GameEvent } from "../../../data/events";
+import EventSystem from "../../../data/eventSystem";
 
 export enum Sound {
+  Notification = "notification",
+  Shot = "shot",
+  Laser = "laser",
+  Flamethrower = "flamethrower",
+  Mortar = "mortar",
+  Railgun = "railgun",
+  Explosion = "explosion",
+  Firework = "firework",
+  Place = "place",
+  Destroy = "destroy",
+  Hit = "hit",
 }
 
 const preload = (alias: Sound, path: string, volume = 1) => {
@@ -12,4 +25,25 @@ const preload = (alias: Sound, path: string, volume = 1) => {
 };
 
 export const init = () => {
+  preload(Sound.Notification, "sounds/notification.ogg");
+  preload(Sound.Shot, "sounds/shot.wav");
+  preload(Sound.Laser, "sounds/laser.flac", 0.5);
+  preload(Sound.Flamethrower, "sounds/flamethrower.wav", 0.2);
+  preload(Sound.Mortar, "sounds/mortar.wav", 0.7);
+  preload(Sound.Railgun, "sounds/railgun.mp3", 0.7);
+  preload(Sound.Explosion, "sounds/explosion.wav");
+  preload(Sound.Firework, "sounds/firework.wav");
+  preload(Sound.Place, "sounds/place.wav", 0.7);
+  preload(Sound.Destroy, "sounds/destroy.wav", 0.7);
+  preload(Sound.Hit, "sounds/hit.wav");
+};
+
+export const playSoundOnEvent = (
+  event: GameEvent,
+  alias: Sound,
+  options?: PlayOptions
+) => {
+  EventSystem.Instance.addEventListener(event, () =>
+    sound.play(alias, options)
+  );
 };
