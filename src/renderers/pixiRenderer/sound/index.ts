@@ -26,7 +26,7 @@ const preload = (alias: Sound, path: string, volume = 1) => {
 
 export const init = () => {
   preload(Sound.Notification, "sounds/notification.ogg");
-  preload(Sound.Shot, "sounds/shot.wav");
+  preload(Sound.Shot, "sounds/shot.wav", 0.7);
   preload(Sound.Laser, "sounds/laser.flac", 0.5);
   preload(Sound.Flamethrower, "sounds/flamethrower.wav", 0.2);
   preload(Sound.Mortar, "sounds/mortar.wav", 0.7);

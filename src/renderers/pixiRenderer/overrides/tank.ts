@@ -6,6 +6,10 @@ import { BASE } from "../layer";
 import { SCALE } from "../constants";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
 import { EntityRenderer } from "./types";
+import { ControllableSound } from "../sound/controllableSound";
+import { Sound } from "../sound";
+import Renderer from "../renderer";
+import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 
 const ATLAS_NAME = "tank";
 const ANIMATION_SPEED = 0.1;
@@ -29,6 +33,8 @@ class Tank extends AnimatedSprite implements EntityRenderer {
           data.entity.getY() + 0.5
         )
     );
+
+    this.play();
   }
 
   sync() {
@@ -36,10 +42,21 @@ class Tank extends AnimatedSprite implements EntityRenderer {
       (this.data.entity.getX() + 0.5) * SCALE,
       (this.data.entity.getY() + 0.5) * SCALE
     );
+
     this.angle = this.data.entity.getRotation();
+    if (this.data.AI.isBusy()) {
+      this.angle +=
+        Math.sin(((Renderer.Instance.getTime() % COOLDOWN) / COOLDOWN) * 5) *
+        20;
+    }
 
     if (this.data.AI.isBusy() === this.playing) {
-      this.playing ? this.stop() : this.play();
+      if (this.playing) {
+        this.stop();
+      } else {
+        ControllableSound.fromEntity(this.data.entity, Sound.Hit);
+        this.play();
+      }
     }
 
     const offset = SCALE / 2;

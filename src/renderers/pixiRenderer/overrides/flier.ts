@@ -6,6 +6,10 @@ import { BASE } from "../layer";
 import { SCALE } from "../constants";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
 import { EntityRenderer } from "./types";
+import Renderer from "../renderer";
+import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
+import { ControllableSound } from "../sound/controllableSound";
+import { Sound } from "../sound";
 
 const ATLAS_NAME = "flier";
 const ANIMATION_SPEED = 0.2;
@@ -31,6 +35,8 @@ class Flier extends AnimatedSprite implements EntityRenderer {
           data.entity.getY() + 0.5
         )
     );
+
+    this.play();
   }
 
   sync() {
@@ -38,7 +44,22 @@ class Flier extends AnimatedSprite implements EntityRenderer {
       (this.data.entity.getX() + 0.5) * SCALE,
       (this.data.entity.getY() + 0.5) * SCALE
     );
+
     this.angle = this.data.entity.getRotation();
+    if (this.data.AI.isBusy()) {
+      this.angle +=
+        Math.sin(((Renderer.Instance.getTime() % COOLDOWN) / COOLDOWN) * 5) *
+        20;
+    }
+
+    if (this.data.AI.isBusy() === this.playing) {
+      if (this.playing) {
+        this.stop();
+      } else {
+        ControllableSound.fromEntity(this.data.entity, Sound.Hit);
+        this.play();
+      }
+    }
 
     const offset = SCALE / 2;
     this.flames.forEach((flame) => {
