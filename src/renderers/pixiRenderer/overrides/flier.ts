@@ -13,6 +13,9 @@ import { Sound } from "../sound";
 
 const ATLAS_NAME = "flier";
 const ANIMATION_SPEED = 0.2;
+const ONE_FOURTH = 1 / 4;
+const ONE_EIGHTH = 1 / 8;
+const FLY_SPEED = 0.0015;
 
 class Flier extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
@@ -40,9 +43,26 @@ class Flier extends AnimatedSprite implements EntityRenderer {
   }
 
   sync() {
+    const flySpeed = FLY_SPEED * (1 + (this.data.entity.getId() % 13) / 13);
+
+    const xOffset =
+      0.5 +
+      Math.sin(
+        (Renderer.Instance.getTime() + this.data.entity.getId()) * flySpeed
+      ) /
+        4 -
+      ONE_EIGHTH;
+    const yOffset =
+      0.5 +
+      Math.cos(
+        (Renderer.Instance.getTime() + this.data.entity.getId()) * flySpeed
+      ) /
+        2 -
+      ONE_FOURTH;
+
     this.position.set(
-      (this.data.entity.getX() + 0.5) * SCALE,
-      (this.data.entity.getY() + 0.5) * SCALE
+      (this.data.entity.getX() + xOffset) * SCALE,
+      (this.data.entity.getY() + yOffset) * SCALE
     );
 
     this.angle = this.data.entity.getRotation();

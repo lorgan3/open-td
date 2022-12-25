@@ -13,6 +13,7 @@ import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 
 const ATLAS_NAME = "tank";
 const ANIMATION_SPEED = 0.1;
+const ONE_FOURTH = 1 / 4;
 
 class Tank extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
@@ -38,9 +39,13 @@ class Tank extends AnimatedSprite implements EntityRenderer {
   }
 
   sync() {
+    const xOffset = 0.5 + (this.data.entity.getId() % 13) / 26 - ONE_FOURTH;
+    const yOffset =
+      0.5 + ((this.data.entity.getId() + 5) % 17) / 34 - ONE_FOURTH;
+
     this.position.set(
-      (this.data.entity.getX() + 0.5) * SCALE,
-      (this.data.entity.getY() + 0.5) * SCALE
+      (this.data.entity.getX() + xOffset) * SCALE,
+      (this.data.entity.getY() + yOffset) * SCALE
     );
 
     this.angle = this.data.entity.getRotation();
