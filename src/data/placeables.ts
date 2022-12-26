@@ -209,7 +209,7 @@ export const EMERGENCY_RECHARGE: Placeable = {
   entityType: EntityType.EmergencyRecharge,
   htmlElement: "🔌",
   isRepeatable: true,
-  cost: 2,
+  cost: 1,
 };
 
 export const EMERGENCY_REPAIR: Placeable = {
@@ -218,7 +218,7 @@ export const EMERGENCY_REPAIR: Placeable = {
   entityType: EntityType.EmergencyRepair,
   htmlElement: "🛠",
   isRepeatable: true,
-  cost: 3,
+  cost: 1,
 };
 
 export enum Group {
