@@ -96,7 +96,7 @@ class Renderer implements IRenderer {
     };
 
     const settings = get("settings");
-    sound.volumeAll = settings?.volume ?? 100;
+    sound.volumeAll = (settings?.volume ?? 100) / 100;
   }
 
   mount(target: HTMLDivElement): void {
