@@ -37,7 +37,7 @@ export const init = () => {
   preload(Sound.Place, "sounds/place.wav", 0.7);
   preload(Sound.Destroy, "sounds/destroy.wav", 0.7);
   preload(Sound.Hit, "sounds/hit.wav");
-  preload(Sound.Sonar, "sounds/sonar.wav");
+  preload(Sound.Sonar, "sounds/sonar.wav", 0.7);
 };
 
 export const playSoundOnEvent = (
