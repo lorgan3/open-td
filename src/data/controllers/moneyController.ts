@@ -91,11 +91,7 @@ class MoneyController {
     if (agent instanceof Blueprint) {
       this.addMoney(TOWER_PRICES[agent.getPlaceable().entityType] ?? 0);
     } else {
-      const price = TOWER_PRICES[agent.getType()] ?? 0;
-
-      this.addMoney(
-        price * (this.recentlyBought.has(agent) ? 1 : SELL_MULTIPLIER)
-      );
+      this.addMoney(this.getValue(agent));
     }
   }
 
@@ -113,6 +109,11 @@ class MoneyController {
 
   isRecent(agent: Agent) {
     return this.recentlyBought.has(agent);
+  }
+
+  getValue(agent: Agent) {
+    const price = TOWER_PRICES[agent.getType()] ?? 0;
+    return price * (this.recentlyBought.has(agent) ? 1 : SELL_MULTIPLIER);
   }
 
   private getEnemyValue(enemy: IEnemy): number {
