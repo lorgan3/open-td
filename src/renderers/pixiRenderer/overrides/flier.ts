@@ -21,6 +21,7 @@ class Flier extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
 
   private flames: Sprite[] = [];
+  private isBusy = false;
 
   constructor(private data: FlierData, private loader: Loader) {
     super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
@@ -38,8 +39,6 @@ class Flier extends AnimatedSprite implements EntityRenderer {
           data.entity.getY() + 0.5
         )
     );
-
-    this.play();
   }
 
   sync() {
@@ -72,13 +71,11 @@ class Flier extends AnimatedSprite implements EntityRenderer {
         20;
     }
 
-    if (this.data.AI.isBusy() === this.playing) {
-      if (this.playing) {
-        this.stop();
-      } else {
+    if (this.data.AI.isBusy() !== this.isBusy) {
+      if (!this.isBusy) {
         ControllableSound.fromEntity(this.data.entity, Sound.Hit);
-        this.play();
       }
+      this.isBusy = this.data.AI.isBusy();
     }
 
     const offset = SCALE / 2;
