@@ -25,7 +25,7 @@ export type MessageFn = (
   }
 ) => Promise<number>;
 
-export const DEFAULT_EXPIRE_TIME = 2000;
+export const DEFAULT_EXPIRE_TIME = 5000;
 
 declare global {
   interface Window {
