@@ -128,6 +128,10 @@ class DefaultManager extends Manager {
     MoneyController.Instance.clearRecents();
     WaveController.Instance.startNewWave();
 
+    // Activate newly placed radars
+    VisibilityController.Instance.commit();
+
+    // Increase level and show the new area that will be discovered.
     this.level++;
     VisibilityController.Instance.updateBaseRange();
 
