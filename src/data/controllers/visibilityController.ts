@@ -112,6 +112,7 @@ class VisibilityController {
     });
 
     const removedSpawnGroups: SpawnGroup[] = [];
+    const others = WaveController.Instance.getSpawnGroups();
     this.discoveredSpawnGroups.forEach((spawnGroup) => {
       if (spawnGroup.isExposed() === 0) {
         removedSpawnGroups.push(spawnGroup);
@@ -120,6 +121,18 @@ class VisibilityController {
 
       const center = spawnGroup.getCenter();
       this.updateVisibility(...center, 5, DiscoveryStatus.Discovered);
+    });
+
+    // @TODO: figure out a way to not have to undo discovering overlapping spawn points
+    others.forEach((spawnGroup) => {
+      const [x, y] = spawnGroup.getCenter();
+      this.surface.forCircle(x, y, SpawnGroup.Radius, (tile) => {
+        if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
+          return;
+        }
+
+        tile.setDiscoveryStatus(DiscoveryStatus.Undiscovered);
+      });
     });
 
     removedSpawnGroups.forEach((spawnGroup) =>
