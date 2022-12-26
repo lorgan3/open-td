@@ -31,6 +31,7 @@ import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 import WaveController from "../../data/controllers/waveController";
 import { sound } from "@pixi/sound";
 import { GameEvent } from "../../data/events";
+import { get } from "../../util/localStorage";
 
 let DEBUG = false;
 
@@ -92,6 +93,9 @@ class Renderer implements IRenderer {
       DEBUG = !DEBUG;
       this.renderTilemap();
     };
+
+    const settings = get("settings");
+    sound.volumeAll = settings?.volume ?? 100;
   }
 
   mount(target: HTMLDivElement): void {

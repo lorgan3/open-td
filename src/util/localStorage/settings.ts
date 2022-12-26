@@ -2,18 +2,15 @@ import { Difficulty } from "../../data/difficulty";
 import { Constructor } from "../../renderers/api";
 import EmojiRenderer from "../../renderers/emojiRenderer/renderer";
 import PixiRenderer from "../../renderers/pixiRenderer/renderer";
+import { assertNumber } from "../number";
 import { assertValue, Bool, getKey } from "../object";
 
 export interface Settings {
   renderer: Constructor;
   difficulty: Difficulty;
   showTutorial: boolean;
+  volume: number;
 }
-
-const RENDERER_MAP = {
-  emojiRenderer: EmojiRenderer as Constructor,
-  pixiRenderer: PixiRenderer as Constructor,
-};
 
 // In an ideal world this returns `Settings[K]` but typescript doesn't understand
 export const settingsReviver = <K extends keyof Settings>(
@@ -21,11 +18,16 @@ export const settingsReviver = <K extends keyof Settings>(
   value: any
 ): any => {
   if (key === "renderer") {
-    if (value in RENDERER_MAP) {
-      return RENDERER_MAP[value as keyof typeof RENDERER_MAP];
+    const rendererMap = {
+      emojiRenderer: EmojiRenderer as Constructor,
+      pixiRenderer: PixiRenderer as Constructor,
+    };
+
+    if (value in rendererMap) {
+      return rendererMap[value as keyof typeof rendererMap];
     }
 
-    return RENDERER_MAP["emojiRenderer"];
+    return rendererMap["emojiRenderer"];
   }
 
   if (key === "difficulty") {
@@ -36,6 +38,10 @@ export const settingsReviver = <K extends keyof Settings>(
     return assertValue(Bool, value);
   }
 
+  if (key === "volume") {
+    return assertNumber(value, 0, 100);
+  }
+
   return value;
 };
 
@@ -44,7 +50,12 @@ export const settingsReplacer = <K extends keyof Settings>(
   value: Settings[K]
 ): any => {
   if (key === "renderer") {
-    return getKey(RENDERER_MAP, value as Constructor, "emojiRenderer");
+    const rendererMap = {
+      emojiRenderer: EmojiRenderer as Constructor,
+      pixiRenderer: PixiRenderer as Constructor,
+    };
+
+    return getKey(rendererMap, value as Constructor, "emojiRenderer");
   }
 
   return value;

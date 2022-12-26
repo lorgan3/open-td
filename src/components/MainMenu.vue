@@ -46,6 +46,7 @@ const renderer = ref(
     renderOptions[0]
 );
 const showTutorial = ref(storedData?.showTutorial ?? true);
+const volume = ref(storedData?.volume ?? 100);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -66,6 +67,7 @@ const submit = (event: Event) => {
     renderer: renderer.value.value,
     difficulty: difficulty.value,
     showTutorial: showTutorial.value,
+    volume: volume.value,
   });
 
   props.onPlay(
@@ -143,6 +145,10 @@ const submit = (event: Event) => {
             <input type="checkbox" v-model="showTutorial" />
             Show tutorial
           </label>
+          <label>
+            Volume
+            <input type="range" min="0" max="100" v-model="volume" />
+          </label>
         </div>
       </div>
     </div>
@@ -199,6 +205,10 @@ const submit = (event: Event) => {
   input[type="checkbox"] {
     width: 30px;
     margin: 0;
+    height: auto;
+  }
+
+  input[type="range"] {
     height: auto;
   }
 
