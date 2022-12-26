@@ -3,7 +3,7 @@ import Controller from "../../data/controllers/controller";
 import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
 import SimpleMessage from "../../components/SimpleMessage.vue";
-import { Application, Graphics, InteractionEvent, Loader } from "pixi.js";
+import { Application, InteractionEvent, Loader } from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
 import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
@@ -32,6 +32,7 @@ import WaveController from "../../data/controllers/waveController";
 import { sound } from "@pixi/sound";
 import { GameEvent } from "../../data/events";
 import { get } from "../../util/localStorage";
+import { CursorRenderer } from "./tilemap/cursorRenderer";
 
 let DEBUG = false;
 
@@ -49,12 +50,12 @@ class Renderer implements IRenderer {
   private tilemap: CompositeTilemap;
 
   private sprites = new Map<number, EntityRenderer>();
-  private selection?: Graphics;
 
   private loader: Loader;
   private wallRenderer: WallRenderer;
   private coverageRenderer?: CoverageRenderer;
   private alertRenderer?: AlertRenderer;
+  private cursorRenderer?: CursorRenderer;
 
   public x = 0;
   public y = 0;
@@ -132,15 +133,9 @@ class Renderer implements IRenderer {
 
     this.viewport!.addChild(this.tilemap, ...LAYERS);
 
-    this.coverageRenderer = new CoverageRenderer(
-      this.loader,
-
-      this.surface
-    );
+    this.coverageRenderer = new CoverageRenderer(this.loader, this.surface);
     this.alertRenderer = new AlertRenderer(this.loader);
-
-    this.selection = new Graphics();
-    UI.addChild(this.selection);
+    this.cursorRenderer = new CursorRenderer();
 
     if (this.loader.loading) {
       this.loader.onComplete.add(() => this.renderTilemap());
@@ -247,8 +242,6 @@ class Renderer implements IRenderer {
 
     this.app!.renderer.plugins.tilemap.tileAnim[0] += dt / 500;
 
-    this.renderSelection();
-
     const entities = this.surface.getEntities();
     for (let entity of entities) {
       let sprite = this.sprites.get(entity.getId());
@@ -288,29 +281,10 @@ class Renderer implements IRenderer {
       }
     });
 
+    this.cursorRenderer!.render();
     this.coverageRenderer!.update();
     this.alertRenderer!.update(dt, Manager.Instance.getIsStarted());
     this.surface.markPristine();
-  }
-
-  private renderSelection() {
-    const scale = SCALE * (this.controller.getPlacable()?.entity?.scale || 1);
-
-    this.selection!.clear();
-    this.selection!.lineStyle(2, 0x000000);
-    if (this.controller.isMouseDown()) {
-      this.controller.getSelection().forEach((tile) => {
-        this.selection!.drawRect(
-          tile.getX() * SCALE,
-          tile.getY() * SCALE,
-          scale,
-          scale
-        );
-      });
-    } else {
-      const [x, y] = this.controller.getMouse();
-      this.selection!.drawRect(x * SCALE, y * SCALE, scale, scale);
-    }
   }
 
   showCoverage(): void {
