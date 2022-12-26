@@ -71,13 +71,18 @@ class WaveController {
 
       const tile = spawnGroup.getSpawnPoints()[0].getTile(0);
       const tilesToUpdate: Tile[] = [];
-      this.surface.forCircle(tile.getX(), tile.getY(), 5, (tile) => {
-        if (FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
-          tilesToUpdate.push(
-            new Tile(tile.getX(), tile.getY(), TileType.Spore)
-          );
+      this.surface.forCircle(
+        tile.getX(),
+        tile.getY(),
+        SpawnGroup.Radius,
+        (tile) => {
+          if (FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
+            tilesToUpdate.push(
+              new Tile(tile.getX(), tile.getY(), TileType.Spore)
+            );
+          }
         }
-      });
+      );
       this.surface.setTiles(tilesToUpdate);
 
       this.spawnGroups.push(spawnGroup);

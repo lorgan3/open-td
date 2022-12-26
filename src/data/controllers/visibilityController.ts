@@ -8,6 +8,7 @@ import Manager from "./manager";
 import EventSystem from "../eventSystem";
 import { GameEvent } from "../events";
 import SpawnGroup from "../wave/SpawnGroup";
+import WaveController from "./waveController";
 
 const isBase = (agent: Agent): agent is Base => {
   return agent.getType() === EntityType.Base;
@@ -151,10 +152,23 @@ class VisibilityController {
   }
 
   uncoverSpawnGroup(spawnGroup: SpawnGroup) {
+    const others = WaveController.Instance.getSpawnGroups();
     this.discoveredSpawnGroups.add(spawnGroup);
 
     const [x, y] = spawnGroup.getCenter();
-    this.updateVisibility(x, y, 5, DiscoveryStatus.Discovered);
+    this.updateVisibility(x, y, SpawnGroup.Radius, DiscoveryStatus.Discovered);
+
+    // Make sure other spawngroups are not discovered automatically.
+    others.forEach((spawnGroup) => {
+      const [x, y] = spawnGroup.getCenter();
+      this.surface.forCircle(x, y, SpawnGroup.Radius, (tile) => {
+        if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
+          return;
+        }
+
+        tile.setDiscoveryStatus(DiscoveryStatus.Undiscovered);
+      });
+    });
 
     EventSystem.Instance.triggerEvent(GameEvent.Discover, {
       x,
