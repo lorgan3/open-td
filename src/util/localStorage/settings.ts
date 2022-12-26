@@ -27,7 +27,7 @@ export const settingsReviver = <K extends keyof Settings>(
       return rendererMap[value as keyof typeof rendererMap];
     }
 
-    return rendererMap["emojiRenderer"];
+    return rendererMap["pixiRenderer"];
   }
 
   if (key === "difficulty") {
@@ -55,7 +55,7 @@ export const settingsReplacer = <K extends keyof Settings>(
       pixiRenderer: PixiRenderer as Constructor,
     };
 
-    return getKey(rendererMap, value as Constructor, "emojiRenderer");
+    return getKey(rendererMap, value as Constructor, "pixiRenderer");
   }
 
   return value;
