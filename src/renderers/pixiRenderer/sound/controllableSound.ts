@@ -75,7 +75,7 @@ class ControllableSound {
   }
 
   constructor(
-    alias: Sound,
+    private alias: Sound,
     private filter: filters.StereoFilter,
     options: PlayOptions
   ) {
@@ -103,6 +103,11 @@ class ControllableSound {
     } else {
       this.promise!.then((ref) => ref.destroy());
     }
+
+    ControllableSound.soundInstanceCountMap.set(
+      this.alias,
+      ControllableSound.soundInstanceCountMap.get(this.alias)! - 1
+    );
   }
 
   update(entity: Entity) {
