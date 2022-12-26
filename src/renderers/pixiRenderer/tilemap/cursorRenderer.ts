@@ -1,11 +1,14 @@
 import { Graphics } from "pixi.js";
-import Controller from "../../../data/controllers/controller";
+import Controller, { Mode } from "../../../data/controllers/controller";
 
 import { SCALE } from "../constants";
 import { UI } from "../layer";
 
 class CursorRenderer {
   private container: Graphics;
+
+  private oldMousePosition = "";
+  private oldMode = Mode.Line;
 
   constructor() {
     this.container = new Graphics();
@@ -14,6 +17,18 @@ class CursorRenderer {
 
   public render() {
     const controller = Controller.Instance;
+
+    const mousePosition = controller.getMouse();
+    const mode = controller.getMode();
+    if (
+      mousePosition.join(",") === this.oldMousePosition &&
+      mode === this.oldMode
+    ) {
+      return;
+    }
+
+    this.oldMousePosition = mousePosition.join(",");
+    this.oldMode = mode;
     const scale = SCALE * (controller.getPlacable()?.entity?.scale || 1);
 
     this.container!.clear();

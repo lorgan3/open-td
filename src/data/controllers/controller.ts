@@ -25,6 +25,13 @@ export enum Keys {
   B = "b",
 }
 
+export enum Mode {
+  Single = "single",
+  Line = "line",
+  StraightLine = "straightLine",
+  grid = "grid",
+}
+
 const values = new Set<string>(Object.values(Keys));
 
 function isKey(key: string): key is Keys {
@@ -190,6 +197,22 @@ class Controller {
       Math.floor(this.mouseX / scale) * scale,
       Math.floor(this.mouseY / scale) * scale,
     ];
+  }
+
+  getMode() {
+    if (!this._isMouseDown) {
+      return Mode.Single;
+    }
+
+    if (this.pressedKeys[Keys.Control] || this.pressedKeys[Keys.Meta]) {
+      return Mode.grid;
+    }
+
+    if (this.pressedKeys[Keys.Shift]) {
+      return Mode.StraightLine;
+    }
+
+    return Mode.Line;
   }
 
   static get Instance() {
