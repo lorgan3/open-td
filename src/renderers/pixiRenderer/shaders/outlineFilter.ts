@@ -37,6 +37,10 @@ class OutlineFilter extends Filter {
    * Get the angleStep by quality
    */
   private static getAngleStep(quality: number): string {
+    if (quality === 0) {
+      return (Math.PI / 2).toFixed(7);
+    }
+
     const samples = Math.max(
       quality * OutlineFilter.MAX_SAMPLES,
       OutlineFilter.MIN_SAMPLES

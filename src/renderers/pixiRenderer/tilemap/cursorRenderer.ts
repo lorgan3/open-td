@@ -17,10 +17,10 @@ class CursorRenderer {
 
   constructor() {
     this.rangeGraphic = new Graphics();
-    this.rangeGraphic.filters = [new OutlineFilter(2, 0x000000)];
+    this.rangeGraphic.filters = [new OutlineFilter(2, 0x000000, 0)];
 
     this.container = new Graphics();
-    this.container.filters = [new OutlineFilter(2, 0x000000)];
+    this.container.filters = [new OutlineFilter(2, 0x000000, 0)];
 
     UI.addChild(this.rangeGraphic, this.container);
   }
