@@ -8,6 +8,32 @@ class ControllableSound {
   private ref?: IMediaInstance;
   private promise?: Promise<IMediaInstance>;
 
+  private static soundInstanceCountMap = new Map<Sound, number>();
+  private static soundPlaytimeMap = new Map<Sound, number>();
+
+  static MAX_INSTANCES = 3;
+  static MIN_INTERVAL = 100;
+
+  private static rateLimitSound(alias: Sound) {
+    const instanceCount = this.soundInstanceCountMap.get(alias) || 0;
+    const playtime = this.soundPlaytimeMap.get(alias) || 0;
+
+    if (instanceCount > this.MAX_INSTANCES) {
+      return true;
+    }
+
+    const now = performance.now();
+    if (playtime + this.MIN_INTERVAL > now) {
+      return true;
+    }
+
+    // Don't forget to manually decrement this when the sound finishes playing!
+    this.soundInstanceCountMap.set(alias, instanceCount + 1);
+    this.soundPlaytimeMap.set(alias, now);
+
+    return false;
+  }
+
   static getSoundOptions(entity: Entity) {
     const { x, y, width, height, scale } = Renderer.Instance.getViewport();
 
@@ -38,6 +64,10 @@ class ControllableSound {
       return;
     }
 
+    if (this.rateLimitSound(alias)) {
+      return;
+    }
+
     return new ControllableSound(alias, new filters.StereoFilter(pan), {
       ...options,
       volume: volume,
@@ -49,7 +79,15 @@ class ControllableSound {
     private filter: filters.StereoFilter,
     options: PlayOptions
   ) {
-    const promiseOrRef = sound.play(alias, { ...options, filters: [filter] });
+    const promiseOrRef = sound.play(alias, {
+      ...options,
+      filters: [filter],
+      complete: () =>
+        ControllableSound.soundInstanceCountMap.set(
+          alias,
+          ControllableSound.soundInstanceCountMap.get(alias)! - 1
+        ),
+    });
 
     if (promiseOrRef instanceof Promise) {
       promiseOrRef.then((ref) => (this.ref = ref));
