@@ -25,40 +25,27 @@ export const MAX_DIAGONAL_COST = 150;
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class Pathfinder {
-  private costFn: (tile: Tile) => number | null;
-  private costMultiplierFn: (tile: Tile) => number;
-
   constructor(
     private surface: Surface,
-    costMultiplier:
-      | Partial<Record<TileType, number>>
-      | ((tile: Tile) => number) = DEFAULT_LAND_BASED_MULTIPLIERS,
-    costs:
-      | Partial<Record<TileType, number>>
-      | ((tile: Tile) => number | null) = DEFAULT_LAND_BASED_COSTS
-  ) {
-    this.costMultiplierFn =
-      typeof costMultiplier === "function"
-        ? costMultiplier
-        : (tile: Tile) => costMultiplier[tile.getType()] ?? 1;
-
-    this.costFn =
-      typeof costs === "function"
-        ? costs
-        : (tile: Tile) => costs[tile.getType()] ?? null;
-  }
+    public costMultipliers: Partial<
+      Record<TileType, number>
+    > = DEFAULT_LAND_BASED_MULTIPLIERS,
+    public costs: Partial<Record<TileType, number>> = DEFAULT_LAND_BASED_COSTS
+  ) {}
 
   getPath(
     from: Tile,
     to: Tile,
     costMultiplierOverride?: (tile: Tile) => number
   ) {
-    const costMultiplier = costMultiplierOverride ?? this.costMultiplierFn;
+    const costMultiplier =
+      costMultiplierOverride ??
+      ((tile: Tile) => this.costMultipliers[tile.getType()] ?? 1);
 
     const visitedTiles = new Set<Tile>();
 
     // Cheapest path from n to start
-    const movementScore = this.costFn(from) ?? 1;
+    const movementScore = this.costs[from.getType()] ?? 1;
     const score = movementScore * costMultiplier(from);
 
     const movementScores = new Map<string, number>();
@@ -162,7 +149,10 @@ class Pathfinder {
     const visitedTiles: Record<string, number> = {};
 
     const multiplierFn = (tile: Tile) => {
-      return (visitedTiles[tile.getHash()] ?? 1) * this.costMultiplierFn(tile);
+      return (
+        (visitedTiles[tile.getHash()] ?? 1) *
+        (this.costMultipliers[tile.getType()] ?? 1)
+      );
     };
 
     return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {
@@ -186,12 +176,14 @@ class Pathfinder {
 
   // From and to should be 1 tile apart
   getCost(from: Tile, to?: Tile) {
+    const costFn = (tile: Tile) => this.costs[tile.getType()] ?? null;
+
     if (!to) {
-      return this.costFn(from);
+      return costFn(from);
     }
 
-    const fromCost = this.costFn(from);
-    const toCost = this.costFn(to);
+    const fromCost = costFn(from);
+    const toCost = costFn(to);
     if (!fromCost || !toCost) {
       return null;
     }
@@ -208,8 +200,8 @@ class Pathfinder {
     // calculate the penalty for moving diagonally
     return (
       cost +
-      (this.costFn(this.surface.getTile(from.getX(), to.getY())!)! +
-        this.costFn(this.surface.getTile(to.getX(), from.getY())!)!) /
+      (costFn(this.surface.getTile(from.getX(), to.getY())!)! +
+        costFn(this.surface.getTile(to.getX(), from.getY())!)!) /
         4
     );
   }
@@ -235,8 +227,7 @@ class Pathfinder {
       return;
     }
 
-    const cost = this.costFn(tile);
-
+    const cost = this.costs[tile.getType()];
     if (cost) {
       data[index * 2] = cost;
       data[index * 2 + 1] = cost * costMultiplier(tile);
@@ -260,8 +251,7 @@ class Pathfinder {
       return;
     }
 
-    const cost = this.costFn(tile);
-
+    const cost = this.costs[tile.getType()];
     if (cost) {
       data[index * 2] = cost + (data[d1 * 2]! + data[d2 * 2]!) / 4;
       data[index * 2 + 1] =

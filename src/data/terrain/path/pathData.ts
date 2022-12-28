@@ -1,8 +1,4 @@
 import Tile, { SerializedTile } from "../tile";
-import {
-  DEFAULT_LAND_BASED_COSTS,
-  DEFAULT_LAND_BASED_MULTIPLIERS,
-} from "./definitions";
 import Path from "./path";
 import Pathfinder from "./pathfinder";
 import { WorkerEvent } from "./worker";
@@ -74,8 +70,8 @@ class PathData {
         width,
         height,
         buffer: buffer.buffer,
-        costs: DEFAULT_LAND_BASED_COSTS, // @TODO: use correct costs and multipliers
-        costMultiplier: DEFAULT_LAND_BASED_MULTIPLIERS,
+        costs: this.pathfinder.costs,
+        costMultiplier: this.pathfinder.costMultipliers,
         startPoints: this.startPoints.map((tile) => tile.serialize()),
         target: this.target.serialize(),
       };
