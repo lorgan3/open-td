@@ -6,6 +6,18 @@ import { getScale, StaticAgent } from "../entity/staticEntity";
 import { AgentCategory } from "../entity/constants";
 import EventSystem from "../eventSystem";
 
+export interface GeneratorParams {
+  width: number;
+  height: number;
+  generate?: Generator;
+}
+
+export interface CopyParams {
+  width: number;
+  height: number;
+  buffer: Uint8Array;
+}
+
 class Surface {
   public map!: Tile[];
   public entities: Entity[] = [];
@@ -13,24 +25,59 @@ class Surface {
   public staticEntities: Entity[] = [];
   private entitiesMap = new Map<AgentCategory, Set<Entity>>();
 
+  private width: number;
+  private height: number;
+
   private dirty = false;
   private changedTiles = new Set<Tile>();
   private addedAgents = new Set<StaticAgent>();
   private removedAgents = new Set<StaticAgent>();
 
-  constructor(
-    private width = 50,
-    private height = 25,
-    private generate: Generator = (x, y) => new Tile(x, y)
-  ) {
-    this.initialize();
+  constructor(params: GeneratorParams | CopyParams) {
+    this.width = params.width;
+    this.height = params.height;
+
+    const generatorOrBuffer =
+      "buffer" in params ? params.buffer : params.generate;
+
+    this.initialize(generatorOrBuffer ?? ((x, y) => new Tile(x, y)));
   }
 
-  private initialize() {
+  serialize(): CopyParams {
+    const buffer = new Uint8Array(this.map.length * 3);
+    for (let i = 0; i < this.map.length; i++) {
+      const tile = this.map[i];
+      const index = i * 3;
+
+      buffer[index] = tile.getX();
+      buffer[index + 1] = tile.getY();
+      buffer[index + 2] = tile.getType();
+    }
+
+    return {
+      width: this.width,
+      height: this.height,
+      buffer,
+    };
+  }
+
+  private initialize(generateOrBuffer: Generator | Uint8Array) {
     this.map = new Array(this.width * this.height);
-    for (let j = 0; j < this.height; j++) {
-      for (let i = 0; i < this.width; i++) {
-        this.map[j * this.width + i] = this.generate(i, j);
+
+    if (generateOrBuffer instanceof Uint8Array) {
+      for (let i = 0; i < this.map.length; i++) {
+        const index = i * 3;
+        this.map[i] = new Tile(
+          generateOrBuffer[index],
+          generateOrBuffer[index + 1],
+          generateOrBuffer[index + 2]
+        );
+      }
+    } else {
+      for (let j = 0; j < this.height; j++) {
+        for (let i = 0; i < this.width; i++) {
+          this.map[j * this.width + i] = generateOrBuffer(i, j);
+        }
       }
     }
 

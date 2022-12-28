@@ -18,6 +18,7 @@ import { AgentCategory, EntityType } from "../../data/entity/constants";
 import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 import VisibilityController from "../../data/controllers/visibilityController";
 import WaveController from "../../data/controllers/waveController";
+import Path from "../../data/terrain/path/path";
 
 const IS_WINDOWS = navigator.appVersion.indexOf("Win") != -1;
 const MAX_FONT_SIZE = 42;
@@ -323,8 +324,18 @@ class Renderer implements IRenderer {
     });
   }
 
-  private renderCoverage() {
+  private async renderCoverage() {
     const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+
+    const promises: Array<Promise<Path[]>> = [];
+    WaveController.Instance.getSpawnGroups().forEach((spawnGroup) => {
+      promises.push(spawnGroup.getAsyncSpawnPoints());
+    });
+
+    const paths: Path[] = [];
+    (await Promise.all(promises)).forEach((result: Path[]) =>
+      paths.push(result[0])
+    );
 
     if (!this.coverageMap) {
       this.coverageMap = document.createElement("div");
@@ -349,11 +360,8 @@ class Renderer implements IRenderer {
 
     const tiles = new Set<Tile>();
     if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
-      WaveController.Instance.getSpawnGroups().forEach((spawnGroup) =>
-        spawnGroup
-          .getSpawnPoints()[0]
-          .getTiles()
-          .forEach((tile) => tiles.add(tile))
+      paths.forEach((path) =>
+        path.getTiles().forEach((tile) => tiles.add(tile))
       );
     }
 

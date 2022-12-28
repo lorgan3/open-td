@@ -114,12 +114,17 @@ class CoverageRenderer {
     }
   }
 
-  private renderPaths() {
+  private async renderPaths() {
     this.pathContainer.removeChildren();
-    const paths: Path[] = [];
 
-    WaveController.Instance.getSpawnGroups().forEach((spawnGroup) =>
-      paths.push(...spawnGroup.getSpawnPoints())
+    const promises: Array<Promise<Path[]>> = [];
+    WaveController.Instance.getSpawnGroups().forEach((spawnGroup) => {
+      promises.push(spawnGroup.getAsyncSpawnPoints());
+    });
+
+    const paths: Path[] = [];
+    (await Promise.all(promises)).forEach((result: Path[]) =>
+      paths.push(...result)
     );
 
     paths.forEach((path, index) => {

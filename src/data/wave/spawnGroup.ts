@@ -71,7 +71,7 @@ class SpawnGroup {
   }
 
   tick(dt: number) {
-    if (this.energy === 0) {
+    if (this.energy === 0 || !this.isReady()) {
       return;
     }
 
@@ -127,8 +127,16 @@ class SpawnGroup {
     return this.pathData.get(type)!;
   }
 
+  isReady() {
+    return !!this.getPathData(this.unit.type).getPaths().length;
+  }
+
   getSpawnPoints() {
     return this.getPathData(this.unit.type).getPaths();
+  }
+
+  getAsyncSpawnPoints() {
+    return this.getPathData(this.unit.type).getAsyncPaths();
   }
 
   getNextSpawnPoint() {

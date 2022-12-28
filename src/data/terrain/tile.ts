@@ -13,6 +13,12 @@ export type TileWithStaticEntity = {
   getStaticEntity: () => StaticEntity;
 } & Tile;
 
+export interface SerializedTile {
+  x: number;
+  y: number;
+  type: TileType;
+}
+
 class Tile {
   private staticEntity: StaticEntity | null = null;
   private hash: string;
@@ -28,6 +34,14 @@ class Tile {
   ) {
     this.hash = `[${this.x}, ${this.y}]`;
     this.actualType = type;
+  }
+
+  serialize(): SerializedTile {
+    return {
+      x: this.x,
+      y: this.y,
+      type: this.type,
+    };
   }
 
   getX() {

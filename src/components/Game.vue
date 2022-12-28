@@ -21,7 +21,11 @@ const props = defineProps<{
 
 const canvas = ref<HTMLDivElement | null>(null);
 
-const surface = new Surface(200, 200, getGenerator(props.seed));
+const surface = new Surface({
+  width: 200,
+  height: 200,
+  generate: getGenerator(props.seed),
+});
 const controller = new Controller(surface);
 const renderer = new props.renderer(surface, controller);
 
