@@ -30,11 +30,15 @@ class Marker extends Sprite {
   }
 }
 
+class Coverage extends Sprite {
+  public originalAlpha = 1;
+}
+
 class CoverageRenderer {
   private coverageContainer: ParticleContainer;
   private pathContainer: ParticleContainer;
 
-  private towers = new Map<string, Sprite[]>();
+  private towers = new Map<string, Coverage[]>();
   private hoveredTile?: Tile;
   private visible = false;
 
@@ -43,6 +47,7 @@ class CoverageRenderer {
       undefined,
       {
         uvs: true,
+        alpha: true,
       },
       undefined,
       true
@@ -98,10 +103,11 @@ class CoverageRenderer {
           return;
         }
 
-        const sprite = new Sprite(
+        const sprite = new Coverage(
           this.loader.resources[ATLAS].textures![AtlasTile.Coverage]
         );
-        sprite.alpha = Math.min(0.1 + 0.2 * tileTowers.length, 0.8);
+        sprite.originalAlpha = Math.min(0.15 + 0.1 * tileTowers.length, 0.55);
+        sprite.alpha = sprite.originalAlpha;
         sprite.position.set(tile.getX() * SCALE, tile.getY() * SCALE);
         this.coverageContainer.addChild(sprite);
 
@@ -189,6 +195,7 @@ class CoverageRenderer {
       this.towers.get(this.hoveredTile.getHash())?.forEach((sprite) => {
         sprite.texture =
           this.loader.resources[ATLAS].textures![AtlasTile.Coverage];
+        sprite.alpha = sprite.originalAlpha;
       });
     }
 
@@ -196,6 +203,7 @@ class CoverageRenderer {
       this.towers.get(newHoveredTile.getHash())?.forEach((sprite) => {
         sprite.texture =
           this.loader.resources[ATLAS].textures![AtlasTile.ActiveCoverage];
+        sprite.alpha = 0.7;
       });
     }
 
