@@ -4,12 +4,16 @@ import Tile from "../../terrain/tile";
 import SpawnGroup from "../SpawnGroup";
 
 describe("SpawnGroup", () => {
-  const surface = new Surface(10, 10, (x, y) => {
-    const tile = new Tile(x, y);
-    if (x >= 7) {
-      tile.setDiscoveryStatus(DiscoveryStatus.Discovered);
-    }
-    return tile;
+  const surface = new Surface({
+    width: 10,
+    height: 10,
+    generate: (x, y) => {
+      const tile = new Tile(x, y);
+      if (x >= 7) {
+        tile.setDiscoveryStatus(DiscoveryStatus.Discovered);
+      }
+      return tile;
+    },
   });
 
   it("gets the center when all spawn points are the same", () => {

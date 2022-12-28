@@ -12,7 +12,7 @@ describe("buildController", () => {
   const emptySet = new Set<Tile>();
 
   it("can add a pending tile", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
@@ -29,7 +29,7 @@ describe("buildController", () => {
   });
 
   it("can remove a pending tile", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
@@ -46,7 +46,7 @@ describe("buildController", () => {
   });
 
   it("can undo an existing removal by overwriting it", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
@@ -67,7 +67,7 @@ describe("buildController", () => {
   });
 
   it("can undo an existing removal by removing it", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
@@ -88,7 +88,7 @@ describe("buildController", () => {
   });
 
   it("can undo an existing addition by removing it", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
@@ -109,7 +109,7 @@ describe("buildController", () => {
   });
 
   it("can overwrite an existing base blueprint", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,
@@ -130,7 +130,7 @@ describe("buildController", () => {
   });
 
   it("can overwrite an existing tower blueprint", () => {
-    const surface = new Surface(5, 5);
+    const surface = new Surface({ width: 5, height: 5 });
     const selectedTile = surface.getTile(2, 2)!;
     new TestManager(
       Difficulty.Normal,

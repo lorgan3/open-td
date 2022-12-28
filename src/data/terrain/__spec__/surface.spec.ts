@@ -4,7 +4,7 @@ import Tile from "../tile";
 import { vi } from "vitest";
 
 describe("surface", () => {
-  const surface = new Surface(10, 5);
+  const surface = new Surface({ width: 10, height: 5 });
 
   it("can get tiles", () => {
     const tile = surface.getTile(0, 0)!;
@@ -64,11 +64,11 @@ describe("surface", () => {
   });
 
   it("can update a tile", () => {
-    const surface = new Surface(
-      10,
-      5,
-      (x, y) => new Tile(x, y, TileType.Grass)
-    );
+    const surface = new Surface({
+      width: 10,
+      height: 5,
+      generate: (x, y) => new Tile(x, y, TileType.Grass),
+    });
 
     expect(surface.isDirty()).toBeFalsy();
     surface.setTile(new Tile(1, 1, TileType.Stone));
@@ -82,11 +82,11 @@ describe("surface", () => {
   });
 
   it("can update tiles", () => {
-    const surface = new Surface(
-      10,
-      5,
-      (x, y) => new Tile(x, y, TileType.Grass)
-    );
+    const surface = new Surface({
+      width: 10,
+      height: 5,
+      generate: (x, y) => new Tile(x, y, TileType.Grass),
+    });
 
     expect(surface.isDirty()).toBeFalsy();
     surface.setTiles([new Tile(1, 1, TileType.Stone)]);

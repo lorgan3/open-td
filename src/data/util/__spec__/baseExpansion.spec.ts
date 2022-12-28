@@ -9,7 +9,7 @@ import Base from "../../entity/base";
 import { vi } from "vitest";
 
 describe("baseExpansion", () => {
-  const surface = new Surface(8, 8);
+  const surface = new Surface({ width: 8, height: 8 });
   const basePoint = surface.getTile(2, 2)!;
   const manager = new TestManager(
     Difficulty.Normal,

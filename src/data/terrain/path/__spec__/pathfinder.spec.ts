@@ -4,7 +4,11 @@ import Tile from "../../tile";
 import { TileType } from "../../constants";
 
 describe("pathfinder", () => {
-  const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
+  const surface = new Surface({
+    width: 5,
+    height: 5,
+    generate: (x, y) => new Tile(x, y, TileType.Grass),
+  });
   surface.forLine(2, 0, 2, 3, (tile) =>
     surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Void))
   );
@@ -89,15 +93,26 @@ describe("pathfinder", () => {
   });
 
   describe("getCost", () => {
-    const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
+    const surface = new Surface({
+      width: 5,
+      height: 5,
+      generate: (x, y) => new Tile(x, y, TileType.Grass),
+    });
     surface.forLine(2, 0, 2, 3, (tile) =>
       surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Stone))
     );
 
-    const pathfinder = new PathFinder(surface, () => 1, {
-      [TileType.Grass]: 1,
-      [TileType.Stone]: 2,
-    });
+    const pathfinder = new PathFinder(
+      surface,
+      {
+        [TileType.Grass]: 1,
+        [TileType.Stone]: 1,
+      },
+      {
+        [TileType.Grass]: 1,
+        [TileType.Stone]: 2,
+      }
+    );
 
     const table = [
       {

@@ -14,13 +14,14 @@ import { DiscoveryStatus, TileType } from "../../constants";
 describe("path", () => {
   const speed = 1;
   const costs = { [TileType.Grass]: 2, [TileType.Stone]: 1 };
-  const surface = new Surface(
-    5,
-    5,
-    (x, y) =>
-      new Tile(x, y, x === 1 || x === 2 ? TileType.Grass : TileType.Void)
-  );
-  const pathfinder = new Pathfinder(surface, () => 1, costs);
+  const multipliers = { [TileType.Grass]: 1, [TileType.Stone]: 1 };
+  const surface = new Surface({
+    width: 5,
+    height: 5,
+    generate: (x, y) =>
+      new Tile(x, y, x === 1 || x === 2 ? TileType.Grass : TileType.Void),
+  });
+  const pathfinder = new Pathfinder(surface, multipliers, costs);
   const tiles = [
     surface.getTile(0, 0)!,
     surface.getTile(1, 0)!,
@@ -157,7 +158,11 @@ describe("path", () => {
     it.each(table)(
       "gets the future position after $time ms with starting position $index and speed $speed",
       ({ index, time, speed, speedMultipliers, expected }) => {
-        const pathfinder = new Pathfinder(surface, () => 1, speedMultipliers);
+        const pathfinder = new Pathfinder(
+          surface,
+          multipliers,
+          speedMultipliers
+        );
         const path = Path.fromTiles(pathfinder, tiles, speed);
         path.setIndex(index);
 
@@ -196,14 +201,18 @@ describe("path", () => {
 
   it("creates checkpoints for all destructible entities", () => {
     const getStaticEntityCheckpoints = staticCheckpointFactory();
-    const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
+    const surface = new Surface({
+      width: 5,
+      height: 5,
+      generate: (x, y) => new Tile(x, y, TileType.Grass),
+    });
     const firstBase = surface.getTile(1, 0)!;
 
     firstBase.setStaticEntity(new Base(firstBase).entity);
     const secondBase = surface.getTile(3, 1)!;
     secondBase.setStaticEntity(new Base(secondBase).entity);
 
-    const pathfinder = new Pathfinder(surface, () => 1, costs);
+    const pathfinder = new Pathfinder(surface, multipliers, costs);
     const tiles = [
       surface.getTile(0, 0)!,
       firstBase,
@@ -225,8 +234,12 @@ describe("path", () => {
   });
 
   it("recomputes a path", () => {
-    const surface = new Surface(5, 5, (x, y) => new Tile(x, y, TileType.Grass));
-    const pathfinder = new Pathfinder(surface, () => 1, costs);
+    const surface = new Surface({
+      width: 5,
+      height: 5,
+      generate: (x, y) => new Tile(x, y, TileType.Grass),
+    });
+    const pathfinder = new Pathfinder(surface, multipliers, costs);
     const tiles = [
       surface.getTile(1, 0)!,
       surface.getTile(2, 0)!,
@@ -251,15 +264,19 @@ describe("path", () => {
   });
 
   it("fast forwards to the first discovered or checkpoint tile", () => {
-    const surface = new Surface(5, 5, (x, y) => {
-      const tile = new Tile(x, y, TileType.Grass);
-      if (x > 3) {
-        tile.setDiscoveryStatus(DiscoveryStatus.Discovered);
-      }
-      return tile;
+    const surface = new Surface({
+      width: 5,
+      height: 5,
+      generate: (x, y) => {
+        const tile = new Tile(x, y, TileType.Grass);
+        if (x > 3) {
+          tile.setDiscoveryStatus(DiscoveryStatus.Discovered);
+        }
+        return tile;
+      },
     });
 
-    const pathfinder = new Pathfinder(surface, () => 1, costs);
+    const pathfinder = new Pathfinder(surface, multipliers, costs);
     const path = Path.fromTiles(pathfinder, surface.getRow(3), speed);
 
     const agent1 = new Enemy(path.getTile(), path.clone());
