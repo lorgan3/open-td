@@ -18,7 +18,7 @@ import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
-import { LAYERS, UI } from "./layer";
+import { LAYERS } from "./layer";
 import { EntityRenderer, EntityRendererStatics } from "./overrides/types";
 import {
   DEFAULT_SCALE,
@@ -103,8 +103,7 @@ class Renderer implements IRenderer {
     this.target = target;
 
     this.app = new Application({
-      width: window.innerWidth,
-      height: window.innerHeight,
+      resizeTo: window,
     });
     target.appendChild(this.app.view);
 
