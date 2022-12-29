@@ -168,13 +168,12 @@ const submit = (event: Event) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10vh;
 
   h1 {
     text-align: center;
     color: #fff;
     font-size: 84px;
+    margin: 10vh 0;
   }
 
   label {
@@ -230,7 +229,8 @@ const submit = (event: Event) => {
     position: relative;
     display: flex;
     flex-direction: row;
-    height: 50vh;
+    height: calc(70vh - 84px);
+    margin-bottom: 10vh;
 
     > * {
       position: relative;

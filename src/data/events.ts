@@ -3,21 +3,22 @@ import { Placeable } from "./placeables";
 import Tile from "./terrain/tile";
 
 export enum GameEvent {
-  StatUpdate = 0,
-  SurfaceChange = 1,
-  BlackOut = 2,
-  OpenBuildMenu = 3,
-  CloseBuildMenu = 4,
-  ToggleShowCoverage = 5,
-  StartWave = 6,
-  EndWave = 7,
-  Unlock = 8,
-  Discover = 9,
-  Spawn = 10,
-  Buy = 11,
-  Sell = 12,
-  HitBase = 13,
-  Lose = 14,
+  StatUpdate,
+  SurfaceChange,
+  BlackOut,
+  OpenBuildMenu,
+  CloseBuildMenu,
+  SelectPlaceable,
+  ToggleShowCoverage,
+  StartWave,
+  EndWave,
+  Unlock,
+  Discover,
+  Spawn,
+  Buy,
+  Sell,
+  HitBase,
+  Lose,
 }
 
 export interface EventParamsMap {
@@ -26,6 +27,7 @@ export interface EventParamsMap {
   [GameEvent.BlackOut]: [];
   [GameEvent.OpenBuildMenu]: [];
   [GameEvent.CloseBuildMenu]: [];
+  [GameEvent.SelectPlaceable]: [SelectPlaceable];
   [GameEvent.ToggleShowCoverage]: [];
   [GameEvent.StartWave]: [];
   [GameEvent.EndWave]: [];
@@ -59,6 +61,10 @@ export interface SurfaceChange {
   affectedTiles: Set<Tile>;
   addedStaticAgents: Set<StaticAgent>;
   removedStaticAgents: Set<StaticAgent>;
+}
+
+export interface SelectPlaceable {
+  placeable: Placeable;
 }
 
 export interface Unlock {

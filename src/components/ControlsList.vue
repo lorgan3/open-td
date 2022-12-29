@@ -7,6 +7,8 @@ import Mouse from "./controls/mouse.vue";
 <template>
   <h3>Build menu</h3>
   <div class="flex">
+    <Key char="e" />
+    /
     <Key char="b" />
   </div>
   <h3>Building</h3>
@@ -52,6 +54,10 @@ import Mouse from "./controls/mouse.vue";
   <div class="flex">
     <Key char="-" />
     <Key char="+" />
+  </div>
+  <h3>Toggle selling</h3>
+  <div class="flex">
+    <Key char="f" />
   </div>
 </template>
 

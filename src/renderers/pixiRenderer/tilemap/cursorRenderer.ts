@@ -5,6 +5,7 @@ import MoneyController from "../../../data/controllers/moneyController";
 import { EntityType } from "../../../data/entity/constants";
 import { Agent } from "../../../data/entity/entity";
 import { ITowerStatics } from "../../../data/entity/towers";
+import { Placeable } from "../../../data/placeables";
 import Tile from "../../../data/terrain/tile";
 
 import { SCALE } from "../constants";
@@ -22,6 +23,7 @@ class CursorRenderer {
 
   private oldMousePosition = "";
   private oldMode = Mode.Line;
+  private oldPlaceable: Placeable | null = null;
 
   constructor() {
     this.rangeGraphic = new Graphics();
@@ -48,17 +50,19 @@ class CursorRenderer {
 
     const mousePosition = controller.getMouse();
     const mode = controller.getMode();
+    const placeable = controller.getPlacable();
     if (
       mousePosition.join(",") === this.oldMousePosition &&
-      mode === this.oldMode
+      mode === this.oldMode &&
+      placeable === this.oldPlaceable
     ) {
       return;
     }
 
     this.oldMousePosition = mousePosition.join(",");
     this.oldMode = mode;
+    this.oldPlaceable = placeable;
 
-    const placeable = controller.getPlacable();
     const scale = SCALE * (placeable?.entity?.scale || 1);
 
     this.rangeGraphic.clear();

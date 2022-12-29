@@ -1,5 +1,5 @@
 import { GameEvent } from "../events";
-import { Placeable } from "../placeables";
+import { DEMOLISH, Placeable, TOWER } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import EventSystem from "../eventSystem";
@@ -23,6 +23,8 @@ export enum Keys {
   Z = "z",
   Q = "q",
   B = "b",
+  E = "e",
+  F = "f",
 }
 
 export enum Mode {
@@ -49,7 +51,8 @@ class Controller {
   private _isMouseDown = false;
   private eventHandlers = new Map<Keys, Set<() => void>>();
 
-  private selectedPlacable: Placeable | null = null;
+  private selectedPlacable: Placeable = DEMOLISH;
+  private previousSelectedPlacable: Placeable = TOWER;
   private buildMenuOpen = false;
 
   constructor(private surface: Surface) {
@@ -62,6 +65,7 @@ class Controller {
 
   public setPlaceable(placeable: Placeable) {
     this.selectedPlacable = placeable;
+    EventSystem.Instance.triggerEvent(GameEvent.SelectPlaceable, { placeable });
   }
 
   public mouseDown(x: number, y: number) {
@@ -154,8 +158,20 @@ class Controller {
 
       this.eventHandlers.get(key)?.forEach((fn) => fn());
 
-      if (key === Keys.B) {
+      if (key === Keys.B || key === Keys.E) {
         this.toggleBuildMenu();
+      }
+
+      // @TODO: I would like to use `Q` for this but there's no easy way to figure out azerty/qwerty keyboards
+      if (key === Keys.F) {
+        if (this.selectedPlacable !== DEMOLISH) {
+          this.previousSelectedPlacable = this.selectedPlacable;
+          this.setPlaceable(DEMOLISH);
+        } else {
+          const temp = this.previousSelectedPlacable;
+          this.previousSelectedPlacable = this.selectedPlacable;
+          this.setPlaceable(temp);
+        }
       }
     }
   }

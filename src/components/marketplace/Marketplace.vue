@@ -22,6 +22,7 @@ const instance = getCurrentInstance();
 
 let removeOpenMenuEventListener: () => void;
 let removeCloseMenuEventListener: () => void;
+let removeSelectPlaceableEventListener: () => void;
 onMounted(() => {
   removeOpenMenuEventListener = props.eventSystem.addEventListener(
     GameEvent.OpenBuildMenu,
@@ -31,17 +32,25 @@ onMounted(() => {
     GameEvent.CloseBuildMenu,
     () => (visible.value = false)
   );
+  removeSelectPlaceableEventListener = props.eventSystem.addEventListener(
+    GameEvent.SelectPlaceable,
+    ({ placeable }) => (selected.value = placeable)
+  );
 });
 
 onUnmounted(() => {
-  if (removeOpenMenuEventListener && removeCloseMenuEventListener) {
+  if (
+    removeOpenMenuEventListener &&
+    removeCloseMenuEventListener &&
+    removeSelectPlaceableEventListener
+  ) {
     removeOpenMenuEventListener();
     removeCloseMenuEventListener();
+    removeSelectPlaceableEventListener();
   }
 });
 
 const onSelect = (item: TPlaceable) => {
-  selected.value = item;
   props.controller.setPlaceable(item);
 };
 
