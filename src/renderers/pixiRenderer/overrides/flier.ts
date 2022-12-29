@@ -2,7 +2,7 @@ import { AnimatedSprite, Loader, Sprite } from "pixi.js";
 import { Status } from "../../../data/entity/enemies";
 import FlierData from "../../../data/entity/enemies/flier";
 import { Explosion } from "../explosion";
-import { BASE } from "../layer";
+import { TOWERS } from "../layer";
 import { SCALE } from "../constants";
 import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
 import { EntityRenderer } from "./types";
@@ -18,7 +18,7 @@ const ONE_EIGHTH = 1 / 8;
 const FLY_SPEED = 0.0015;
 
 class Flier extends AnimatedSprite implements EntityRenderer {
-  public static readonly layer = BASE;
+  public static readonly layer = TOWERS; // Fliers fly over towers
 
   private flames: Sprite[] = [];
   private isBusy = false;
