@@ -7,7 +7,14 @@ import { TileType } from "./constants";
 
 export type Generator = (x: number, y: number) => Tile;
 
-const getGenerator = (seed: string) => {
+export interface Edges {
+  top: number[];
+  right: number[];
+  bottom: number[];
+  left: number[];
+}
+
+const getGenerator = (seed: string, mapWidth: number, mapHeight: number) => {
   const prng = Alea(seed);
   const noise2D = createNoise2D(prng);
 
@@ -18,10 +25,58 @@ const getGenerator = (seed: string) => {
   const MOISTURE_SCALE = 0.0077;
   const TEMPERATURE_SCALE = 0.0025;
   const HEIGHT_SCALE = 0.0194;
+  const EDGE_SCALE = 0.039;
+  const EDGE_DEPTH = 13;
+  const DOUBLE_EDGE_DEPTH = EDGE_DEPTH * 2;
+  const EDGE_CORNER_MULTIPLIER = 0.1;
 
   const RIVER_THRESHOLD = 0.95; // Smaller numbers mean wider rivers connecting the lakes
 
+  const edges: Edges = {
+    top: [],
+    right: [],
+    bottom: [],
+    left: [],
+  };
+
+  for (let i = 0; i < mapWidth; i++) {
+    let multiplier = 0;
+    if (i < DOUBLE_EDGE_DEPTH) {
+      multiplier = (DOUBLE_EDGE_DEPTH - i) * EDGE_CORNER_MULTIPLIER;
+    } else if (i > mapWidth - DOUBLE_EDGE_DEPTH) {
+      multiplier = (DOUBLE_EDGE_DEPTH - mapWidth + i) * EDGE_CORNER_MULTIPLIER;
+    }
+
+    edges.top[i] = (noise2D(i * EDGE_SCALE, 0) + 1 + multiplier) * EDGE_DEPTH;
+    edges.bottom[i] =
+      (noise2D(i * EDGE_SCALE, mapHeight * EDGE_SCALE) + 1 + multiplier) *
+      EDGE_DEPTH;
+  }
+
+  for (let i = 0; i < mapHeight; i++) {
+    let multiplier = 0;
+    if (i < DOUBLE_EDGE_DEPTH) {
+      multiplier = (DOUBLE_EDGE_DEPTH - i) * EDGE_CORNER_MULTIPLIER;
+    } else if (i > mapHeight - DOUBLE_EDGE_DEPTH) {
+      multiplier = (DOUBLE_EDGE_DEPTH - mapHeight + i) * EDGE_CORNER_MULTIPLIER;
+    }
+
+    edges.right[i] =
+      (noise2D(mapWidth * EDGE_SCALE, i * EDGE_SCALE) + 1 + multiplier) *
+      EDGE_DEPTH;
+    edges.left[i] = (noise2D(0, i * EDGE_SCALE) + 1 + multiplier) * EDGE_DEPTH;
+  }
+
   const generate: Generator = (x, y) => {
+    if (
+      y < edges.top[x] ||
+      y > mapHeight - edges.bottom[x] ||
+      x < edges.left[y] ||
+      x > mapWidth - edges.right[y]
+    ) {
+      return new Tile(x, y, TileType.Void);
+    }
+
     const x1 = x + xOffset;
     const y1 = y + yOffset;
 

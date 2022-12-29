@@ -24,7 +24,7 @@ const canvas = ref<HTMLDivElement | null>(null);
 const surface = new Surface({
   width: 200,
   height: 200,
-  generate: getGenerator(props.seed),
+  generate: getGenerator(props.seed, 200, 200),
 });
 const controller = new Controller(surface);
 const renderer = new props.renderer(surface, controller);
