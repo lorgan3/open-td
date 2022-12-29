@@ -20,6 +20,7 @@ class Rocket extends Projectile implements Agent {
 
   private prevX?: number;
   private prevY?: number;
+  public straightY = 0;
 
   constructor(
     protected source: ITower,
@@ -69,8 +70,9 @@ class Rocket extends Projectile implements Agent {
     const t = this.time / this.travelTime;
 
     const arc = Math.sin(t * Math.PI) * ARC_HEIGHT;
+    this.straightY = lerp(this.sourceY, this.targetY, t);
     this.entity.setX(lerp(this.sourceX, this.targetX, t));
-    this.entity.setY(lerp(this.sourceY, this.targetY, t) - arc);
+    this.entity.setY(this.straightY - arc);
 
     if (this.prevX && this.prevY) {
       const xDiff = this.entity.getX() - this.prevX;
@@ -89,6 +91,10 @@ class Rocket extends Projectile implements Agent {
 
   isVisible() {
     return true;
+  }
+
+  getPercentage() {
+    return this.time / this.travelTime;
   }
 }
 

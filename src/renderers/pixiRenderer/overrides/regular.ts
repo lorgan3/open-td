@@ -1,4 +1,4 @@
-import { AnimatedSprite, Loader, Sprite } from "pixi.js";
+import { AnimatedSprite, Graphics, Loader, Sprite } from "pixi.js";
 import { Status } from "../../../data/entity/enemies";
 import RegularData from "../../../data/entity/enemies/regular";
 import { Explosion } from "../explosion";
@@ -10,6 +10,7 @@ import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 import Renderer from "../renderer";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
+import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 
 const ATLAS_NAME = "regular";
 const ANIMATION_SPEED = 0.1;
@@ -19,21 +20,18 @@ class Regular extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
 
   private flames: Sprite[] = [];
+  private shadow: Graphics;
 
   constructor(private data: RegularData, private loader: Loader) {
     super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
+    this.shadow = createShadow(ShadowSize.medium);
 
-    this.on(
-      "removed",
-      () =>
-        new Explosion(
-          loader,
-          data.entity.getX() + 0.5,
-          data.entity.getY() + 0.5
-        )
-    );
+    this.on("removed", () => {
+      deleteShadow(this.shadow);
+      new Explosion(loader, data.entity.getX() + 0.5, data.entity.getY() + 0.5);
+    });
 
     this.play();
   }
@@ -47,6 +45,7 @@ class Regular extends AnimatedSprite implements EntityRenderer {
       (this.data.entity.getX() + xOffset) * SCALE,
       (this.data.entity.getY() + yOffset) * SCALE
     );
+    this.shadow.position.copyFrom(this.position);
 
     this.angle = this.data.entity.getRotation();
     if (this.data.AI.isBusy()) {

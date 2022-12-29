@@ -17,7 +17,7 @@ const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
 class GenericProjectile extends Sprite implements EntityRenderer {
   public static readonly layer = PROJECTILES;
 
-  constructor(private data: Agent, loader: Loader) {
+  constructor(protected data: Agent, loader: Loader) {
     super(
       loader.resources[ATLAS_NAME].spritesheet!.textures[
         ENTITY_TO_ATLAS_MAP.get(data.getType()) ?? DEFAULT_SPRITE

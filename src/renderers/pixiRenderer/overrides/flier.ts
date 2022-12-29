@@ -1,4 +1,4 @@
-import { AnimatedSprite, Loader, Sprite } from "pixi.js";
+import { AnimatedSprite, Graphics, Loader, Sprite } from "pixi.js";
 import { Status } from "../../../data/entity/enemies";
 import FlierData from "../../../data/entity/enemies/flier";
 import { Explosion } from "../explosion";
@@ -10,6 +10,7 @@ import Renderer from "../renderer";
 import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
+import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 
 const ATLAS_NAME = "flier";
 const ANIMATION_SPEED = 0.2;
@@ -22,23 +23,20 @@ class Flier extends AnimatedSprite implements EntityRenderer {
 
   private flames: Sprite[] = [];
   private isBusy = false;
+  private shadow: Graphics;
 
   constructor(private data: FlierData, private loader: Loader) {
     super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
+    this.shadow = createShadow(ShadowSize.small);
 
     this.play();
 
-    this.on(
-      "removed",
-      () =>
-        new Explosion(
-          loader,
-          data.entity.getX() + 0.5,
-          data.entity.getY() + 0.5
-        )
-    );
+    this.on("removed", () => {
+      deleteShadow(this.shadow);
+      new Explosion(loader, data.entity.getX() + 0.5, data.entity.getY() + 0.5);
+    });
   }
 
   sync() {
@@ -62,6 +60,11 @@ class Flier extends AnimatedSprite implements EntityRenderer {
     this.position.set(
       (this.data.entity.getX() + xOffset) * SCALE,
       (this.data.entity.getY() + yOffset) * SCALE
+    );
+
+    this.shadow.position.set(
+      (this.data.entity.getX() + 0.5) * SCALE,
+      (this.data.entity.getY() + 0.5) * SCALE
     );
 
     this.angle = this.data.entity.getRotation();
