@@ -7,7 +7,7 @@ class SpawnAlert {
   private constructor(
     private min: number,
     private max: number,
-    private unit?: EntityType
+    private units: EntityType[] = []
   ) {}
 
   getRange() {
@@ -22,8 +22,16 @@ class SpawnAlert {
     return this.max - this.min;
   }
 
-  getUnit() {
-    return this.unit;
+  getUnits() {
+    return this.units;
+  }
+
+  addUnit(unit: EntityType) {
+    if (!this.units.includes(unit)) {
+      this.units.push(unit);
+    }
+
+    this.units.sort((a, b) => b - a);
   }
 
   equals(other: SpawnAlert) {
@@ -47,18 +55,20 @@ class SpawnAlert {
         return new SpawnAlert(
           Math.floor(direction / 15) * 15,
           Math.floor(direction / 15) * 15 + 15,
-          spawnGroup.getUnitType()
+          [spawnGroup.getUnitType()]
         );
       case Difficulty.Normal:
         return new SpawnAlert(
           Math.floor(direction / 45) * 45,
-          Math.floor(direction / 45) * 45 + 45
+          Math.floor(direction / 45) * 45 + 45,
+          [spawnGroup.getUnitType()]
         );
 
       case Difficulty.Hard:
         return new SpawnAlert(
           Math.floor(direction / 120) * 120,
-          Math.floor(direction / 120) * 120 + 120
+          Math.floor(direction / 120) * 120 + 120,
+          [spawnGroup.getUnitType()]
         );
     }
   }
@@ -69,7 +79,13 @@ class SpawnAlert {
       .filter((spawnGroup) => !spawnGroup.isExposed())
       .forEach((spawnGroup) => {
         const alert = SpawnAlert.forSpawnGroup(spawnGroup);
-        spawnAlerts.set(alert.toString(), alert);
+
+        const original = spawnAlerts.get(alert.toString());
+        if (original) {
+          original.addUnit(spawnGroup.getUnitType());
+        } else {
+          spawnAlerts.set(alert.toString(), alert);
+        }
       });
 
     return [...spawnAlerts.values()];

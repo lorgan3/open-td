@@ -82,27 +82,25 @@ class AlertRenderer {
       this.alertSymbols.push(symbol);
 
       const container = new Container();
-      const direction = (alert.getCenter() * Math.PI) / 180;
+      const center = alert.getCenter();
+      const direction = (center * Math.PI) / 180;
       container.position.set(
         (x + Math.cos(direction) * 9.2) * SCALE,
         (y + Math.sin(direction) * 9.2) * SCALE
       );
       container.addChild(symbol);
 
-      const unit = alert.getUnit();
-      if (unit) {
-        console.log(direction);
-        const enemy = new Sprite(
+      alert.getUnits().forEach((unit, i) => {
+        const icon = new Sprite(
           this.loader.resources[ATLAS].textures![
             AlertRenderer.enemySpriteMap.get(unit)!
           ]
         );
-        enemy.position.set(
-          16 - (alert.getCenter() > 270 || alert.getCenter() < 90 ? 64 : 0),
-          8
-        );
-        container.addChild(enemy);
-      }
+        const direction = center > 270 || center < 90 ? -1 : 1;
+        const offset = direction > 0 ? 16 : -48;
+        icon.position.set(offset + 32 * i * direction, 8);
+        container.addChild(icon);
+      });
 
       alertContainer.addChild(range, container);
       this.container.addChild(alertContainer);
