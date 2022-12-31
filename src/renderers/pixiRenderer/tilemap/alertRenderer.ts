@@ -1,4 +1,5 @@
 import { Container, Graphics, LINE_CAP, Loader, Sprite } from "pixi.js";
+import { EntityType } from "../../../data/entity/constants";
 import { GameEvent } from "../../../data/events";
 import EventSystem from "../../../data/eventSystem";
 import SpawnAlert from "../../../data/util/spawnAlert";
@@ -8,6 +9,12 @@ import { UI } from "../layer";
 
 class AlertRenderer {
   static displayDuration = 20 * 1000;
+  static enemySpriteMap: Map<EntityType, string> = new Map([
+    [EntityType.Runner, AtlasTile.Runner],
+    [EntityType.Slime, AtlasTile.Regular],
+    [EntityType.Tank, AtlasTile.Tank],
+    [EntityType.Flier, AtlasTile.Flier],
+  ]);
 
   private container: Container;
   private alertSymbols: Sprite[] = [];
@@ -26,12 +33,12 @@ class AlertRenderer {
   enable() {
     this.permanent = true;
     this.container.alpha = 1;
-    this.time = AlertRenderer.DISPLAY_DURATION;
+    this.time = AlertRenderer.displayDuration;
   }
 
   disable() {
     this.permanent = false;
-    this.time = AlertRenderer.DISPLAY_DURATION;
+    this.time = AlertRenderer.displayDuration;
   }
 
   private reset() {
@@ -71,15 +78,33 @@ class AlertRenderer {
         this.loader.resources[ATLAS].textures![AtlasTile.Alert]
       );
       symbol.anchor.set(0.5);
+      symbol.scale.set(2);
+      this.alertSymbols.push(symbol);
 
+      const container = new Container();
       const direction = (alert.getCenter() * Math.PI) / 180;
-      symbol.position.set(
+      container.position.set(
         (x + Math.cos(direction) * 9.2) * SCALE,
         (y + Math.sin(direction) * 9.2) * SCALE
       );
-      this.alertSymbols.push(symbol);
+      container.addChild(symbol);
 
-      alertContainer.addChild(range, symbol);
+      const unit = alert.getUnit();
+      if (unit) {
+        console.log(direction);
+        const enemy = new Sprite(
+          this.loader.resources[ATLAS].textures![
+            AlertRenderer.enemySpriteMap.get(unit)!
+          ]
+        );
+        enemy.position.set(
+          16 - (alert.getCenter() > 270 || alert.getCenter() < 90 ? 64 : 0),
+          8
+        );
+        container.addChild(enemy);
+      }
+
+      alertContainer.addChild(range, container);
       this.container.addChild(alertContainer);
     });
   }
@@ -91,7 +116,7 @@ class AlertRenderer {
 
     if (
       !this.permanent &&
-      (this.time > AlertRenderer.DISPLAY_DURATION || isStarted)
+      (this.time > AlertRenderer.displayDuration || isStarted)
     ) {
       this.container.alpha -= dt / 500;
     }

@@ -34,6 +34,10 @@ export enum AtlasTile {
   Bridge = "atlas5.png",
   None = "atlas0.png",
   Coin = "atlas31.png",
+  Runner = "atlas32.png",
+  Regular = "atlas33.png",
+  Flier = "atlas34.png",
+  Tank = "atlas35.png",
 }
 
 export const TILE_TO_ATLAS_MAP: Partial<Record<TileType, AtlasTile>> = {
