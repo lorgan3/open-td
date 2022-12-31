@@ -7,7 +7,7 @@ import { SCALE } from "../constants";
 import { UI } from "../layer";
 
 class AlertRenderer {
-  static DISPLAY_DURATION = 10 * 1000;
+  static displayDuration = 20 * 1000;
 
   private container: Container;
   private alertSymbols: Sprite[] = [];

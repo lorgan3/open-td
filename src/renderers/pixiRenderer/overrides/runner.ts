@@ -12,18 +12,18 @@ import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 import Renderer from "../renderer";
 import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 
-const ATLAS_NAME = "runner";
 const ANIMATION_SPEED = 0.1;
 const ONE_FOURTH = 1 / 4;
 
 class Runner extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
+  public static readonly atlas = "runner";
 
   private flames: Sprite[] = [];
   private shadow: Graphics;
 
   constructor(private data: RunnerData, private loader: Loader) {
-    super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
+    super(Object.values(loader.resources[Runner.atlas].spritesheet!.textures));
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
     this.shadow = createShadow(ShadowSize.medium);

@@ -12,18 +12,18 @@ import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
 import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 
-const ATLAS_NAME = "regular";
 const ANIMATION_SPEED = 0.1;
 const ONE_FOURTH = 1 / 4;
 
 class Regular extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
+  public static readonly atlas = "regular";
 
   private flames: Sprite[] = [];
   private shadow: Graphics;
 
   constructor(private data: RegularData, private loader: Loader) {
-    super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
+    super(Object.values(loader.resources[Regular.atlas].spritesheet!.textures));
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
     this.shadow = createShadow(ShadowSize.medium);

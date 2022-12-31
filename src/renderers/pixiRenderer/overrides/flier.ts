@@ -12,7 +12,6 @@ import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
 import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 
-const ATLAS_NAME = "flier";
 const ANIMATION_SPEED = 0.2;
 const ONE_FOURTH = 1 / 4;
 const ONE_EIGHTH = 1 / 8;
@@ -20,13 +19,14 @@ const FLY_SPEED = 0.0015;
 
 class Flier extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = TOWERS; // Fliers fly over towers
+  public static readonly atlas = "flier";
 
   private flames: Sprite[] = [];
   private isBusy = false;
   private shadow: Graphics;
 
   constructor(private data: FlierData, private loader: Loader) {
-    super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
+    super(Object.values(loader.resources[Flier.atlas].spritesheet!.textures));
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
     this.shadow = createShadow(ShadowSize.small);
