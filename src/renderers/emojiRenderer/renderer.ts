@@ -461,7 +461,11 @@ class Renderer implements IRenderer {
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("dominant-baseline", "middle");
         text.classList.add("alert");
-        text.innerHTML = "⚠️";
+        if (angle > 270 || angle < 90) {
+          text.setAttribute("direction", "rtl");
+        }
+        text.innerHTML =
+          "⚠️" + range.getUnits().map(this.getEntityTypeEmoji).join("");
 
         htmlElement.appendChild(text);
 
@@ -724,7 +728,11 @@ class Renderer implements IRenderer {
   };
 
   private getEntityEmoji(entity: Entity) {
-    switch (entity.getAgent().getType()) {
+    return this.getEntityTypeEmoji(entity.getAgent().getType());
+  }
+
+  private getEntityTypeEmoji(entityType: EntityType) {
+    switch (entityType) {
       case EntityType.Slime:
         return "🐞";
       case EntityType.Bullet:
