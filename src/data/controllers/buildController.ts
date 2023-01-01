@@ -5,30 +5,31 @@ import Tile from "../terrain/tile";
 import Surface from "../terrain/surface";
 import { floodFill } from "../util/baseExpansion";
 import { getScale, StaticAgent } from "../entity/staticEntity";
-import { DEFAULT_EXPIRE_TIME } from "../../renderers/api";
 import { GameEvent } from "../events";
 import { EntityType } from "../entity/constants";
 import { FREE_TILES, TileType } from "../terrain/constants";
 import EventSystem from "../eventSystem";
 import MoneyController from "./moneyController";
 import UnlocksController from "./unlocksController";
-
-export const BASE_PARTS = new Set([
-  EntityType.Armory,
-  EntityType.Radar,
-  EntityType.Market,
-  EntityType.PowerPlant,
-]);
-
-export const SURFACES_REQUIRING_FOUNDATION = new Set([
-  TileType.Water,
-  TileType.Ice,
-  TileType.Spore,
-  TileType.Bridge,
-]);
+import { ITowerStatics } from "../entity/towers";
 
 class BuildController {
   private static instance: BuildController;
+  public static readonly towersPerPart = 5;
+
+  public static readonly baseParts = new Set([
+    EntityType.Armory,
+    EntityType.Radar,
+    EntityType.Market,
+    EntityType.PowerPlant,
+  ]);
+
+  public static readonly surfacesRequiringFoundation = new Set([
+    TileType.Water,
+    TileType.Ice,
+    TileType.Spore,
+    TileType.Bridge,
+  ]);
 
   private blueprints = new Map<string, Blueprint>();
 
@@ -60,6 +61,11 @@ class BuildController {
         this.freeTiles.add(TileType.Bridge);
       }
     });
+  }
+
+  getMaxTowers() {
+    const partCount = Manager.Instance.getBase().getParts().size;
+    return (partCount + 1) * BuildController.towersPerPart;
   }
 
   build(selection: Tile[], placeable: Placeable) {
@@ -179,7 +185,9 @@ class BuildController {
           );
         } else if (
           tile.hasStaticEntity() &&
-          BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+          BuildController.baseParts.has(
+            tile.getStaticEntity().getAgent().getType()
+          )
         ) {
           this.pendingBaseRemovals.splice(
             this.pendingBaseRemovals.indexOf(currentBlueprint),
@@ -190,7 +198,9 @@ class BuildController {
         if (
           currentBlueprint.isDelete() &&
           tile.hasStaticEntity() &&
-          BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+          BuildController.baseParts.has(
+            tile.getStaticEntity().getAgent().getType()
+          )
         ) {
           this.pendingBaseRemovals.splice(
             this.pendingBaseRemovals.indexOf(currentBlueprint),
@@ -206,7 +216,9 @@ class BuildController {
       if (
         placeable.isBasePart &&
         (!tile.hasStaticEntity() ||
-          !BASE_PARTS.has(tile.getStaticEntity().getAgent().getType()))
+          !BuildController.baseParts.has(
+            tile.getStaticEntity().getAgent().getType()
+          ))
       ) {
         this.pendingBaseAdditions.push(blueprint);
       }
@@ -271,7 +283,9 @@ class BuildController {
 
             if (
               tile.hasStaticEntity() &&
-              BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+              BuildController.baseParts.has(
+                tile.getStaticEntity().getAgent().getType()
+              )
             ) {
               this.pendingBaseRemovals.splice(
                 this.pendingBaseRemovals.indexOf(blueprint),
@@ -283,7 +297,9 @@ class BuildController {
           if (
             blueprint.isBasePart() &&
             (!tile.hasStaticEntity() ||
-              !BASE_PARTS.has(tile.getStaticEntity().getAgent().getType()))
+              !BuildController.baseParts.has(
+                tile.getStaticEntity().getAgent().getType()
+              ))
           ) {
             this.pendingBaseAdditions.splice(
               this.pendingBaseAdditions.indexOf(blueprint),
@@ -295,7 +311,9 @@ class BuildController {
 
           if (
             tile.hasStaticEntity() &&
-            BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+            BuildController.baseParts.has(
+              tile.getStaticEntity().getAgent().getType()
+            )
           ) {
             this.pendingBaseRemovals.splice(
               this.pendingBaseRemovals.indexOf(blueprint),
@@ -317,7 +335,7 @@ class BuildController {
         );
         this.reserveBlueprint(blueprint);
 
-        if (BASE_PARTS.has(agent.getType())) {
+        if (BuildController.baseParts.has(agent.getType())) {
           this.pendingBaseRemovals.push(blueprint);
         }
       }
@@ -327,6 +345,14 @@ class BuildController {
   }
 
   private placeEntities(selection: Tile[], placeable: Placeable) {
+    const range = (placeable.entity as unknown as ITowerStatics).range;
+    if (range > 1 && this.surface.getTowers().size >= this.getMaxTowers()) {
+      Manager.Instance.showMessage(
+        "The base needs to be extended to support additional towers"
+      );
+      return;
+    }
+
     const validTiles = selection.filter((tile) =>
       this.checkIsFree(tile, placeable.entity!.scale)
     );
@@ -430,7 +456,9 @@ class BuildController {
 
       if (
         tile.hasStaticEntity() &&
-        BASE_PARTS.has(tile.getStaticEntity().getAgent().getType())
+        BuildController.baseParts.has(
+          tile.getStaticEntity().getAgent().getType()
+        )
       ) {
         baseTiles.add(tile.getStaticEntity().getAgent().getTile());
       } else {
@@ -537,7 +565,7 @@ class BuildController {
 
   private spawn(agent: StaticAgent) {
     this.surface.getEntityTiles(agent).forEach((tile) => {
-      if (SURFACES_REQUIRING_FOUNDATION.has(tile.getBaseType())) {
+      if (BuildController.surfacesRequiringFoundation.has(tile.getBaseType())) {
         this.surface.setTile(
           new Tile(tile.getX(), tile.getY(), TileType.Stone)
         );

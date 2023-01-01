@@ -55,6 +55,8 @@ export interface StatUpdate {
   consumption: number;
   remainingEnemies: number;
   inProgress: boolean;
+  towers: number;
+  maxTowers: number;
 }
 
 export interface SurfaceChange {

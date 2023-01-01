@@ -83,6 +83,8 @@ class DefaultManager extends Manager {
       power: PowerController.Instance.getPower(),
       remainingEnemies,
       inProgress: this.getIsStarted(),
+      towers: this.surface.getTowers().size,
+      maxTowers: BuildController.Instance.getMaxTowers(),
     });
   }
 
@@ -120,6 +122,15 @@ class DefaultManager extends Manager {
   start() {
     if (this.getIsStarted()) {
       throw new Error("Wave already in progress!");
+    }
+
+    if (
+      this.surface.getTowers().size > BuildController.Instance.getMaxTowers()
+    ) {
+      Manager.Instance.showMessage(
+        `Your current base can support up to ${BuildController.Instance.getMaxTowers()} towers. Extend your base or sell towers before starting `
+      );
+      return;
     }
 
     EventSystem.Instance.triggerEvent(GameEvent.StartWave);

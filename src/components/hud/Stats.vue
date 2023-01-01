@@ -22,7 +22,8 @@ const percentageFormatter = Intl.NumberFormat(undefined, {
 const money = ref(0);
 const moneyMultiplier = ref(0);
 const level = ref(0);
-const remainingEnemies = ref(0);
+const towers = ref(0);
+const maxTowers = ref(0);
 const inProgress = ref(false);
 const integrity = ref(0);
 const regeneration = ref(0);
@@ -34,7 +35,8 @@ const eventHandler = (stats: StatUpdate) => {
   money.value = stats.money;
   moneyMultiplier.value = stats.moneyMultiplier;
   level.value = stats.level;
-  remainingEnemies.value = stats.remainingEnemies;
+  towers.value = stats.towers;
+  maxTowers.value = stats.maxTowers;
   inProgress.value = stats.inProgress;
   integrity.value = stats.integrity;
   regeneration.value = stats.regeneration;
@@ -89,7 +91,7 @@ onUnmounted(() => {
         >)</span
       >
     </span>
-    <span :class="clazz"> 👾 {{ remainingEnemies }} </span>
+    <span :class="clazz"> 🗼 {{ towers }} / {{ maxTowers }} </span>
   </div>
 </template>
 

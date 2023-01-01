@@ -5,6 +5,7 @@ import { GameEvent } from "../events";
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import { AgentCategory } from "../entity/constants";
 import EventSystem from "../eventSystem";
+import { getRange, isTower, ITower } from "../entity/towers";
 
 export interface GeneratorParams {
   width: number;
@@ -24,6 +25,7 @@ class Surface {
   public deletedEntities: Entity[] = [];
   public staticEntities: Entity[] = [];
   private entitiesMap = new Map<AgentCategory, Set<Entity>>();
+  private towers = new Set<ITower>();
 
   private width: number;
   private height: number;
@@ -427,6 +429,10 @@ class Surface {
     this.addedAgents.add(agent);
     this.spawn(agent);
     this.dirty = true;
+
+    if (isTower(agent) && getRange(agent) > 1) {
+      this.towers.add(agent);
+    }
   }
 
   public despawn(agent: Agent) {
@@ -455,6 +461,10 @@ class Surface {
     this.removedAgents.add(agent);
     this.despawn(agent);
     this.dirty = true;
+
+    if (isTower(agent)) {
+      this.towers.delete(agent);
+    }
   }
 
   public getEntities() {
@@ -471,6 +481,10 @@ class Surface {
 
   public getStaticEntities() {
     return this.staticEntities;
+  }
+
+  public getTowers() {
+    return this.towers;
   }
 
   public markPristine() {

@@ -8,7 +8,8 @@ import { ITower } from "./towers";
 const DAMAGE = 0.625;
 
 class ElectricFence implements ITower {
-  public static scale = 1;
+  public static readonly scale = 1;
+  public static readonly range = 1;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
