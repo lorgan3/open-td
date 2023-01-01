@@ -150,9 +150,12 @@ class Base implements StaticAgent {
 
   getRegenerationFactor() {
     const armories = this.getPartsCount(EntityType.Armory);
+    const barracks = this.getPartsCount(EntityType.Barracks);
 
     // Diminishing returns
-    return (armories * 50) / (armories + 25);
+    return (
+      (armories * 50) / (armories + 25) + (barracks * 50) / (barracks + 25)
+    );
   }
 
   getMoneyFactor() {

@@ -668,6 +668,7 @@ class Renderer implements IRenderer {
       case EntityType.None:
         return "❌";
       case EntityType.Armory:
+      case EntityType.Barracks:
         return "🏰";
       case EntityType.Market:
         return "🏪";

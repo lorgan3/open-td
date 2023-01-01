@@ -10,6 +10,7 @@ const DEFAULT_SPRITE = "buildings0.png";
 const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Base, "buildings0.png"],
   [EntityType.Armory, "buildings1.png"],
+  [EntityType.Barracks, "buildings1.png"],
   [EntityType.PowerPlant, "buildings2.png"],
   [EntityType.Radar, "buildings3.png"],
   [EntityType.Market, "buildings4.png"],

@@ -16,6 +16,7 @@ import Laser from "./entity/towers/Laser";
 import { StaticAgent, StaticAgentStatics } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
 import { EntityType } from "./entity/constants";
+import Barracks from "./entity/barracks";
 
 export interface Placeable {
   name: string;
@@ -131,9 +132,19 @@ export const POWER_PLANT: Placeable = {
 export const ARMORY: Placeable = {
   name: "Armory",
   description:
-    "A part of your base that regenerates hit points at the start of every wave. More armories will regenerate more hit points but there are diminishing returns.",
+    "A part of your base that regenerates hit points at the end of every wave. More armories will regenerate more hit points but there are diminishing returns.",
   entity: Armory,
   entityType: EntityType.Armory,
+  htmlElement: "🏰",
+  isBasePart: true,
+};
+
+export const BARRACKS: Placeable = {
+  name: "Barracks",
+  description:
+    "A part of your base mainly intended for being able to place more turrets. It also regenerates a bit of hit points at the end of every wave. More barracks will regenerate more hit points but there are diminishing returns.",
+  entity: Barracks,
+  entityType: EntityType.Barracks,
   htmlElement: "🏰",
   isBasePart: true,
 };
@@ -236,7 +247,7 @@ export const SECTIONS: Record<Group, Placeable[]> = {
   [Group.Walls]: [FENCE, WALL, ELECTRIC_FENCE],
   [Group.BasicBuildings]: [TOWER, FLAMETHROWER, MORTAR],
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
-  [Group.BaseBuildings]: [ARMORY, RADAR, MARKET],
+  [Group.BaseBuildings]: [BARRACKS, RADAR, MARKET],
   [Group.WildcardBuildings]: [FREEZER, SPEED_BEACON, DAMAGE_BEACON],
   [Group.Abilities]: [CONVERT, EMERGENCY_RECHARGE, EMERGENCY_REPAIR],
 };
@@ -258,6 +269,7 @@ const placeables: Placeable[] = [
   SPEED_BEACON,
   DAMAGE_BEACON,
   LASER,
+  BARRACKS,
 ];
 
 export const placeableEntityTypes = new Set(
