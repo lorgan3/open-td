@@ -91,7 +91,10 @@ onUnmounted(() => {
         >)</span
       >
     </span>
-    <span :class="clazz"> 🗼 {{ towers }} / {{ maxTowers }} </span>
+    <span :class="clazz">
+      🗼 <span v-if="towers > maxTowers" class="negative">{{ towers }}</span
+      ><span v-else>{{ towers }}</span> / {{ maxTowers }}
+    </span>
   </div>
 </template>
 
@@ -101,28 +104,47 @@ onUnmounted(() => {
   flex-direction: row;
   gap: 16px;
   color: #fff;
+  width: 100%;
+  margin-right: 16px;
 
   .stat {
     border: 2px solid #000;
     border-top: none;
     background-color: rgb(44, 49, 120);
-    padding: 4px;
+    padding: 4px 8px;
     overflow: hidden;
     white-space: nowrap;
-    width: 80px;
-    transition: width 0.2s;
     pointer-events: all;
+
+    .positive {
+      color: green;
+    }
+
+    .negative {
+      color: red;
+    }
 
     .meta {
       opacity: 0;
-      transition: opacity 0.2s;
+      display: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &:hover,
     &--expanded {
-      width: 150px;
-
       .meta {
+        display: inline;
+        animation: 0.2s ease 0s 1 normal forwards fade-in;
+      }
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
         opacity: 1;
       }
     }
