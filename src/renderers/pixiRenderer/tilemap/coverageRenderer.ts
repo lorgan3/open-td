@@ -84,7 +84,10 @@ class CoverageRenderer {
 
     this.renderCoverage();
 
-    if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
+    if (
+      Manager.Instance.getDifficulty() === Difficulty.Easy &&
+      !Manager.Instance.getIsStarted()
+    ) {
       this.renderPaths();
     }
   }
