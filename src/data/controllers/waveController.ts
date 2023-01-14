@@ -23,6 +23,7 @@ class WaveController {
 
   private spawnGroups: SpawnGroup[] = [];
   private nextSpawnGroup: SpawnGroup | undefined;
+  private initialNextSpawnGroup: SpawnGroup | undefined;
   private direction = Math.random() * Math.PI * 2;
 
   private wave?: Wave;
@@ -65,8 +66,18 @@ class WaveController {
           Math.min(Math.PI * 2, (level + 1) / 1.5)
       );
 
-    const spawnGroup = this.getNextSpawnGroup();
-    if (spawnGroup) {
+    const spawnGroups: SpawnGroup[] = [];
+    const nextSpawnGroup = this.getNextSpawnGroup();
+    if (nextSpawnGroup) {
+      spawnGroups.push(nextSpawnGroup);
+    }
+
+    // This means the initial next spawn group was discovered. In this case we still want to award a wave point.
+    if (nextSpawnGroup !== this.initialNextSpawnGroup) {
+      spawnGroups.push(this.initialNextSpawnGroup!);
+    }
+
+    spawnGroups.forEach((spawnGroup) => {
       this.timeSinceLastExpansion = 0;
 
       const [x, y] = spawnGroup.getCenter();
@@ -81,9 +92,10 @@ class WaveController {
       this.surface.setTiles(tilesToUpdate);
 
       this.spawnGroups.push(spawnGroup);
-    }
+    });
 
     this.nextSpawnGroup = undefined;
+    this.initialNextSpawnGroup = undefined;
     this.wave = Wave.fromSpawnGroups(level, this.spawnGroups);
   }
 
@@ -225,6 +237,10 @@ class WaveController {
       } else {
         break;
       }
+    }
+
+    if (!this.initialNextSpawnGroup) {
+      this.initialNextSpawnGroup = this.nextSpawnGroup;
     }
 
     return this.nextSpawnGroup;
