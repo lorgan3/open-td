@@ -95,8 +95,6 @@ class DefaultManager extends Manager {
 
   despawnEnemy(enemy: IEnemy) {
     if (this.surface.despawn(enemy)) {
-      MoneyController.Instance.registerEnemyKill(enemy);
-
       if (WaveController.Instance.processWave()) {
         this.end();
       } else {
@@ -137,6 +135,7 @@ class DefaultManager extends Manager {
 
     PowerController.Instance.processPower();
     MoneyController.Instance.clearRecents();
+    MoneyController.Instance.addWaveBudget(this.level);
     WaveController.Instance.startNewWave();
 
     // Activate newly placed radars

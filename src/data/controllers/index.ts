@@ -24,9 +24,7 @@ export const init = (
 
   new WaveController(base, surface);
   new PowerController();
-  new MoneyController(150, () =>
-    Math.max(0.5, base.getMoneyFactor() - manager.getLevel() / 120)
-  );
+  new MoneyController(100, () => base.getMoneyFactor());
   new BuildController(surface);
   new UnlocksController();
 

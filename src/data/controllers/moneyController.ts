@@ -1,5 +1,4 @@
 import Blueprint, { isBlueprint } from "../entity/blueprint";
-import { IEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
 import { GameEvent } from "../events";
 import Manager from "./manager";
@@ -9,24 +8,26 @@ import EventSystem from "../eventSystem";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
-  [EntityType.Wall]: 6,
+  [EntityType.Wall]: 4,
   [EntityType.ElectricFence]: 9,
   [EntityType.Freezer]: 6,
-  [EntityType.Tower]: 14,
-  [EntityType.Flamethrower]: 21,
-  [EntityType.Mortar]: 50,
-  [EntityType.Railgun]: 70,
+  [EntityType.Tower]: 12,
+  [EntityType.Flamethrower]: 18,
+  [EntityType.Mortar]: 40,
+  [EntityType.Railgun]: 60,
   [EntityType.Radar]: 20,
-  [EntityType.PowerPlant]: 25,
+  [EntityType.PowerPlant]: 20,
   [EntityType.Armory]: 50,
   [EntityType.Market]: 30,
-  [EntityType.SpeedBeacon]: 70,
-  [EntityType.DamageBeacon]: 60,
-  [EntityType.Laser]: 40,
+  [EntityType.SpeedBeacon]: 50,
+  [EntityType.DamageBeacon]: 40,
+  [EntityType.Laser]: 25,
   [EntityType.Barracks]: 15,
 };
 
 const SELL_MULTIPLIER = 0.5;
+
+const WAVE_BUDGET = 20;
 
 class MoneyController {
   private static instance: MoneyController;
@@ -60,9 +61,10 @@ class MoneyController {
     this.money -= amount;
   }
 
-  registerEnemyKill(enemy: IEnemy) {
-    const amount = this.getEnemyValue(enemy) * this.multiplier();
-    this.money += amount;
+  addWaveBudget(level: number) {
+    this.addMoney(
+      (WAVE_BUDGET + (WAVE_BUDGET * level) / 3) * this.multiplier()
+    );
   }
 
   buy(agent: Agent) {
@@ -115,20 +117,6 @@ class MoneyController {
   getValue(agent: Agent) {
     const price = TOWER_PRICES[agent.getType()] ?? 0;
     return price * (this.recentlyBought.has(agent) ? 1 : SELL_MULTIPLIER);
-  }
-
-  private getEnemyValue(enemy: IEnemy): number {
-    switch (enemy.getType()) {
-      case EntityType.Slime:
-      case EntityType.Tank:
-        return 5;
-      case EntityType.Runner:
-        return 3;
-      case EntityType.Flier:
-        return 6;
-      default:
-        throw new Error("Entity is not an enemy");
-    }
   }
 
   static get Instance() {
