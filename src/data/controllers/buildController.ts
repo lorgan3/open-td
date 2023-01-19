@@ -15,7 +15,7 @@ import { ITowerStatics } from "../entity/towers";
 
 class BuildController {
   private static instance: BuildController;
-  public static readonly towersPerPart = 5;
+  public static readonly towersPerPart = 2;
 
   public static readonly baseParts = new Set([
     EntityType.Armory,
@@ -65,7 +65,7 @@ class BuildController {
 
   getMaxTowers() {
     const partCount = Manager.Instance.getBase().getParts().size;
-    return (partCount + 1) * BuildController.towersPerPart;
+    return 1 + (partCount + 1) * BuildController.towersPerPart;
   }
 
   build(selection: Tile[], placeable: Placeable) {
