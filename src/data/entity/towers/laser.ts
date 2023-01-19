@@ -71,7 +71,7 @@ class Laser implements ITower {
   }
 
   spawn() {
-    this.cleanupEventListener = coverTilesWithTowerSightLines(
+    [this.cleanupEventListener] = coverTilesWithTowerSightLines(
       this,
       Laser.range,
       isSolid

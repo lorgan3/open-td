@@ -65,7 +65,7 @@ class Railgun implements ITower {
   }
 
   spawn() {
-    this.cleanupEventListener = coverTilesWithTowerSightLines(
+    [this.cleanupEventListener] = coverTilesWithTowerSightLines(
       this,
       Railgun.range,
       isSolid

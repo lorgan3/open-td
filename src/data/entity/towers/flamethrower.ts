@@ -69,7 +69,7 @@ class Flamethrower implements ITower {
   }
 
   spawn() {
-    this.cleanupEventListener = coverTilesWithTowerSightLines(
+    [this.cleanupEventListener] = coverTilesWithTowerSightLines(
       this,
       Flamethrower.range,
       isSolid

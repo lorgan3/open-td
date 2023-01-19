@@ -61,7 +61,7 @@ class Tower implements ITower {
   }
 
   spawn() {
-    this.cleanupEventListener = coverTilesWithTowerSightLines(
+    [this.cleanupEventListener] = coverTilesWithTowerSightLines(
       this,
       Tower.range,
       isSolid

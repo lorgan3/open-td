@@ -34,7 +34,7 @@ export const coverTilesWithTowerSightLines = (
   tower: ITower,
   range: number,
   sightLineFn?: (tile: Tile) => boolean
-) => {
+): [() => void, Set<Tile>] => {
   const surface = Manager.Instance.getSurface();
   const coveredTiles = new Set<Tile>();
 
@@ -91,10 +91,13 @@ export const coverTilesWithTowerSightLines = (
     }
   );
 
-  return () => {
-    coveredTiles.forEach((tile) => tile.removeTower(tower));
-    removeEventListener();
-  };
+  return [
+    () => {
+      coveredTiles.forEach((tile) => tile.removeTower(tower));
+      removeEventListener();
+    },
+    coveredTiles,
+  ];
 };
 
 export const getSpeedMultiplier = (linkedAgents: Set<StaticAgent>) => {

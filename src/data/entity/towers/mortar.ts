@@ -60,7 +60,7 @@ class Mortar implements ITower {
   }
 
   spawn() {
-    this.cleanupEventListener = coverTilesWithTowerSightLines(
+    [this.cleanupEventListener] = coverTilesWithTowerSightLines(
       this,
       Mortar.range
     );
