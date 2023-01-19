@@ -13,6 +13,7 @@ import EnemyAI from "./enemyAI";
 const getStaticEntityCheckpoints = staticCheckpointFactory(BASE_ENTITIES);
 
 const ON_FIRE_TIME = 3000;
+const STUN_TIME = 1000;
 const FIRE_DAMAGE = 0.01;
 const SPEED = 0.006;
 const HP = 80;
@@ -62,11 +63,11 @@ class Flier implements IEnemy {
   }
 
   tick(dt: number) {
-    if (this.status === Status.OnFire) {
+    if (this.status !== Status.Normal) {
       this.statusDuration -= dt;
       if (this.statusDuration <= 0) {
         this.status = Status.Normal;
-      } else {
+      } else if (this.status === Status.OnFire) {
         this.ai.hit(FIRE_DAMAGE * dt);
       }
     }
@@ -81,6 +82,11 @@ class Flier implements IEnemy {
   lightOnFire() {
     this.status = Status.OnFire;
     this.statusDuration = ON_FIRE_TIME;
+  }
+
+  stun() {
+    this.status = Status.Stunned;
+    this.statusDuration = STUN_TIME;
   }
 }
 

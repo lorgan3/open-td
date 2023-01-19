@@ -12,6 +12,7 @@ export interface IEnemy extends Agent {
   getPath(): Path;
   getStatus(): Status;
   lightOnFire?: () => void;
+  stun?: () => void;
 }
 
 export interface IEnemyStatics {
@@ -25,4 +26,5 @@ export interface IEnemyStatics {
 export enum Status {
   Normal,
   OnFire,
+  Stunned,
 }

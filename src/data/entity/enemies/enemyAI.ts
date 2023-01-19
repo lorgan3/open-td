@@ -1,4 +1,4 @@
-import { IEnemy } from ".";
+import { IEnemy, Status } from ".";
 import Manager from "../../controllers/manager";
 
 import Tile from "../../terrain/tile";
@@ -96,7 +96,7 @@ class EnemyAI {
   }
 
   isBusy() {
-    return this.cooldown !== 0;
+    return this.cooldown !== 0 || this.enemy.getStatus() === Status.Stunned;
   }
 
   getFuturePosition(time: number) {
