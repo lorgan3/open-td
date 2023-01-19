@@ -21,6 +21,7 @@ class Tank extends AnimatedSprite implements EntityRenderer {
 
   private flames: Sprite[] = [];
   private shadow: Graphics;
+  private oldOffset = 0;
 
   constructor(private data: TankData, private loader: Loader) {
     super(Object.values(loader.resources[Tank.atlas].spritesheet!.textures));
@@ -48,18 +49,24 @@ class Tank extends AnimatedSprite implements EntityRenderer {
     this.shadow.position.copyFrom(this.position);
 
     this.angle = this.data.entity.getRotation();
-    if (this.data.AI.isBusy()) {
-      this.angle +=
+    if (this.data.AI.isAttacking()) {
+      const offset =
         Math.sin(((Renderer.Instance.getTime() % COOLDOWN) / COOLDOWN) * 5) *
         20;
+      this.angle += offset;
+
+      if (Math.sign(offset) === 1 && Math.sign(this.oldOffset) === -1) {
+        ControllableSound.fromEntity(this.data.entity, Sound.Hit);
+      }
+      this.oldOffset = offset;
     }
 
     if (this.data.AI.isBusy() === this.playing) {
       if (this.playing) {
         this.stop();
       } else {
-        ControllableSound.fromEntity(this.data.entity, Sound.Hit);
         this.play();
+        this.oldOffset = 0;
       }
     }
 

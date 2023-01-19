@@ -95,8 +95,12 @@ class EnemyAI {
     this.predictedHp += damage;
   }
 
+  isAttacking() {
+    return this.cooldown !== 0;
+  }
+
   isBusy() {
-    return this.cooldown !== 0 || this.enemy.getStatus() === Status.Stunned;
+    return this.isAttacking() || this.enemy.getStatus() === Status.Stunned;
   }
 
   getFuturePosition(time: number) {

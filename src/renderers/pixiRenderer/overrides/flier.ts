@@ -22,8 +22,8 @@ class Flier extends AnimatedSprite implements EntityRenderer {
   public static readonly atlas = "flier";
 
   private flames: Sprite[] = [];
-  private isBusy = false;
   private shadow: Graphics;
+  private oldOffset = 0;
 
   constructor(private data: FlierData, private loader: Loader) {
     super(Object.values(loader.resources[Flier.atlas].spritesheet!.textures));
@@ -69,16 +69,29 @@ class Flier extends AnimatedSprite implements EntityRenderer {
 
     this.angle = this.data.entity.getRotation();
     if (this.data.AI.isBusy()) {
+      const oldAngle = this.angle;
       this.angle +=
         Math.sin(((Renderer.Instance.getTime() % COOLDOWN) / COOLDOWN) * 5) *
         20;
-    }
 
-    if (this.data.AI.isBusy() !== this.isBusy) {
-      if (!this.isBusy) {
+      if (Math.sign(this.angle) !== Math.sign(oldAngle)) {
         ControllableSound.fromEntity(this.data.entity, Sound.Hit);
       }
-      this.isBusy = this.data.AI.isBusy();
+    }
+
+    this.angle = this.data.entity.getRotation();
+    if (this.data.AI.isAttacking()) {
+      const offset =
+        Math.sin(((Renderer.Instance.getTime() % COOLDOWN) / COOLDOWN) * 5) *
+        20;
+      this.angle += offset;
+
+      if (Math.sign(offset) === 1 && Math.sign(this.oldOffset) === -1) {
+        ControllableSound.fromEntity(this.data.entity, Sound.Hit);
+      }
+      this.oldOffset = offset;
+    } else {
+      this.oldOffset = 0;
     }
 
     const offset = SCALE / 2;

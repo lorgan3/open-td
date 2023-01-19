@@ -13,7 +13,7 @@ const render: RenderFn<IEnemy> = (renderer, enemy, htmlElement) => {
   const time = (renderer.getTime() % 13) / 3;
 
   let rotation = entity.getRotation();
-  if (enemy.AI.isBusy()) {
+  if (enemy.AI.isAttacking()) {
     rotation += Math.sin(((renderer.getTime() % COOLDOWN) / COOLDOWN) * 5) * 20;
   }
 
