@@ -52,7 +52,6 @@ class WaveController {
       this.timeSinceLastExpansion = 0;
     }
 
-    this.cleanupSpawnGroups();
     this.spawnGroups.forEach((spawnGroup) => {
       spawnGroup.grow();
       spawnGroup.rePath();
@@ -93,6 +92,8 @@ class WaveController {
 
       this.spawnGroups.push(spawnGroup);
     });
+
+    this.cleanupSpawnGroups();
 
     this.nextSpawnGroup = undefined;
     this.initialNextSpawnGroup = undefined;
