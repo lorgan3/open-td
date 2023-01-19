@@ -5,7 +5,7 @@ import { IEnemy } from "../enemies";
 import Entity, { Agent } from "../entity";
 import { AgentCategory, EntityType } from "../constants";
 
-import Tower from "../towers/tower";
+import { ITower } from "../towers";
 
 const SPEED = 0.015;
 
@@ -17,7 +17,7 @@ class Bullet extends Projectile implements Agent {
   private time = 0;
 
   constructor(
-    protected source: Tower,
+    protected source: ITower,
     protected target: IEnemy,
     private damage: number
   ) {
