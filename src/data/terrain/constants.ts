@@ -73,4 +73,6 @@ export const STATIC_ENTITY_GROUND_TILE_MAP: Partial<
   [EntityType.SpeedBeacon]: TileType.Obstructed,
   [EntityType.DamageBeacon]: TileType.Obstructed,
   [EntityType.Laser]: TileType.Obstructed,
+  [EntityType.Barracks]: TileType.Base,
+  [EntityType.Tesla]: TileType.Obstructed,
 };

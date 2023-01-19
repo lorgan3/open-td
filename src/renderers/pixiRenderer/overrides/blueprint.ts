@@ -8,6 +8,7 @@ import { EntityRenderer } from "./types";
 
 const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
   [EntityType.Armory, ["buildings", "buildings1.png"]],
+  [EntityType.Barracks, ["buildings", "buildings1.png"]],
   [EntityType.PowerPlant, ["buildings", "buildings2.png"]],
   [EntityType.Radar, ["buildings", "buildings3.png"]],
   [EntityType.Market, ["buildings", "buildings4.png"]],
@@ -22,6 +23,7 @@ const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
   [EntityType.Mortar, ["mortar", "mortar0.png"]],
   [EntityType.Laser, ["laser", "laser0.png"]],
   [EntityType.Railgun, ["railgun", "railgun0.png"]],
+  [EntityType.Tesla, ["tesla", "tesla0.png"]],
   [EntityType.None, [ATLAS, AtlasTile.None]],
 ]);
 

@@ -23,6 +23,7 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.DamageBeacon]: 40,
   [EntityType.Laser]: 25,
   [EntityType.Barracks]: 15,
+  [EntityType.Tesla]: 50,
 };
 
 const SELL_MULTIPLIER = 0.5;

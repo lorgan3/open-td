@@ -15,6 +15,7 @@ export enum Sound {
   Destroy = "destroy",
   Hit = "hit",
   Sonar = "sonar",
+  Thunder = "thunder",
 }
 
 const preload = (alias: Sound, path: string, volume = 1) => {
@@ -29,7 +30,7 @@ export const init = () => {
   preload(Sound.Notification, "sounds/notification.ogg");
   preload(Sound.Shot, "sounds/shot.wav", 0.7);
   preload(Sound.Laser, "sounds/laser.flac", 0.5);
-  preload(Sound.Flamethrower, "sounds/flamethrower.wav", 0.2);
+  preload(Sound.Flamethrower, "sounds/flamethrower.wav", 0.1);
   preload(Sound.Mortar, "sounds/mortar.wav", 0.7);
   preload(Sound.Railgun, "sounds/railgun.mp3", 0.7);
   preload(Sound.Explosion, "sounds/explosion.wav");
@@ -38,6 +39,7 @@ export const init = () => {
   preload(Sound.Destroy, "sounds/destroy.wav", 0.7);
   preload(Sound.Hit, "sounds/hit.wav");
   preload(Sound.Sonar, "sounds/sonar.wav", 0.7);
+  preload(Sound.Thunder, "sounds/thunder.wav", 0.7);
 };
 
 export const playSoundOnEvent = (

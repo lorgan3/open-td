@@ -678,6 +678,8 @@ class Renderer implements IRenderer {
         return "🚨";
       case EntityType.Laser:
         return "🔭";
+      case EntityType.Tesla:
+        return "💡";
       default:
         return "❓";
     }
@@ -754,6 +756,8 @@ class Renderer implements IRenderer {
         return "🦀";
       case EntityType.WavePoint:
         return "🪙";
+      case EntityType.Spark:
+        return "⚡️";
       default:
         return "";
     }

@@ -17,6 +17,7 @@ import { StaticAgent, StaticAgentStatics } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
 import { EntityType } from "./entity/constants";
 import Barracks from "./entity/barracks";
+import Tesla from "./entity/towers/tesla";
 
 export interface Placeable {
   name: string;
@@ -186,6 +187,15 @@ export const LASER: Placeable = {
   htmlElement: "🔭",
 };
 
+export const TESLA: Placeable = {
+  name: "Tesla",
+  description:
+    "A tower that starts charging when an enemy comes near and then damages all enemies within its range.",
+  entity: Tesla,
+  entityType: EntityType.Tesla,
+  htmlElement: "💡",
+};
+
 export const EXCAVATOR: Placeable = {
   name: "Excavator",
   description: "Allows building over trees and rocks.",
@@ -244,7 +254,7 @@ export enum Group {
 
 export const SECTIONS: Record<Group, Placeable[]> = {
   [Group.Construction]: [DEMOLISH, EXCAVATOR, TERRAFORM],
-  [Group.Walls]: [FENCE, WALL, ELECTRIC_FENCE],
+  [Group.Walls]: [FENCE, WALL, TESLA],
   [Group.BasicBuildings]: [TOWER, FLAMETHROWER, MORTAR],
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
   [Group.BaseBuildings]: [BARRACKS, RADAR, MARKET],
@@ -270,6 +280,7 @@ const placeables: Placeable[] = [
   DAMAGE_BEACON,
   LASER,
   BARRACKS,
+  TESLA,
 ];
 
 export const placeableEntityTypes = new Set(

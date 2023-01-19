@@ -35,13 +35,14 @@ Check `package.json`, there are also commands available to run tests and check t
 - Most sprites and code made me ([@lorgan3](https://github.com/lorgan3)).
 - Several [world tiles](https://opengameart.org/content/basic-map-32x32-by-ivan-voirol) by [Ivan Voirol](https://opengameart.org/users/ivan-voirol).
 - [Explosion animation](https://opengameart.org/content/explosion-3) by [sogomn](https://opengameart.org/users/sogomn).
-- [notification.ogg](https://freesound.org/people/zzwerty/sounds/315878/) by [zzwerty](https://freesound.org/people/zzwerty/)
-- [flamethrower.wav](https://freesound.org/people/deleted_user_13668154/sounds/616093/)
-- [laser.flac](https://freesound.org/people/unfa/sounds/584191/) by [Tobiasz 'unfa' Karoń](https://freesound.org/people/unfa/)
-- [mortar.wav](https://freesound.org/people/OGsoundFX/sounds/423108/) and [shot.wav](https://freesound.org/people/OGsoundFX/sounds/423114/) by [Olivier Girardot](https://freesound.org/people/OGsoundFX/)
-- [railgun.mp3](https://freesound.org/people/deleted_user_1941307/sounds/155790/)
-- [explosion.wav](https://freesound.org/people/EminYILDIRIM/sounds/553153/) by [Emin](https://freesound.org/people/EminYILDIRIM/)
-- [firework.wav](https://freesound.org/people/TimoSchmied/sounds/530972/) by [Timo Schmied](https://freesound.org/people/TimoSchmied/)
-- [place.wav](https://freesound.org/people/Robinhood76/sounds/254079/) and [destroy.wav](https://freesound.org/people/Robinhood76/sounds/503554/) by [FxProSound](https://freesound.org/people/Robinhood76/)
-- [hit.wav](https://freesound.org/people/BMacZero/sounds/96138/) by [BMacZero](https://freesound.org/people/BMacZero/)
-- [sonar.wav](https://freesound.org/people/SamsterBirdies/sounds/371178/) by [SamsterBirdies](https://freesound.org/people/SamsterBirdies/)
+- [notification.ogg](https://freesound.org/people/zzwerty/sounds/315878/) by [zzwerty](https://freesound.org/people/zzwerty/).
+- [flamethrower.wav](https://freesound.org/people/deleted_user_13668154/sounds/616093/).
+- [laser.flac](https://freesound.org/people/unfa/sounds/584191/) by [Tobiasz 'unfa' Karoń](https://freesound.org/people/unfa/).
+- [mortar.wav](https://freesound.org/people/OGsoundFX/sounds/423108/) and [shot.wav](https://freesound.org/people/OGsoundFX/sounds/423114/) by [Olivier Girardot](https://freesound.org/people/OGsoundFX/).
+- [railgun.mp3](https://freesound.org/people/deleted_user_1941307/sounds/155790/).
+- [explosion.wav](https://freesound.org/people/EminYILDIRIM/sounds/553153/) by [Emin](https://freesound.org/people/EminYILDIRIM/).
+- [firework.wav](https://freesound.org/people/TimoSchmied/sounds/530972/) by [Timo Schmied](https://freesound.org/people/TimoSchmied/).
+- [place.wav](https://freesound.org/people/Robinhood76/sounds/254079/) and [destroy.wav](https://freesound.org/people/Robinhood76/sounds/503554/) by [FxProSound](https://freesound.org/people/Robinhood76/).
+- [hit.wav](https://freesound.org/people/BMacZero/sounds/96138/) by [BMacZero](https://freesound.org/people/BMacZero/).
+- [sonar.wav](https://freesound.org/people/SamsterBirdies/sounds/371178/) by [SamsterBirdies](https://freesound.org/people/SamsterBirdies/).
+- [thunder.wav](https://freesound.org/people/doudar41/sounds/535952/) by [doudar41](https://freesound.org/people/doudar41/).

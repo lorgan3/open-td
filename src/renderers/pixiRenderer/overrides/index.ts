@@ -13,6 +13,7 @@ import { Tower } from "./tower";
 import { Rocket } from "./rocket";
 import { Constructor } from "./types";
 import { WavePoint } from "./wavePoint";
+import { Spark } from "./spark";
 
 export const init = (loader: Loader) => {
   loader.add("runner", `${import.meta.env.BASE_URL}animations/runner.json`);
@@ -36,6 +37,8 @@ export const init = (loader: Loader) => {
     "explosion",
     `${import.meta.env.BASE_URL}animations/explosion.json`
   );
+  loader.add("lightning", `${import.meta.env.BASE_URL}tiles/lightning.json`);
+  loader.add("tesla", `${import.meta.env.BASE_URL}animations/tesla.json`);
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
@@ -59,4 +62,6 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.ElectricFence]: null,
   [EntityType.Blueprint]: Blueprint,
   [EntityType.WavePoint]: WavePoint,
+  [EntityType.Spark]: Spark,
+  [EntityType.Tesla]: Tower,
 };

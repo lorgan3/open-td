@@ -1,0 +1,18 @@
+{
+  "frames": {
+    "lightning0.png": {
+      "frame": { "x": 0, "y": 0, "w": 32, "h": 96 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 96 },
+      "sourceSize": { "w": 32, "h": 96 }
+    }
+  },
+  "meta": {
+    "app": "https://github.com/piskelapp/piskel/",
+    "version": "1.0",
+    "image": "lightning.png",
+    "format": "RGBA8888",
+    "size": { "w": 32, "h": 96 }
+  }
+}

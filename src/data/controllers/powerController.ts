@@ -8,6 +8,7 @@ export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
   [EntityType.ElectricFence]: 0.05,
   [EntityType.Railgun]: 5,
   [EntityType.Laser]: 0.004,
+  [EntityType.Tesla]: 2,
 };
 
 export const SPEED_BEACON_CONSUMPTION = 2;

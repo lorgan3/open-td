@@ -16,6 +16,7 @@ const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Laser, "laser"],
   [EntityType.Mortar, "mortar"],
   [EntityType.Railgun, "railgun"],
+  [EntityType.Tesla, "tesla"],
 ]);
 
 const TOWER_TO_SOUND_MAP = new Map<EntityType, Sound>([
@@ -24,6 +25,7 @@ const TOWER_TO_SOUND_MAP = new Map<EntityType, Sound>([
   [EntityType.Laser, Sound.Laser],
   [EntityType.Mortar, Sound.Mortar],
   [EntityType.Railgun, Sound.Railgun],
+  [EntityType.Tesla, Sound.Thunder],
 ]);
 
 const LOOPING_TOWERS = new Set([EntityType.Flamethrower, EntityType.Laser]);
