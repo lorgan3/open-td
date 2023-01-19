@@ -55,6 +55,7 @@ export const BASE_ENTITIES = new Set([
   EntityType.PowerPlant,
   EntityType.Armory,
   EntityType.Market,
+  EntityType.Barracks,
 ]);
 
 export const DESTRUCTIBLE_ENTITIES = new Set([
