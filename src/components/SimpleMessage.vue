@@ -73,7 +73,10 @@ const close = (message: Message) => {
   instance!.proxy!.$forceUpdate();
 
   window.setTimeout(() => {
-    messageQueue.value.splice(messageQueue.value.indexOf(message), 1);
+    const index = messageQueue.value.indexOf(message);
+    if (index > -1) {
+      messageQueue.value.splice(index, 1);
+    }
   }, 700);
 };
 
