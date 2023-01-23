@@ -8,7 +8,7 @@ import EventSystem from "../eventSystem";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
-  [EntityType.Wall]: 4,
+  [EntityType.Wall]: 3,
   [EntityType.ElectricFence]: 9,
   [EntityType.Freezer]: 6,
   [EntityType.Tower]: 12,
@@ -26,11 +26,10 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Tesla]: 50,
 };
 
-const SELL_MULTIPLIER = 0.5;
-
-const WAVE_BUDGET = 20;
-
 class MoneyController {
+  private static waveBudget = 20;
+  private static sellMultiplier = 0.5;
+
   private static instance: MoneyController;
 
   private recentlyBought = new Set<Agent>();
@@ -64,7 +63,11 @@ class MoneyController {
 
   addWaveBudget(level: number) {
     this.addMoney(
-      (WAVE_BUDGET + (WAVE_BUDGET * level) / 3) * this.multiplier()
+      Math.ceil(
+        (MoneyController.waveBudget +
+          (MoneyController.waveBudget * level) / 3) *
+          this.multiplier()
+      )
     );
   }
 
@@ -116,8 +119,16 @@ class MoneyController {
   }
 
   getValue(agent: Agent) {
+    const sellMultiplier = Math.min(
+      0.9,
+      MoneyController.sellMultiplier *
+        Manager.Instance.getBase().getMoneyFactor()
+    );
+
     const price = TOWER_PRICES[agent.getType()] ?? 0;
-    return price * (this.recentlyBought.has(agent) ? 1 : SELL_MULTIPLIER);
+    return Math.ceil(
+      price * (this.recentlyBought.has(agent) ? 1 : sellMultiplier)
+    );
   }
 
   static get Instance() {

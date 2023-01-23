@@ -210,13 +210,18 @@ class DefaultManager extends Manager {
     const inProgress = this.getIsStarted();
 
     if (placeable.entityType === EntityType.EmergencyRecharge) {
-      PowerController.Instance.processPower(
+      PowerController.Instance.emergencyRegenerate(
         inProgress ? 1 : WAVE_OVER_MULTIPLIER
       );
+
+      this.triggerStatUpdate();
     }
 
     if (placeable.entityType === EntityType.EmergencyRepair) {
-      this.base.regenerate(inProgress ? 1 : WAVE_OVER_MULTIPLIER);
+      this.base.hp +=
+        2 * this.base.getParts().size * (inProgress ? 1 : WAVE_OVER_MULTIPLIER);
+
+      this.triggerStatUpdate();
     }
   };
 

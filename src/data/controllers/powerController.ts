@@ -16,7 +16,11 @@ export const SPEED_BEACON_CONSUMPTION = 2;
 export const DAMAGE_BEACON_CONSUMPTION = 1.25;
 
 class PowerController {
+  public static speedBeaconConsumption = 2;
+  public static damageBeaconConsumption = 1.25;
+
   private static instance: PowerController;
+  private static powerMultiplier = 5;
 
   private generators = new Set<Agent>();
 
@@ -38,7 +42,10 @@ class PowerController {
   }
 
   getProduction() {
-    return Manager.Instance.getBase().getPartsCount(EntityType.PowerPlant) * 5;
+    return (
+      Manager.Instance.getBase().getPartsCount(EntityType.PowerPlant) *
+      PowerController.powerMultiplier
+    );
   }
 
   getConsumption() {
@@ -69,8 +76,8 @@ class PowerController {
     return true;
   }
 
-  processPower(multiplier = 1) {
-    this.power = this.power + this.getProduction() * multiplier;
+  processPower() {
+    this.power = this.power + this.getProduction();
     this.blackout = false;
 
     if (this.power < 0) {
@@ -80,6 +87,15 @@ class PowerController {
     if (!Manager.Instance.getIsStarted()) {
       this.consumption = 0;
     }
+  }
+
+  emergencyRegenerate(multiplier = 1) {
+    this.power =
+      this.power +
+      Manager.Instance.getBase().getParts().size *
+        PowerController.powerMultiplier *
+        multiplier;
+    this.blackout = false;
   }
 
   getPower() {

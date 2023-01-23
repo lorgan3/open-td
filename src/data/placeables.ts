@@ -105,7 +105,7 @@ export const RAILGUN: Placeable = {
 export const DEMOLISH: Placeable = {
   name: "Sell",
   description:
-    "Sell towers or blueprints. Blueprints and towers placed before the start of a wave are fully refunded. Other towers give back half their original cost when sold.",
+    "Sell parts or blueprints. Blueprints and parts placed before the start of a wave are fully refunded. Other parts give back half their original cost when sold, but this can be improved by placing markets.",
   entityType: EntityType.None,
   htmlElement: "❌",
 };
@@ -153,7 +153,7 @@ export const BARRACKS: Placeable = {
 export const MARKET: Placeable = {
   name: "Market",
   description:
-    "A part of your base that increases the amount of money you get per killed enemy. More markets will increase the multiplier but there are diminishing returns.",
+    "A part of your base that increases the amount of money you get per wave and increases the percentage you get back when selling a part. More markets will increase the multiplier but there are diminishing returns.",
   entity: Market,
   entityType: EntityType.Market,
   htmlElement: "🏪",
@@ -226,7 +226,7 @@ export const CONVERT: Placeable = {
 export const WAVE_OVER_MULTIPLIER = 1.5;
 export const EMERGENCY_RECHARGE: Placeable = {
   name: "Emerg. recharge",
-  description: `Activate all existing power plants again to generate additional power. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
+  description: `Generate power for every base tile built. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
   entityType: EntityType.EmergencyRecharge,
   htmlElement: "🔌",
   isRepeatable: true,
@@ -235,7 +235,7 @@ export const EMERGENCY_RECHARGE: Placeable = {
 
 export const EMERGENCY_REPAIR: Placeable = {
   name: "Emerg. repair",
-  description: `Activate all existing armories again to generate additional base health. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
+  description: `Regenerate health for every base tile built. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
   entityType: EntityType.EmergencyRepair,
   htmlElement: "🛠",
   isRepeatable: true,
