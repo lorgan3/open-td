@@ -97,7 +97,7 @@ class WaveController {
 
     this.nextSpawnGroup = undefined;
     this.initialNextSpawnGroup = undefined;
-    this.wave = Wave.fromSpawnGroups(level, this.spawnGroups);
+    this.wave = Wave.fromSpawnGroups(level, [...this.spawnGroups]);
   }
 
   processWave() {
@@ -168,6 +168,10 @@ class WaveController {
   }
 
   shouldAddSpawnGroup() {
+    if (this.initialNextSpawnGroup && !this.initialNextSpawnGroup.isExposed()) {
+      return true;
+    }
+
     const timeToExpansion = Math.ceil(2 ** this.spawnGroups.length / 3);
     const time = VisibilityController.Instance.hasPendingAgents()
       ? 0
@@ -186,6 +190,11 @@ class WaveController {
     }
 
     if (this.nextSpawnGroup && !this.nextSpawnGroup.isExposed()) {
+      return this.nextSpawnGroup;
+    }
+
+    if (this.initialNextSpawnGroup && !this.initialNextSpawnGroup.isExposed()) {
+      this.nextSpawnGroup = this.initialNextSpawnGroup;
       return this.nextSpawnGroup;
     }
 
