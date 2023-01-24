@@ -244,7 +244,7 @@ export const EMERGENCY_REPAIR: Placeable = {
 
 export enum Group {
   Construction = "Construction",
-  Walls = "Walls",
+  Defensive = "Defensive buildings",
   BasicBuildings = "Basic buildings",
   PoweredBuildings = "Powered Buildings",
   BaseBuildings = "Base Buildings",
@@ -254,7 +254,7 @@ export enum Group {
 
 export const SECTIONS: Record<Group, Placeable[]> = {
   [Group.Construction]: [DEMOLISH, EXCAVATOR, TERRAFORM],
-  [Group.Walls]: [FENCE, WALL, TESLA],
+  [Group.Defensive]: [FENCE, WALL, TESLA],
   [Group.BasicBuildings]: [TOWER, FLAMETHROWER, MORTAR],
   [Group.PoweredBuildings]: [POWER_PLANT, LASER, RAILGUN],
   [Group.BaseBuildings]: [BARRACKS, RADAR, MARKET],

@@ -14,7 +14,8 @@ import LaserBeam from "../projectiles/laserBeam";
 import StaticEntity, { StaticAgent } from "../staticEntity";
 
 const COOLDOWN = 1;
-const DAMAGE = 0.05;
+const DAMAGE = 0.06;
+const CHARGE_TIME = 500;
 
 class Laser implements ITower {
   public static readonly scale = 2;
@@ -30,6 +31,7 @@ class Laser implements ITower {
   private speedMultiplier = 1;
   private damageMultiplier = 1;
   public renderData: RenderData = {};
+  private lastTarget?: IEnemy;
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
@@ -40,10 +42,21 @@ class Laser implements ITower {
       return;
     }
 
+    if (!this.laserBeam && this.lastTarget) {
+      this.entity.lookAt(this.lastTarget.entity);
+    }
+
     this.cooldown = Math.max(0, this.cooldown - dt);
   }
 
   fire(target: IEnemy, dt: number) {
+    if (this.lastTarget !== target) {
+      this.lastTarget = target;
+      this.cooldown = CHARGE_TIME;
+
+      return 0;
+    }
+
     this.cooldown = COOLDOWN;
 
     if (

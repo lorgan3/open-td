@@ -44,13 +44,17 @@ class Mortar implements ITower {
   fire(target: IEnemy) {
     this.cooldown += COOLDOWN;
 
-    const isPowered = Manager.Instance.consume(
-      this,
-      this.speedMultiplier,
-      this.damageMultiplier
-    );
+    if (
+      !Manager.Instance.consume(
+        this,
+        this.speedMultiplier,
+        this.damageMultiplier
+      )
+    ) {
+      return 0;
+    }
 
-    const damage = DAMAGE * (isPowered ? this.damageMultiplier : 0);
+    const damage = DAMAGE * this.damageMultiplier;
     const projectile = new Rocket(this, target, damage);
     Manager.Instance.getSurface().spawn(projectile);
 
