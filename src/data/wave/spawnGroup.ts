@@ -98,6 +98,7 @@ class SpawnGroup {
     if (this.timer >= this.spawnInterval) {
       this.timer -= this.spawnInterval;
       this.energy = Math.max(0, this.energy - this.unit.cost);
+      this.burst++;
 
       const enemy = this.getNextUnit();
       Manager.Instance.spawnEnemy(enemy);

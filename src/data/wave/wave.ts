@@ -9,8 +9,8 @@ import SpawnGroup from "./SpawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
 
 const MAX_SPAWN_DELAY = 4000;
-const MIN_SPAWN_INTERVAL = 200;
-const SPAWN_DISTRIBUTION = 500;
+const MIN_SPAWN_INTERVAL = 150;
+const SPAWN_DISTRIBUTION = 550;
 const MIN_BURST_INTERVAL = 500;
 const BURST_DISTRIBUTION = 3000;
 const MIN_BURST_SIZE = 3;
@@ -63,7 +63,9 @@ class Wave {
 
       spawnGroup.setParameters(
         energy,
-        normalDistributionRandom() * SPAWN_DISTRIBUTION + MIN_SPAWN_INTERVAL,
+        (normalDistributionRandom() * SPAWN_DISTRIBUTION) /
+          Math.max(1, level / 3) +
+          MIN_SPAWN_INTERVAL,
         spawnDelay,
         burstSize,
         normalDistributionRandom() * BURST_DISTRIBUTION + MIN_BURST_INTERVAL

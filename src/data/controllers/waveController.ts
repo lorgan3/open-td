@@ -62,7 +62,7 @@ class WaveController {
       Math.max(
         (Math.PI / 6) *
           normalDistributionRandom() *
-          Math.min(Math.PI * 2, (level + 1) / 1.5)
+          Math.min(Math.PI * 2, level + 1)
       );
 
     const spawnGroups: SpawnGroup[] = [];
@@ -86,6 +86,10 @@ class WaveController {
           tilesToUpdate.push(
             new Tile(tile.getX(), tile.getY(), TileType.Spore)
           );
+
+          if (tile.hasStaticEntity()) {
+            this.surface.despawnStatic(tile.getStaticEntity().getAgent());
+          }
         }
       });
       this.surface.setTiles(tilesToUpdate);
@@ -211,8 +215,9 @@ class WaveController {
               4 +
               Math.min(
                 Manager.Instance.getLevel(),
-                Math.floor(Math.random() * 4)
-              );
+                Math.floor(Math.random() * 5)
+              ) *
+                2;
 
             return true;
           }
@@ -223,7 +228,7 @@ class WaveController {
             return true;
           }
 
-          if (!FREE_TILES.has(tile.getType())) {
+          if (!FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
             // For the first 10 attempts in the first wave, try putting the spawn point as close as possible.
             return !(Manager.Instance.getLevel() === 0 && i < 10);
           }
