@@ -121,12 +121,12 @@ onMounted(() => {
 }
 
 .message {
-  max-width: 300px;
+  width: 400px;
   box-sizing: border-box;
   z-index: 1;
   box-shadow: 5px 5px 10px -5px;
   transition: transform 0.2s, max-height 0.5s ease 0.2s;
-  transform: translateX(-320px);
+  transform: translateX(-420px);
   max-height: 300px;
   overflow: hidden;
 
@@ -154,6 +154,7 @@ onMounted(() => {
     border: 0;
     background: 0;
     cursor: pointer;
+    font-size: 18px;
   }
 
   &-keyboard {

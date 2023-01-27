@@ -8,6 +8,7 @@ const TUTORIALS: TutorialMessage[] = [
   messages.START_WAVE,
   messages.EXPAND_RADIUS,
   messages.BUY_UPGRADE,
+  messages.CHOOSE_UPGRADE,
 ];
 
 class TutorialManager {

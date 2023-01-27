@@ -50,19 +50,27 @@ const createTutorialMessage =
     );
 
 export const INTRO = createTutorialMessage(
-  "Welcome to Open Tower Defense! Open the build menu by clicking the {key: 🔧} button or by pressing {key: b}",
-  GameEvent.OpenBuildMenu
+  "Welcome to Open Tower Defense! Open the build menu by pressing {key: e}. You can also quickly select the most basic tower by pressing {key: f}.",
+  GameEvent.OpenBuildMenu,
+  GameEvent.StartWave
 );
 
 export const BUILD_TOWERS: TutorialMessage = (override) =>
-  continueAfterEvent(
-    Manager.Instance.showMessage(
-      "Build towers and walls near your base to protect it from enemies lurking in undiscovered areas",
-      { override, expires: 0 }
-    ),
-    GameEvent.SurfaceChange,
-    ({ affectedTiles }) => !!affectedTiles.size
-  );
+  new Promise<number>((resolve) => {
+    if (Manager.Instance.getIsStarted()) {
+      continueAfterEvent(override, GameEvent.EndWave).then(resolve);
+      return;
+    }
+
+    continueAfterEvent(
+      Manager.Instance.showMessage(
+        "Here you can choose which defenses to build. Consider picking the basic tower to beat the first wave. Towers in the 2nd and 3rd row can be unlocked later in the game.",
+        { override, expires: 0 }
+      ),
+      GameEvent.SurfaceChange,
+      ({ affectedTiles }) => !!affectedTiles.size
+    ).then(resolve);
+  });
 
 export const CHECK_COVERAGE: TutorialMessage = (override) =>
   new Promise<number>((resolve) => {
@@ -74,9 +82,9 @@ export const CHECK_COVERAGE: TutorialMessage = (override) =>
 
     continueAfterEvents(
       Manager.Instance.showMessage(
-        `Click the {key: 🎯} button to view tower sight lines${
+        `If you're new to the game you can click the {key: 🎯} button to view tower sight lines${
           difficulty === Difficulty.Easy ? " and enemy paths" : " "
-        } to check how effective your layout is`,
+        } to check how effective your layout is.`,
         { override, expires: 0 }
       ),
       [GameEvent.ToggleShowCoverage, GameEvent.StartWave]
@@ -100,11 +108,16 @@ export const START_WAVE: TutorialMessage = (override) =>
   });
 
 export const EXPAND_RADIUS = createTutorialMessage(
-  "After every wave your visible radius will increase. When enemy spawn points are discovered they are disabled and you receive a point to unlock new technologies.",
+  "Good job defeating the first wave! Things will quickly become more difficult from here on out! After every wave your visible radius will increase. When enemy spawn points are discovered they are disabled and you receive a point to unlock new technologies.",
   GameEvent.Discover
 );
 
 export const BUY_UPGRADE = createTutorialMessage(
-  "You gained a wave point by discovering a spawn point! You can spend it in the build menu. You can build radars to discover spawn points more quickly.",
+  "You gained a wave point by discovering a spawn point! Open the build menu in order to spend it.",
   GameEvent.OpenBuildMenu
+);
+
+export const CHOOSE_UPGRADE = createTutorialMessage(
+  "There are both defensive and offensive upgrades, read the descriptions to understand their strengths! You can also trade wave points for bonuses in the last column.",
+  GameEvent.CloseBuildMenu
 );
