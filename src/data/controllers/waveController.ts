@@ -214,10 +214,9 @@ class WaveController {
             backOff =
               4 +
               Math.min(
-                Manager.Instance.getLevel(),
-                Math.floor(Math.random() * 5)
-              ) *
-                2;
+                Manager.Instance.getLevel() / 2,
+                Math.floor(Math.random() * 6)
+              );
 
             return true;
           }
@@ -228,7 +227,11 @@ class WaveController {
             return true;
           }
 
-          if (!FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
+          if (
+            Math.random() > 0.66
+              ? !FREE_TILES_INCLUDING_WATER.has(tile.getType())
+              : !FREE_TILES.has(tile.getType())
+          ) {
             // For the first 10 attempts in the first wave, try putting the spawn point as close as possible.
             return !(Manager.Instance.getLevel() === 0 && i < 10);
           }
