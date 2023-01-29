@@ -7,6 +7,8 @@ import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import { get, set } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
 
+import { version } from "../../package.json";
+
 const props = defineProps<{
   onPlay: (
     seed: string,
@@ -152,6 +154,16 @@ const submit = (event: Event) => {
         </div>
       </div>
     </div>
+    <div class="footer">
+      <span>{{ version }}</span>
+      <a
+        class="footer-link"
+        href="https://github.com/lorgan3/open-td/releases"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Release notes</a
+      >
+    </div>
   </div>
 </template>
 
@@ -286,6 +298,33 @@ const submit = (event: Event) => {
     }
     &-settings {
       left: -6px;
+    }
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 20px;
+    color: #fff;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 44px;
+
+    &-link {
+      color: #fff;
+      padding: 8px 16px;
+      background: rgb(31, 34, 77);
+      text-decoration: initial;
+      border-radius: 6px;
+      border-bottom: 2px solid #000;
+      border-right: 2px solid #000;
+
+      &:hover {
+        background: rgb(44, 49, 120);
+        border: none;
+      }
     }
   }
 }
