@@ -8,6 +8,7 @@ import { get, set } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
 
 import { version } from "../../package.json";
+import { getAssets } from "../renderers/pixiRenderer/assets";
 
 const props = defineProps<{
   onPlay: (
@@ -49,6 +50,9 @@ const renderer = ref(
 );
 const showTutorial = ref(storedData?.showTutorial ?? true);
 const volume = ref(storedData?.volume ?? 100);
+
+const assetsLoading = ref(true);
+getAssets().then(() => (assetsLoading.value = false));
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -162,6 +166,9 @@ const submit = (event: Event) => {
         target="_blank"
         rel="noopener noreferrer"
         >Release notes</a
+      >
+      <span v-if="assetsLoading"
+        ><span class="spinner">߷</span> Loading assets</span
       >
     </div>
   </div>
@@ -324,6 +331,24 @@ const submit = (event: Event) => {
       &:hover {
         background: rgb(44, 49, 120);
         border: none;
+      }
+    }
+
+    .spinner {
+      animation: spin 0.5s linear infinite;
+      display: inline-block;
+      transform-origin: 50%;
+      line-height: 20px;
+      width: 24px;
+      height: 24px;
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
       }
     }
   }
