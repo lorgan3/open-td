@@ -9,6 +9,8 @@
     "check-types": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@pixi/assets": "^6.5.9",
+    "@pixi/basis": "^6.5.9",
     "@pixi/sound": "4.3.1",
     "@pixi/tilemap": "^3.2.2",
     "alea": "^1.0.1",

@@ -227,6 +227,18 @@
   resolved "https://registry.yarnpkg.com/@pixi/app/-/app-6.5.5.tgz#6a9fd77a8c67e672e936376f1cb9c03c939b4037"
   integrity sha512-VW2kzgj/eNZqGaf+24eL5BGPTHlCDjCYVrKXuFPmPnj48ucUOOKdMQrA8ezmC3LDXsraavwhru8F+JPLUbRtzg==
 
+"@pixi/assets@^6.5.9":
+  version "6.5.9"
+  resolved "https://registry.yarnpkg.com/@pixi/assets/-/assets-6.5.9.tgz#7e0b040d09d07ef944142142c1dda81abcd86fe3"
+  integrity sha512-0QHaqgeewyrNB9+3Uhs4Xb9VkEe/zDrXWBDgowVvFwrnMX5Se9AoRT4biy/lqsSKNMRMBceKNPQr+F6lgSt5Lg==
+  dependencies:
+    "@types/css-font-loading-module" "^0.0.7"
+
+"@pixi/basis@^6.5.9":
+  version "6.5.9"
+  resolved "https://registry.yarnpkg.com/@pixi/basis/-/basis-6.5.9.tgz#52ca35aa0b02ffaff17f8e611a87b528c9e62bae"
+  integrity sha512-mWuqq3ZmNo2eZw6rapOAQdafd+LaHLOBaa/Iy/PqfmuB8aFYaBgzEyF4FjnHGK1TYn+2PKO85G3ptIoAh9c67g==
+
 "@pixi/compressed-textures@6.5.5":
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/@pixi/compressed-textures/-/compressed-textures-6.5.5.tgz#60e16450565bb7dd9ac1f1a1b1936aa7c762f649"
@@ -452,6 +464,11 @@
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.4.tgz#e913e8175db8307d78b4e8fa690408ba6b65dee4"
   integrity sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==
+
+"@types/css-font-loading-module@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@types/css-font-loading-module/-/css-font-loading-module-0.0.7.tgz#2f98ede46acc0975de85c0b7b0ebe06041d24601"
+  integrity sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==
 
 "@types/earcut@^2.1.0":
   version "2.1.1"
