@@ -1,4 +1,3 @@
-import { Loader } from "pixi.js";
 import { EntityType } from "../../../data/entity/constants";
 import { Blueprint } from "./blueprint";
 import { Flame } from "./flame";
@@ -15,30 +14,21 @@ import { Constructor } from "./types";
 import { WavePoint } from "./wavePoint";
 import { Spark } from "./spark";
 
-export const init = (loader: Loader) => {
-  loader.add("runner", `${import.meta.env.BASE_URL}animations/runner.json`);
-  loader.add("regular", `${import.meta.env.BASE_URL}animations/regular.json`);
-  loader.add("flier", `${import.meta.env.BASE_URL}animations/flier.json`);
-  loader.add("tank", `${import.meta.env.BASE_URL}animations/tank.json`);
-  loader.add("buildings", `${import.meta.env.BASE_URL}tiles/buildings.json`);
-  loader.add("turret", `${import.meta.env.BASE_URL}animations/turret.json`);
-  loader.add(
-    "flamethrower",
-    `${import.meta.env.BASE_URL}animations/flamethrower.json`
-  );
-  loader.add("laser", `${import.meta.env.BASE_URL}animations/laser.json`);
-  loader.add("mortar", `${import.meta.env.BASE_URL}animations/mortar.json`);
-  loader.add("railgun", `${import.meta.env.BASE_URL}animations/railgun.json`);
-  loader.add(
-    "projectiles",
-    `${import.meta.env.BASE_URL}tiles/projectiles.json`
-  );
-  loader.add(
-    "explosion",
-    `${import.meta.env.BASE_URL}animations/explosion.json`
-  );
-  loader.add("lightning", `${import.meta.env.BASE_URL}tiles/lightning.json`);
-  loader.add("tesla", `${import.meta.env.BASE_URL}animations/tesla.json`);
+export const spriteOverrideAssets = {
+  runner: `${import.meta.env.BASE_URL}animations/runner.json`,
+  regular: `${import.meta.env.BASE_URL}animations/regular.json`,
+  flier: `${import.meta.env.BASE_URL}animations/flier.json`,
+  tank: `${import.meta.env.BASE_URL}animations/tank.json`,
+  buildings: `${import.meta.env.BASE_URL}tiles/buildings.json`,
+  turret: `${import.meta.env.BASE_URL}animations/turret.json`,
+  flamethrower: `${import.meta.env.BASE_URL}animations/flamethrower.json`,
+  laser: `${import.meta.env.BASE_URL}animations/laser.json`,
+  mortar: `${import.meta.env.BASE_URL}animations/mortar.json`,
+  railgun: `${import.meta.env.BASE_URL}animations/railgun.json`,
+  projectiles: `${import.meta.env.BASE_URL}tiles/projectiles.json`,
+  explosion: `${import.meta.env.BASE_URL}animations/explosion.json`,
+  lightning: `${import.meta.env.BASE_URL}tiles/lightning.json`,
+  tesla: `${import.meta.env.BASE_URL}animations/tesla.json`,
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {

@@ -1,4 +1,5 @@
 import { TileType } from "../../../data/terrain/constants";
+import { ATLAS } from "../atlas";
 
 export const wallCoordinates = {
   1: [
@@ -30,3 +31,9 @@ export const wallTypes = new Set([
   TileType.Wall,
   TileType.ElectricFence,
 ]);
+
+export const spriteAssets = {
+  fences: `${import.meta.env.BASE_URL}tiles/fenceCombined.json`,
+  wall: `${import.meta.env.BASE_URL}tiles/bigWall.json`,
+  [ATLAS]: `${import.meta.env.BASE_URL}tiles/atlas.json`,
+};

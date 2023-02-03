@@ -1,4 +1,4 @@
-import { AnimatedSprite, Graphics, Loader, Sprite } from "pixi.js";
+import { AnimatedSprite, Graphics, Sprite } from "pixi.js";
 import { Status } from "../../../data/entity/enemies";
 import TankData from "../../../data/entity/enemies/tank";
 import { Explosion } from "../explosion";
@@ -11,6 +11,7 @@ import { Sound } from "../sound";
 import Renderer from "../renderer";
 import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 import { createShadow, deleteShadow, ShadowSize } from "./shadow";
+import { AssetsContainer } from "../assets/container";
 
 const ANIMATION_SPEED = 0.1;
 const ONE_FOURTH = 1 / 4;
@@ -23,15 +24,19 @@ class Tank extends AnimatedSprite implements EntityRenderer {
   private shadow: Graphics;
   private oldOffset = 0;
 
-  constructor(private data: TankData, private loader: Loader) {
-    super(Object.values(loader.resources[Tank.atlas].spritesheet!.textures));
+  constructor(private data: TankData, private container: AssetsContainer) {
+    super(Object.values(container.assets![Tank.atlas].textures) as any);
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
     this.shadow = createShadow(ShadowSize.medium);
 
     this.on("removed", () => {
       deleteShadow(this.shadow);
-      new Explosion(loader, data.entity.getX() + 0.5, data.entity.getY() + 0.5);
+      new Explosion(
+        container,
+        data.entity.getX() + 0.5,
+        data.entity.getY() + 0.5
+      );
     });
 
     this.play();
@@ -84,9 +89,7 @@ class Tank extends AnimatedSprite implements EntityRenderer {
 
       for (let i = 0; i < 2; i++) {
         const flame = new Sprite(
-          this.loader.resources[FIRE_ATLAS_NAME].spritesheet!.textures[
-            FIRE_SPRITE
-          ]
+          this.container.assets![FIRE_ATLAS_NAME].textures[FIRE_SPRITE]
         );
         flame.alpha = 0.8;
         flame.anchor.set(0.5);

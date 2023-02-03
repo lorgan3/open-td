@@ -1,8 +1,9 @@
-import { Loader, ParticleContainer, Sprite } from "pixi.js";
+import { ParticleContainer, Sprite } from "pixi.js";
 import FlameData from "../../../data/entity/projectiles/flame";
 import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
+import { AssetsContainer } from "../assets/container";
 
 export const FIRE_ATLAS_NAME = "projectiles";
 export const FIRE_SPRITE = "projectiles1.png";
@@ -18,7 +19,7 @@ class FireParticle extends Sprite {
 class Flame extends ParticleContainer implements EntityRenderer {
   public static readonly layer = PROJECTILES;
 
-  constructor(private data: FlameData, loader: Loader) {
+  constructor(private data: FlameData, container: AssetsContainer) {
     super(MAX_FLAMES, {
       position: true,
       scale: true,
@@ -28,7 +29,7 @@ class Flame extends ParticleContainer implements EntityRenderer {
 
     for (let i = 0; i < MAX_FLAMES; i++) {
       const particle = new FireParticle(
-        loader.resources[FIRE_ATLAS_NAME].spritesheet!.textures[FIRE_SPRITE]
+        container.assets![FIRE_ATLAS_NAME].textures[FIRE_SPRITE]
       );
 
       particle.anchor.set(0.5);

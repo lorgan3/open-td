@@ -1,4 +1,4 @@
-import { Graphics, Loader } from "pixi.js";
+import { Graphics } from "pixi.js";
 import { Explosion } from "../explosion";
 import { TOWERS } from "../layer";
 import { Sound } from "../sound";
@@ -7,20 +7,21 @@ import { GenericProjectile } from "./genericProjectile";
 import RocketData from "../../../data/entity/projectiles/rocket";
 import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 import { SCALE } from "../constants";
+import { AssetsContainer } from "../assets/container";
 
 class Rocket extends GenericProjectile {
   public static readonly layer = TOWERS;
 
   private shadow: Graphics;
 
-  constructor(protected data: RocketData, loader: Loader) {
-    super(data, loader);
+  constructor(protected data: RocketData, container: AssetsContainer) {
+    super(data, container);
 
     this.shadow = createShadow(ShadowSize.small);
 
     this.on("removed", () => {
       deleteShadow(this.shadow);
-      new Explosion(loader, data.entity.getX(), data.entity.getY(), 2);
+      new Explosion(container, data.entity.getX(), data.entity.getY(), 2);
       ControllableSound.fromEntity(data.entity, Sound.Explosion);
     });
   }

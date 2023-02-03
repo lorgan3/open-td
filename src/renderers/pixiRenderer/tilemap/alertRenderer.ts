@@ -1,8 +1,9 @@
-import { Container, Graphics, LINE_CAP, Loader, Sprite } from "pixi.js";
+import { Container, Graphics, LINE_CAP, Sprite } from "pixi.js";
 import { EntityType } from "../../../data/entity/constants";
 import { GameEvent } from "../../../data/events";
 import EventSystem from "../../../data/eventSystem";
 import SpawnAlert from "../../../data/util/spawnAlert";
+import { AssetsContainer } from "../assets/container";
 import { ATLAS, AtlasTile } from "../atlas";
 import { SCALE } from "../constants";
 import { UI } from "../layer";
@@ -21,7 +22,7 @@ class AlertRenderer {
   private time = 0;
   private permanent = false;
 
-  constructor(private loader: Loader) {
+  constructor(private assetsContainer: AssetsContainer) {
     this.container = new Container();
     UI.addChild(this.container);
 
@@ -75,7 +76,7 @@ class AlertRenderer {
       );
 
       const symbol = new Sprite(
-        this.loader.resources[ATLAS].textures![AtlasTile.Alert]
+        this.assetsContainer.assets![ATLAS].textures![AtlasTile.Alert]
       );
       symbol.anchor.set(0.5);
       symbol.scale.set(2);
@@ -92,7 +93,7 @@ class AlertRenderer {
 
       alert.getUnits().forEach((unit, i) => {
         const icon = new Sprite(
-          this.loader.resources[ATLAS].textures![
+          this.assetsContainer.assets![ATLAS].textures![
             AlertRenderer.enemySpriteMap.get(unit)!
           ]
         );

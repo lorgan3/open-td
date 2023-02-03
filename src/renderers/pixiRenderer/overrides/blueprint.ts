@@ -1,10 +1,11 @@
-import { Loader, Sprite } from "pixi.js";
+import { Sprite } from "pixi.js";
 import BlueprintData from "../../../data/entity/blueprint";
 import { EntityType } from "../../../data/entity/constants";
 import { ATLAS, AtlasTile } from "../atlas";
 import { BASE } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
+import { AssetsContainer } from "../assets/container";
 
 const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
   [EntityType.Armory, ["buildings", "buildings1.png"]],
@@ -30,7 +31,7 @@ const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
 class Blueprint extends Sprite implements EntityRenderer {
   public static readonly layer = BASE;
 
-  constructor(private data: BlueprintData, loader: Loader) {
+  constructor(private data: BlueprintData, container: AssetsContainer) {
     const type = data.getPlaceable().entityType;
 
     if (!BLUEPRINT_MAP.has(type)) {
@@ -38,7 +39,7 @@ class Blueprint extends Sprite implements EntityRenderer {
     }
 
     const [atlas, texture] = BLUEPRINT_MAP.get(type)!;
-    super(loader.resources[atlas].spritesheet!.textures[texture]);
+    super(container.assets![atlas].textures[texture]);
 
     if (type === EntityType.None) {
       this.scale.set(data.getScale());

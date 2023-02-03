@@ -1,10 +1,11 @@
-import { Loader, TilingSprite } from "pixi.js";
+import { TilingSprite } from "pixi.js";
 import LaserBeamData, {
   LIFETIME,
 } from "../../../data/entity/projectiles/laserBeam";
 import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
+import { AssetsContainer } from "../assets/container";
 
 const ATLAS_NAME = "projectiles";
 const SPRITE = "projectiles3.png";
@@ -15,9 +16,9 @@ class LaserBeam extends TilingSprite implements EntityRenderer {
 
   private tileOffset = 0;
 
-  constructor(private data: LaserBeamData, loader: Loader) {
+  constructor(private data: LaserBeamData, container: AssetsContainer) {
     super(
-      loader.resources[ATLAS_NAME].spritesheet!.textures[SPRITE],
+      container.assets![ATLAS_NAME].textures[SPRITE],
       SPRITE_SCALE,
       SPRITE_SCALE
     );

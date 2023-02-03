@@ -1,4 +1,4 @@
-import { Container, Loader, ParticleContainer, Sprite } from "pixi.js";
+import { Container, ParticleContainer, Sprite } from "pixi.js";
 
 import { SCALE } from "../constants";
 import { UI } from "../layer";
@@ -7,6 +7,7 @@ import WavePointData from "../../../data/entity/wavePoint";
 import { ATLAS, AtlasTile } from "../atlas";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
+import { AssetsContainer } from "../assets/container";
 
 const PARTICLE_COUNT = 75;
 const PARTICLE_LIFETIME = 1000;
@@ -22,18 +23,18 @@ class WavePoint extends Container implements EntityRenderer {
   private sprite: Sprite;
   private time = 0;
 
-  constructor(private data: WavePointData, loader: Loader) {
+  constructor(private data: WavePointData, container: AssetsContainer) {
     super();
 
     this.sprite = new Sprite(
-      loader.resources[ATLAS].spritesheet!.textures[AtlasTile.Coin]
+      container.assets![ATLAS]!.textures[AtlasTile.Coin]
     );
     this.sprite.anchor.set(0.5);
 
     this.container = new ParticleContainer(PARTICLE_COUNT, { alpha: true });
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const particle = new SmokeParticle(
-        loader.resources[ATLAS].spritesheet!.textures[AtlasTile.SporeParticle]
+        container.assets![ATLAS].textures[AtlasTile.SporeParticle]
       );
 
       const angle = ((i % 25) / 25) * Math.PI * 2;

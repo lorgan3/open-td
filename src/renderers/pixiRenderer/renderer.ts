@@ -3,7 +3,7 @@ import Controller from "../../data/controllers/controller";
 import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
 import SimpleMessage from "../../components/SimpleMessage.vue";
-import { Application, InteractionEvent, Loader } from "pixi.js";
+import { Application, InteractionEvent } from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
 import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
@@ -11,7 +11,7 @@ import { settings } from "@pixi/tilemap";
 import Tile from "../../data/terrain/tile";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
-import { init, OVERRIDES } from "./overrides";
+import { OVERRIDES } from "./overrides";
 import { init as initSound, playSoundOnEvent, Sound } from "./sound";
 import { WallRenderer } from "./tilemap/wallRenderer";
 import { wallTypes } from "./tilemap/constants";
@@ -33,6 +33,7 @@ import { sound } from "@pixi/sound";
 import { GameEvent } from "../../data/events";
 import { get } from "../../util/localStorage";
 import { CursorRenderer } from "./tilemap/cursorRenderer";
+import { AssetsContainer } from "./assets/container";
 
 let DEBUG = false;
 
@@ -51,7 +52,7 @@ class Renderer implements IRenderer {
 
   private sprites = new Map<number, EntityRenderer>();
 
-  private loader: Loader;
+  private assets: AssetsContainer;
   private wallRenderer: WallRenderer;
   private coverageRenderer?: CoverageRenderer;
   private alertRenderer?: AlertRenderer;
@@ -77,16 +78,13 @@ class Renderer implements IRenderer {
     );
 
     this.tilemap = new CompositeTilemap();
+    this.assets = new AssetsContainer();
 
-    this.loader = new Loader();
-    this.loader.add(ATLAS, `${import.meta.env.BASE_URL}tiles/atlas.json`);
     this.wallRenderer = new WallRenderer(
-      this.loader,
+      this.assets,
       this.tilemap,
       this.surface
     );
-    init(this.loader);
-    this.loader.load();
 
     initSound();
 
@@ -132,15 +130,11 @@ class Renderer implements IRenderer {
 
     this.viewport!.addChild(this.tilemap, ...LAYERS);
 
-    this.coverageRenderer = new CoverageRenderer(this.loader, this.surface);
-    this.alertRenderer = new AlertRenderer(this.loader);
+    this.coverageRenderer = new CoverageRenderer(this.assets, this.surface);
+    this.alertRenderer = new AlertRenderer(this.assets);
     this.cursorRenderer = new CursorRenderer();
 
-    if (this.loader.loading) {
-      this.loader.onComplete.add(() => this.renderTilemap());
-    } else {
-      this.renderTilemap();
-    }
+    this.assets.onComplete(() => this.renderTilemap());
 
     const container = target.appendChild(document.createElement("div"));
     createApp(SimpleMessage, {
@@ -162,7 +156,7 @@ class Renderer implements IRenderer {
     this.tilemap.clear();
 
     const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
-    const atlas = this.loader.resources[ATLAS];
+    const atlas = this.assets.assets![ATLAS];
     const rows = this.surface.getHeight();
     const walls: Tile[] = [];
     for (let i = 0; i < rows; i++) {
@@ -228,7 +222,7 @@ class Renderer implements IRenderer {
   }
 
   rerender(dt: number): void {
-    if (this.loader.loading) {
+    if (this.assets.loading) {
       return;
     }
 
@@ -254,7 +248,7 @@ class Renderer implements IRenderer {
 
         const constructor = override || Default;
 
-        sprite = new constructor(entity.getAgent(), this.loader);
+        sprite = new constructor(entity.getAgent(), this.assets);
         constructor.layer.addChild(sprite);
 
         this.sprites.set(entity.getId(), sprite);

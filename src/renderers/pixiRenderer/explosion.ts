@@ -1,13 +1,14 @@
-import { AnimatedSprite, Loader } from "pixi.js";
+import { AnimatedSprite } from "pixi.js";
 import { TOWERS } from "./layer";
 import { SCALE } from "./constants";
+import { AssetsContainer } from "./assets/container";
 
 const ATLAS_NAME = "explosion";
 const ANIMATION_SPEED = 0.2;
 
 class Explosion extends AnimatedSprite {
-  constructor(loader: Loader, x: number, y: number, scale = 1) {
-    super(Object.values(loader.resources[ATLAS_NAME].spritesheet!.textures));
+  constructor(container: AssetsContainer, x: number, y: number, scale = 1) {
+    super(Object.values(container.assets![ATLAS_NAME].textures) as any);
     this.anchor.set(0.5);
     this.animationSpeed = ANIMATION_SPEED;
     this.loop = false;

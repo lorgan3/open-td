@@ -1,36 +1,33 @@
 import { CompositeTilemap } from "@pixi/tilemap";
-import { Loader } from "pixi.js";
 import { EntityType } from "../../../data/entity/constants";
 import { getScale } from "../../../data/entity/staticEntity";
 import Surface from "../../../data/terrain/surface";
 import Tile from "../../../data/terrain/tile";
+import { AssetsContainer } from "../assets/container";
 import { SCALE } from "../constants";
 import { wallCoordinates, wallSpritePadding, wallTypes } from "./constants";
 
 class WallRenderer {
   constructor(
-    private loader: Loader,
+    private container: AssetsContainer,
     private tilemap: CompositeTilemap,
     private surface: Surface
-  ) {
-    loader.add("fences", `${import.meta.env.BASE_URL}tiles/fenceCombined.json`);
-    loader.add("wall", `${import.meta.env.BASE_URL}tiles/bigWall.json`);
-  }
+  ) {}
 
   private getWallSprite(type: EntityType, index: number) {
     switch (type) {
       case EntityType.Fence:
-        return this.loader.resources["fences"].textures![
+        return this.container.assets!["fences"].textures![
           `fenceCombined${index}.png`
         ];
 
       case EntityType.ElectricFence:
-        return this.loader.resources["fences"].textures![
+        return this.container.assets!["fences"].textures![
           `fenceCombined${9 + index}.png`
         ];
 
       case EntityType.Wall:
-        return this.loader.resources["wall"].textures![`bigWall${index}.png`];
+        return this.container.assets!["wall"].textures![`bigWall${index}.png`];
 
       default:
         throw new Error("unknown wall type");

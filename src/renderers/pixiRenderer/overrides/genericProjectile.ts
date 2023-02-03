@@ -1,9 +1,10 @@
-import { Loader, Sprite } from "pixi.js";
+import { Sprite } from "pixi.js";
 import { Agent } from "../../../data/entity/entity";
 import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { EntityType } from "../../../data/entity/constants";
+import { AssetsContainer } from "../assets/container";
 
 const ATLAS_NAME = "projectiles";
 const DEFAULT_SPRITE = "projectiles0.png";
@@ -17,9 +18,9 @@ const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
 class GenericProjectile extends Sprite implements EntityRenderer {
   public static readonly layer = PROJECTILES;
 
-  constructor(protected data: Agent, loader: Loader) {
+  constructor(protected data: Agent, container: AssetsContainer) {
     super(
-      loader.resources[ATLAS_NAME].spritesheet!.textures[
+      container.assets![ATLAS_NAME].textures[
         ENTITY_TO_ATLAS_MAP.get(data.getType()) ?? DEFAULT_SPRITE
       ]
     );

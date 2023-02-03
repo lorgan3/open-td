@@ -1,4 +1,4 @@
-import { AnimatedSprite, Loader, Sprite } from "pixi.js";
+import { AnimatedSprite, Sprite } from "pixi.js";
 import { EntityType } from "../../../data/entity/constants";
 import { getCenter } from "../../../data/entity/staticEntity";
 import { ITower } from "../../../data/entity/towers";
@@ -9,6 +9,7 @@ import { ATLAS_NAME } from "./default";
 import { EntityRenderer } from "./types";
 import { Sound } from "../sound";
 import { ControllableSound } from "../sound/controllableSound";
+import { AssetsContainer } from "../assets/container";
 
 const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Tower, "turret"],
@@ -52,9 +53,9 @@ class Tower extends Sprite implements EntityRenderer {
   private turret!: AnimatedSprite;
   private sound?: ControllableSound;
 
-  constructor(private data: ITower, private loader: Loader) {
+  constructor(private data: ITower, private container: AssetsContainer) {
     super(
-      loader.resources[ATLAS_NAME].spritesheet!.textures[
+      container.assets![ATLAS_NAME].textures[
         getFrameSprite(data.isSpeedBoosted(), data.isDamageBoosted())
       ]
     );
@@ -69,7 +70,7 @@ class Tower extends Sprite implements EntityRenderer {
   private createTurret() {
     const atlasName = TOWER_TO_ATLAS_MAP.get(this.data.getType())!;
     this.turret = new AnimatedSprite(
-      Object.values(this.loader.resources[atlasName].spritesheet!.textures)
+      Object.values(this.container.assets![atlasName].textures) as any
     );
 
     this.turret.position.set(this.x, this.y);
@@ -88,7 +89,7 @@ class Tower extends Sprite implements EntityRenderer {
   sync(dt: number, full: boolean) {
     if (full) {
       this.texture =
-        this.loader.resources[ATLAS_NAME].spritesheet!.textures[
+        this.container.assets![ATLAS_NAME].textures[
           getFrameSprite(
             this.data.isSpeedBoosted(),
             this.data.isDamageBoosted()

@@ -18,6 +18,22 @@ export enum Sound {
   Thunder = "thunder",
 }
 
+export const soundAssets = {
+  [Sound.Notification]: `${import.meta.env.BASE_URL}sounds/notification.ogg`,
+  [Sound.Shot]: `${import.meta.env.BASE_URL}sounds/shot.wav`,
+  [Sound.Laser]: `${import.meta.env.BASE_URL}sounds/laser.flac`,
+  [Sound.Flamethrower]: `${import.meta.env.BASE_URL}sounds/flamethrower.wav`,
+  [Sound.Mortar]: `${import.meta.env.BASE_URL}sounds/mortar.wav`,
+  [Sound.Railgun]: `${import.meta.env.BASE_URL}sounds/railgun.mp3`,
+  [Sound.Explosion]: `${import.meta.env.BASE_URL}sounds/explosion.wav`,
+  [Sound.Firework]: `${import.meta.env.BASE_URL}sounds/firework.wav`,
+  [Sound.Place]: `${import.meta.env.BASE_URL}sounds/place.wav`,
+  [Sound.Destroy]: `${import.meta.env.BASE_URL}sounds/destroy.wav`,
+  [Sound.Hit]: `${import.meta.env.BASE_URL}sounds/hit.wav`,
+  [Sound.Sonar]: `${import.meta.env.BASE_URL}sounds/sonar.wav`,
+  [Sound.Thunder]: `${import.meta.env.BASE_URL}sounds/thunder.wav`,
+};
+
 const preload = (alias: Sound, path: string, volume = 1) => {
   sound.add(alias, {
     url: `${import.meta.env.BASE_URL}${path}`,

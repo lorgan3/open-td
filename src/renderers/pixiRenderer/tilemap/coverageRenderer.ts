@@ -1,4 +1,4 @@
-import { Loader, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { ParticleContainer, Sprite, Texture } from "pixi.js";
 import { Difficulty } from "../../../data/difficulty";
 import Manager from "../../../data/controllers/manager";
 import Path from "../../../data/terrain/path/path";
@@ -10,6 +10,7 @@ import { BASE_ENTITIES } from "../../../data/entity/constants";
 import { FLOOR, UI } from "../layer";
 import WaveController from "../../../data/controllers/waveController";
 import Controller from "../../../data/controllers/controller";
+import { AssetsContainer } from "../assets/container";
 
 class Marker extends Sprite {
   constructor(private offset: number, private path: Path, texture: Texture) {
@@ -42,7 +43,7 @@ class CoverageRenderer {
   private hoveredTile?: Tile;
   private visible = false;
 
-  constructor(private loader: Loader, private surface: Surface) {
+  constructor(private container: AssetsContainer, private surface: Surface) {
     this.coverageContainer = new ParticleContainer(
       undefined,
       {
@@ -107,7 +108,7 @@ class CoverageRenderer {
         }
 
         const sprite = new Coverage(
-          this.loader.resources[ATLAS].textures![AtlasTile.Coverage]
+          this.container.assets![ATLAS].textures![AtlasTile.Coverage]
         );
         sprite.originalAlpha = Math.min(0.15 + 0.1 * tileTowers.length, 0.55);
         sprite.alpha = sprite.originalAlpha;
@@ -145,7 +146,7 @@ class CoverageRenderer {
           new Marker(
             index * 2 + i * 5,
             slicedPath,
-            this.loader.resources[ATLAS].textures![AtlasTile.Entity]
+            this.container.assets![ATLAS].textures![AtlasTile.Entity]
           )
         );
       }
@@ -197,7 +198,7 @@ class CoverageRenderer {
     if (this.hoveredTile) {
       this.towers.get(this.hoveredTile.getHash())?.forEach((sprite) => {
         sprite.texture =
-          this.loader.resources[ATLAS].textures![AtlasTile.Coverage];
+          this.container.assets![ATLAS].textures![AtlasTile.Coverage];
         sprite.alpha = sprite.originalAlpha;
       });
     }
@@ -205,7 +206,7 @@ class CoverageRenderer {
     if (newHoveredTile) {
       this.towers.get(newHoveredTile.getHash())?.forEach((sprite) => {
         sprite.texture =
-          this.loader.resources[ATLAS].textures![AtlasTile.ActiveCoverage];
+          this.container.assets![ATLAS].textures![AtlasTile.ActiveCoverage];
         sprite.alpha = 0.7;
       });
     }

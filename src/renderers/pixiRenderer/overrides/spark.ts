@@ -1,8 +1,9 @@
-import { Container, Loader, TilingSprite } from "pixi.js";
+import { Container, TilingSprite } from "pixi.js";
 import SparkData, { LIFETIME } from "../../../data/entity/projectiles/spark";
 import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
+import { AssetsContainer } from "../assets/container";
 
 const ATLAS_NAME = "lightning";
 const SPRITE = "lightning0.png";
@@ -14,7 +15,7 @@ class Spark extends Container implements EntityRenderer {
 
   private sprites: TilingSprite[] = [];
 
-  constructor(private data: SparkData, loader: Loader) {
+  constructor(private data: SparkData, container: AssetsContainer) {
     super();
 
     let x = data.entity.getX();
@@ -24,7 +25,7 @@ class Spark extends Container implements EntityRenderer {
       const _y = target.entity.getY() + 0.5;
 
       const sprite = new TilingSprite(
-        loader.resources[ATLAS_NAME].spritesheet!.textures[SPRITE],
+        container.assets![ATLAS_NAME].textures[SPRITE],
         SPRITE_WIDTH,
         SPRITE_HEIGHT
       );
