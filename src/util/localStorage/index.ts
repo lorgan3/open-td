@@ -22,6 +22,10 @@ export const get = <K extends keyof Items>(key: K): Items[K] | null => {
     return null;
   }
 
+  if (!json.startsWith("{")) {
+    json = window.atob(json);
+  }
+
   try {
     return JSON.parse(json, REVIVERS_MAP[key]);
   } catch (error) {
@@ -29,12 +33,16 @@ export const get = <K extends keyof Items>(key: K): Items[K] | null => {
   }
 };
 
-export const set = <K extends keyof Items>(key: K, data: Partial<Items[K]>) => {
+export const set = <K extends keyof Items>(
+  key: K,
+  data: Partial<Items[K]>,
+  hashed = false
+) => {
   const original = get(key) || {};
   const json = JSON.stringify({ ...original, ...data }, REPLACER_MAP[key]);
 
   try {
-    localStorage.setItem(key, json);
+    localStorage.setItem(key, hashed ? window.btoa(json) : json);
   } catch (error) {
     console.warn("Failed to store data", error);
   }

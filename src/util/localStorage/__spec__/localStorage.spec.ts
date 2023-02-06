@@ -75,4 +75,23 @@ describe("localStorage", () => {
       JSON.stringify(expected)
     );
   });
+
+  it("Sets hashed values", () => {
+    getItem.mockReturnValue(JSON.stringify({}));
+
+    set("settings", { renderer }, true);
+
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "settings",
+      "eyJyZW5kZXJlciI6InBpeGlSZW5kZXJlciJ9"
+    );
+  });
+
+  it("Gets hashed values", () => {
+    getItem.mockReturnValue("eyJyZW5kZXJlciI6InBpeGlSZW5kZXJlciJ9");
+
+    expect(get("settings")).toEqual({
+      renderer,
+    });
+  });
 });
