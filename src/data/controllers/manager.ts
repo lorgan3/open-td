@@ -31,6 +31,8 @@ abstract class Manager {
 
   abstract despawnEnemy(enemy: IEnemy): void;
 
+  abstract getKilledEnemies(): number;
+
   getSurface() {
     return this.surface;
   }
@@ -60,7 +62,7 @@ abstract class Manager {
   abstract consumeContinuous(
     agent: Agent,
     dt: number,
-    damageMultiplie?: number
+    damageMultiplier?: number
   ): boolean;
 
   getDifficulty() {

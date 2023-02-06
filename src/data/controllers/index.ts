@@ -3,6 +3,7 @@ import { Difficulty } from "../difficulty";
 import Base from "../entity/base";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
+import AchievementController from "./achievementController";
 import BuildController from "./buildController";
 import DefaultManager from "./defaultManager";
 import MoneyController from "./moneyController";
@@ -27,6 +28,7 @@ export const init = (
   new MoneyController(100, () => base.getMoneyFactor());
   new BuildController(surface);
   new UnlocksController();
+  new AchievementController();
 
   return manager;
 };

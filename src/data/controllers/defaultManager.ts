@@ -17,6 +17,8 @@ import WaveController from "./waveController";
 import VisibilityController from "./visibilityController";
 
 class DefaultManager extends Manager {
+  private killedEnemies = 0;
+
   constructor(
     difficulty: Difficulty,
     base: Base,
@@ -90,6 +92,8 @@ class DefaultManager extends Manager {
   }
 
   despawnEnemy(enemy: IEnemy) {
+    this.killedEnemies++;
+
     if (this.surface.despawn(enemy)) {
       if (WaveController.Instance.processWave()) {
         this.end();
@@ -97,6 +101,10 @@ class DefaultManager extends Manager {
         this.triggerStatUpdate();
       }
     }
+  }
+
+  getKilledEnemies(): number {
+    return this.killedEnemies;
   }
 
   getIsStarted() {
@@ -127,8 +135,6 @@ class DefaultManager extends Manager {
       return;
     }
 
-    EventSystem.Instance.triggerEvent(GameEvent.StartWave);
-
     PowerController.Instance.processPower();
     MoneyController.Instance.clearRecents();
     MoneyController.Instance.addWaveBudget(this.level);
@@ -140,6 +146,8 @@ class DefaultManager extends Manager {
     // Increase level and show the new area that will be discovered.
     this.level++;
     VisibilityController.Instance.updateBaseRange();
+
+    EventSystem.Instance.triggerEvent(GameEvent.StartWave);
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();

@@ -22,14 +22,14 @@ const props = defineProps<{
 const canvas = ref<HTMLDivElement | null>(null);
 
 const surface = new Surface({
-  width: 200,
-  height: 200,
-  generate: getGenerator(props.seed, 200, 200),
+  width: 160,
+  height: 160,
+  generate: getGenerator(props.seed, 160, 160),
 });
 const controller = new Controller(surface);
 const renderer = new props.renderer(surface, controller);
 
-const targetTile = surface.getTile(100, 100)!;
+const targetTile = surface.getTile(80, 80)!;
 const manager = init(
   props.difficulty,
   targetTile,
@@ -43,7 +43,7 @@ if (props.showTutorial) {
 }
 
 let mounted = false;
-let oldTimestamp = 0;
+let oldTimestamp: number | undefined;
 
 onMounted(() => {
   mounted = true;
@@ -72,7 +72,7 @@ onMounted(() => {
       renderer.move({ x, y, zoom });
     }
 
-    const dt = timestamp - oldTimestamp;
+    const dt = oldTimestamp ? timestamp - oldTimestamp : 16;
     manager.tick(dt);
     renderer.rerender(dt);
     oldTimestamp = timestamp;

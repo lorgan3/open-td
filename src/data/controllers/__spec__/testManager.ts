@@ -40,6 +40,10 @@ class TestManager extends Manager {
     throw new Error("Method not implemented.");
   }
 
+  getKilledEnemies(): number {
+    throw new Error("Method not implemented.");
+  }
+
   getIsStarted(): boolean {
     throw new Error("Method not implemented.");
   }

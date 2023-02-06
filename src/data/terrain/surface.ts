@@ -487,6 +487,10 @@ class Surface {
     return this.towers;
   }
 
+  public getTiles() {
+    return this.map;
+  }
+
   public markPristine() {
     this.dirty = false;
     this.deletedEntities = [];

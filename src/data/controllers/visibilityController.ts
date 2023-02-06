@@ -2,7 +2,7 @@ import type Base from "../entity/base";
 import { Agent } from "../entity/entity";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
-import { DiscoveryStatus } from "../terrain/constants";
+import { DiscoveryStatus, TileType } from "../terrain/constants";
 import { EntityType } from "../entity/constants";
 import Manager from "./manager";
 import EventSystem from "../eventSystem";
@@ -23,6 +23,7 @@ class VisibilityController {
   private pendingAgents = new Set<Agent>();
   private base?: Base;
   private pendingRadius = 0;
+  private discoveredEdge = false;
 
   private minX?: number;
   private minY?: number;
@@ -189,6 +190,10 @@ class VisibilityController {
     });
   }
 
+  isEdgeDiscovered() {
+    return this.discoveredEdge;
+  }
+
   private getVisibilityRange(agent: Agent) {
     switch (agent.getType()) {
       case EntityType.Base:
@@ -197,7 +202,7 @@ class VisibilityController {
           (Manager.Instance.getLevel() - (this.pendingRadius > 0 ? 1 : 0)) * 2
         );
       case EntityType.Radar:
-        return 17;
+        return 21;
       default:
         throw new Error("Entity has no visibility defined");
     }
@@ -254,6 +259,13 @@ class VisibilityController {
     this.surface.forCircle(x, y, range, (tile) => {
       if (status === DiscoveryStatus.Pending && tile.isDiscovered()) {
         return;
+      }
+
+      if (
+        status === DiscoveryStatus.Discovered &&
+        tile.getType() === TileType.Void
+      ) {
+        this.discoveredEdge = true;
       }
 
       tile.setDiscoveryStatus(status);
