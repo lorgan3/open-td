@@ -6,11 +6,7 @@ import { Agent } from "../entity/entity";
 import { GameEvent, Unlock } from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable, WAVE_OVER_MULTIPLIER } from "../placeables";
-import PowerController, {
-  DAMAGE_BEACON_CONSUMPTION,
-  POWER_CONSUMPTIONS,
-  SPEED_BEACON_CONSUMPTION,
-} from "./powerController";
+import PowerController, { POWER_CONSUMPTIONS } from "./powerController";
 import Surface from "../terrain/surface";
 import UnlocksController from "./unlocksController";
 import Manager from "./manager";
@@ -156,15 +152,18 @@ class DefaultManager extends Manager {
   consume(agent: Agent, speedMultiplier = 1, damageMultiplier = 1) {
     return PowerController.Instance.consume(
       (POWER_CONSUMPTIONS[agent.getType()] ?? 0) +
-        (speedMultiplier - 1) * SPEED_BEACON_CONSUMPTION +
-        (damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION
+        (speedMultiplier - 1) * PowerController.speedBeaconConsumption +
+        (damageMultiplier - 1) * PowerController.damageBeaconConsumption
     );
   }
 
   consumeContinuous(agent: Agent, dt: number, damageMultiplier = 1) {
     return PowerController.Instance.consume(
       (POWER_CONSUMPTIONS[agent.getType()] ?? 0) * dt +
-        ((damageMultiplier - 1) * DAMAGE_BEACON_CONSUMPTION * dt) / 16
+        ((damageMultiplier - 1) *
+          PowerController.damageBeaconConsumption *
+          dt) /
+          160
     );
   }
 

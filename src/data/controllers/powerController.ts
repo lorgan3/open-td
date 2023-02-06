@@ -12,13 +12,9 @@ export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
   [EntityType.Mortar]: 2,
 };
 
-export const SPEED_BEACON_CONSUMPTION = 2;
-
-export const DAMAGE_BEACON_CONSUMPTION = 1.25;
-
 class PowerController {
-  public static speedBeaconConsumption = 2;
-  public static damageBeaconConsumption = 1.25;
+  public static speedBeaconConsumption = 1.1;
+  public static damageBeaconConsumption = 1.2;
 
   private static instance: PowerController;
   private static powerMultiplier = 5;
