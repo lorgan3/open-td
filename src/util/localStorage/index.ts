@@ -1,12 +1,15 @@
+import { achievementsReplacer, achievementsReviver } from "./achievements";
 import { settingsReplacer, settingsReviver } from "./settings";
 import { Items, Replacer, Reviver } from "./types";
 
 const REVIVERS_MAP: Record<keyof Items, Reviver> = {
   settings: settingsReviver,
+  achievements: achievementsReviver,
 };
 
 const REPLACER_MAP: Record<keyof Items, Replacer> = {
   settings: settingsReplacer,
+  achievements: achievementsReplacer,
 };
 
 export const get = <K extends keyof Items>(key: K): Items[K] | null => {

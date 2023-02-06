@@ -6,6 +6,7 @@ import EmojiRenderer from "../renderers/emojiRenderer/renderer";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import { get, set } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
+import AchievementsList from "./achievements/AchievementsList.vue";
 
 import { version } from "../../package.json";
 import { getAssets } from "../renderers/pixiRenderer/assets";
@@ -23,6 +24,7 @@ enum SubMenu {
   None,
   Play,
   Controls,
+  Achievements,
   Settings,
 }
 
@@ -94,6 +96,7 @@ const submit = (event: Event) => {
         <div class="menu-main-inner">
           <button @click="onClick(SubMenu.Play)">Play</button>
           <button @click="onClick(SubMenu.Controls)">Controls</button>
+          <button @click="onClick(SubMenu.Achievements)">Achievements</button>
           <button @click="onClick(SubMenu.Settings)">Settings</button>
         </div>
       </div>
@@ -130,6 +133,16 @@ const submit = (event: Event) => {
       >
         <div class="menu-controls-inner">
           <ControlsList />
+        </div>
+      </div>
+      <div
+        :class="{
+          'menu-achievements': true,
+          'menu--hidden': openSubMenu !== SubMenu.Achievements,
+        }"
+      >
+        <div class="menu-controls-inner">
+          <AchievementsList />
         </div>
       </div>
       <div
@@ -273,6 +286,7 @@ const submit = (event: Event) => {
     &-main,
     &-play,
     &-controls,
+    &-achievements,
     &-settings {
       &-inner {
         width: 300px;
@@ -303,8 +317,11 @@ const submit = (event: Event) => {
     &-controls {
       left: -4px;
     }
-    &-settings {
+    &-achievements {
       left: -6px;
+    }
+    &-settings {
+      left: -8px;
     }
   }
 
