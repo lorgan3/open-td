@@ -62,8 +62,7 @@ export const playSoundOnEvent = (
   event: GameEvent,
   alias: Sound,
   options?: PlayOptions
-) => {
+) =>
   EventSystem.Instance.addEventListener(event, () =>
     sound.play(alias, options)
   );
-};

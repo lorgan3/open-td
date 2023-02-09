@@ -28,6 +28,8 @@ const startGame = (
   gameRenderer.value = renderer;
   gameShowTutorial.value = showTutorial;
 };
+
+const mainMenu = () => (state.value = State.Menu);
 </script>
 
 <template>
@@ -38,6 +40,7 @@ const startGame = (
     :difficulty="gameDifficulty!"
     :renderer="gameRenderer!"
     :showTutorial="gameShowTutorial!"
+    :mainMenu="mainMenu"
   />
 </template>
 

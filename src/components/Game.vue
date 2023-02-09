@@ -5,6 +5,7 @@ import Surface from "../data/terrain/surface";
 import Controller, { Keys } from "../data/controllers/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
+import MainMenu from "./hud/IngameMenu.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
@@ -17,9 +18,11 @@ const props = defineProps<{
   difficulty: Difficulty;
   renderer: Constructor;
   showTutorial: boolean;
+  mainMenu: () => void;
 }>();
 
 const canvas = ref<HTMLDivElement | null>(null);
+const isMenuVisible = ref(false);
 
 const surface = new Surface({
   width: 160,
@@ -44,12 +47,20 @@ if (props.showTutorial) {
 
 let mounted = false;
 let oldTimestamp: number | undefined;
+let removeKeyListener: () => void;
 
 onMounted(() => {
   mounted = true;
   renderer.mount(canvas.value as HTMLDivElement);
+  removeKeyListener = controller.addKeyListener(Keys.Escape, () => {
+    isMenuVisible.value = !isMenuVisible.value;
+  });
 
   const render = (timestamp: number) => {
+    if (!mounted) {
+      return;
+    }
+
     const x =
       +controller.isKeyDown(Keys.Right)! +
       +controller.isKeyDown(Keys.D)! -
@@ -73,19 +84,27 @@ onMounted(() => {
     }
 
     const dt = oldTimestamp ? timestamp - oldTimestamp : 16;
-    manager.tick(dt);
+    if (!isMenuVisible.value) {
+      manager.tick(dt);
+    }
     renderer.rerender(dt);
     oldTimestamp = timestamp;
 
-    if (mounted) {
-      window.requestAnimationFrame(render);
-    }
+    window.requestAnimationFrame(render);
   };
 
   window.requestAnimationFrame(render);
 });
 
-onUnmounted(() => (mounted = false));
+onUnmounted(() => {
+  renderer.unmount();
+  removeKeyListener();
+  mounted = false;
+});
+
+const resume = () => {
+  isMenuVisible.value = false;
+};
 </script>
 
 <template>
@@ -107,6 +126,11 @@ onUnmounted(() => (mounted = false));
         :controller="Controller.Instance"
         :unlocksController="UnlocksController.Instance"
         :eventSystem="EventSystem.Instance"
+      />
+      <MainMenu
+        :mainMenu="mainMenu"
+        :visible="isMenuVisible"
+        :resume="resume"
       />
     </div>
   </div>

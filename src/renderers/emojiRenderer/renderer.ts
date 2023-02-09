@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { App, createApp } from "vue";
 import Controller from "../../data/controllers/controller";
 import Entity from "../../data/entity/entity";
 import Manager from "../../data/controllers/manager";
@@ -33,6 +33,7 @@ class Renderer implements IRenderer {
   private scaledTilesPool: Pool<Entity, HTMLSpanElement>;
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
+  private removeEventListeners?: () => void;
 
   public xStep = 0;
   public yStep = 0;
@@ -45,6 +46,8 @@ class Renderer implements IRenderer {
   private _showCoverage = false;
 
   private target: HTMLDivElement | null = null;
+  private app?: App<Element>;
+  private appContainer?: HTMLDivElement;
   private world: HTMLDivElement | null = null;
   private rows: HTMLDivElement[] = [];
   private alertRanges: SVGElement[] = [];
@@ -167,10 +170,11 @@ class Renderer implements IRenderer {
   mount(target: HTMLDivElement): void {
     this.target = target;
 
-    const container = target.appendChild(document.createElement("div"));
-    createApp(SimpleMessage, {
+    this.appContainer = target.appendChild(document.createElement("div"));
+    this.app = createApp(SimpleMessage, {
       register: this.resolveMessageFn,
-    }).mount(container);
+    })!;
+    this.app.mount(this.appContainer);
 
     this.world = target.appendChild(document.createElement("div"));
     this.world.className = "scrollable";
@@ -503,7 +507,11 @@ class Renderer implements IRenderer {
   }
 
   unmount(): void {
-    throw new Error("Method not implemented.");
+    if (this.app) {
+      this.app.unmount();
+      this.target!.removeChild(this.appContainer!);
+      this.removeEventListeners!();
+    }
   }
 
   getTime() {
@@ -541,10 +549,11 @@ class Renderer implements IRenderer {
   }
 
   private registerEventHandlers(target: HTMLDivElement) {
-    target.addEventListener("contextmenu", (event: Event) => {
+    const handleContextMenu = (event: Event) => {
       event.preventDefault();
       return false;
-    });
+    };
+    target.addEventListener("contextmenu", handleContextMenu);
 
     const preventMovement = (deltaX: number, deltaY: number, event: Event) => {
       const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
@@ -560,15 +569,12 @@ class Renderer implements IRenderer {
       }
     };
 
-    target.addEventListener(
-      "wheel",
-      (event: WheelEvent) => {
-        preventMovement(event.deltaX, event.deltaY, event);
-      },
-      { passive: false }
-    );
+    const handleWheel = (event: WheelEvent) => {
+      preventMovement(event.deltaX, event.deltaY, event);
+    };
+    target.addEventListener("wheel", handleWheel, { passive: false });
 
-    target.addEventListener("mousedown", (event: MouseEvent) => {
+    const handleMousedown = (event: MouseEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
@@ -577,9 +583,10 @@ class Renderer implements IRenderer {
       );
 
       this.controller.mouseDown(x, y);
-    });
+    };
+    target.addEventListener("mousedown", handleMousedown);
 
-    target.addEventListener("mousemove", (event: MouseEvent) => {
+    const handleMousemove = (event: MouseEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
@@ -588,9 +595,10 @@ class Renderer implements IRenderer {
       );
 
       this.controller.mouseMove(x, y);
-    });
+    };
+    target.addEventListener("mousemove", handleMousemove);
 
-    target.addEventListener("mouseup", (event: MouseEvent) => {
+    const handleMouseup = (event: MouseEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
@@ -599,17 +607,30 @@ class Renderer implements IRenderer {
       );
 
       this.controller.mouseUp(x, y);
-    });
+    };
+    target.addEventListener("mouseup", handleMouseup);
 
-    window.addEventListener("keydown", (event: KeyboardEvent) => {
+    const handleKeydown = (event: KeyboardEvent) => {
       this.controller.keyDown(event.key);
       event.preventDefault();
-    });
+    };
+    window.addEventListener("keydown", handleKeydown);
 
-    window.addEventListener("keyup", (event: KeyboardEvent) => {
+    const handleKeyup = (event: KeyboardEvent) => {
       this.controller.keyUp(event.key);
       event.preventDefault();
-    });
+    };
+    window.addEventListener("keyup", handleKeyup);
+
+    this.removeEventListeners = () => {
+      target.removeEventListener("contextmenu", handleContextMenu);
+      target.removeEventListener("wheel", handleWheel);
+      target.removeEventListener("mousedown", handleMousedown);
+      target.removeEventListener("mousemove", handleMousemove);
+      target.removeEventListener("mouseup", handleMouseup);
+      target.removeEventListener("keydown", handleKeydown);
+      target.removeEventListener("keyup", handleKeyup);
+    };
   }
 
   showMessage: MessageFn = async (...args) => {

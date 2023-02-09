@@ -115,11 +115,14 @@ function toggleCoverage() {
   .wave-toggle {
     border: 2px solid #000;
     border-top: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
     background-color: rgb(44, 49, 120);
     padding: 4px;
     width: 41.5px;
     pointer-events: all;
     cursor: pointer;
+    color: #fff;
 
     &-toggled {
       padding-top: 8px;

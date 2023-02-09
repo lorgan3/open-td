@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { App, createApp } from "vue";
 import Controller from "../../data/controllers/controller";
 import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
@@ -44,11 +44,13 @@ class Renderer implements IRenderer {
 
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
+  private removeEventListeners?: () => void;
 
   private target?: HTMLElement;
   private app?: Application;
   private viewport?: Viewport;
   private tilemap: CompositeTilemap;
+  private vueApp?: App<Element>;
 
   private sprites = new Map<number, EntityRenderer>();
 
@@ -137,9 +139,10 @@ class Renderer implements IRenderer {
     this.assets.onComplete(() => this.renderTilemap());
 
     const container = target.appendChild(document.createElement("div"));
-    createApp(SimpleMessage, {
+    this.vueApp = createApp(SimpleMessage, {
       register: this.resolveMessageFn,
-    }).mount(container);
+    });
+    this.vueApp.mount(container);
 
     const center = Manager.Instance.getBase().getTile();
     this.x = center.getX() * SCALE;
@@ -291,7 +294,12 @@ class Renderer implements IRenderer {
   }
 
   unmount(): void {
-    throw new Error("Method not implemented.");
+    if (this.app) {
+      this.vueApp!.unmount();
+      this.app.destroy(true);
+      this.removeEventListeners!();
+      LAYERS.forEach((layer) => layer.removeChildren());
+    }
   }
 
   getTime() {
@@ -299,12 +307,13 @@ class Renderer implements IRenderer {
   }
 
   private registerEventHandlers() {
-    this.target!.addEventListener("contextmenu", (event: Event) => {
+    const handleContextmenu = (event: Event) => {
       event.preventDefault();
       return false;
-    });
+    };
+    this.target!.addEventListener("contextmenu", handleContextmenu);
 
-    this.viewport!.addListener("mousedown", (event: InteractionEvent) => {
+    const handleMousedown = (event: InteractionEvent) => {
       const x = Math.floor(
         (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
           SCALE
@@ -315,9 +324,10 @@ class Renderer implements IRenderer {
       );
 
       this.controller.mouseDown(x, y);
-    });
+    };
+    this.viewport!.addListener("mousedown", handleMousedown);
 
-    this.viewport!.addListener("mousemove", (event: InteractionEvent) => {
+    const handleMousemove = (event: InteractionEvent) => {
       const x = Math.floor(
         (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
           SCALE
@@ -328,9 +338,10 @@ class Renderer implements IRenderer {
       );
 
       this.controller.mouseMove(x, y);
-    });
+    };
+    this.viewport!.addListener("mousemove", handleMousemove);
 
-    this.viewport!.addListener("mouseup", (event: InteractionEvent) => {
+    const handleMouseup = (event: InteractionEvent) => {
       const x = Math.floor(
         (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
           SCALE
@@ -341,22 +352,45 @@ class Renderer implements IRenderer {
       );
 
       this.controller.mouseUp(x, y);
-    });
+    };
+    this.viewport!.addListener("mouseup", handleMouseup);
 
-    window.addEventListener("keydown", (event: KeyboardEvent) => {
+    const handleKeydown = (event: KeyboardEvent) => {
       this.controller.keyDown(event.key);
       event.preventDefault();
-    });
+    };
+    window.addEventListener("keydown", handleKeydown);
 
-    window.addEventListener("keyup", (event: KeyboardEvent) => {
+    const handleKeyup = (event: KeyboardEvent) => {
       this.controller.keyUp(event.key);
       event.preventDefault();
-    });
+    };
+    window.addEventListener("keyup", handleKeyup);
 
-    playSoundOnEvent(GameEvent.StartWave, Sound.Sonar);
-    playSoundOnEvent(GameEvent.Buy, Sound.Place);
-    playSoundOnEvent(GameEvent.Sell, Sound.Destroy);
-    playSoundOnEvent(GameEvent.HitBase, Sound.Destroy);
+    const removeStartWaveSound = playSoundOnEvent(
+      GameEvent.StartWave,
+      Sound.Sonar
+    );
+    const removeBuySound = playSoundOnEvent(GameEvent.Buy, Sound.Place);
+    const removeSellSound = playSoundOnEvent(GameEvent.Sell, Sound.Destroy);
+    const removeHitBaseSound = playSoundOnEvent(
+      GameEvent.HitBase,
+      Sound.Destroy
+    );
+
+    this.removeEventListeners = () => {
+      window.removeEventListener("contextmenu", handleContextmenu);
+      this.viewport!.removeListener("mousedown", handleMousedown);
+      this.viewport!.removeListener("mousemove", handleMousemove);
+      this.viewport!.removeListener("mouseup", handleMouseup);
+      window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("keyup", handleKeyup);
+
+      removeStartWaveSound();
+      removeBuySound();
+      removeSellSound();
+      removeHitBaseSound();
+    };
   }
 
   showMessage: MessageFn = async (...args) => {
