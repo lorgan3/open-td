@@ -5,7 +5,7 @@ import Tile from "../terrain/tile";
 import EventSystem from "../eventSystem";
 import BuildController from "./buildController";
 
-export enum Keys {
+export enum Key {
   Shift = "Shift",
   Control = "Control",
   Meta = "Meta",
@@ -35,9 +35,9 @@ export enum Mode {
   grid = "grid",
 }
 
-const values = new Set<string>(Object.values(Keys));
+const values = new Set<string>(Object.values(Key));
 
-function isKey(key: string): key is Keys {
+function isKey(key: string): key is Key {
   return values.has(key);
 }
 
@@ -48,9 +48,9 @@ class Controller {
   private mouseDownY = 0;
   private mouseX = 0;
   private mouseY = 0;
-  private pressedKeys: Partial<Record<Keys, boolean>> = {};
+  private pressedKeys: Partial<Record<Key, boolean>> = {};
   private _isMouseDown = false;
-  private eventHandlers = new Map<Keys, Set<() => void>>();
+  private eventHandlers = new Map<Key, Set<() => void>>();
 
   private selectedPlacable: Placeable = DEMOLISH;
   private previousSelectedPlacable: Placeable = TOWER;
@@ -88,7 +88,7 @@ class Controller {
     let x = this.mouseX;
     let y = this.mouseY;
 
-    if (this.pressedKeys[Keys.Control] || this.pressedKeys[Keys.Meta]) {
+    if (this.pressedKeys[Key.Control] || this.pressedKeys[Key.Meta]) {
       let tiles: Tile[] = [];
       this.surface.forRect(
         this.mouseDownX,
@@ -108,7 +108,7 @@ class Controller {
       return tiles;
     }
 
-    if (this.pressedKeys[Keys.Shift]) {
+    if (this.pressedKeys[Key.Shift]) {
       if (Math.abs(x - this.mouseDownX) > Math.abs(y - this.mouseDownY)) {
         y = this.mouseDownY;
       } else {
@@ -149,22 +149,22 @@ class Controller {
 
   public keyDown(key: string) {
     if (isKey(key)) {
-      this.pressedKeys[key as Keys] = true;
+      this.pressedKeys[key as Key] = true;
     }
   }
 
   public keyUp(key: string) {
     if (isKey(key)) {
-      this.pressedKeys[key as Keys] = false;
+      this.pressedKeys[key as Key] = false;
 
       this.eventHandlers.get(key)?.forEach((fn) => fn());
 
-      if (key === Keys.B || key === Keys.E) {
+      if (key === Key.B || key === Key.E) {
         this.toggleBuildMenu();
       }
 
       // @TODO: I would like to use `Q` for this but there's no easy way to figure out azerty/qwerty keyboards
-      if (key === Keys.F) {
+      if (key === Key.F) {
         if (this.selectedPlacable !== DEMOLISH) {
           this.previousSelectedPlacable = this.selectedPlacable;
           this.setPlaceable(DEMOLISH);
@@ -186,11 +186,11 @@ class Controller {
     }
   }
 
-  public isKeyDown(key: Keys) {
+  public isKeyDown(key: Key) {
     return this.pressedKeys[key] ?? false;
   }
 
-  public addKeyListener(key: Keys, fn: () => void) {
+  public addKeyListener(key: Key, fn: () => void) {
     if (this.eventHandlers.has(key)) {
       this.eventHandlers.get(key)!.add(fn);
     } else {
@@ -200,7 +200,7 @@ class Controller {
     return () => this.removeKeyListener(key, fn);
   }
 
-  public removeKeyListener(key: Keys, fn: () => void) {
+  public removeKeyListener(key: Key, fn: () => void) {
     this.eventHandlers.get(key)?.delete(fn);
   }
 
@@ -221,11 +221,11 @@ class Controller {
       return Mode.Single;
     }
 
-    if (this.pressedKeys[Keys.Control] || this.pressedKeys[Keys.Meta]) {
+    if (this.pressedKeys[Key.Control] || this.pressedKeys[Key.Meta]) {
       return Mode.grid;
     }
 
-    if (this.pressedKeys[Keys.Shift]) {
+    if (this.pressedKeys[Key.Shift]) {
       return Mode.StraightLine;
     }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import Controller, { Keys } from "../data/controllers/controller";
+import Controller, { Key } from "../data/controllers/controller";
 import { GameEvent } from "../data/events";
 import { TOWER_PRICES } from "../data/controllers/moneyController";
 import placeables, { Placeable } from "../data/placeables";
@@ -36,7 +36,7 @@ function selectTower(tower: Placeable) {
 
 let removeEventListener: () => void;
 onMounted(() => {
-  removeEventListener = props.controller.addKeyListener(Keys.B, toggleMenu);
+  removeEventListener = props.controller.addKeyListener(Key.B, toggleMenu);
 });
 
 onUnmounted(() => {

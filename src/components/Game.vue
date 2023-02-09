@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
-import Controller, { Keys } from "../data/controllers/controller";
+import Controller, { Key } from "../data/controllers/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
 import MainMenu from "./hud/IngameMenu.vue";
@@ -52,7 +52,7 @@ let removeKeyListener: () => void;
 onMounted(() => {
   mounted = true;
   renderer.mount(canvas.value as HTMLDivElement);
-  removeKeyListener = controller.addKeyListener(Keys.Escape, () => {
+  removeKeyListener = controller.addKeyListener(Key.Escape, () => {
     isMenuVisible.value = !isMenuVisible.value;
   });
 
@@ -62,22 +62,22 @@ onMounted(() => {
     }
 
     const x =
-      +controller.isKeyDown(Keys.Right)! +
-      +controller.isKeyDown(Keys.D)! -
-      +controller.isKeyDown(Keys.Left)! -
-      +controller.isKeyDown(Keys.A)! -
-      +controller.isKeyDown(Keys.Q)!;
+      +controller.isKeyDown(Key.Right)! +
+      +controller.isKeyDown(Key.D)! -
+      +controller.isKeyDown(Key.Left)! -
+      +controller.isKeyDown(Key.A)! -
+      +controller.isKeyDown(Key.Q)!;
     const y =
-      +controller.isKeyDown(Keys.Down)! +
-      +controller.isKeyDown(Keys.S)! -
-      +controller.isKeyDown(Keys.Up)! -
-      +controller.isKeyDown(Keys.W)! -
-      +controller.isKeyDown(Keys.Z)!;
+      +controller.isKeyDown(Key.Down)! +
+      +controller.isKeyDown(Key.S)! -
+      +controller.isKeyDown(Key.Up)! -
+      +controller.isKeyDown(Key.W)! -
+      +controller.isKeyDown(Key.Z)!;
 
     const zoom =
-      +controller.isKeyDown(Keys.Plus)! +
-      +controller.isKeyDown(Keys.Equals)! -
-      +controller.isKeyDown(Keys.Minus)!;
+      +controller.isKeyDown(Key.Plus)! +
+      +controller.isKeyDown(Key.Equals)! -
+      +controller.isKeyDown(Key.Minus)!;
 
     if (x || y || zoom) {
       renderer.move({ x, y, zoom });
