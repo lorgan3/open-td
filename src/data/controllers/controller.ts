@@ -55,6 +55,7 @@ class Controller {
   private selectedPlacable: Placeable = DEMOLISH;
   private previousSelectedPlacable: Placeable = TOWER;
   private buildMenuOpen = false;
+  private isPaused = false;
 
   constructor(private surface: Surface) {
     Controller.instance = this;
@@ -157,6 +158,10 @@ class Controller {
     if (isKey(key)) {
       this.pressedKeys[key as Key] = false;
 
+      if (this.isPaused && key !== Key.Escape) {
+        return;
+      }
+
       this.eventHandlers.get(key)?.forEach((fn) => fn());
 
       if (key === Key.B || key === Key.E) {
@@ -230,6 +235,14 @@ class Controller {
     }
 
     return Mode.Line;
+  }
+
+  pause() {
+    this.isPaused = true;
+  }
+
+  unpause() {
+    this.isPaused = false;
   }
 
   static get Instance() {

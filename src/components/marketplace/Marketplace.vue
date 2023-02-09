@@ -14,24 +14,14 @@ const props = defineProps<{
   controller: Controller;
   unlocksController: UnlocksController;
   eventSystem: EventSystem;
+  visible: boolean;
 }>();
 
 const selected = ref(props.controller.getPlacable());
-const visible = ref(false);
 const instance = getCurrentInstance();
 
-let removeOpenMenuEventListener: () => void;
-let removeCloseMenuEventListener: () => void;
 let removeSelectPlaceableEventListener: () => void;
 onMounted(() => {
-  removeOpenMenuEventListener = props.eventSystem.addEventListener(
-    GameEvent.OpenBuildMenu,
-    () => (visible.value = true)
-  );
-  removeCloseMenuEventListener = props.eventSystem.addEventListener(
-    GameEvent.CloseBuildMenu,
-    () => (visible.value = false)
-  );
   removeSelectPlaceableEventListener = props.eventSystem.addEventListener(
     GameEvent.SelectPlaceable,
     ({ placeable }) => (selected.value = placeable)
@@ -39,13 +29,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (
-    removeOpenMenuEventListener &&
-    removeCloseMenuEventListener &&
-    removeSelectPlaceableEventListener
-  ) {
-    removeOpenMenuEventListener();
-    removeCloseMenuEventListener();
+  if (removeSelectPlaceableEventListener) {
     removeSelectPlaceableEventListener();
   }
 });
@@ -70,7 +54,7 @@ const close = () => {
   <div
     :class="{
       'marketplace-wrapper': true,
-      'marketplace-wrapper--visible': visible,
+      'marketplace-wrapper--visible': props.visible,
     }"
   >
     <div class="marketplace">

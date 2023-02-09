@@ -12,6 +12,7 @@ import { Constructor } from "../renderers/api";
 import { init } from "../data/controllers";
 import EventSystem from "../data/eventSystem";
 import UnlocksController from "../data/controllers/unlocksController";
+import { GameEvent } from "../data/events";
 
 const props = defineProps<{
   seed: string;
@@ -23,6 +24,7 @@ const props = defineProps<{
 
 const canvas = ref<HTMLDivElement | null>(null);
 const isMenuVisible = ref(false);
+const isMarketplaceVisible = ref(false);
 
 const surface = new Surface({
   width: 160,
@@ -48,13 +50,37 @@ if (props.showTutorial) {
 let mounted = false;
 let oldTimestamp: number | undefined;
 let removeKeyListener: () => void;
+let removeOpenMenuEventListener: () => void;
+let removeCloseMenuEventListener: () => void;
 
 onMounted(() => {
   mounted = true;
   renderer.mount(canvas.value as HTMLDivElement);
+
   removeKeyListener = controller.addKeyListener(Key.Escape, () => {
+    if (isMarketplaceVisible.value) {
+      Controller.Instance.toggleBuildMenu();
+      return;
+    }
+
     isMenuVisible.value = !isMenuVisible.value;
+
+    if (isMenuVisible.value) {
+      controller.pause();
+    } else {
+      controller.unpause();
+    }
   });
+
+  removeOpenMenuEventListener = EventSystem.Instance.addEventListener(
+    GameEvent.OpenBuildMenu,
+    () => (isMarketplaceVisible.value = true)
+  );
+
+  removeCloseMenuEventListener = EventSystem.Instance.addEventListener(
+    GameEvent.CloseBuildMenu,
+    () => (isMarketplaceVisible.value = false)
+  );
 
   const render = (timestamp: number) => {
     if (!mounted) {
@@ -99,11 +125,14 @@ onMounted(() => {
 onUnmounted(() => {
   renderer.unmount();
   removeKeyListener();
+  removeOpenMenuEventListener();
+  removeCloseMenuEventListener();
   mounted = false;
 });
 
 const resume = () => {
   isMenuVisible.value = false;
+  controller.unpause();
 };
 </script>
 
@@ -126,6 +155,7 @@ const resume = () => {
         :controller="Controller.Instance"
         :unlocksController="UnlocksController.Instance"
         :eventSystem="EventSystem.Instance"
+        :visible="isMarketplaceVisible"
       />
       <MainMenu
         :mainMenu="mainMenu"
