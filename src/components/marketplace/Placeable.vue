@@ -75,7 +75,7 @@ const range =
     padding: 0;
 
     .data {
-      border: none;
+      border: none !important;
       padding-bottom: 1px;
     }
   }

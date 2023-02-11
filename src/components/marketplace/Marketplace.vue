@@ -35,6 +35,20 @@ onUnmounted(() => {
 });
 
 const onSelect = (item: TPlaceable) => {
+  // Double clicking closes the menu.
+  if (item === props.controller.getPlacable()) {
+    if (props.unlocksController.isUnlocked(item)) {
+      props.controller.toggleBuildMenu();
+
+      return;
+    }
+
+    if (props.unlocksController.canUnlock(item)) {
+      unlock();
+      return;
+    }
+  }
+
   props.controller.setPlaceable(item);
 };
 
