@@ -12,7 +12,7 @@ const TUTORIALS: TutorialMessage[] = [
 ];
 
 class TutorialManager {
-  private promise?: Promise<void>;
+  private promise?: Promise<number>;
   private reject?: () => void;
   private previousId = -1;
 
@@ -20,20 +20,42 @@ class TutorialManager {
     this.promise = new Promise(async (resolve, reject) => {
       this.reject = reject;
 
+      // Wait 1 tick for the promise variable to be set.
+      await Promise.resolve();
+
       for (let i = 0; i < TUTORIALS.length; i++) {
         const tutorial = TUTORIALS[i];
 
-        this.previousId = await tutorial(this.previousId);
+        try {
+          this.previousId = await Promise.race([
+            tutorial(this.previousId),
+            this.promise!,
+          ]);
+        } catch {
+          // Tutorial was cancelled; stop the loop
+          return;
+        }
       }
 
-      resolve();
+      resolve(-1);
     });
 
-    await this.promise;
+    try {
+      await this.promise;
+    } catch {
+      // Tutorial was cancelled
+    }
   }
 
   stop() {
     this.reject?.();
+
+    this.reject = undefined;
+    this.promise = undefined;
+  }
+
+  get isStarted() {
+    return !!this.promise;
   }
 }
 
