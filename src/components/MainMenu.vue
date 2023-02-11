@@ -2,14 +2,14 @@
 import { ref } from "vue";
 import { difficulties, Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
-import EmojiRenderer from "../renderers/emojiRenderer/renderer";
-import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import { get, set } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
+import Settings from "./Settings.vue";
 import AchievementsList from "./achievements/AchievementsList.vue";
 
 import { version } from "../../package.json";
 import { getAssets } from "../renderers/pixiRenderer/assets";
+import { Settings as ISettings } from "../util/localStorage/settings";
 
 const props = defineProps<{
   onPlay: (
@@ -28,33 +28,18 @@ enum SubMenu {
   Settings,
 }
 
-const renderOptions: Array<{ label: string; value: Constructor }> = [
-  {
-    label: "Emoji renderer",
-    value: EmojiRenderer,
-  },
-  {
-    label: "Pixi renderer",
-    value: PixiRenderer,
-  },
-];
-
-const storedData = get("settings");
-
 const openSubMenu = ref(SubMenu.None);
 const seed = ref("");
 const seedInput = ref<HTMLElement | null>(null);
+
+const storedData = get("settings");
 const difficulty = ref(storedData?.difficulty || Difficulty.Easy);
-const renderer = ref(
-  (storedData &&
-    renderOptions.find(({ value }) => value === storedData.renderer)) ||
-    renderOptions[0]
-);
-const showTutorial = ref(storedData?.showTutorial ?? true);
-const volume = ref(storedData?.volume ?? 100);
 
 const assetsLoading = ref(true);
 getAssets().then(() => (assetsLoading.value = false));
+
+let getSettings: () => Partial<ISettings>;
+const setSubmitter = (submit: typeof getSettings) => (getSettings = submit);
 
 const onClick = (subMenu: SubMenu) => {
   if (subMenu === openSubMenu.value) {
@@ -71,18 +56,18 @@ const onClick = (subMenu: SubMenu) => {
 const submit = (event: Event) => {
   event.preventDefault();
 
+  const settings = getSettings();
+
   set("settings", {
-    renderer: renderer.value.value,
+    ...settings,
     difficulty: difficulty.value,
-    showTutorial: showTutorial.value,
-    volume: volume.value,
   });
 
   props.onPlay(
     seed.value,
     difficulty.value,
-    renderer.value.value,
-    showTutorial.value
+    settings.renderer!,
+    settings.showTutorial!
   );
 };
 </script>
@@ -152,22 +137,7 @@ const submit = (event: Event) => {
         }"
       >
         <div class="menu-settings-inner">
-          <label>
-            Renderer
-            <select v-model="renderer">
-              <option v-for="option in renderOptions" :value="option">
-                {{ option.label }}
-              </option>
-            </select>
-          </label>
-          <label class="horizontal">
-            <input type="checkbox" v-model="showTutorial" />
-            Show tutorial
-          </label>
-          <label>
-            Volume
-            <input type="range" min="0" max="100" v-model="volume" />
-          </label>
+          <Settings :setSubmitter="setSubmitter" />
         </div>
       </div>
     </div>
@@ -219,6 +189,11 @@ const submit = (event: Event) => {
 
     &.horizontal {
       flex-direction: row;
+      align-items: baseline;
+
+      select {
+        flex: 1;
+      }
     }
   }
 
@@ -231,16 +206,6 @@ const submit = (event: Event) => {
     text-align: center;
     font-family: JupiterCrash;
     flex-shrink: 0;
-  }
-
-  input[type="checkbox"] {
-    width: 30px;
-    margin: 0;
-    height: auto;
-  }
-
-  input[type="range"] {
-    height: auto;
   }
 
   select {
