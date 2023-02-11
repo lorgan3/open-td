@@ -21,6 +21,6 @@ export const difficulties: Record<
   [Difficulty.Hard]: {
     label: "Hard",
     description:
-      "Checking tower sight lines is no longer possible, enemies are stronger and undiscovered nests gain strength more quickly",
+      "Checking tower sight lines is no longer possible, enemies are stronger and undiscovered nests gain strength more quickly.",
   },
 };
