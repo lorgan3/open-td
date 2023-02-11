@@ -53,6 +53,10 @@ abstract class Manager {
 
   abstract showMessage: MessageFn;
 
+  update(newMessageFn: MessageFn) {
+    this.messageFn = newMessageFn;
+  }
+
   abstract consume(
     agent: Agent,
     speedMultiplier?: number,

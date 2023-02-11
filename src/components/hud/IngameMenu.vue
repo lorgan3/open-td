@@ -1,9 +1,23 @@
 <script setup lang="ts">
-const { visible, mainMenu } = defineProps<{
+import Settings from "./../Settings.vue";
+import { Settings as ISettings } from "../../util/localStorage/settings";
+import { set } from "../../util/localStorage";
+import { Constructor } from "../../renderers/api";
+
+const { visible, mainMenu, resume } = defineProps<{
   visible: boolean;
   mainMenu: () => void;
-  resume: () => void;
+  resume: (renderer?: Constructor, showTutorial?: boolean) => void;
 }>();
+
+let getSettings: () => Partial<ISettings>;
+const setSubmitter = (submit: typeof getSettings) => (getSettings = submit);
+
+const handleResume = () => {
+  const settings = getSettings();
+  set("settings", settings);
+  resume(settings.renderer, settings.showTutorial);
+};
 </script>
 
 <template>
@@ -15,8 +29,10 @@ const { visible, mainMenu } = defineProps<{
   >
     <div class="menu">
       <h3>Paused</h3>
-      <button @click="resume">Resume</button>
       <button @click="mainMenu">Main menu</button>
+      <span class="divider"></span>
+      <Settings :setSubmitter="setSubmitter" />
+      <button @click="handleResume">Save and resume</button>
     </div>
   </div>
 </template>
@@ -53,17 +69,44 @@ const { visible, mainMenu } = defineProps<{
   flex-direction: column;
   gap: 16px;
   max-width: calc(100vw - 48px);
-  max-height: calc(100% - 30px);
+  max-height: calc(100% - 100px);
   transition: transform 0.5s;
   transform: translateY(100vh);
   background: rgb(59, 77, 152);
   border: 2px solid #000;
   border-radius: 3px;
+  overflow: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: black;
+  }
 
   h3 {
-    font-size: 24px;
+    font-size: 30px;
     text-align: center;
     color: #fff;
+  }
+
+  button {
+    width: 100%;
+    height: 48px;
+    box-sizing: border-box;
+    font-size: 30px;
+    text-align: center;
+    font-family: JupiterCrash;
+    flex-shrink: 0;
+  }
+
+  .divider {
+    border: 1px solid #fff;
   }
 }
 </style>

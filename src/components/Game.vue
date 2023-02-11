@@ -5,14 +5,15 @@ import Surface from "../data/terrain/surface";
 import Controller, { Key } from "../data/controllers/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
 import Marketplace from "./marketplace/Marketplace.vue";
-import MainMenu from "./hud/IngameMenu.vue";
+import IngameMenu from "./hud/IngameMenu.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
-import { Constructor } from "../renderers/api";
+import { Constructor, IRenderer } from "../renderers/api";
 import { init } from "../data/controllers";
 import EventSystem from "../data/eventSystem";
 import UnlocksController from "../data/controllers/unlocksController";
 import { GameEvent } from "../data/events";
+import PixiRenderer from "../renderers/pixiRenderer/renderer";
 
 const props = defineProps<{
   seed: string;
@@ -32,7 +33,7 @@ const surface = new Surface({
   generate: getGenerator(props.seed, 160, 160),
 });
 const controller = new Controller(surface);
-const renderer = new props.renderer(surface, controller);
+let renderer = new props.renderer(surface, controller);
 
 const targetTile = surface.getTile(80, 80)!;
 const manager = init(
@@ -42,8 +43,8 @@ const manager = init(
   renderer.showMessage
 );
 
+const tutorialManager = new TutorialManager();
 if (props.showTutorial) {
-  const tutorialManager = new TutorialManager();
   tutorialManager.start();
 }
 
@@ -130,7 +131,26 @@ onUnmounted(() => {
   mounted = false;
 });
 
-const resume = () => {
+const resume = (newRenderer?: Constructor, showTutorial?: boolean) => {
+  if (newRenderer && !(renderer instanceof newRenderer)) {
+    (renderer as IRenderer).unmount();
+
+    surface.forceRerender();
+    renderer = new newRenderer(surface, controller);
+    renderer.mount(canvas.value as HTMLDivElement);
+    manager.update(renderer.showMessage);
+  } else if (renderer instanceof PixiRenderer) {
+    renderer.updateSettings();
+  }
+
+  if (!tutorialManager.isStarted && showTutorial) {
+    tutorialManager.start();
+  }
+
+  if (tutorialManager.isStarted && showTutorial === false) {
+    tutorialManager.stop();
+  }
+
   isMenuVisible.value = false;
   controller.unpause();
 };
@@ -157,7 +177,7 @@ const resume = () => {
         :eventSystem="EventSystem.Instance"
         :visible="isMarketplaceVisible"
       />
-      <MainMenu
+      <IngameMenu
         :mainMenu="mainMenu"
         :visible="isMenuVisible"
         :resume="resume"
