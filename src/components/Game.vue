@@ -14,6 +14,7 @@ import EventSystem from "../data/eventSystem";
 import UnlocksController from "../data/controllers/unlocksController";
 import { GameEvent } from "../data/events";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
+import AchievementController from "../data/controllers/achievementController";
 
 const props = defineProps<{
   seed: string;
@@ -125,6 +126,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   renderer.unmount();
+  AchievementController.Instance.unRegister();
+
   removeKeyListener();
   removeOpenMenuEventListener();
   removeCloseMenuEventListener();

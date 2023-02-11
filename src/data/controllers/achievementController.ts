@@ -6,9 +6,11 @@ import { GameEvent } from "../events";
 import EventSystem from "../eventSystem";
 
 class AchievementController {
+  private static instance: AchievementController;
   private achievements: Achievement[];
 
   constructor() {
+    AchievementController.instance = this;
     this.achievements = getAchievements();
 
     this.achievements.forEach((achievement) => achievement.register());
@@ -28,6 +30,10 @@ class AchievementController {
     });
 
     set("achievements", data, true);
+  }
+
+  static get Instance() {
+    return this.instance;
   }
 }
 
