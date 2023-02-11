@@ -12,7 +12,7 @@ import Railgun from "./entity/towers/railgun";
 import Tower from "./entity/towers/tower";
 import Wall from "./entity/wall";
 import DamageBeacon from "./entity/damageBeacon";
-import Laser from "./entity/towers/Laser";
+import Laser from "./entity/towers/laser";
 import { StaticAgent, StaticAgentStatics } from "./entity/staticEntity";
 import Tile from "./terrain/tile";
 import { EntityType } from "./entity/constants";

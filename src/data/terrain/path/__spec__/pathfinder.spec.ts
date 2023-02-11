@@ -1,4 +1,4 @@
-import PathFinder from "../pathFinder";
+import Pathfinder from "../pathfinder";
 import Surface from "../../surface";
 import Tile from "../../tile";
 import { TileType } from "../../constants";
@@ -13,7 +13,7 @@ describe("pathfinder", () => {
     surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Void))
   );
 
-  const pathfinder = new PathFinder(surface);
+  const pathfinder = new Pathfinder(surface);
 
   const table = [
     {
@@ -102,7 +102,7 @@ describe("pathfinder", () => {
       surface.setTile(new Tile(tile.getX(), tile.getY(), TileType.Stone))
     );
 
-    const pathfinder = new PathFinder(
+    const pathfinder = new Pathfinder(
       surface,
       {
         [TileType.Grass]: 1,

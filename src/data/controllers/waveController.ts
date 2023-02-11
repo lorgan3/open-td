@@ -12,7 +12,7 @@ import {
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import SpawnAlert from "../util/spawnAlert";
-import SpawnGroup from "../wave/SpawnGroup";
+import SpawnGroup from "../wave/spawnGroup";
 import { normalDistributionRandom } from "../wave/util";
 import Wave from "../wave/wave";
 import Manager from "./manager";

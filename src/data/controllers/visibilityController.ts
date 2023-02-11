@@ -7,7 +7,7 @@ import { EntityType } from "../entity/constants";
 import Manager from "./manager";
 import EventSystem from "../eventSystem";
 import { GameEvent } from "../events";
-import SpawnGroup from "../wave/SpawnGroup";
+import SpawnGroup from "../wave/spawnGroup";
 import WaveController from "./waveController";
 
 const isBase = (agent: Agent): agent is Base => {

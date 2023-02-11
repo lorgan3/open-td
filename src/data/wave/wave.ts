@@ -5,7 +5,7 @@ import Regular from "../entity/enemies/regular";
 import Runner from "../entity/enemies/runner";
 import Tank from "../entity/enemies/tank";
 import Manager from "../controllers/manager";
-import SpawnGroup from "./SpawnGroup";
+import SpawnGroup from "./spawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
 
 const MAX_SPAWN_DELAY = 4000;

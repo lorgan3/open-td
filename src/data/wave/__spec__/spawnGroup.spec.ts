@@ -1,7 +1,7 @@
 import { DiscoveryStatus } from "../../terrain/constants";
 import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
-import SpawnGroup from "../SpawnGroup";
+import SpawnGroup from "../spawnGroup";
 
 describe("SpawnGroup", () => {
   const surface = new Surface({
