@@ -18,9 +18,11 @@ class AchievementController {
     EventSystem.Instance.addEventListener(GameEvent.Lose, () =>
       this.unRegister()
     );
+
+    window.addEventListener("beforeunload", this.unRegister);
   }
 
-  unRegister() {
+  unRegister = () => {
     const data: Record<string, number> = {};
 
     this.achievements.forEach((achievement) => {
@@ -30,7 +32,7 @@ class AchievementController {
     });
 
     set("achievements", data, true);
-  }
+  };
 
   static get Instance() {
     return this.instance;
