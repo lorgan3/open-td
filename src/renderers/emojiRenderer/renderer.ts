@@ -510,6 +510,7 @@ class Renderer implements IRenderer {
     if (this.app) {
       this.app.unmount();
       this.target!.removeChild(this.appContainer!);
+      this.target!.removeChild(this.world!);
       this.removeEventListeners!();
     }
   }
@@ -628,8 +629,8 @@ class Renderer implements IRenderer {
       target.removeEventListener("mousedown", handleMousedown);
       target.removeEventListener("mousemove", handleMousemove);
       target.removeEventListener("mouseup", handleMouseup);
-      target.removeEventListener("keydown", handleKeydown);
-      target.removeEventListener("keyup", handleKeyup);
+      window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("keyup", handleKeyup);
     };
   }
 
