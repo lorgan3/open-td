@@ -94,9 +94,6 @@ class Renderer implements IRenderer {
       DEBUG = !DEBUG;
       this.renderTilemap();
     };
-
-    const settings = get("settings");
-    sound.volumeAll = (settings?.volume ?? 100) / 100;
   }
 
   mount(target: HTMLDivElement): void {
@@ -153,6 +150,12 @@ class Renderer implements IRenderer {
     });
 
     this.registerEventHandlers();
+    this.updateSettings();
+  }
+
+  updateSettings() {
+    const settings = get("settings");
+    sound.volumeAll = (settings?.volume ?? 100) / 100;
   }
 
   private renderTilemap() {
