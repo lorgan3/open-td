@@ -19,6 +19,21 @@ export interface CopyParams {
   buffer: Uint8Array;
 }
 
+const ADJACENT_COORDINATES: Array<[number, number]> = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+];
+
+const MATRIX_COORDINATES: Array<[number, number]> = [
+  ...ADJACENT_COORDINATES,
+  [1, 1],
+  [-1, -1],
+  [-1, 1],
+  [1, -1],
+];
+
 class Surface {
   public map!: Tile[];
   public entities: Entity[] = [];
@@ -139,18 +154,9 @@ class Surface {
   }
 
   public getAdjacentTiles(middle: Tile, scale = 1) {
-    const options: Array<[number, number]> = [
-      [1, 0],
-      [-1, 0],
-      [0, 1],
-      [0, -1],
-    ];
-
-    return options
-      .map(([x, y]) =>
-        this.getTile(middle.getX() + x * scale, middle.getY() + y * scale)
-      )
-      .filter((tile) => !!tile) as Tile[];
+    return ADJACENT_COORDINATES.map(([x, y]) =>
+      this.getTile(middle.getX() + x * scale, middle.getY() + y * scale)
+    ).filter((tile) => !!tile) as Tile[];
   }
 
   public setTile(tile: Tile) {
