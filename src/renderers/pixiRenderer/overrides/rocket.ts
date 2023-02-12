@@ -12,7 +12,7 @@ import { AssetsContainer } from "../assets/container";
 class Rocket extends GenericProjectile {
   public static readonly layer = TOWERS;
 
-  private shadow: Graphics;
+  public shadow: Graphics;
 
   constructor(protected data: RocketData, container: AssetsContainer) {
     super(data, container);
