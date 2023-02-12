@@ -153,10 +153,12 @@ class Surface {
     }
   }
 
-  public getAdjacentTiles(middle: Tile, scale = 1) {
-    return ADJACENT_COORDINATES.map(([x, y]) =>
-      this.getTile(middle.getX() + x * scale, middle.getY() + y * scale)
-    ).filter((tile) => !!tile) as Tile[];
+  public getAdjacentTiles(middle: Tile, scale = 1, diagonals = false) {
+    return (diagonals ? MATRIX_COORDINATES : ADJACENT_COORDINATES)
+      .map(([x, y]) =>
+        this.getTile(middle.getX() + x * scale, middle.getY() + y * scale)
+      )
+      .filter((tile) => !!tile) as Tile[];
   }
 
   public setTile(tile: Tile) {

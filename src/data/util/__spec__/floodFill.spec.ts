@@ -2,13 +2,14 @@ import { Difficulty } from "../../difficulty";
 import Armory from "../../entity/armory";
 import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
-import { ensureBaseIsContinuous } from "../floodFill";
+import { ensureBaseIsContinuous, getStructureSize } from "../floodFill";
 import TestManager from "../../controllers/__spec__/testManager";
 import { TileType } from "../../terrain/constants";
 import Base from "../../entity/base";
 import { vi } from "vitest";
+import { EntityType } from "../../entity/constants";
 
-describe("baseExpansion", () => {
+describe("floodFill", () => {
   const surface = new Surface({ width: 8, height: 8 });
   const basePoint = surface.getTile(2, 2)!;
   const manager = new TestManager(
@@ -18,8 +19,10 @@ describe("baseExpansion", () => {
     vi.fn()
   );
 
-  surface.spawnStatic(new Armory(surface.getTile(2, 4)!));
+  const armory = new Armory(surface.getTile(2, 4)!);
+  surface.spawnStatic(armory);
   surface.spawnStatic(new Armory(surface.getTile(2, 6)!));
+  surface.spawnStatic(new Armory(surface.getTile(4, 2)!));
 
   const emptySet = new Set<Tile>();
 
@@ -115,5 +118,32 @@ describe("baseExpansion", () => {
     expect(
       ensureBaseIsContinuous(emptySet, tiles, manager.getBase(), surface)
     ).toBeTruthy();
+  });
+
+  it("gets the size of adjacent armories", () => {
+    expect(
+      getStructureSize(armory.getTile(), surface, new Set([EntityType.Armory]))
+    ).toEqual(2);
+  });
+
+  it("gets the size of adjacent and diagonal armories", () => {
+    expect(
+      getStructureSize(
+        armory.getTile(),
+        surface,
+        new Set([EntityType.Armory]),
+        true
+      )
+    ).toEqual(3);
+  });
+
+  it("gets the size of armories and bases", () => {
+    expect(
+      getStructureSize(
+        armory.getTile(),
+        surface,
+        new Set([EntityType.Armory, EntityType.Base])
+      )
+    ).toEqual(4);
   });
 });

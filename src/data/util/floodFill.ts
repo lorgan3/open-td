@@ -1,4 +1,5 @@
 import Base from "../entity/base";
+import { EntityType } from "../entity/constants";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 
@@ -39,4 +40,36 @@ export const ensureBaseIsContinuous = (
   return (
     filled.size === base.getParts().size + tilesToBuy.size - tilesToSell.size
   );
+};
+
+export const getStructureSize = (
+  source: Tile,
+  surface: Surface,
+  entityTypes: Set<EntityType>,
+  includeDiagonals = false
+) => {
+  const filled = new Set<Tile>([source]);
+
+  const tilesToCheck = surface.getAdjacentTiles(source, 2, includeDiagonals);
+  while (tilesToCheck.length > 0) {
+    const tile = tilesToCheck.pop()!;
+
+    if (filled.has(tile)) {
+      continue;
+    }
+
+    if (
+      !tile.hasStaticEntity() ||
+      !entityTypes.has(tile.getStaticEntity().getAgent().getType())
+    ) {
+      continue;
+    }
+
+    filled.add(tile);
+    surface
+      .getAdjacentTiles(tile, 2, includeDiagonals)
+      .forEach((tile) => tilesToCheck.push(tile));
+  }
+
+  return filled.size;
 };
