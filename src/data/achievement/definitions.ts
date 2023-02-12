@@ -1,8 +1,10 @@
 import Manager from "../controllers/manager";
 import VisibilityController from "../controllers/visibilityController";
 import { Difficulty } from "../difficulty";
-import { GameEvent } from "../events";
+import { EntityType } from "../entity/constants";
+import { Buy, GameEvent } from "../events";
 import { TileType } from "../terrain/constants";
+import { getStructureSize } from "../util/floodFill";
 import { AchievementDefinition } from "./achievement";
 
 export const achievements: AchievementDefinition[] = [
@@ -118,5 +120,27 @@ export const achievements: AchievementDefinition[] = [
         ? Manager.Instance.getLevel()
         : 0,
     triggers: [GameEvent.StartWave],
+  },
+
+  {
+    description: "Build a wall of at least 30 tiles.",
+    thresholds: {
+      30: "Great wall of China",
+    },
+    getProgress: (data) => {
+      const buyEvent = data as Buy;
+
+      if (buyEvent.tiles[0].getType() !== TileType.Wall) {
+        return 0;
+      }
+
+      return getStructureSize(
+        buyEvent.tiles[0],
+        Manager.Instance.getSurface(),
+        new Set([EntityType.Wall]),
+        true
+      );
+    },
+    triggers: [GameEvent.Buy],
   },
 ];

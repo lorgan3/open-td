@@ -7,7 +7,7 @@ import Manager from "../controllers/manager";
 export interface AchievementDefinition {
   description: string;
   thresholds: Record<string, string>;
-  getProgress: (this: Achievement) => number;
+  getProgress: (this: Achievement, data: unknown) => number;
   triggers: GameEvent[];
 }
 
@@ -89,9 +89,12 @@ export class Achievement {
     }
   }
 
-  private process = () => {
+  private process = (data: unknown) => {
     const oldProgress = Math.max(this.progress, this.initialProgress);
-    this.progress = this.definition.getProgress.call(this);
+    this.progress = Math.max(
+      this.definition.getProgress.call(this, data),
+      this.progress
+    );
 
     if (this.isDone) {
       return;

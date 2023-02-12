@@ -1,7 +1,7 @@
 import { DEMOLISH, Placeable, placeableEntityTypes } from "../placeables";
 import Manager from "./manager";
 import Blueprint from "../entity/blueprint";
-import Tile from "../terrain/tile";
+import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import Surface from "../terrain/surface";
 import { ensureBaseIsContinuous } from "../util/floodFill";
 import { getScale, StaticAgent } from "../entity/staticEntity";
@@ -93,6 +93,7 @@ class BuildController {
   }
 
   commit() {
+    const boughtTiles: Tile[] = [];
     this.blueprints.forEach((blueprint) => {
       const tile = blueprint.getTile();
       const tiles = this.surface.getEntityTiles(
@@ -120,6 +121,7 @@ class BuildController {
       const agent = new constructor(tile);
       this.spawn(agent);
       MoneyController.Instance.replaceBlueprint(blueprint, agent);
+      boughtTiles.push(tile);
     });
 
     this.pendingBaseAdditions = [];
@@ -131,7 +133,12 @@ class BuildController {
 
     this.blueprints.clear();
     Manager.Instance.triggerStatUpdate();
-    EventSystem.Instance.triggerEvent(GameEvent.Buy);
+
+    if (boughtTiles.length > 0) {
+      EventSystem.Instance.triggerEvent(GameEvent.Buy, {
+        tiles: boughtTiles as TileWithStaticEntity[],
+      });
+    }
   }
 
   private placeBlueprints(selection: Tile[], placeable: Placeable) {
@@ -391,7 +398,9 @@ class BuildController {
     });
 
     Manager.Instance.triggerStatUpdate();
-    EventSystem.Instance.triggerEvent(GameEvent.Buy);
+    EventSystem.Instance.triggerEvent(GameEvent.Buy, {
+      tiles: validTiles as TileWithStaticEntity[],
+    });
   }
 
   private sellEntities(selection: Tile[]) {

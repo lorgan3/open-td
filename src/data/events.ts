@@ -1,6 +1,6 @@
 import { StaticAgent } from "./entity/staticEntity";
 import { Placeable } from "./placeables";
-import Tile from "./terrain/tile";
+import Tile, { TileWithStaticEntity } from "./terrain/tile";
 
 export enum GameEvent {
   StatUpdate,
@@ -34,7 +34,7 @@ export interface EventParamsMap {
   [GameEvent.Unlock]: [Unlock];
   [GameEvent.Discover]: [Discover];
   [GameEvent.Spawn]: [];
-  [GameEvent.Buy]: [];
+  [GameEvent.Buy]: [Buy];
   [GameEvent.Sell]: [];
   [GameEvent.HitBase]: [];
   [GameEvent.Lose]: [];
@@ -76,4 +76,8 @@ export interface Unlock {
 export interface Discover {
   x: number;
   y: number;
+}
+
+export interface Buy {
+  tiles: TileWithStaticEntity[];
 }
