@@ -157,6 +157,11 @@ const resume = (newRenderer?: Constructor, showTutorial?: boolean) => {
   isMenuVisible.value = false;
   controller.unpause();
 };
+
+const returnToMainMenu = () => {
+  AchievementController.Instance.unRegister();
+  props.mainMenu();
+};
 </script>
 
 <template>
@@ -181,7 +186,7 @@ const resume = (newRenderer?: Constructor, showTutorial?: boolean) => {
         :visible="isMarketplaceVisible"
       />
       <IngameMenu
-        :mainMenu="mainMenu"
+        :mainMenu="returnToMainMenu"
         :visible="isMenuVisible"
         :resume="resume"
       />
