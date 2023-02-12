@@ -64,6 +64,15 @@ export class Achievement {
     return this.progress / max;
   }
 
+  getPercentageForThreshold(threshold: string) {
+    const value = parseFloat(threshold);
+    const previousValue = this.steps[this.steps.indexOf(value) - 1] ?? 0;
+    return Math.min(
+      Math.max(this.progress - previousValue, 0) / (value - previousValue),
+      1
+    );
+  }
+
   register() {
     this.removeEventListeners = EventSystem.Instance.addEventListeners(
       this.definition.triggers,

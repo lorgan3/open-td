@@ -34,11 +34,16 @@ const percentage = achievement.percentage;
             v-for="(name, value) in achievement.thresholds"
             :class="{
               'achievement-line-segment': true,
-              'achievement-line-segment--completed':
-                achievement.internalProgress >= parseFloat(value),
+            }"
+            :style="{
+              '--progress': `${
+                achievement.getPercentageForThreshold(value) * 100
+              }%`,
             }"
             :title="
-              achievement.internalProgress >= parseFloat(value) ? name : UNKNOWN
+              achievement.internalProgress >= parseFloat(value)
+                ? name
+                : achievement.internalProgress.toFixed()
             "
           >
             <span class="line"></span>
@@ -131,19 +136,17 @@ const percentage = achievement.percentage;
         display: block;
         height: 4px;
         width: 100%;
-        background: #999;
+        background: linear-gradient(
+          to right,
+          rgb(218, 160, 13) var(--progress),
+          #999 var(--progress)
+        );
       }
 
       .marker {
         color: #555;
         font-size: 12px;
         align-self: flex-end;
-      }
-
-      &--completed {
-        .line {
-          background: rgb(218, 160, 13);
-        }
       }
     }
 
