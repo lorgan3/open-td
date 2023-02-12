@@ -149,11 +149,11 @@ export const achievements: AchievementDefinition[] = [
     description: "Expand your base.",
     thresholds: {
       5: "Pompeii",
-      15: "Alexandria",
-      30: "Athens",
+      12: "Alexandria",
+      25: "Athens",
       50: "Rome",
     },
-    getProgress: () => Manager.Instance.getBase().getParts().size + 1,
+    getProgress: () => Manager.Instance.getBase().getParts().size,
     triggers: [GameEvent.Buy],
   },
 
