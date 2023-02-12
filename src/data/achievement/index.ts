@@ -14,5 +14,10 @@ export const getAchievements = () => {
           achievementData?.[md5(definition.description)] ?? 0
         )
     )
-    .sort((a, b) => b.percentage - a.percentage);
+    .sort(
+      (a, b) =>
+        Number(b.isDone) - Number(a.isDone) ||
+        b.completedThresholds - a.completedThresholds ||
+        b.percentage - a.percentage
+    );
 };

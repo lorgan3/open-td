@@ -55,8 +55,8 @@ export class Achievement {
     return this.progress;
   }
 
-  get currentProgress() {
-    return this.highestProgress;
+  get completedThresholds() {
+    return this.steps.indexOf(this.highestProgress);
   }
 
   get percentage() {
