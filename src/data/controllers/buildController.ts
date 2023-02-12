@@ -3,7 +3,7 @@ import Manager from "./manager";
 import Blueprint from "../entity/blueprint";
 import Tile from "../terrain/tile";
 import Surface from "../terrain/surface";
-import { floodFill } from "../util/baseExpansion";
+import { ensureBaseIsContinuous } from "../util/floodFill";
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import { GameEvent } from "../events";
 import { EntityType } from "../entity/constants";
@@ -143,7 +143,7 @@ class BuildController {
       const { pendingBaseAdditions, pendingBaseRemovals } =
         this.getPendingTiles(selection);
       if (
-        !floodFill(
+        !ensureBaseIsContinuous(
           pendingBaseRemovals,
           pendingBaseAdditions,
           Manager.Instance.getBase(),
@@ -257,7 +257,7 @@ class BuildController {
         this.getPendingTiles(baseTiles, true);
 
       if (
-        !floodFill(
+        !ensureBaseIsContinuous(
           pendingBaseRemovals,
           pendingBaseAdditions,
           Manager.Instance.getBase(),
@@ -359,7 +359,7 @@ class BuildController {
 
     if (
       placeable.isBasePart &&
-      !floodFill(
+      !ensureBaseIsContinuous(
         new Set(),
         new Set(validTiles),
         Manager.Instance.getBase(),
@@ -413,7 +413,7 @@ class BuildController {
         this.getPendingTiles(baseTiles, true);
 
       if (
-        !floodFill(
+        !ensureBaseIsContinuous(
           pendingBaseRemovals,
           pendingBaseAdditions,
           Manager.Instance.getBase(),

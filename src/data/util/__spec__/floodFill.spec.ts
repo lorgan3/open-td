@@ -2,7 +2,7 @@ import { Difficulty } from "../../difficulty";
 import Armory from "../../entity/armory";
 import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
-import { floodFill } from "../baseExpansion";
+import { ensureBaseIsContinuous } from "../floodFill";
 import TestManager from "../../controllers/__spec__/testManager";
 import { TileType } from "../../terrain/constants";
 import Base from "../../entity/base";
@@ -25,13 +25,13 @@ describe("baseExpansion", () => {
 
   it("flood fills when nothing changes", () => {
     expect(
-      floodFill(emptySet, emptySet, manager.getBase(), surface)
+      ensureBaseIsContinuous(emptySet, emptySet, manager.getBase(), surface)
     ).toBeTruthy();
   });
 
   it("flood fills when a valid tile is removed", () => {
     expect(
-      floodFill(
+      ensureBaseIsContinuous(
         new Set([surface.getTile(2, 6)!]),
         emptySet,
         manager.getBase(),
@@ -42,7 +42,7 @@ describe("baseExpansion", () => {
 
   it("does not flood fill when an invalid tile is removed", () => {
     expect(
-      floodFill(
+      ensureBaseIsContinuous(
         new Set([surface.getTile(2, 4)!]),
         emptySet,
         manager.getBase(),
@@ -53,7 +53,7 @@ describe("baseExpansion", () => {
 
   it("flood fills when the end result is valid", () => {
     expect(
-      floodFill(
+      ensureBaseIsContinuous(
         new Set([surface.getTile(2, 4)!, surface.getTile(2, 6)!]),
         emptySet,
         manager.getBase(),
@@ -64,7 +64,7 @@ describe("baseExpansion", () => {
 
   it("flood fills when a valid tile is added", () => {
     expect(
-      floodFill(
+      ensureBaseIsContinuous(
         emptySet,
         new Set([surface.getTile(4, 6)!]),
         manager.getBase(),
@@ -75,7 +75,7 @@ describe("baseExpansion", () => {
 
   it("does not flood fill when an invalid tile is added", () => {
     expect(
-      floodFill(
+      ensureBaseIsContinuous(
         emptySet,
         new Set([surface.getTile(6, 6)!]),
         manager.getBase(),
@@ -86,7 +86,7 @@ describe("baseExpansion", () => {
 
   it("does not flood fill when its invalid because of a pending deletion", () => {
     expect(
-      floodFill(
+      ensureBaseIsContinuous(
         new Set([surface.getTile(2, 4)!]),
         new Set([surface.getTile(4, 4)!]),
         manager.getBase(),
@@ -112,6 +112,8 @@ describe("baseExpansion", () => {
       }
     );
 
-    expect(floodFill(emptySet, tiles, manager.getBase(), surface)).toBeTruthy();
+    expect(
+      ensureBaseIsContinuous(emptySet, tiles, manager.getBase(), surface)
+    ).toBeTruthy();
   });
 });

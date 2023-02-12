@@ -2,7 +2,7 @@ import Base from "../entity/base";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 
-export const floodFill = (
+export const ensureBaseIsContinuous = (
   tilesToSell: Set<Tile>,
   tilesToBuy: Set<Tile>,
   base: Base,
