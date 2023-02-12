@@ -20,8 +20,8 @@ class Runner extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
   public static readonly atlas = "runner";
 
+  shadow: Graphics;
   private flames: Sprite[] = [];
-  private shadow: Graphics;
   private oldOffset = 0;
 
   constructor(private data: RunnerData, private container: AssetsContainer) {

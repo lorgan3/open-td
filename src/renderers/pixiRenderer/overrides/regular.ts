@@ -20,8 +20,8 @@ class Regular extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = BASE;
   public static readonly atlas = "regular";
 
+  shadow: Graphics;
   private flames: Sprite[] = [];
-  private shadow: Graphics;
   private oldOffset = 0;
 
   constructor(private data: RegularData, private container: AssetsContainer) {

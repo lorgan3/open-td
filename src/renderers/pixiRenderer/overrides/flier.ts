@@ -22,8 +22,8 @@ class Flier extends AnimatedSprite implements EntityRenderer {
   public static readonly layer = TOWERS; // Fliers fly over towers
   public static readonly atlas = "flier";
 
+  shadow: Graphics;
   private flames: Sprite[] = [];
-  private shadow: Graphics;
   private oldOffset = 0;
 
   constructor(private data: FlierData, private container: AssetsContainer) {

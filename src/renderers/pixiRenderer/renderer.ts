@@ -263,8 +263,16 @@ class Renderer implements IRenderer {
       if (entity.getAgent().isVisible() || revealEverything) {
         sprite.sync(dt, full);
         sprite.visible = true;
+
+        if (sprite.shadow) {
+          sprite.shadow.visible = true;
+        }
       } else {
         sprite.visible = false;
+
+        if (sprite.shadow) {
+          sprite.shadow.visible = false;
+        }
       }
     }
 
