@@ -1,4 +1,5 @@
 import Manager from "../controllers/manager";
+import UnlocksController from "../controllers/unlocksController";
 import VisibilityController from "../controllers/visibilityController";
 import { Difficulty } from "../difficulty";
 import { EntityType } from "../entity/constants";
@@ -25,11 +26,11 @@ export const achievements: AchievementDefinition[] = [
   {
     description: "Discover the map.",
     thresholds: {
-      "10%": "James Cook",
-      "20%": "Marco Polo",
-      "40%": "Hernán Cortés",
-      "60%": "Ferdinand Magellan",
-      "90%": "Christopher Columbus",
+      "10%": "Settler",
+      "20%": "Trailblazer",
+      "40%": "Homesteader",
+      "60%": "Adventurer",
+      "90%": "Frontier explorer",
     },
     getProgress: () => {
       const surface = Manager.Instance.getSurface();
@@ -142,5 +143,29 @@ export const achievements: AchievementDefinition[] = [
       );
     },
     triggers: [GameEvent.Buy],
+  },
+
+  {
+    description: "Expand your base.",
+    thresholds: {
+      5: "Pompeii",
+      15: "Alexandria",
+      30: "Athens",
+      50: "Rome",
+    },
+    getProgress: () => Manager.Instance.getBase().getParts().size + 1,
+    triggers: [GameEvent.Buy],
+  },
+
+  {
+    description: "Unlock new technologies.",
+    thresholds: {
+      2: "Innovator",
+      5: "Visionary",
+      8: "Groundbreaker",
+      12: "Game-changer",
+    },
+    getProgress: () => UnlocksController.Instance.getUnlockAmount(),
+    triggers: [GameEvent.Unlock],
   },
 ];

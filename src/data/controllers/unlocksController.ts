@@ -11,6 +11,7 @@ class UnlocksController {
   private unlockLinkedMap: Map<EntityType, Placeable>;
 
   private points = 0;
+  private unlockedAmount = 0;
 
   constructor() {
     UnlocksController.instance = this;
@@ -63,6 +64,10 @@ class UnlocksController {
     return this.unlockedTowers.has(placeable.entityType);
   }
 
+  getUnlockAmount() {
+    return this.unlockedAmount;
+  }
+
   unlock(placeable: Placeable) {
     if (!this.canUnlock(placeable)) {
       throw new Error(`Can't unlock ${placeable.entityType}`);
@@ -79,6 +84,7 @@ class UnlocksController {
 
     if (!placeable.isRepeatable) {
       this.availableUnlocks.delete(placeable.entityType);
+      this.unlockedAmount++;
     }
 
     const nextUnlock = this.unlockLinkedMap.get(placeable.entityType);
