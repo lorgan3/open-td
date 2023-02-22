@@ -1,0 +1,67 @@
+{
+  "frames": {
+    "foliage0.png": {
+      "frame": { "x": 1, "y": 0, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage1.png": {
+      "frame": { "x": 33, "y": 0, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage2.png": {
+      "frame": { "x": 69, "y": 0, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage3.png": {
+      "frame": { "x": 1, "y": 48, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage4.png": {
+      "frame": { "x": 33, "y": 48, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage5.png": {
+      "frame": { "x": 69, "y": 48, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage6.png": {
+      "frame": { "x": 1, "y": 96, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    },
+    "foliage7.png": {
+      "frame": { "x": 33, "y": 96, "w": 32, "h": 48 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+      "sourceSize": { "w": 32, "h": 48 }
+    }
+  },
+  "meta": {
+    "app": "https://github.com/piskelapp/piskel/",
+    "version": "1.0",
+    "image": "foliage.png",
+    "format": "RGBA8888",
+    "size": { "w": 102, "h": 144 }
+  }
+}
