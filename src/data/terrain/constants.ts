@@ -37,6 +37,9 @@ export enum AltTileType {
   SandAlt = 24,
   SnowAlt = 25,
   IceAlt = 26,
+  Static1 = 27,
+  Static2 = 28,
+  Static3 = 29,
 }
 
 export const ALT_TO_BASE_TYPE: Record<AltTileType, TileType> = {
@@ -48,6 +51,9 @@ export const ALT_TO_BASE_TYPE: Record<AltTileType, TileType> = {
   [AltTileType.SandAlt]: TileType.Sand,
   [AltTileType.SnowAlt]: TileType.Snow,
   [AltTileType.IceAlt]: TileType.Ice,
+  [AltTileType.Static1]: TileType.Void,
+  [AltTileType.Static2]: TileType.Void,
+  [AltTileType.Static3]: TileType.Void,
 };
 
 export const FREE_TILES = new Set([

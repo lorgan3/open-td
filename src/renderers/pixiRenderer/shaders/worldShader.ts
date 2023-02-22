@@ -4,8 +4,13 @@ import vertex from "./world.vert?raw";
 import { BaseTexture, MeshMaterial, Program, Texture } from "pixi.js";
 import Surface from "../../../data/terrain/surface";
 import { getAssets } from "../assets";
-import { TileType } from "../../../data/terrain/constants";
+import {
+  AltTileType,
+  DiscoveryStatus,
+  TileType,
+} from "../../../data/terrain/constants";
 import { SCALE } from "../constants";
+import Tile from "../../../data/terrain/tile";
 
 // Inspired by https://godotshaders.com/shader/rimworld-style-tilemap-shader-with-tutorial-video/
 // This does not use any code from that nor does it do the same thing though.
@@ -42,14 +47,11 @@ class WorldShader extends MeshMaterial {
 
   render(debug = false) {
     this.surface.getTiles().forEach((tile, i) => {
-      const tiles =
-        tile.isDiscovered() || debug
-          ? tile.getAnimation()
-          : [TileType.Obstructed];
+      let types = debug ? tile.getAnimation() : this.getTileTypes(tile);
 
-      this.imageData.data[i * 4] = tiles[0];
-      this.imageData.data[i * 4 + 1] = tiles[1] || tiles[0];
-      this.imageData.data[i * 4 + 2] = tiles[2] || tiles[0];
+      this.imageData.data[i * 4] = types[0];
+      this.imageData.data[i * 4 + 1] = types[1] || types[0];
+      this.imageData.data[i * 4 + 2] = types[2] || types[0];
 
       this.imageData.data[i * 4 + 3] = 255;
     });
@@ -69,6 +71,19 @@ class WorldShader extends MeshMaterial {
   setTime(time: number) {
     this.uniforms.time = Math.sin(time / 1000) * 3;
   }
+
+  private getTileTypes = (tile: Tile) => {
+    switch (tile.getDiscoveryStatus()) {
+      case DiscoveryStatus.Discovered:
+        return tile.getAnimation();
+
+      case DiscoveryStatus.Pending:
+        return [AltTileType.Static1, AltTileType.Static2, AltTileType.Static3];
+
+      default:
+        return [TileType.Obstructed];
+    }
+  };
 }
 
 export { WorldShader };
