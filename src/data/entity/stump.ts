@@ -1,15 +1,12 @@
-import Manager from "../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { AgentCategory, EntityType } from "./constants";
 import StaticEntity, { StaticAgent } from "./staticEntity";
-import Stump from "./stump";
 
-class Tree implements StaticAgent {
+class Stump implements StaticAgent {
   public static scale = 1;
 
   public entity: StaticEntity;
   public category = AgentCategory.Unknown;
-  private hp = 30;
   public renderData = {};
 
   constructor(private tile: Tile) {
@@ -17,7 +14,7 @@ class Tree implements StaticAgent {
   }
 
   getType(): EntityType {
-    return EntityType.Tree;
+    return EntityType.Stump;
   }
 
   getTile() {
@@ -28,20 +25,9 @@ class Tree implements StaticAgent {
     this.tile = tile;
   }
 
-  hit(damage: number) {
-    this.hp -= damage;
-
-    if (this.hp <= 0) {
-      Manager.Instance.getSurface().despawnStatic(this);
-
-      const stump = new Stump(this.tile);
-      Manager.Instance.getSurface().spawnStatic(stump);
-    }
-  }
-
   isVisible() {
     return this.tile.isDiscovered();
   }
 }
 
-export default Tree;
+export default Stump;

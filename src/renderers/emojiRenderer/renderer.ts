@@ -681,6 +681,8 @@ class Renderer implements IRenderer {
         return "⛺";
       case EntityType.Tree:
         return "🌲";
+      case EntityType.Stump:
+        return "🪵";
       case EntityType.Rock:
         return "🪨";
       case EntityType.Radar:

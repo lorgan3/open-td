@@ -60,5 +60,6 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Spark]: Spark,
   [EntityType.Tesla]: Tower,
   [EntityType.Tree]: Foliage,
+  [EntityType.Stump]: Foliage,
   [EntityType.Rock]: Foliage,
 };

@@ -10,7 +10,11 @@ export class StaticEntityCheckpoint implements Checkpoint {
   constructor(public index: number) {}
 
   isCleared(tiles: Tile[]): boolean {
-    return !tiles[this.index].hasStaticEntity();
+    const tile = tiles[this.index];
+    return (
+      !tile.hasStaticEntity() ||
+      !DESTRUCTIBLE_ENTITIES.has(tile.getStaticEntity().getAgent().getType())
+    );
   }
 
   process(tiles: Tile[], agent: Agent, dt: number): void {

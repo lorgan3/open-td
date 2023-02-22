@@ -52,6 +52,7 @@ class BuildController {
 
         this.ignoredEntities.add(EntityType.Tree);
         this.ignoredEntities.add(EntityType.Rock);
+        this.ignoredEntities.add(EntityType.Stump);
       }
 
       if (placeable.entityType === EntityType.Terraform) {

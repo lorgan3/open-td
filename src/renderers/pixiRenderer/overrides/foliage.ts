@@ -13,6 +13,7 @@ class Foliage extends Sprite implements EntityRenderer {
 
   private static entityMap = new Map<EntityType, string>([
     [EntityType.Tree, "foliage0.png"],
+    [EntityType.Stump, "foliage2.png"],
     [EntityType.Rock, "foliage5.png"],
   ]);
 

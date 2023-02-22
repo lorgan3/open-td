@@ -20,6 +20,7 @@ export enum EntityType {
   Fence,
   Freezer,
   Tree,
+  Stump,
   Rock,
   Radar,
   PowerPlant,
