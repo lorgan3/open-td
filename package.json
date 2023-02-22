@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "check-types": "vue-tsc --noEmit",
-    "wall-generator": "ts-node-esm ./scripts/wallGenerator.ts"
+    "wall-generator": "ts-node-esm ./scripts/wallGenerator.ts",
+    "mask-generator": "ts-node-esm ./scripts/maskGenerator.ts"
   },
   "dependencies": {
     "@pixi/assets": "^6.5.9",
