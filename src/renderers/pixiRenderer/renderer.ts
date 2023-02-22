@@ -186,22 +186,6 @@ class Renderer implements IRenderer {
             this.tilemap.tileAnimX(32, 2);
           }
         }
-
-        if (tile.hasStaticEntity()) {
-          if (tile.getType() === TileType.Tree) {
-            this.tilemap.tile(
-              atlas.textures![AtlasTile.Tree],
-              tile.getX() * SCALE,
-              tile.getY() * SCALE
-            );
-          } else if (tile.getType() === TileType.Rock) {
-            this.tilemap.tile(
-              atlas.textures![AtlasTile.Rock],
-              tile.getX() * SCALE,
-              tile.getY() * SCALE
-            );
-          }
-        }
       });
     }
 

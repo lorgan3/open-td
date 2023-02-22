@@ -10,6 +10,13 @@ FLOOR.name = "Floor";
 export const STATIC = new Container();
 STATIC.name = "Static";
 
+/**
+ * Container should only contain sprites directly, I might make this a particle container.
+ * Intended for simple static entities that should overlap the static layer only.
+ */
+export const FOLIAGE = new Container();
+FOLIAGE.name = "Foliage";
+
 export const BASE = new Container();
 BASE.name = "Base";
 
@@ -22,4 +29,4 @@ TOWERS.name = "Towers";
 export const UI = new Container();
 UI.name = "UI";
 
-export const LAYERS = [FLOOR, STATIC, BASE, PROJECTILES, TOWERS, UI];
+export const LAYERS = [FLOOR, STATIC, FOLIAGE, BASE, PROJECTILES, TOWERS, UI];

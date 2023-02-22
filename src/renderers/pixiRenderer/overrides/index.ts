@@ -14,6 +14,7 @@ import { Constructor } from "./types";
 import { WavePoint } from "./wavePoint";
 import { Spark } from "./spark";
 import { Wall } from "./wall";
+import { Foliage } from "./foliage";
 
 export const spriteOverrideAssets = {
   runner: `${import.meta.env.BASE_URL}animations/runner.json`,
@@ -30,6 +31,9 @@ export const spriteOverrideAssets = {
   explosion: `${import.meta.env.BASE_URL}animations/explosion.json`,
   lightning: `${import.meta.env.BASE_URL}tiles/lightning.json`,
   tesla: `${import.meta.env.BASE_URL}animations/tesla.json`,
+  wall: `${import.meta.env.BASE_URL}tiles/wall.json`,
+  fence: `${import.meta.env.BASE_URL}tiles/fence.json`,
+  foliage: `${import.meta.env.BASE_URL}tiles/foliage.json`,
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
@@ -55,4 +59,6 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.WavePoint]: WavePoint,
   [EntityType.Spark]: Spark,
   [EntityType.Tesla]: Tower,
+  [EntityType.Tree]: Foliage,
+  [EntityType.Rock]: Foliage,
 };
