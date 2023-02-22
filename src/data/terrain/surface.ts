@@ -38,7 +38,7 @@ class Surface {
   public map!: Tile[];
   public entities: Entity[] = [];
   public deletedEntities: Entity[] = [];
-  public staticEntities: Entity[] = [];
+  public tickingEntities: Entity[] = [];
   private entitiesMap = new Map<AgentCategory, Set<Entity>>();
   private towers = new Set<ITower>();
 
@@ -81,7 +81,6 @@ class Surface {
   private initialize(generateOrBuffer: Generator | Uint8Array) {
     this.entities = [];
     this.deletedEntities = [];
-    this.staticEntities = [];
     this.entitiesMap.clear();
 
     Object.values(AgentCategory)
@@ -431,6 +430,10 @@ class Surface {
     this.entities.push(agent.entity);
     this.entitiesMap.get(agent.category)!.add(agent.entity);
 
+    if (agent.tick) {
+      this.tickingEntities.push(agent.entity);
+    }
+
     if (agent.spawn) {
       agent.spawn();
     }
@@ -456,6 +459,13 @@ class Surface {
     const index = this.entities.indexOf(agent.entity);
     if (index >= 0) {
       this.entities.splice(index, 1);
+
+      if (agent.tick) {
+        this.tickingEntities.splice(
+          this.tickingEntities.indexOf(agent.entity),
+          1
+        );
+      }
     }
 
     const result = this.entitiesMap.get(agent.category)!.delete(agent.entity);
@@ -488,16 +498,16 @@ class Surface {
     return this.entities;
   }
 
+  public getTickingEntities() {
+    return this.tickingEntities;
+  }
+
   public getEntitiesForCategory(category: AgentCategory) {
     return this.entitiesMap.get(category)!;
   }
 
   public getDeletedEntities() {
     return this.deletedEntities;
-  }
-
-  public getStaticEntities() {
-    return this.staticEntities;
   }
 
   public getTowers() {

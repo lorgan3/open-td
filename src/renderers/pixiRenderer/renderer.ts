@@ -194,7 +194,10 @@ class Renderer implements IRenderer {
 
     this.worldShader.setTime(this.time);
 
-    const entities = this.surface.getEntities();
+    const entities = full
+      ? this.surface.getEntities()
+      : this.surface.getTickingEntities();
+
     for (let entity of entities) {
       let sprite = this.sprites.get(entity.getId());
 

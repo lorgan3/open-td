@@ -48,18 +48,9 @@ class DefaultManager extends Manager {
       return;
     }
 
-    const entities = this.surface.getEntities();
+    const entities = this.surface.getTickingEntities();
     for (let entity of entities) {
-      if (entity.getAgent().tick) {
-        entity.getAgent().tick!(dt);
-      }
-    }
-
-    const staticEntities = this.surface.getStaticEntities();
-    for (let entity of staticEntities) {
-      if (entity.getAgent().tick) {
-        entity.getAgent().tick!(dt);
-      }
+      entity.getAgent().tick!(dt);
     }
 
     WaveController.Instance.tick(dt);
