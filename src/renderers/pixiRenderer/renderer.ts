@@ -84,6 +84,7 @@ class Renderer implements IRenderer {
 
     window.debug = () => {
       DEBUG = !DEBUG;
+      this.surface.forceRerender();
       this.renderWorld();
     };
   }
