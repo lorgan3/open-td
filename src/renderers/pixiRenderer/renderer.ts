@@ -3,12 +3,17 @@ import Controller from "../../data/controllers/controller";
 import Surface from "../../data/terrain/surface";
 import { IRenderer, MessageFn } from "../api";
 import SimpleMessage from "../../components/SimpleMessage.vue";
-import { Application, InteractionEvent } from "pixi.js";
+import {
+  Application,
+  BaseTexture,
+  InteractionEvent,
+  SimplePlane,
+  Texture,
+} from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
 import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
 import { settings } from "@pixi/tilemap";
-import Tile from "../../data/terrain/tile";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
@@ -32,6 +37,7 @@ import { GameEvent } from "../../data/events";
 import { get } from "../../util/localStorage";
 import { CursorRenderer } from "./tilemap/cursorRenderer";
 import { AssetsContainer } from "./assets/container";
+import { WorldShader } from "./shaders/worldShader";
 
 let DEBUG = false;
 
@@ -53,10 +59,11 @@ class Renderer implements IRenderer {
   private sprites = new Map<number, EntityRenderer>();
 
   private assets: AssetsContainer;
-  private wallRenderer: WallRenderer;
   private coverageRenderer?: CoverageRenderer;
   private alertRenderer?: AlertRenderer;
   private cursorRenderer?: CursorRenderer;
+
+  private worldShader: WorldShader;
 
   public x = 0;
   public y = 0;
@@ -79,6 +86,7 @@ class Renderer implements IRenderer {
 
     this.tilemap = new CompositeTilemap();
     this.assets = new AssetsContainer();
+    this.worldShader = new WorldShader(this.surface, false, false);
 
     initSound();
 
@@ -119,13 +127,32 @@ class Renderer implements IRenderer {
 
     this.app.stage.addChild(this.viewport);
 
-    this.viewport!.addChild(this.tilemap, ...LAYERS);
+    // Texture needs to be at least 1*1 pixel to be rendered.
+    const texture = new Texture(
+      new BaseTexture(undefined, {
+        width: 1,
+        height: 1,
+      })
+    );
+
+    const world = new SimplePlane(texture, 2, 2);
+    world.width = this.surface.getWidth() * SCALE;
+    world.height = this.surface.getWidth() * SCALE;
+    world.shader = this.worldShader;
+
+    this.viewport!.addChild(world, ...LAYERS);
 
     this.coverageRenderer = new CoverageRenderer(this.assets, this.surface);
     this.alertRenderer = new AlertRenderer(this.assets);
     this.cursorRenderer = new CursorRenderer();
 
-    this.assets.onComplete(() => this.renderTilemap());
+    this.assets.onComplete(() => {
+      this.renderTilemap();
+
+      // Totally unnecessary but looks kind of cool.
+      window.setTimeout(() => this.worldShader!.setTextured(true), 500);
+      window.setTimeout(() => this.worldShader!.setBlended(true), 1000);
+    });
 
     const container = target.appendChild(document.createElement("div"));
     this.vueApp = createApp(SimpleMessage, {
@@ -151,6 +178,8 @@ class Renderer implements IRenderer {
   }
 
   private renderTilemap() {
+    this.worldShader.render(DEBUG);
+
     this.tilemap.clear();
 
     const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();

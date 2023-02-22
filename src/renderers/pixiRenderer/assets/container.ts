@@ -8,6 +8,7 @@ class AssetsContainer {
   constructor() {
     getAssets().then((assets) => {
       this.assets = assets;
+
       if (this.callback) {
         this.callback();
       }
@@ -17,7 +18,10 @@ class AssetsContainer {
   onComplete(callback: () => void) {
     if (this.assets) {
       callback();
+      return;
     }
+
+    this.callback = callback;
   }
 
   get loading() {
