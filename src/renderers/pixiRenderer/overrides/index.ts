@@ -13,6 +13,7 @@ import { Rocket } from "./rocket";
 import { Constructor } from "./types";
 import { WavePoint } from "./wavePoint";
 import { Spark } from "./spark";
+import { Wall } from "./wall";
 
 export const spriteOverrideAssets = {
   runner: `${import.meta.env.BASE_URL}animations/runner.json`,
@@ -47,9 +48,9 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Shockwave]: GenericProjectile,
   [EntityType.LaserBeam]: LaserBeam,
   [EntityType.Rail]: Rail,
-  [EntityType.Fence]: null,
-  [EntityType.Wall]: null,
-  [EntityType.ElectricFence]: null,
+  [EntityType.Fence]: Wall,
+  [EntityType.Wall]: Wall,
+  [EntityType.ElectricFence]: Wall,
   [EntityType.Blueprint]: Blueprint,
   [EntityType.WavePoint]: WavePoint,
   [EntityType.Spark]: Spark,

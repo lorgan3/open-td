@@ -3,6 +3,13 @@ import { Container } from "pixi.js";
 export const FLOOR = new Container();
 FLOOR.name = "Floor";
 
+/**
+ * Container should only contain sprites directly, I might make this a particle container.
+ * Intended for simple static entities only.
+ */
+export const STATIC = new Container();
+STATIC.name = "Static";
+
 export const BASE = new Container();
 BASE.name = "Base";
 
@@ -15,4 +22,4 @@ TOWERS.name = "Towers";
 export const UI = new Container();
 UI.name = "UI";
 
-export const LAYERS = [FLOOR, BASE, PROJECTILES, TOWERS, UI];
+export const LAYERS = [FLOOR, STATIC, BASE, PROJECTILES, TOWERS, UI];

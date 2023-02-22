@@ -13,8 +13,6 @@ import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
 import { init as initSound, playSoundOnEvent, Sound } from "./sound";
-import { WallRenderer } from "./tilemap/wallRenderer";
-import { wallTypes } from "./tilemap/constants";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
@@ -81,12 +79,6 @@ class Renderer implements IRenderer {
 
     this.tilemap = new CompositeTilemap();
     this.assets = new AssetsContainer();
-
-    this.wallRenderer = new WallRenderer(
-      this.assets,
-      this.tilemap,
-      this.surface
-    );
 
     initSound();
 
@@ -164,7 +156,7 @@ class Renderer implements IRenderer {
     const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
     const atlas = this.assets.assets![ATLAS];
     const rows = this.surface.getHeight();
-    const walls: Tile[] = [];
+
     for (let i = 0; i < rows; i++) {
       this.surface.getRow(i).forEach((tile) => {
         if (!revealEverything) {
@@ -208,17 +200,10 @@ class Renderer implements IRenderer {
               tile.getX() * SCALE,
               tile.getY() * SCALE
             );
-          } else if (
-            wallTypes.has(tile.getType()) &&
-            tile.isStaticEntityRoot()
-          ) {
-            walls.push(tile);
           }
         }
       });
     }
-
-    walls.forEach((tile) => this.wallRenderer.render(tile));
 
     this.coverageRenderer!.render();
 
