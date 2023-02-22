@@ -28,6 +28,28 @@ export enum TileType {
   Base = 18,
 }
 
+export enum AltTileType {
+  WaterAlt = 19,
+  WaterStill = 20,
+  GrassFlower = 21,
+  GrassAlt = 22,
+  GrassPlain = 23,
+  SandAlt = 24,
+  SnowAlt = 25,
+  IceAlt = 26,
+}
+
+export const ALT_TO_BASE_TYPE: Record<AltTileType, TileType> = {
+  [AltTileType.WaterAlt]: TileType.Water,
+  [AltTileType.WaterStill]: TileType.Water,
+  [AltTileType.GrassFlower]: TileType.Grass,
+  [AltTileType.GrassAlt]: TileType.Grass,
+  [AltTileType.GrassPlain]: TileType.Grass,
+  [AltTileType.SandAlt]: TileType.Sand,
+  [AltTileType.SnowAlt]: TileType.Snow,
+  [AltTileType.IceAlt]: TileType.Ice,
+};
+
 export const FREE_TILES = new Set([
   TileType.Grass,
   TileType.Stone,

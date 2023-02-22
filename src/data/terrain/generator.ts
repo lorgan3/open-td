@@ -3,7 +3,7 @@ import { createNoise2D } from "simplex-noise";
 import Tree from "../entity/tree";
 import Rock from "../entity/rock";
 import Alea from "alea";
-import { TileType } from "./constants";
+import { AltTileType, TileType } from "./constants";
 
 export type Generator = (x: number, y: number) => Tile;
 
@@ -104,7 +104,11 @@ const getGenerator = (seed: string, mapWidth: number, mapHeight: number) => {
       // Water in cold biomes freezes
       // Random part creates a gradient when transitioning biomes
       if (temperature + ((absTemperature * 1811) % 1) / 7 < -0.6) {
-        return new Tile(x, y, TileType.Ice);
+        return new Tile(
+          x,
+          y,
+          (absTemperature * 1439) % 1 > 0.5 ? TileType.Ice : AltTileType.IceAlt
+        );
       }
       return new Tile(x, y, TileType.Water);
     } else if (river > RIVER_THRESHOLD + biassedTemperature / 15) {
@@ -114,11 +118,35 @@ const getGenerator = (seed: string, mapWidth: number, mapHeight: number) => {
 
     let tile: Tile;
     if (biassedTemperature > 0.3) {
-      tile = new Tile(x, y, TileType.Sand);
+      tile = new Tile(
+        x,
+        y,
+        (biassedTemperature * 1439) % 1 > 0.3
+          ? TileType.Sand
+          : AltTileType.SandAlt
+      );
     } else if (biassedTemperature < -0.5) {
-      tile = new Tile(x, y, TileType.Snow);
+      tile = new Tile(
+        x,
+        y,
+        (biassedTemperature * -1439) % 1 > 0.3
+          ? TileType.Snow
+          : AltTileType.SnowAlt
+      );
     } else {
-      tile = new Tile(x, y, TileType.Grass);
+      const rng = (Math.abs(biassedTemperature) * 4999) % 1;
+
+      tile = new Tile(
+        x,
+        y,
+        rng < 0.05
+          ? AltTileType.GrassFlower
+          : rng < 0.1
+          ? AltTileType.GrassAlt
+          : rng < 0.6
+          ? AltTileType.GrassPlain
+          : TileType.Grass
+      );
     }
 
     const fertility =

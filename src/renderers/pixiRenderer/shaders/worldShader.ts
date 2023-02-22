@@ -19,7 +19,7 @@ class WorldShader extends MeshMaterial {
   constructor(private surface: Surface, textured = true, blended = true) {
     super(Texture.EMPTY, {
       program: new Program(vertex, fragment),
-      uniforms: { tileSize: SCALE, textured, blended },
+      uniforms: { tileSize: SCALE, time: 0, textured, blended },
     });
 
     this.canvas = new OffscreenCanvas(
@@ -42,8 +42,14 @@ class WorldShader extends MeshMaterial {
 
   render(debug = false) {
     this.surface.getTiles().forEach((tile, i) => {
-      this.imageData.data[i * 4] =
-        tile.isDiscovered() || debug ? tile.getBaseType() : TileType.Obstructed;
+      const tiles =
+        tile.isDiscovered() || debug
+          ? tile.getAnimation()
+          : [TileType.Obstructed];
+
+      this.imageData.data[i * 4] = tiles[0];
+      this.imageData.data[i * 4 + 1] = tiles[1] || tiles[0];
+      this.imageData.data[i * 4 + 2] = tiles[2] || tiles[0];
 
       this.imageData.data[i * 4 + 3] = 255;
     });
@@ -58,6 +64,10 @@ class WorldShader extends MeshMaterial {
 
   setTextured(textured: boolean) {
     this.uniforms.textured = textured;
+  }
+
+  setTime(time: number) {
+    this.uniforms.time = Math.sin(time / 1000) * 3;
   }
 }
 

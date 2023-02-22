@@ -4,6 +4,8 @@ import StaticEntity, {
 } from "../entity/staticEntity";
 import { ITower } from "../entity/towers";
 import {
+  AltTileType,
+  ALT_TO_BASE_TYPE,
   DiscoveryStatus,
   STATIC_ENTITY_GROUND_TILE_MAP,
   TileType,
@@ -16,13 +18,14 @@ export type TileWithStaticEntity = {
 export interface SerializedTile {
   x: number;
   y: number;
-  type: TileType;
+  type: TileType | AltTileType;
 }
 
 class Tile {
   private staticEntity: StaticEntity | null = null;
   private hash: string;
   private actualType: TileType;
+  private type: TileType;
   private towers: ITower[] = [];
   private linkedAgents?: Set<StaticAgent>;
   private discoveryStatus = DiscoveryStatus.Undiscovered;
@@ -30,10 +33,11 @@ class Tile {
   constructor(
     private x: number,
     private y: number,
-    private type = TileType.Void
+    private altType: TileType | AltTileType = TileType.Void
   ) {
     this.hash = `[${this.x}, ${this.y}]`;
-    this.actualType = type;
+    this.type = ALT_TO_BASE_TYPE[altType as AltTileType] ?? altType;
+    this.actualType = this.type;
   }
 
   serialize(): SerializedTile {
@@ -54,6 +58,24 @@ class Tile {
 
   getBaseType() {
     return this.type;
+  }
+
+  /**
+   * Should be used for graphical purposes only.
+   */
+  getAltType() {
+    return this.altType;
+  }
+
+  /**
+   * Should be used for graphical purposes only.
+   */
+  getAnimation() {
+    if (this.type === TileType.Water) {
+      return [TileType.Water, AltTileType.WaterAlt, AltTileType.WaterStill];
+    }
+
+    return [this.altType];
   }
 
   getType() {

@@ -10,6 +10,7 @@ uniform sampler2D mask;
 uniform float tileSize;
 uniform bool textured;
 uniform bool blended;
+uniform float time;
 
 out vec4 fragmentColor;
 
@@ -40,7 +41,7 @@ void main(){
     // Get atlas id from word texture: world position + mask offset.
     int x = int(floor(wx + (maskTexel.r - 0.5)));
 	int y = int(floor(wy + (maskTexel.g - 0.5)));
-	int atlasId = int(texelFetch(world, ivec2(x, y), 0).r * 255.0);
+	int atlasId = int(texelFetch(world, ivec2(x, y), 0)[int(mod(time + float(x) + float(y), 3.0))] * 255.0);
 
     if (!textured) {
          wx = floor(wx / tileSize) * tileSize;

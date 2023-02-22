@@ -170,7 +170,8 @@ class Renderer implements IRenderer {
   }
 
   private renderWorld() {
-    this.worldShader.render(DEBUG);
+    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
+    this.worldShader.render(revealEverything);
 
     this.coverageRenderer!.render();
 
@@ -190,6 +191,8 @@ class Renderer implements IRenderer {
     if (full) {
       this.renderWorld();
     }
+
+    this.worldShader.setTime(this.time);
 
     const entities = this.surface.getEntities();
     for (let entity of entities) {
