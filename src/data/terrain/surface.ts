@@ -2,7 +2,7 @@ import Entity, { Agent } from "../entity/entity";
 import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";
-import { getScale, StaticAgent } from "../entity/staticEntity";
+import StaticEntity, { getScale, StaticAgent } from "../entity/staticEntity";
 import { AgentCategory } from "../entity/constants";
 import EventSystem from "../eventSystem";
 import { getRange, isTower, ITower } from "../entity/towers";
@@ -79,6 +79,14 @@ class Surface {
   }
 
   private initialize(generateOrBuffer: Generator | Uint8Array) {
+    this.entities = [];
+    this.deletedEntities = [];
+    this.staticEntities = [];
+    this.entitiesMap.clear();
+
+    Object.values(AgentCategory)
+      .filter((value): value is AgentCategory => typeof value !== "string")
+      .forEach((category) => this.entitiesMap.set(category, new Set()));
     this.map = new Array(this.width * this.height);
 
     if (generateOrBuffer instanceof Uint8Array) {
@@ -91,21 +99,22 @@ class Surface {
         );
       }
     } else {
+      const staticEntities: StaticEntity[] = [];
       for (let j = 0; j < this.height; j++) {
         for (let i = 0; i < this.width; i++) {
-          this.map[j * this.width + i] = generateOrBuffer(i, j);
+          const tile = generateOrBuffer(i, j);
+          this.map[j * this.width + i] = tile;
+
+          if (tile.hasStaticEntity()) {
+            staticEntities.push(tile.getStaticEntity());
+          }
         }
       }
+
+      for (let entity of staticEntities) {
+        this.spawnStatic(entity.getAgent());
+      }
     }
-
-    this.entities = [];
-    this.deletedEntities = [];
-    this.staticEntities = [];
-    this.entitiesMap.clear();
-
-    Object.values(AgentCategory)
-      .filter((value): value is AgentCategory => typeof value !== "string")
-      .forEach((category) => this.entitiesMap.set(category, new Set()));
   }
 
   public getTile(x: number, y: number, clamp = false): Tile | undefined {

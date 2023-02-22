@@ -69,6 +69,10 @@ class Tile {
   }
 
   setStaticEntity(entity: StaticEntity) {
+    if (entity === this.staticEntity) {
+      return;
+    }
+
     if (this.staticEntity !== null) {
       throw new Error("A tile can only have 1 static entity.");
     }
