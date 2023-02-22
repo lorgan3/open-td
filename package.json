@@ -1,12 +1,14 @@
 {
   "name": "open-td",
   "version": "0.0.3",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "yarn check-types && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "check-types": "vue-tsc --noEmit"
+    "check-types": "vue-tsc --noEmit",
+    "wall-generator": "ts-node-esm ./scripts/wallGenerator.ts"
   },
   "dependencies": {
     "@pixi/assets": "^6.5.9",
@@ -28,7 +30,9 @@
     "@types/md5": "^2.3.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "jest-environment-jsdom": "^29.3.1",
+    "jimp": "^0.22.4",
     "sass": "^1.56.2",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.4",
     "vite": "^4.0.0",
     "vitest": "^0.28.4",
