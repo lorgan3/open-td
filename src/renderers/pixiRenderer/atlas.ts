@@ -39,17 +39,3 @@ export enum AtlasTile {
   Flier = "atlas34.png",
   Tank = "atlas35.png",
 }
-
-export const TILE_TO_ATLAS_MAP: Partial<Record<TileType, AtlasTile>> = {
-  [TileType.Grass]: AtlasTile.Grass,
-  [TileType.Sand]: AtlasTile.Sand,
-  [TileType.Water]: AtlasTile.Water,
-  [TileType.Ice]: AtlasTile.Ice,
-  [TileType.Snow]: AtlasTile.Snow,
-  [TileType.Dirt]: AtlasTile.Dirt,
-  [TileType.Tree]: AtlasTile.Tree,
-  [TileType.Rock]: AtlasTile.Rock,
-  [TileType.Stone]: AtlasTile.Stone,
-  [TileType.Spore]: AtlasTile.Spore,
-  [TileType.Bridge]: AtlasTile.Bridge,
-};

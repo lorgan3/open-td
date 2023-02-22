@@ -10,10 +10,7 @@ import {
   SimplePlane,
   Texture,
 } from "pixi.js";
-import { CompositeTilemap } from "@pixi/tilemap";
-import { ATLAS, AtlasTile, TILE_TO_ATLAS_MAP } from "./atlas";
 import { Viewport } from "pixi-viewport";
-import { settings } from "@pixi/tilemap";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
@@ -30,7 +27,6 @@ import {
   SCALE,
   SCROLL_SPEED,
 } from "./constants";
-import { DiscoveryStatus, TileType } from "../../data/terrain/constants";
 import WaveController from "../../data/controllers/waveController";
 import { sound } from "@pixi/sound";
 import { GameEvent } from "../../data/events";
@@ -40,8 +36,6 @@ import { AssetsContainer } from "./assets/container";
 import { WorldShader } from "./shaders/worldShader";
 
 let DEBUG = false;
-
-settings.use32bitIndex = true;
 
 class Renderer implements IRenderer {
   private static instance: Renderer;
@@ -53,7 +47,6 @@ class Renderer implements IRenderer {
   private target?: HTMLElement;
   private app?: Application;
   private viewport?: Viewport;
-  private tilemap: CompositeTilemap;
   private vueApp?: App<Element>;
 
   private sprites = new Map<number, EntityRenderer>();
@@ -84,7 +77,6 @@ class Renderer implements IRenderer {
       (resolve) => (this.resolveMessageFn = resolve)
     );
 
-    this.tilemap = new CompositeTilemap();
     this.assets = new AssetsContainer();
     this.worldShader = new WorldShader(this.surface, false, false);
 
@@ -92,7 +84,7 @@ class Renderer implements IRenderer {
 
     window.debug = () => {
       DEBUG = !DEBUG;
-      this.renderTilemap();
+      this.renderWorld();
     };
   }
 
@@ -147,7 +139,7 @@ class Renderer implements IRenderer {
     this.cursorRenderer = new CursorRenderer();
 
     this.assets.onComplete(() => {
-      this.renderTilemap();
+      this.renderWorld();
 
       // Totally unnecessary but looks kind of cool.
       window.setTimeout(() => this.worldShader!.setTextured(true), 500);
@@ -177,46 +169,8 @@ class Renderer implements IRenderer {
     sound.volumeAll = (settings?.volume ?? 100) / 100;
   }
 
-  private renderTilemap() {
+  private renderWorld() {
     this.worldShader.render(DEBUG);
-
-    this.tilemap.clear();
-
-    const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
-    const atlas = this.assets.assets![ATLAS];
-    const rows = this.surface.getHeight();
-
-    for (let i = 0; i < rows; i++) {
-      this.surface.getRow(i).forEach((tile) => {
-        if (!revealEverything) {
-          if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
-            return;
-          }
-
-          if (tile.getDiscoveryStatus() === DiscoveryStatus.Pending) {
-            this.tilemap.tile(
-              atlas.textures![AtlasTile.Unknown],
-              tile.getX() * SCALE,
-              tile.getY() * SCALE
-            );
-            return;
-          }
-        }
-
-        let ref = TILE_TO_ATLAS_MAP[tile.getBaseType()];
-        if (ref) {
-          this.tilemap.tile(
-            atlas.textures![ref],
-            tile.getX() * SCALE,
-            tile.getY() * SCALE
-          );
-
-          if (tile.getBaseType() === TileType.Water) {
-            this.tilemap.tileAnimX(32, 2);
-          }
-        }
-      });
-    }
 
     this.coverageRenderer!.render();
 
@@ -234,10 +188,8 @@ class Renderer implements IRenderer {
     const revealEverything = DEBUG || Manager.Instance.getIsBaseDestroyed();
     const full = this.surface.isDirty();
     if (full) {
-      this.renderTilemap();
+      this.renderWorld();
     }
-
-    this.app!.renderer.plugins.tilemap.tileAnim[0] += dt / 500;
 
     const entities = this.surface.getEntities();
     for (let entity of entities) {
