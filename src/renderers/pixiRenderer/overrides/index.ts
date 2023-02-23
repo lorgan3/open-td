@@ -15,6 +15,7 @@ import { WavePoint } from "./wavePoint";
 import { Spark } from "./spark";
 import { Wall } from "./wall";
 import { Foliage } from "./foliage";
+import { Stump } from "./stump";
 
 export const spriteOverrideAssets = {
   runner: `${import.meta.env.BASE_URL}animations/runner.json`,
@@ -60,6 +61,6 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Spark]: Spark,
   [EntityType.Tesla]: Tower,
   [EntityType.Tree]: Foliage,
-  [EntityType.Stump]: Foliage,
+  [EntityType.Stump]: Stump,
   [EntityType.Rock]: Foliage,
 };
