@@ -1,6 +1,7 @@
 import Manager from "../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { AgentCategory, EntityType } from "./constants";
+import { RenderData } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 
 class Rock implements StaticAgent {
@@ -9,7 +10,7 @@ class Rock implements StaticAgent {
   public entity: StaticEntity;
   public category = AgentCategory.Unknown;
   private hp = 30;
-  public renderData = {};
+  public renderData: RenderData = {};
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);

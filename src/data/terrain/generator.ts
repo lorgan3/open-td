@@ -4,6 +4,7 @@ import Tree from "../entity/tree";
 import Rock from "../entity/rock";
 import Alea from "alea";
 import { AltTileType, TileType } from "./constants";
+import { RockType, TreeType } from "../entity/constants";
 
 export type Generator = (x: number, y: number) => Tile;
 
@@ -159,12 +160,21 @@ const getGenerator = (seed: string, mapWidth: number, mapHeight: number) => {
       randomizedTemperature < 0.6
     ) {
       const tree = new Tree(tile);
+      tree.renderData.subType =
+        biassedTemperature > 0.3
+          ? TreeType.Cactus
+          : biassedTemperature < -0.4 || fertility < 0.045
+          ? TreeType.Pine
+          : TreeType.Simple;
+
       tile.setStaticEntity(tree.entity);
     } else if (
       (randomizedTemperature < -0.5 || randomizedTemperature > 0.7) &&
       (absHeight * 2791) % 1 > 0.99
     ) {
       const rock = new Rock(tile);
+      rock.renderData.subType =
+        absHeight > 0.5 ? RockType.Rock1 : RockType.Rock3;
       tile.setStaticEntity(rock.entity);
     }
 

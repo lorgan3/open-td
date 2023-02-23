@@ -50,6 +50,18 @@ export enum EntityType {
   EmergencyRepair,
 }
 
+export enum TreeType {
+  Simple,
+  Pine,
+  Cactus,
+}
+
+export enum RockType {
+  Rock1,
+  Rock2,
+  Rock3,
+}
+
 export const BASE_ENTITIES = new Set([
   EntityType.Base,
   EntityType.Radar,

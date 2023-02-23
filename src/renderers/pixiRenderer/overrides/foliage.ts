@@ -11,10 +11,10 @@ class Foliage extends Sprite implements EntityRenderer {
 
   private static atlas = "foliage";
 
-  private static entityMap = new Map<EntityType, string>([
-    [EntityType.Tree, "foliage0.png"],
-    [EntityType.Stump, "foliage2.png"],
-    [EntityType.Rock, "foliage5.png"],
+  private static entityMap = new Map<EntityType, string[]>([
+    [EntityType.Tree, ["foliage1.png", "foliage0.png", "foliage3.png"]],
+    [EntityType.Stump, ["foliage2.png"]],
+    [EntityType.Rock, ["foliage5.png", "foliage7.png"]],
   ]);
 
   static verticalOffset = -0.5;
@@ -22,7 +22,7 @@ class Foliage extends Sprite implements EntityRenderer {
   constructor(data: Agent, container: AssetsContainer) {
     super(
       container.assets![Foliage.atlas].textures[
-        Foliage.entityMap.get(data.getType())!
+        Foliage.entityMap.get(data.getType())![data.renderData.subType || 0]
       ]
     );
 

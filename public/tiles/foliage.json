@@ -8,7 +8,7 @@
       "sourceSize": { "w": 32, "h": 48 }
     },
     "foliage1.png": {
-      "frame": { "x": 33, "y": 0, "w": 32, "h": 48 },
+      "frame": { "x": 35, "y": 0, "w": 32, "h": 48 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
@@ -29,7 +29,7 @@
       "sourceSize": { "w": 32, "h": 48 }
     },
     "foliage4.png": {
-      "frame": { "x": 33, "y": 48, "w": 32, "h": 48 },
+      "frame": { "x": 35, "y": 48, "w": 32, "h": 48 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
@@ -50,7 +50,7 @@
       "sourceSize": { "w": 32, "h": 48 }
     },
     "foliage7.png": {
-      "frame": { "x": 33, "y": 96, "w": 32, "h": 48 },
+      "frame": { "x": 35, "y": 96, "w": 32, "h": 48 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
