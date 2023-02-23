@@ -78,7 +78,7 @@ class Renderer implements IRenderer {
     );
 
     this.assets = new AssetsContainer();
-    this.worldShader = new WorldShader(this.surface, false, false);
+    this.worldShader = new WorldShader(this.surface, true, true);
 
     initSound();
 
@@ -139,13 +139,7 @@ class Renderer implements IRenderer {
     this.alertRenderer = new AlertRenderer(this.assets);
     this.cursorRenderer = new CursorRenderer();
 
-    this.assets.onComplete(() => {
-      this.renderWorld();
-
-      // Totally unnecessary but looks kind of cool.
-      window.setTimeout(() => this.worldShader!.setTextured(true), 500);
-      window.setTimeout(() => this.worldShader!.setBlended(true), 1000);
-    });
+    this.assets.onComplete(() => this.renderWorld());
 
     const container = target.appendChild(document.createElement("div"));
     this.vueApp = createApp(SimpleMessage, {

@@ -75,7 +75,7 @@ class WorldShader extends MeshMaterial {
   }
 
   setTime(time: number) {
-    this.uniforms.time = Math.sin(time / 1000) * 3;
+    this.uniforms.time = time / 600;
   }
 
   private getTileTypes = (tile: Tile) => {
