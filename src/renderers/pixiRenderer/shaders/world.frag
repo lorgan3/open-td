@@ -12,6 +12,8 @@ uniform bool textured;
 uniform bool blended;
 uniform float time;
 
+uniform int bridgeId; // Bridges should not get blended
+
 out vec4 fragmentColor;
 
 void main(){
@@ -42,6 +44,16 @@ void main(){
     int x = int(floor(wx + (maskTexel.r - 0.5)));
 	int y = int(floor(wy + (maskTexel.g - 0.5)));
 	int atlasId = int(texelFetch(world, ivec2(x, y), 0)[int(mod(time + float(x) + float(y), 3.0))] * 255.0);
+
+    int unblentAtlasId = int(texelFetch(world, ivec2(int(floor(wx)), int(floor(wy))), 0)[int(mod(time + float(x) + float(y), 3.0))] * 255.0);
+
+    if (unblentAtlasId == bridgeId) {
+        atlasId = unblentAtlasId;
+    }
+
+    if (atlasId == bridgeId) {
+        atlasId = unblentAtlasId;
+    }
 
     if (!textured) {
          wx = floor(wx / tileSize) * tileSize;

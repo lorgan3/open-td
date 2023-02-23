@@ -24,7 +24,13 @@ class WorldShader extends MeshMaterial {
   constructor(private surface: Surface, textured = true, blended = true) {
     super(Texture.EMPTY, {
       program: new Program(vertex, fragment),
-      uniforms: { tileSize: SCALE, time: 0, textured, blended },
+      uniforms: {
+        tileSize: SCALE,
+        bridgeId: TileType.Bridge,
+        time: 0,
+        textured,
+        blended,
+      },
     });
 
     this.canvas = new OffscreenCanvas(
