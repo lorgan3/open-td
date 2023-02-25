@@ -1,24 +1,9 @@
 import Jimp from "jimp";
-import fs from "fs";
+import { NamedImage, rotate, write } from "./util.js";
 
 const TILE_SIZE = 32;
 const MULTIPLIER = 1.25; // We need a bigger frame to make diagonal connections
 const OFFSET_MULTIPLIER = (MULTIPLIER - 1) / 2;
-
-interface NamedImage {
-  image: Jimp;
-  name: string;
-}
-
-/**
- * Dumb workaround because Jimp messes up the center on power of 2 images :/
- */
-const rotate = (jimp: Jimp, deg: number) => {
-  return jimp
-    .scale(3, Jimp.RESIZE_NEAREST_NEIGHBOR)
-    .rotate(deg, false)
-    .scale(1 / 3, Jimp.RESIZE_NEAREST_NEIGHBOR);
-};
 
 /**
  * We store every sprite based on the connections going clockwise.
@@ -259,43 +244,6 @@ const generateSprites = (atlas: Jimp, scale: number, name: string) => {
     (a, b) =>
       a.name.split("1").length - b.name.split("1").length ||
       b.name.localeCompare(a.name)
-  );
-};
-
-const write = async (images: NamedImage[], name: string) => {
-  const actualSize = images[0].image.getWidth();
-  const width = Math.ceil(Math.sqrt(images.length));
-  const out = new Jimp(actualSize * width, actualSize * width);
-
-  const frames: Record<string, any> = {};
-  images.forEach(({ image, name }, i) => {
-    const x = (i % width) * actualSize;
-    const y = Math.floor(i / width) * actualSize;
-    out.blit(image, x, y);
-
-    frames[name] = {
-      frame: { x, y, w: actualSize, h: actualSize },
-    };
-  });
-
-  const json = {
-    frames,
-    meta: {
-      app: "https://github.com/lorgan3/open-td",
-      version: "1.0",
-      image: `${name}.png`,
-      size: { w: out.getWidth(), h: out.getHeight() },
-    },
-  };
-
-  await out.write(`./scripts/${name}.png`);
-
-  await new Promise((resolve) =>
-    fs.writeFile(
-      `./scripts/${name}.json`,
-      JSON.stringify(json, undefined, 2),
-      resolve
-    )
   );
 };
 
