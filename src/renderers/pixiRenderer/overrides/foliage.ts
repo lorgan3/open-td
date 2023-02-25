@@ -2,9 +2,10 @@ import { Sprite } from "pixi.js";
 import { Agent } from "../../../data/entity/entity";
 import { FOLIAGE } from "../layer";
 import { EntityRenderer } from "./types";
-import { EntityType } from "../../../data/entity/constants";
+import { EntityType, TreeType } from "../../../data/entity/constants";
 import { AssetsContainer } from "../assets/container";
 import { SCALE } from "../constants";
+import { FallingTree } from "../fallingTree";
 
 class Foliage extends Sprite implements EntityRenderer {
   public static readonly layer = FOLIAGE;
@@ -30,6 +31,15 @@ class Foliage extends Sprite implements EntityRenderer {
       data.entity.getX() * SCALE,
       (data.entity.getY() + Foliage.verticalOffset) * SCALE
     );
+
+    this.on("removed", () => {
+      if (
+        data.getType() === EntityType.Tree &&
+        data.renderData.subType !== TreeType.Cactus
+      ) {
+        new FallingTree(this.texture, data.entity.getX(), data.entity.getY());
+      }
+    });
   }
 
   sync() {}

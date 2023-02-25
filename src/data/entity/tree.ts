@@ -34,9 +34,6 @@ class Tree implements StaticAgent {
 
     if (this.hp <= 0) {
       Manager.Instance.getSurface().despawnStatic(this);
-
-      const stump = new Stump(this.tile);
-      Manager.Instance.getSurface().spawnStatic(stump);
     }
   }
 
