@@ -1,4 +1,4 @@
-import { EntityType } from "../../../data/entity/constants";
+import { BASE_ENTITIES, EntityType } from "../../../data/entity/constants";
 import { Blueprint } from "./blueprint";
 import { Flame } from "./flame";
 import { Flier } from "./flier";
@@ -16,6 +16,7 @@ import { Spark } from "./spark";
 import { Wall } from "./wall";
 import { Foliage } from "./foliage";
 import { Stump } from "./stump";
+import { Base } from "./base";
 
 export const spriteOverrideAssets = {
   runner: `${import.meta.env.BASE_URL}animations/runner.json`,
@@ -35,6 +36,7 @@ export const spriteOverrideAssets = {
   wall: `${import.meta.env.BASE_URL}tiles/wall.json`,
   fence: `${import.meta.env.BASE_URL}tiles/fence.json`,
   foliage: `${import.meta.env.BASE_URL}tiles/foliage.json`,
+  base: `${import.meta.env.BASE_URL}tiles/baseAtlas.json`,
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
@@ -63,4 +65,11 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Tree]: Foliage,
   [EntityType.Stump]: Stump,
   [EntityType.Rock]: Foliage,
+  ...[...BASE_ENTITIES].reduce(
+    (entities, entity) => ({
+      ...entities,
+      [entity]: Base,
+    }),
+    {}
+  ),
 };
