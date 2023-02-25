@@ -252,4 +252,38 @@ images.push({
   name: "base-1111",
 });
 
+// Left + right
+images.push({
+  image: new Jimp(SCALE, SCALE)
+    .blit(background, 1, 0, 1, 0, SCALE - 2, SCALE)
+    .blit(borders, 0, 0, 0, 0, BORDER_WIDTH, SCALE)
+    .blit(
+      borders,
+      SCALE - BORDER_WIDTH,
+      0,
+      SCALE - BORDER_WIDTH,
+      0,
+      BORDER_WIDTH,
+      SCALE
+    ),
+  name: "base-0101",
+});
+
+// Top + bottom
+images.push({
+  image: new Jimp(SCALE, SCALE)
+    .blit(background, 0, 1, 0, 1, SCALE, SCALE - 2)
+    .blit(borders, 0, 0, 0, 0, SCALE, BORDER_WIDTH)
+    .blit(
+      borders,
+      0,
+      SCALE - BORDER_WIDTH,
+      0,
+      SCALE - BORDER_WIDTH,
+      SCALE,
+      BORDER_WIDTH
+    ),
+  name: "base-1010",
+});
+
 await write(images, "baseAtlas");
