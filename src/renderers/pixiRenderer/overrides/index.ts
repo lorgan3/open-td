@@ -65,6 +65,7 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Tree]: Foliage,
   [EntityType.Stump]: Stump,
   [EntityType.Rock]: Foliage,
+  [EntityType.Freezer]: null,
   ...[...BASE_ENTITIES].reduce(
     (entities, entity) => ({
       ...entities,

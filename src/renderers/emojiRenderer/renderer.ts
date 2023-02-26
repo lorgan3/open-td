@@ -749,6 +749,8 @@ class Renderer implements IRenderer {
         return "🟫";
       case TileType.Ice:
         return "🧊";
+      case TileType.Freezer:
+        return "❄️";
       default:
         return "&nbsp;";
     }
