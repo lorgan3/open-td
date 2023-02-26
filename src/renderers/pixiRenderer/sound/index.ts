@@ -3,25 +3,25 @@ import { GameEvent } from "../../../data/events";
 import EventSystem from "../../../data/eventSystem";
 
 export enum Sound {
-  Notification = "notification",
-  Shot = "shot",
-  Laser = "laser",
-  Flamethrower = "flamethrower",
-  Mortar = "mortar",
-  Railgun = "railgun",
-  Explosion = "explosion",
-  Firework = "firework",
-  Place = "place",
-  Destroy = "destroy",
-  Hit = "hit",
-  Sonar = "sonar",
-  Thunder = "thunder",
+  Notification = "notificationSnd",
+  Shot = "shotSnd",
+  Laser = "laserSnd",
+  Flamethrower = "flamethrowerSnd",
+  Mortar = "mortarSnd",
+  Railgun = "railgunSnd",
+  Explosion = "explosionSnd",
+  Firework = "fireworkSnd",
+  Place = "placeSnd",
+  Destroy = "destroySnd",
+  Hit = "hitSnd",
+  Sonar = "sonarSnd",
+  Thunder = "thunderSnd",
 }
 
 export const soundAssets = {
   [Sound.Notification]: `${import.meta.env.BASE_URL}sounds/notification.ogg`,
   [Sound.Shot]: `${import.meta.env.BASE_URL}sounds/shot.wav`,
-  [Sound.Laser]: `${import.meta.env.BASE_URL}sounds/laser.flac`,
+  [Sound.Laser]: `${import.meta.env.BASE_URL}sounds/laser.mp3`,
   [Sound.Flamethrower]: `${import.meta.env.BASE_URL}sounds/flamethrower.wav`,
   [Sound.Mortar]: `${import.meta.env.BASE_URL}sounds/mortar.wav`,
   [Sound.Railgun]: `${import.meta.env.BASE_URL}sounds/railgun.mp3`,
@@ -34,28 +34,20 @@ export const soundAssets = {
   [Sound.Thunder]: `${import.meta.env.BASE_URL}sounds/thunder.wav`,
 };
 
-const preload = (alias: Sound, path: string, volume = 1) => {
-  sound.add(alias, {
-    url: `${import.meta.env.BASE_URL}${path}`,
-    preload: true,
-    volume,
-  });
+const updateVolume = (alias: Sound, volume: number) => {
+  sound.volume(alias, volume);
 };
 
 export const init = () => {
-  preload(Sound.Notification, "sounds/notification.ogg");
-  preload(Sound.Shot, "sounds/shot.wav", 0.7);
-  preload(Sound.Laser, "sounds/laser.flac", 0.5);
-  preload(Sound.Flamethrower, "sounds/flamethrower.wav", 0.1);
-  preload(Sound.Mortar, "sounds/mortar.wav", 0.7);
-  preload(Sound.Railgun, "sounds/railgun.mp3", 0.7);
-  preload(Sound.Explosion, "sounds/explosion.wav");
-  preload(Sound.Firework, "sounds/firework.wav");
-  preload(Sound.Place, "sounds/place.wav", 0.7);
-  preload(Sound.Destroy, "sounds/destroy.wav", 0.7);
-  preload(Sound.Hit, "sounds/hit.wav");
-  preload(Sound.Sonar, "sounds/sonar.wav", 0.7);
-  preload(Sound.Thunder, "sounds/thunder.wav", 0.7);
+  updateVolume(Sound.Shot, 0.7);
+  updateVolume(Sound.Laser, 0.5);
+  updateVolume(Sound.Flamethrower, 0.1);
+  updateVolume(Sound.Mortar, 0.7);
+  updateVolume(Sound.Railgun, 0.7);
+  updateVolume(Sound.Place, 0.7);
+  updateVolume(Sound.Destroy, 0.7);
+  updateVolume(Sound.Sonar, 0.7);
+  updateVolume(Sound.Thunder, 0.7);
 };
 
 export const playSoundOnEvent = (

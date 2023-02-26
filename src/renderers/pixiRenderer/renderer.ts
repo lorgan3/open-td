@@ -6,7 +6,7 @@ import SimpleMessage from "../../components/SimpleMessage.vue";
 import {
   Application,
   BaseTexture,
-  InteractionEvent,
+  FederatedPointerEvent,
   SimplePlane,
   Texture,
 } from "pixi.js";
@@ -45,7 +45,7 @@ class Renderer implements IRenderer {
   private removeEventListeners?: () => void;
 
   private target?: HTMLElement;
-  private app?: Application;
+  private app?: Application<HTMLCanvasElement>;
   private viewport?: Viewport;
   private vueApp?: App<Element>;
 
@@ -104,7 +104,7 @@ class Renderer implements IRenderer {
       screenHeight: window.innerHeight,
       worldWidth: this.width,
       worldHeight: this.height,
-      interaction: this.app.renderer.plugins.interaction,
+      events: this.app.renderer.events,
     })
       .clamp({
         direction: "all",
@@ -275,7 +275,7 @@ class Renderer implements IRenderer {
     };
     this.target!.addEventListener("contextmenu", handleContextmenu);
 
-    const handleMousedown = (event: InteractionEvent) => {
+    const handleMousedown = (event: FederatedPointerEvent) => {
       const x = Math.floor(
         (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
           SCALE
@@ -289,7 +289,7 @@ class Renderer implements IRenderer {
     };
     this.viewport!.addListener("mousedown", handleMousedown);
 
-    const handleMousemove = (event: InteractionEvent) => {
+    const handleMousemove = (event: FederatedPointerEvent) => {
       const x = Math.floor(
         (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
           SCALE
@@ -303,7 +303,7 @@ class Renderer implements IRenderer {
     };
     this.viewport!.addListener("mousemove", handleMousemove);
 
-    const handleMouseup = (event: InteractionEvent) => {
+    const handleMouseup = (event: FederatedPointerEvent) => {
       const x = Math.floor(
         (event.data.global.x / this.viewport!.scale.x + this.viewport!.left) /
           SCALE

@@ -13,14 +13,12 @@
     "base-generator": "ts-node-esm ./scripts/baseGenerator.ts"
   },
   "dependencies": {
-    "@pixi/assets": "^6.5.9",
-    "@pixi/basis": "^6.5.9",
-    "@pixi/sound": "4.3.1",
+    "@pixi/sound": "5.0.0",
     "alea": "^1.0.1",
     "heap": "^0.2.7",
     "md5": "^2.3.0",
-    "pixi-viewport": "^4.38.0",
-    "pixi.js": "^6.0.4",
+    "pixi-viewport": "^5.0.0",
+    "pixi.js": "^7.1.3",
     "simplex-noise": "^4.0.1",
     "vue": "^3.2.45"
   },
