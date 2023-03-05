@@ -33,8 +33,8 @@ Check `package.json`, there are also commands available to run tests and check t
 ## Credits
 
 - Most sprites and code made me ([@lorgan3](https://github.com/lorgan3)).
-- Several [world tiles](https://opengameart.org/content/basic-map-32x32-by-ivan-voirol) by [Ivan Voirol](https://opengameart.org/users/ivan-voirol).
 - [Explosion animation](https://opengameart.org/content/explosion-3) by [sogomn](https://opengameart.org/users/sogomn).
+- [Various sprites](./credits.md) Many sprites from [opengameart](https://opengameart.org/) in LPC style. The attribution for this is very complicated so please see the credits file where I tried including everything.
 - [notification.ogg](https://freesound.org/people/zzwerty/sounds/315878/) by [zzwerty](https://freesound.org/people/zzwerty/).
 - [flamethrower.wav](https://freesound.org/people/deleted_user_13668154/sounds/616093/).
 - [laser.flac](https://freesound.org/people/unfa/sounds/584191/) by [Tobiasz 'unfa' Karoń](https://freesound.org/people/unfa/).
