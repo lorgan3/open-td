@@ -4,9 +4,8 @@ import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
-const ATLAS_NAME = "projectiles";
-const SPRITE = "projectiles4.png";
 const SPRITE_SCALE = 16;
 
 class Rail extends TilingSprite implements EntityRenderer {
@@ -14,7 +13,7 @@ class Rail extends TilingSprite implements EntityRenderer {
 
   constructor(private data: RailData, container: AssetsContainer) {
     super(
-      container.assets![ATLAS_NAME].textures[SPRITE],
+      container.assets![ATLAS].textures[AtlasTile.Rail],
       SPRITE_SCALE,
       SPRITE_SCALE
     );

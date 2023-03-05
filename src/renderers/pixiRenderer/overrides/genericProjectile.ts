@@ -5,14 +5,14 @@ import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { EntityType } from "../../../data/entity/constants";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
-const ATLAS_NAME = "projectiles";
-const DEFAULT_SPRITE = "projectiles0.png";
+const DEFAULT_SPRITE = AtlasTile.Bullet;
 const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
-  [EntityType.Bullet, "projectiles0.png"],
-  [EntityType.Flame, "projectiles1.png"],
-  [EntityType.Rocket, "projectiles2.png"],
-  [EntityType.Shockwave, "projectiles5.png"],
+  [EntityType.Bullet, AtlasTile.Bullet],
+  [EntityType.Flame, AtlasTile.Fire],
+  [EntityType.Rocket, AtlasTile.Rocket],
+  [EntityType.Shockwave, AtlasTile.Shockwave],
 ]);
 
 class GenericProjectile extends Sprite implements EntityRenderer {
@@ -20,7 +20,7 @@ class GenericProjectile extends Sprite implements EntityRenderer {
 
   constructor(protected data: Agent, container: AssetsContainer) {
     super(
-      container.assets![ATLAS_NAME].textures[
+      container.assets![ATLAS].textures[
         ENTITY_TO_ATLAS_MAP.get(data.getType()) ?? DEFAULT_SPRITE
       ]
     );

@@ -6,23 +6,22 @@ import { EntityType, TreeType } from "../../../data/entity/constants";
 import { AssetsContainer } from "../assets/container";
 import { SCALE } from "../constants";
 import { FallingTree } from "../fallingTree";
+import { ATLAS, AtlasTile } from "../atlas";
 
 class Foliage extends Sprite implements EntityRenderer {
   public static readonly layer = FOLIAGE;
 
-  private static atlas = "foliage";
-
   private static entityMap = new Map<EntityType, string[]>([
-    [EntityType.Tree, ["foliage1.png", "foliage0.png", "foliage3.png"]],
-    [EntityType.Stump, ["foliage2.png"]],
-    [EntityType.Rock, ["foliage5.png", "foliage7.png"]],
+    [EntityType.Tree, [AtlasTile.Tree, AtlasTile.Pine, AtlasTile.Cactus]],
+    [EntityType.Stump, [AtlasTile.Stump]],
+    [EntityType.Rock, [AtlasTile.Rock, AtlasTile.RockAlt]],
   ]);
 
   static verticalOffset = -0.5;
 
   constructor(data: Agent, container: AssetsContainer) {
     super(
-      container.assets![Foliage.atlas].textures[
+      container.assets![ATLAS].textures[
         Foliage.entityMap.get(data.getType())![data.renderData.subType || 0]
       ]
     );

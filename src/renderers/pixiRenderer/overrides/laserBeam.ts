@@ -6,9 +6,8 @@ import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
-const ATLAS_NAME = "projectiles";
-const SPRITE = "projectiles3.png";
 const SPRITE_SCALE = 16;
 
 class LaserBeam extends TilingSprite implements EntityRenderer {
@@ -18,7 +17,7 @@ class LaserBeam extends TilingSprite implements EntityRenderer {
 
   constructor(private data: LaserBeamData, container: AssetsContainer) {
     super(
-      container.assets![ATLAS_NAME].textures[SPRITE],
+      container.assets![ATLAS].textures[AtlasTile.Laser],
       SPRITE_SCALE,
       SPRITE_SCALE
     );

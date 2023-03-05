@@ -23,20 +23,13 @@ export const spriteOverrideAssets = {
   regular: `${import.meta.env.BASE_URL}animations/regular.json`,
   flier: `${import.meta.env.BASE_URL}animations/flier.json`,
   tank: `${import.meta.env.BASE_URL}animations/tank.json`,
-  buildings: `${import.meta.env.BASE_URL}tiles/buildings.json`,
   turret: `${import.meta.env.BASE_URL}animations/turret.json`,
   flamethrower: `${import.meta.env.BASE_URL}animations/flamethrower.json`,
   laser: `${import.meta.env.BASE_URL}animations/laser.json`,
   mortar: `${import.meta.env.BASE_URL}animations/mortar.json`,
   railgun: `${import.meta.env.BASE_URL}animations/railgun.json`,
-  projectiles: `${import.meta.env.BASE_URL}tiles/projectiles.json`,
   explosion: `${import.meta.env.BASE_URL}animations/explosion.json`,
-  lightning: `${import.meta.env.BASE_URL}tiles/lightning.json`,
   tesla: `${import.meta.env.BASE_URL}animations/tesla.json`,
-  wall: `${import.meta.env.BASE_URL}tiles/wall.json`,
-  fence: `${import.meta.env.BASE_URL}tiles/fence.json`,
-  foliage: `${import.meta.env.BASE_URL}tiles/foliage.json`,
-  base: `${import.meta.env.BASE_URL}tiles/baseAtlas.json`,
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {

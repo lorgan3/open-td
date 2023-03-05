@@ -3,7 +3,6 @@ import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { AgentCategory, EntityType } from "./constants";
 import { RenderData } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
-import Stump from "./stump";
 
 class Tree implements StaticAgent {
   public static scale = 1;

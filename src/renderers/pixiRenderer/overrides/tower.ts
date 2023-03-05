@@ -5,11 +5,11 @@ import { ITower } from "../../../data/entity/towers";
 import { clampDegrees } from "../../../data/util/math";
 import { BASE, TOWERS } from "../layer";
 import { SCALE } from "../constants";
-import { ATLAS_NAME } from "./default";
 import { EntityRenderer } from "./types";
 import { Sound } from "../sound";
 import { ControllableSound } from "../sound/controllableSound";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
 const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Tower, "turret"],
@@ -34,17 +34,12 @@ const LOOPING_TOWERS = new Set([EntityType.Flamethrower, EntityType.Laser]);
 const ANIMATION_SPEED = 0.1;
 const ROTATION_SPEED = 0.6;
 
-const FRAME_SPEED_DAMAGE_BOOST = "buildings8.png";
-const FRAME_SPEED_BOOST = "buildings9.png";
-const FRAME_DAMAGE_BOOST = "buildings10.png";
-const FRAME = "buildings11.png";
-
 const getFrameSprite = (isSpeedBoosted: boolean, isDamagedBoosted: boolean) => {
   if (isSpeedBoosted) {
-    return isDamagedBoosted ? FRAME_SPEED_DAMAGE_BOOST : FRAME_SPEED_BOOST;
+    return isDamagedBoosted ? AtlasTile.FrameSpeedDamage : AtlasTile.FrameSpeed;
   }
 
-  return isDamagedBoosted ? FRAME_DAMAGE_BOOST : FRAME;
+  return isDamagedBoosted ? AtlasTile.FrameDamage : AtlasTile.Frame;
 };
 
 class Tower extends Sprite implements EntityRenderer {
@@ -55,7 +50,7 @@ class Tower extends Sprite implements EntityRenderer {
 
   constructor(private data: ITower, private container: AssetsContainer) {
     super(
-      container.assets![ATLAS_NAME].textures[
+      container.assets![ATLAS].textures[
         getFrameSprite(data.isSpeedBoosted(), data.isDamageBoosted())
       ]
     );
@@ -89,7 +84,7 @@ class Tower extends Sprite implements EntityRenderer {
   sync(dt: number, full: boolean) {
     if (full) {
       this.texture =
-        this.container.assets![ATLAS_NAME].textures[
+        this.container.assets![ATLAS].textures[
           getFrameSprite(
             this.data.isSpeedBoosted(),
             this.data.isDamageBoosted()

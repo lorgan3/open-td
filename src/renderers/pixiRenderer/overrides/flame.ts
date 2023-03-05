@@ -4,9 +4,7 @@ import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { AssetsContainer } from "../assets/container";
-
-export const FIRE_ATLAS_NAME = "projectiles";
-export const FIRE_SPRITE = "projectiles1.png";
+import { ATLAS, AtlasTile } from "../atlas";
 
 const MAX_FLAMES = 20;
 
@@ -29,7 +27,7 @@ class Flame extends ParticleContainer implements EntityRenderer {
 
     for (let i = 0; i < MAX_FLAMES; i++) {
       const particle = new FireParticle(
-        container.assets![FIRE_ATLAS_NAME].textures[FIRE_SPRITE]
+        container.assets![ATLAS].textures[AtlasTile.Fire]
       );
 
       particle.anchor.set(0.5);

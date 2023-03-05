@@ -4,7 +4,6 @@ import TankData from "../../../data/entity/enemies/tank";
 import { Explosion } from "../explosion";
 import { BASE } from "../layer";
 import { SCALE } from "../constants";
-import { FIRE_ATLAS_NAME, FIRE_SPRITE } from "./flame";
 import { EntityRenderer } from "./types";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
@@ -12,6 +11,7 @@ import Renderer from "../renderer";
 import { COOLDOWN } from "../../../data/entity/enemies/enemyAI";
 import { createShadow, deleteShadow, ShadowSize } from "./shadow";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
 const ANIMATION_SPEED = 0.1;
 const ONE_FOURTH = 1 / 4;
@@ -89,7 +89,7 @@ class Tank extends AnimatedSprite implements EntityRenderer {
 
       for (let i = 0; i < 2; i++) {
         const flame = new Sprite(
-          this.container.assets![FIRE_ATLAS_NAME].textures[FIRE_SPRITE]
+          this.container.assets![ATLAS].textures[AtlasTile.Fire]
         );
         flame.alpha = 0.8;
         flame.anchor.set(0.5);

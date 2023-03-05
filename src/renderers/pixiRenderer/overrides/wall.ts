@@ -8,37 +8,15 @@ import Manager from "../../../data/controllers/manager";
 import { getScale, StaticAgent } from "../../../data/entity/staticEntity";
 import { TileType } from "../../../data/terrain/constants";
 import { SCALE } from "../constants";
-
-interface Mapping {
-  atlas: string;
-  prefix: string;
-}
+import { ATLAS } from "../atlas";
 
 class Wall extends Sprite implements EntityRenderer {
   public static readonly layer = STATIC;
 
-  private static entityMap = new Map<EntityType, Mapping>([
-    [
-      EntityType.Wall,
-      {
-        atlas: "wall",
-        prefix: "wall-",
-      },
-    ],
-    [
-      EntityType.Fence,
-      {
-        atlas: "fence",
-        prefix: "fence-",
-      },
-    ],
-    [
-      EntityType.ElectricFence,
-      {
-        atlas: "fence",
-        prefix: "fence-",
-      },
-    ],
+  private static entityMap = new Map<EntityType, string>([
+    [EntityType.Wall, "wall-"],
+    [EntityType.Fence, "fence-"],
+    [EntityType.ElectricFence, "fence-"],
   ]);
 
   /**
@@ -66,7 +44,7 @@ class Wall extends Sprite implements EntityRenderer {
   private _x: number;
   private _y: number;
   private entityScale: number;
-  private mapping: Mapping;
+  private prefix: string;
 
   constructor(data: Agent, private container: AssetsContainer) {
     super();
@@ -74,7 +52,7 @@ class Wall extends Sprite implements EntityRenderer {
     this._x = data.entity.getAlignedX();
     this._y = data.entity.getAlignedY();
     this.entityScale = getScale(data as StaticAgent);
-    this.mapping = Wall.entityMap.get(data.getType())!;
+    this.prefix = Wall.entityMap.get(data.getType())!;
 
     this.position.set(
       this._x * SCALE - Wall.padding * this.entityScale,
@@ -131,9 +109,7 @@ class Wall extends Sprite implements EntityRenderer {
     }
 
     this.texture =
-      this.container.assets![this.mapping.atlas].textures[
-        this.mapping.prefix + wall.join("")
-      ];
+      this.container.assets![ATLAS].textures[this.prefix + wall.join("")];
   }
 }
 

@@ -5,13 +5,13 @@ import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { EntityType } from "../../../data/entity/constants";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
-export const ATLAS_NAME = "buildings";
-const DEFAULT_SPRITE = "buildings4.png";
+const DEFAULT_SPRITE = "base-1111";
 const ENTITY_TO_ATLAS_MAP = new Map<EntityType, string>([
-  [EntityType.DamageBeacon, "buildings5.png"],
-  [EntityType.SpeedBeacon, "buildings6.png"],
-  [EntityType.Freezer, "buildings12.png"],
+  [EntityType.DamageBeacon, AtlasTile.DamageBeacon],
+  [EntityType.SpeedBeacon, AtlasTile.SpeedBeacon],
+  [EntityType.Freezer, AtlasTile.Tar],
 ]);
 
 class Default extends Sprite implements EntityRenderer {
@@ -19,7 +19,7 @@ class Default extends Sprite implements EntityRenderer {
 
   constructor(private data: Agent, container: AssetsContainer) {
     super(
-      container.assets![ATLAS_NAME].textures[
+      container.assets![ATLAS].textures[
         ENTITY_TO_ATLAS_MAP.get(data.getType()) ?? DEFAULT_SPRITE
       ]
     );

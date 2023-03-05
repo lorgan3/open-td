@@ -6,12 +6,10 @@ import { EntityRenderer } from "./types";
 import { BASE_ENTITIES, EntityType } from "../../../data/entity/constants";
 import { AssetsContainer } from "../assets/container";
 import Manager from "../../../data/controllers/manager";
-import { ATLAS_NAME } from "./default";
+import { ATLAS, AtlasTile } from "../atlas";
 
 class Base extends Sprite implements EntityRenderer {
   public static readonly layer = BASE;
-
-  private static atlas = "base";
 
   private static neighbors = [
     [0, -2],
@@ -21,12 +19,12 @@ class Base extends Sprite implements EntityRenderer {
   ];
 
   private static entityToAtlasMap = new Map<EntityType, string>([
-    [EntityType.Base, "buildings0.png"],
-    [EntityType.Armory, "buildings1.png"],
-    [EntityType.Barracks, "buildings1.png"],
-    [EntityType.PowerPlant, "buildings2.png"],
-    [EntityType.Radar, "buildings3.png"],
-    [EntityType.Market, "buildings4.png"],
+    [EntityType.Base, AtlasTile.Base],
+    [EntityType.Armory, AtlasTile.Barracks],
+    [EntityType.Barracks, AtlasTile.Barracks],
+    [EntityType.PowerPlant, AtlasTile.PowerPlant],
+    [EntityType.Radar, AtlasTile.Radar],
+    [EntityType.Market, AtlasTile.Market],
   ]);
 
   private _x: number;
@@ -40,9 +38,7 @@ class Base extends Sprite implements EntityRenderer {
 
     const texture = Base.entityToAtlasMap.get(data.getType());
     if (texture) {
-      const icon = new Sprite(
-        this.container.assets![ATLAS_NAME].textures[texture]
-      );
+      const icon = new Sprite(this.container.assets![ATLAS].textures[texture]);
       icon.anchor.set(0.5);
       icon.position.set(SCALE, SCALE);
       this.addChild(icon);
@@ -77,7 +73,7 @@ class Base extends Sprite implements EntityRenderer {
           : "1";
     }
 
-    this.texture = this.container.assets![Base.atlas].textures[index];
+    this.texture = this.container.assets![ATLAS].textures[index];
   }
 }
 

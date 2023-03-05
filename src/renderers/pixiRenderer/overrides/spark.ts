@@ -4,9 +4,8 @@ import { PROJECTILES } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { AssetsContainer } from "../assets/container";
+import { ATLAS, AtlasTile } from "../atlas";
 
-const ATLAS_NAME = "lightning";
-const SPRITE = "lightning0.png";
 const SPRITE_WIDTH = 32;
 const SPRITE_HEIGHT = 96;
 
@@ -25,7 +24,7 @@ class Spark extends Container implements EntityRenderer {
       const _y = target.entity.getY() + 0.5;
 
       const sprite = new TilingSprite(
-        container.assets![ATLAS_NAME].textures[SPRITE],
+        container.assets![ATLAS].textures[AtlasTile.Lightning],
         SPRITE_WIDTH,
         SPRITE_HEIGHT
       );
