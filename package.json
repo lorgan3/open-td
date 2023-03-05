@@ -8,9 +8,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "check-types": "vue-tsc --noEmit",
-    "wall-generator": "ts-node-esm ./scripts/wallGenerator.ts",
-    "mask-generator": "ts-node-esm ./scripts/maskGenerator.ts",
-    "base-generator": "ts-node-esm ./scripts/baseGenerator.ts"
+    "wall-generator": "ts-node-esm -T ./scripts/wallGenerator.ts",
+    "mask-generator": "ts-node-esm -T ./scripts/maskGenerator.ts",
+    "base-generator": "ts-node-esm -T ./scripts/baseGenerator.ts",
+    "atlas-packer": "ts-node-esm -T ./scripts/atlasPacker.ts"
   },
   "dependencies": {
     "@pixi/sound": "5.0.0",
@@ -28,6 +29,7 @@
     "@types/jest": "^29.2.4",
     "@types/md5": "^2.3.2",
     "@vitejs/plugin-vue": "^4.0.0",
+    "binpacking": "^0.0.1",
     "jest-environment-jsdom": "^29.4.3",
     "jimp": "^0.22.7",
     "sass": "^1.58.3",
