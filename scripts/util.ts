@@ -6,6 +6,25 @@ export interface NamedImage {
   name: string;
 }
 
+export interface Frame {
+  frame: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  };
+}
+
+export interface Atlas {
+  frames: Record<string, Frame>;
+  meta: {
+    app: string;
+    version: string;
+    image: string;
+    size: { w: number; h: number };
+  };
+}
+
 /**
  * Dumb workaround because Jimp messes up the center on power of 2 images :/
  */
@@ -21,7 +40,7 @@ export const write = async (images: NamedImage[], name: string) => {
   const width = Math.ceil(Math.sqrt(images.length));
   const out = new Jimp(actualSize * width, actualSize * width);
 
-  const frames: Record<string, any> = {};
+  const frames: Record<string, Frame> = {};
   images.forEach(({ image, name }, i) => {
     const x = (i % width) * actualSize;
     const y = Math.floor(i / width) * actualSize;
@@ -32,7 +51,7 @@ export const write = async (images: NamedImage[], name: string) => {
     };
   });
 
-  const json = {
+  const json: Atlas = {
     frames,
     meta: {
       app: "https://github.com/lorgan3/open-td",
