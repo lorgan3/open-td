@@ -432,6 +432,12 @@ class Surface {
 
     if (agent.tick) {
       this.tickingEntities.push(agent.entity);
+    } else {
+      // @todo
+      // Non ticking entities aren't drawn until a full sync occurs.
+      // To fix this, new entities need to tick at least once.
+      // Or just assume it doesn't happen that often and do a full update.
+      this.dirty = true;
     }
 
     if (agent.spawn) {
