@@ -32,6 +32,10 @@ class Foliage extends Sprite implements EntityRenderer {
     );
 
     this.on("removed", () => {
+      if (!this.visible) {
+        return;
+      }
+
       if (
         data.getType() === EntityType.Tree &&
         data.renderData.subType !== TreeType.Cactus
