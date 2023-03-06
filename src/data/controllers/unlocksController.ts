@@ -25,7 +25,6 @@ class UnlocksController {
 
       towers.forEach((tower, index) => {
         if (index === 0) {
-          this.availableUnlocks.add(tower.entityType);
           this.unlockedTowers.add(tower.entityType);
           return;
         }
