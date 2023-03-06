@@ -190,7 +190,7 @@ export const LASER: Placeable = {
 export const TESLA: Placeable = {
   name: "Tesla",
   description:
-    "A tower that starts charging when an enemy comes near and then damages all enemies within its range.",
+    "A tower that starts charging when an enemy comes near and then damages and stuns all enemies within its range.",
   entity: Tesla,
   entityType: EntityType.Tesla,
   htmlElement: "💡",

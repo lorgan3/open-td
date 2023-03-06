@@ -4,7 +4,7 @@ import getGenerator from "../data/terrain/generator";
 import Surface from "../data/terrain/surface";
 import Controller, { Key } from "../data/controllers/controller";
 import TutorialManager from "../data/tutorial/tutorialManager";
-import Marketplace from "./marketplace/Marketplace.vue";
+import Marketplace from "./marketplace/Shop.vue";
 import IngameMenu from "./hud/IngameMenu.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
