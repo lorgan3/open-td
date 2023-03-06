@@ -7,6 +7,8 @@ import {
   Application,
   BaseTexture,
   FederatedPointerEvent,
+  SCALE_MODES,
+  settings,
   SimplePlane,
   Texture,
 } from "pixi.js";
@@ -36,6 +38,8 @@ import { AssetsContainer } from "./assets/container";
 import { WorldShader } from "./shaders/worldShader";
 
 let DEBUG = false;
+
+settings.SCALE_MODE = SCALE_MODES.NEAREST;
 
 class Renderer implements IRenderer {
   private static instance: Renderer;
