@@ -156,7 +156,7 @@ const close = () => {
         <div class="detail">
           <h2 class="detail-name">{{ selected.name }}</h2>
           <div class="detail-summary">
-            <img :src="images[selected.entityType]" />
+            <img :src="'portraits/' + images[selected.entityType]" />
             <div class="hints">
               <span
                 v-if="selected.entity && (selected.entity as unknown as ITowerStatics).range"
