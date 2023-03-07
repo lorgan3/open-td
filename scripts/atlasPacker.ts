@@ -11,7 +11,7 @@ interface SpriteBlock extends Block {
 
 const blocks: SpriteBlock[] = [];
 
-const DIRECTORY = "./scripts/atlas/";
+const DIRECTORY = "./public/atlas/";
 
 // This might help with edges containing colors of adjacent sprites in the atlas?
 // @todo this doesn't really work for margins > 1
@@ -132,5 +132,5 @@ const json: Atlas = {
   },
 };
 
-await atlas.write(`./scripts/atlas.png`);
-fs.writeFileSync(`./scripts/atlas.json`, JSON.stringify(json, undefined, 2));
+await atlas.write(`./public/atlas.png`);
+fs.writeFileSync(`./public/atlas.json`, JSON.stringify(json, undefined, 2));

@@ -8,10 +8,11 @@
     "preview": "vite preview",
     "test": "vitest",
     "check-types": "vue-tsc --noEmit",
-    "wall-generator": "ts-node-esm -T ./scripts/wallGenerator.ts",
     "mask-generator": "ts-node-esm -T ./scripts/maskGenerator.ts",
+    "wall-generator": "ts-node-esm -T ./scripts/wallGenerator.ts",
     "base-generator": "ts-node-esm -T ./scripts/baseGenerator.ts",
-    "atlas-packer": "ts-node-esm -T ./scripts/atlasPacker.ts"
+    "atlas-packer": "ts-node-esm -T ./scripts/atlasPacker.ts",
+    "install": "yarn wall-generator && yarn base-generator && yarn atlas-packer"
   },
   "dependencies": {
     "@pixi/sound": "5.0.0",

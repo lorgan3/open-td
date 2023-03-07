@@ -3,3 +3,12 @@ node_modules
 dist
 dist-ssr
 *.local
+
+public/atlas/base.png
+public/atlas/base.json
+public/atlas/wall.png
+public/atlas/wall.json
+public/atlas/fence.png
+public/atlas/fence.json
+public/atlas.png
+public/atlas.json

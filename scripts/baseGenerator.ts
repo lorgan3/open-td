@@ -4,7 +4,7 @@ import { NamedImage, write } from "./util.js";
 const SCALE = 64;
 const BORDER_WIDTH = 4;
 
-const atlas = await Jimp.read("./scripts/wallTest2.png");
+const atlas = await Jimp.read("./scripts/base.png");
 const background = new Jimp(SCALE, SCALE).blit(atlas, 0, 0, 0, 0, SCALE, SCALE);
 
 const borders = new Jimp(SCALE, SCALE).blit(
@@ -606,4 +606,4 @@ images.push({
   name: "base-1010",
 });
 
-await write(images, "baseAtlas");
+await write(images, "base");

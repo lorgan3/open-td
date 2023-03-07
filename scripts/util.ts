@@ -61,11 +61,11 @@ export const write = async (images: NamedImage[], name: string) => {
     },
   };
 
-  await out.write(`./scripts/${name}.png`);
+  await out.write(`./public/atlas/${name}.png`);
 
   await new Promise((resolve) =>
     fs.writeFile(
-      `./scripts/${name}.json`,
+      `./public/atlas/${name}.json`,
       JSON.stringify(json, undefined, 2),
       resolve
     )
