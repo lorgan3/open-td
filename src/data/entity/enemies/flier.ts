@@ -16,7 +16,7 @@ const ON_FIRE_TIME = 3000;
 const STUN_TIME = 1000;
 const FIRE_DAMAGE = 0.01;
 const SPEED = 0.006;
-const HP = 80;
+const HP = 50;
 
 class Flier implements IEnemy {
   public static readonly pathCosts = DEFAULT_SKY_BASED_COSTS;

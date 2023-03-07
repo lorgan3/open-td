@@ -46,7 +46,7 @@ export const DEFAULT_SKY_BASED_COSTS: PathMap = {
   [TileType.Spore]: 3,
   [TileType.ElectricFence]: 3,
   [TileType.Fence]: 3,
-  [TileType.Freezer]: 6,
+  [TileType.Freezer]: 3,
   [TileType.Obstructed]: 3,
   [TileType.Bridge]: 3,
   [TileType.Dirt]: 3,
@@ -65,7 +65,6 @@ export const DEFAULT_SKY_BASED_MULTIPLIERS: PathMap = {
   [TileType.Wall]: 5,
   [TileType.Tree]: 4,
   [TileType.Rock]: 3,
-  [TileType.Freezer]: 0.5,
   [TileType.Obstructed]: 5,
   [TileType.PlayerBuilding]: -10,
 };
