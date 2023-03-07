@@ -7,6 +7,8 @@ import { AssetsContainer } from "../assets/container";
 import { SCALE } from "../constants";
 import { FallingTree } from "../fallingTree";
 import { ATLAS, AtlasTile } from "../atlas";
+import { ControllableSound } from "../sound/controllableSound";
+import { Sound } from "../sound";
 
 class Foliage extends Sprite implements EntityRenderer {
   public static readonly layer = FOLIAGE;
@@ -40,6 +42,7 @@ class Foliage extends Sprite implements EntityRenderer {
         data.getType() === EntityType.Tree &&
         data.renderData.subType !== TreeType.Cactus
       ) {
+        ControllableSound.fromEntity(data.entity, Sound.Bush);
         new FallingTree(this.texture, data.entity.getX(), data.entity.getY());
       }
     });

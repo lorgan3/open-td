@@ -46,3 +46,4 @@ Check `package.json`, there are also commands available to run tests and check t
 - [hit.wav](https://freesound.org/people/BMacZero/sounds/96138/) by [BMacZero](https://freesound.org/people/BMacZero/).
 - [sonar.wav](https://freesound.org/people/SamsterBirdies/sounds/371178/) by [SamsterBirdies](https://freesound.org/people/SamsterBirdies/).
 - [thunder.wav](https://freesound.org/people/doudar41/sounds/535952/) by [doudar41](https://freesound.org/people/doudar41/).
+- [bush.mp3](https://freesound.org/people/Herkules92/sounds/518799/) by [Herkules92](https://freesound.org/people/Herkules92/).

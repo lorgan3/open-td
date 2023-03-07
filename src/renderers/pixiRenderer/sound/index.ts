@@ -16,6 +16,7 @@ export enum Sound {
   Hit = "hitSnd",
   Sonar = "sonarSnd",
   Thunder = "thunderSnd",
+  Bush = "bushSnd",
 }
 
 export const soundAssets = {
@@ -32,6 +33,7 @@ export const soundAssets = {
   [Sound.Hit]: `${import.meta.env.BASE_URL}sounds/hit.wav`,
   [Sound.Sonar]: `${import.meta.env.BASE_URL}sounds/sonar.wav`,
   [Sound.Thunder]: `${import.meta.env.BASE_URL}sounds/thunder.wav`,
+  [Sound.Bush]: `${import.meta.env.BASE_URL}sounds/bush.mp3`,
 };
 
 const updateVolume = (alias: Sound, volume: number) => {
