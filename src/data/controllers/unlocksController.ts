@@ -26,6 +26,10 @@ class UnlocksController {
       towers.forEach((tower, index) => {
         if (index === 0) {
           this.unlockedTowers.add(tower.entityType);
+
+          if (tower.isRepeatable) {
+            this.availableUnlocks.add(tower.entityType);
+          }
           return;
         }
 
