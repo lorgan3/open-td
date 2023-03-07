@@ -93,7 +93,7 @@ const submit = (event: Event) => {
       >
         <form @submit="submit" class="menu-play-inner">
           <label>
-            Which planet?
+            Which world?
             <input ref="seedInput" v-model="seed" />
           </label>
           <label>
