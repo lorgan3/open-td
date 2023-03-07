@@ -676,7 +676,7 @@ class Renderer implements IRenderer {
       case EntityType.Fence:
         return "🥅";
       case EntityType.Freezer:
-        return "❄️";
+        return "🦠";
       case EntityType.Base:
         return "⛺";
       case EntityType.Tree:
@@ -750,7 +750,7 @@ class Renderer implements IRenderer {
       case TileType.Ice:
         return "🧊";
       case TileType.Freezer:
-        return "❄️";
+        return "🦠";
       default:
         return "&nbsp;";
     }

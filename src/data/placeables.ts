@@ -58,12 +58,12 @@ export const ELECTRIC_FENCE: Placeable = {
 };
 
 export const FREEZER: Placeable = {
-  name: "Freezer",
+  name: "Tar",
   description:
-    "A large pad that slows down land-based enemies that walk over it. The pad does not repel or attract enemies so they still have to be guided to walk over it.",
+    "A large area of sticky goo that slows down land-based enemies that walk over it. The area does not repel or attract enemies so they still have to be guided to walk over it.",
   entity: Freezer,
   entityType: EntityType.Freezer,
-  htmlElement: "❄️",
+  htmlElement: "🦠",
 };
 
 export const TOWER: Placeable = {
