@@ -1,5 +1,8 @@
 [Pine Tree Tiles](https://opengameart.org/content/pine-tree-tiles) by b_o
 
+[Flat Shingle Roof A](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by Lanea Zimmerman (aka Sharm), Eliza Wyatt.
+Original by Lanea Zimmerman. Expanded for tiling and recolors by Eliza Wyatt.
+
 <details>
     <summary>[LPC] Rocks]</summary>
 
