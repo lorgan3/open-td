@@ -13,6 +13,7 @@ import { EntityType } from "../../data/entity/constants";
 import { TOWER_PRICES } from "../../data/controllers/moneyController";
 import { ITowerStatics } from "../../data/entity/towers";
 import { POWER_CONSUMPTIONS } from "../../data/controllers/powerController";
+import { get } from "../../util/localStorage";
 
 const props = defineProps<{
   controller: Controller;
@@ -71,6 +72,7 @@ const icons: Partial<Record<EntityType, string>> = {
 
 const selected = ref(props.controller.getPlacable());
 const instance = getCurrentInstance();
+const simpleMode = ref(get("settings")?.showTutorial);
 
 let removeSelectPlaceableEventListener: () => void;
 onMounted(() => {
@@ -114,6 +116,10 @@ const unlock = () => {
 const close = () => {
   props.controller.toggleBuildMenu();
 };
+
+const toggleSimpleMode = () => {
+  simpleMode.value = !simpleMode.value;
+};
 </script>
 
 <template>
@@ -125,31 +131,41 @@ const close = () => {
   >
     <div class="marketplace">
       <button @click="close" class="close-button">✖</button>
+      <button @click="toggleSimpleMode" class="view-mode-button">
+        {{ simpleMode ? "🍼" : "👓" }}
+      </button>
+
       <div class="inner">
         <div class="menu">
           <div v-for="group in groups" class="group">
             <div class="title">{{ group }}</div>
             <div class="items">
-              <button
-                v-for="placeable in SECTIONS[group]"
-                :class="{
-                  item: true,
-                  'item--locked':
-                    !props.unlocksController.isUnlocked(placeable),
-                  'item--selected':
-                    selected?.entityType === placeable.entityType,
-                }"
-                :onClick="() => onSelect(placeable)"
-              >
-                <span>
-                  <span class="emoji">{{ icons[placeable.entityType] }}</span>
-                  {{ placeable.name }}</span
+              <div class="item-wrapper" v-for="placeable in SECTIONS[group]">
+                <button
+                  v-if="
+                    !simpleMode ||
+                    props.unlocksController.isUnlocked(placeable) ||
+                    props.unlocksController.canUnlock(placeable)
+                  "
+                  :class="{
+                    item: true,
+                    'item--locked':
+                      !props.unlocksController.isUnlocked(placeable),
+                    'item--selected':
+                      selected?.entityType === placeable.entityType,
+                  }"
+                  :onClick="() => onSelect(placeable)"
                 >
-                <span v-if="TOWER_PRICES[placeable.entityType]"
-                  >{{ TOWER_PRICES[placeable.entityType] }}
-                  <span class="emoji">🪙</span>
-                </span>
-              </button>
+                  <span>
+                    <span class="emoji">{{ icons[placeable.entityType] }}</span>
+                    {{ placeable.name }}</span
+                  >
+                  <span v-if="TOWER_PRICES[placeable.entityType]"
+                    >{{ TOWER_PRICES[placeable.entityType] }}
+                    <span class="emoji">🪙</span>
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -227,6 +243,11 @@ const close = () => {
   }
 }
 
+.menu {
+  border-right: 2px solid #fff;
+  overflow-x: hidden;
+}
+
 .detail {
   width: 500px;
   gap: 24px;
@@ -280,6 +301,7 @@ const close = () => {
   border-left: none;
   display: flex;
   flex-direction: row;
+  margin-right: -2px;
 
   .title {
     width: 200px;
@@ -315,6 +337,10 @@ const close = () => {
       &--selected,
       &:hover {
         background: #ffffff37;
+      }
+
+      &-wrapper {
+        display: contents;
       }
     }
   }
@@ -360,18 +386,26 @@ const close = () => {
   transition: transform 0.5s;
   transform: translateY(100vh);
 
-  .close-button {
+  .close-button,
+  .view-mode-button {
     position: absolute;
     right: 0;
     background: none;
     color: #fff;
     border: none;
     cursor: pointer;
+    height: 30px;
+    width: 30px;
 
     &:hover {
       background: #ffffff5f;
       border-radius: 4px;
     }
+  }
+
+  .view-mode-button {
+    right: 36px;
+    font-size: 18px;
   }
 }
 </style>

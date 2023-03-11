@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
 import EmojiRenderer from "../renderers/emojiRenderer/renderer";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
