@@ -39,7 +39,7 @@ import { WorldShader } from "./shaders/worldShader";
 
 let DEBUG = false;
 
-settings.SCALE_MODE = SCALE_MODES.NEAREST;
+BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 class Renderer implements IRenderer {
   private static instance: Renderer;
