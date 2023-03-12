@@ -71,7 +71,7 @@ describe("pathfinder", () => {
 
   it("finds a path around tiles with a higher multiplier", () => {
     // Avoid tile [4, 2] even though the movement cost is the same
-    const multiplierFn = (tile: Tile) =>
+    const multiplierFn = (_: number, tile: Tile) =>
       tile.getX() === 4 && tile.getY() === 2 ? 100 : 1;
 
     const path = pathfinder

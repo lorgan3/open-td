@@ -36,11 +36,15 @@ class Pathfinder {
   getPath(
     from: Tile,
     to: Tile,
-    costMultiplierOverride?: (tile: Tile) => number
+    costMultiplierOverride?: (costMultiplier: number, tile: Tile) => number
   ) {
-    const costMultiplier =
-      costMultiplierOverride ??
-      ((tile: Tile) => this.costMultipliers[tile.getType()] ?? 1);
+    const costMultiplier = costMultiplierOverride
+      ? (tile: Tile) =>
+          costMultiplierOverride(
+            this.costMultipliers[tile.getType()] ?? 1,
+            tile
+          )
+      : (tile: Tile) => this.costMultipliers[tile.getType()] ?? 1;
 
     const visitedTiles = new Set<Tile>();
 
@@ -148,11 +152,8 @@ class Pathfinder {
   getHivePath(tiles: Tile[], to: Tile) {
     const visitedTiles: Record<string, number> = {};
 
-    const multiplierFn = (tile: Tile) => {
-      return (
-        (visitedTiles[tile.getHash()] ?? 1) *
-        (this.costMultipliers[tile.getType()] ?? 1)
-      );
+    const multiplierFn = (costMultiplier: number, tile: Tile) => {
+      return (visitedTiles[tile.getHash()] ?? 1) * costMultiplier;
     };
 
     return tiles.reduce<Array<Path | undefined>>((paths, from, i) => {
