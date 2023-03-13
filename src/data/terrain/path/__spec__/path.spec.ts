@@ -10,17 +10,27 @@ import Surface from "../../surface";
 import Tile from "../../tile";
 import { DirtCheckpoint } from "../../checkpoint/dirt";
 import { DiscoveryStatus, TileType } from "../../constants";
+import { Difficulty } from "../../../difficulty";
+import TestManager from "../../../controllers/__spec__/testManager";
+import { vi } from "vitest";
 
 describe("path", () => {
   const speed = 1;
   const costs = { [TileType.Grass]: 2, [TileType.Stone]: 1 };
   const multipliers = { [TileType.Grass]: 1, [TileType.Stone]: 1 };
   const surface = new Surface({
-    width: 5,
-    height: 5,
+    width: 6,
+    height: 6,
     generate: (x, y) =>
       new Tile(x, y, x === 1 || x === 2 ? TileType.Grass : TileType.Void),
   });
+  new TestManager(
+    Difficulty.Normal,
+    new Base(surface.getTile(4, 4)!),
+    surface,
+    vi.fn()
+  );
+
   const pathfinder = new Pathfinder(surface, multipliers, costs);
   const tiles = [
     surface.getTile(0, 0)!,
@@ -207,8 +217,8 @@ describe("path", () => {
       generate: (x, y) => new Tile(x, y, TileType.Grass),
     });
     const firstBase = surface.getTile(1, 0)!;
+    new TestManager(Difficulty.Normal, new Base(firstBase), surface, vi.fn());
 
-    firstBase.setStaticEntity(new Base(firstBase).entity);
     const secondBase = surface.getTile(3, 1)!;
     secondBase.setStaticEntity(new Base(secondBase).entity);
 
@@ -227,6 +237,7 @@ describe("path", () => {
 
     const expectedCheckpoints = [
       new StaticEntityCheckpoint(1),
+      new StaticEntityCheckpoint(2),
       new StaticEntityCheckpoint(3),
     ];
 

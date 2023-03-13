@@ -10,7 +10,7 @@ import { AgentCategory, BASE_ENTITIES, EntityType } from "../constants";
 import Entity from "../entity";
 import EnemyAI from "./enemyAI";
 
-const getStaticEntityCheckpoints = staticCheckpointFactory(BASE_ENTITIES);
+const getStaticEntityCheckpoints = staticCheckpointFactory(1, BASE_ENTITIES);
 
 const ON_FIRE_TIME = 3000;
 const STUN_TIME = 1000;
