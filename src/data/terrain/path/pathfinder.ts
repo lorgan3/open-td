@@ -25,31 +25,55 @@ export const MAX_DIAGONAL_COST = 150;
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class Pathfinder {
+  private neighbors: typeof NEIGHBORS;
+  private computedCosts!: Array<number | null>;
+  private computedMultipliers!: number[];
+  private scaledWidth!: number;
+  private scaledHeight!: number;
+  private computedVersion = -1;
+
   constructor(
     private surface: Surface,
     public costMultipliers: Partial<
       Record<TileType, number>
     > = DEFAULT_LAND_BASED_MULTIPLIERS,
-    public costs: Partial<Record<TileType, number>> = DEFAULT_LAND_BASED_COSTS
-  ) {}
+    public costs: Partial<Record<TileType, number>> = DEFAULT_LAND_BASED_COSTS,
+    public scale = 1
+  ) {
+    this.neighbors = NEIGHBORS.map(([x, y]) => [x * scale, y * scale]);
+  }
 
   getPath(
     from: Tile,
     to: Tile,
     costMultiplierOverride?: (costMultiplier: number, tile: Tile) => number
   ) {
+    if (this.computedVersion !== this.surface.version) {
+      this.computeCosts();
+    }
+
+    // Align with grid
+    from = this.surface.getTile(
+      Math.floor(from.getX() / this.scale) * this.scale,
+      Math.floor(from.getY() / this.scale) * this.scale
+    )!;
+    to = this.surface.getTile(
+      Math.floor(to.getX() / this.scale) * this.scale,
+      Math.floor(to.getY() / this.scale) * this.scale
+    )!;
+
     const costMultiplier = costMultiplierOverride
       ? (tile: Tile) =>
           costMultiplierOverride(
-            this.costMultipliers[tile.getType()] ?? 1,
+            this.computedMultipliers[this.getIndex(tile)],
             tile
           )
-      : (tile: Tile) => this.costMultipliers[tile.getType()] ?? 1;
+      : (tile: Tile) => this.computedMultipliers[this.getIndex(tile)];
 
     const visitedTiles = new Set<Tile>();
 
     // Cheapest path from n to start
-    const movementScore = this.costs[from.getType()] ?? 1;
+    const movementScore = this.computedCosts[this.getIndex(from)] ?? 1;
     const score = movementScore * costMultiplier(from);
 
     const movementScores = new Map<string, number>();
@@ -78,7 +102,7 @@ class Pathfinder {
 
       const currentHash = current.getHash();
 
-      const neighbors = NEIGHBORS.map(([x, y]) =>
+      const neighbors = this.neighbors.map(([x, y]) =>
         this.surface.getTile(x + current.getX(), y + current.getY())
       );
 
@@ -177,17 +201,20 @@ class Pathfinder {
 
   // From and to should be 1 tile apart
   getCost(from: Tile, to?: Tile) {
-    const costFn = (tile: Tile) => this.costs[tile.getType()] ?? null;
-
-    if (!to) {
-      return costFn(from);
+    if (this.computedVersion !== this.surface.version) {
+      this.computeCosts();
     }
 
-    const fromCost = costFn(from);
-    const toCost = costFn(to);
+    const fromCost = this.computedCosts[this.getIndex(from)];
+    if (!to) {
+      return fromCost;
+    }
+
+    const toCost = this.computedCosts[this.getIndex(to)];
     if (!fromCost || !toCost) {
       return null;
     }
+
     const cost = (fromCost + toCost) / 2;
     if (
       !fromCost ||
@@ -201,8 +228,14 @@ class Pathfinder {
     // calculate the penalty for moving diagonally
     return (
       cost +
-      (costFn(this.surface.getTile(from.getX(), to.getY())!)! +
-        costFn(this.surface.getTile(to.getX(), from.getY())!)!) /
+      (this.computedCosts[
+        ((to.getY() / this.scale) | 0) * this.scaledWidth +
+          ((from.getX() / this.scale) | 0)
+      ]! +
+        this.computedCosts[
+          ((from.getY() / this.scale) | 0) * this.scaledWidth +
+            ((to.getX() / this.scale) | 0)
+        ]!) /
         4
     );
   }
@@ -228,7 +261,7 @@ class Pathfinder {
       return;
     }
 
-    const cost = this.costs[tile.getType()];
+    const cost = this.computedCosts[this.getIndex(tile)];
     if (cost) {
       data[index * 2] = cost;
       data[index * 2 + 1] = cost * costMultiplier(tile);
@@ -252,12 +285,57 @@ class Pathfinder {
       return;
     }
 
-    const cost = this.costs[tile.getType()];
+    const cost = this.computedCosts[this.getIndex(tile)];
     if (cost) {
       data[index * 2] = cost + (data[d1 * 2]! + data[d2 * 2]!) / 4;
       data[index * 2 + 1] =
         cost * costMultiplier(tile) + diagonalMultipliedCost / 4;
     }
+  }
+
+  private computeCosts() {
+    this.computedVersion = this.surface.version;
+
+    const squaredScale = this.scale ** 2;
+    this.scaledWidth = Math.floor(this.surface.getWidth() / this.scale);
+    this.scaledHeight = Math.floor(this.surface.getHeight() / this.scale);
+    const length = this.scaledWidth * this.scaledHeight;
+    this.computedCosts = new Array(length);
+    this.computedMultipliers = new Array(length);
+
+    for (let i = 0; i < this.scaledWidth; i++) {
+      for (let j = 0; j < this.scaledHeight; j++) {
+        const tiles = this.surface.getEntityTiles(
+          i * this.scale,
+          j * this.scale,
+          this.scale
+        );
+        let cost: number | null = 0;
+        let multiplier = 0;
+        for (let k = 0; k < tiles.length; k++) {
+          let type = tiles[k].getType();
+          if (!this.costs[type]) {
+            cost = null;
+            multiplier = squaredScale;
+            break;
+          }
+
+          cost += this.costs[type]!;
+          multiplier += this.costMultipliers[type] ?? 1;
+        }
+
+        const index = j * this.scaledWidth + i;
+        this.computedCosts[index] = cost === null ? null : cost / squaredScale;
+        this.computedMultipliers[index] = multiplier / squaredScale;
+      }
+    }
+  }
+
+  private getIndex(tile: Tile) {
+    return (
+      ((tile.getY() / this.scale) | 0) * this.scaledWidth +
+      ((tile.getX() / this.scale) | 0)
+    );
   }
 }
 

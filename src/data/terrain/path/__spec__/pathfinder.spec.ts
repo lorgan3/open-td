@@ -4,9 +4,16 @@ import Tile from "../../tile";
 import { TileType } from "../../constants";
 
 describe("pathfinder", () => {
+  /* XX_XXX
+   * XX_XXX
+   * XX_XXX
+   * XX_XXX
+   * XXXXXX
+   * XXXXXX
+   */
   const surface = new Surface({
-    width: 5,
-    height: 5,
+    width: 6,
+    height: 6,
     generate: (x, y) => new Tile(x, y, TileType.Grass),
   });
   surface.forLine(2, 0, 2, 3, (tile) =>
@@ -14,9 +21,11 @@ describe("pathfinder", () => {
   );
 
   const pathfinder = new Pathfinder(surface);
+  const bigPathfinder = new Pathfinder(surface, undefined, undefined, 2);
 
   const table = [
     {
+      pathfinder,
       case: "straight",
       sourceX: 0,
       sourceY: 4,
@@ -31,6 +40,7 @@ describe("pathfinder", () => {
       ],
     },
     {
+      pathfinder,
       case: "curved",
       sourceX: 0,
       sourceY: 0,
@@ -50,11 +60,41 @@ describe("pathfinder", () => {
         [4, 0],
       ],
     },
+    {
+      pathfinder: bigPathfinder,
+      case: "2x2 straight",
+      sourceX: 0,
+      sourceY: 4,
+      targetX: 4,
+      targetY: 4,
+      steps: [
+        [0, 4],
+        [2, 4],
+        [4, 4],
+      ],
+    },
+    {
+      pathfinder: bigPathfinder,
+      case: "2x2 curved",
+      sourceX: 0,
+      sourceY: 0,
+      targetX: 4,
+      targetY: 0,
+      steps: [
+        [0, 0],
+        [0, 2],
+        [0, 4],
+        [2, 4],
+        [4, 4],
+        [4, 2],
+        [4, 0],
+      ],
+    },
   ];
 
   it.each(table)(
     "finds a $case path from [$sourceX, $sourceY] to [$targetX, $targetY]",
-    ({ sourceX, sourceY, targetX, targetY, steps }) => {
+    ({ pathfinder, sourceX, sourceY, targetX, targetY, steps }) => {
       const path = pathfinder
         .getPath(
           surface.getTile(sourceX, sourceY)!,
@@ -80,9 +120,9 @@ describe("pathfinder", () => {
 
     const steps = [
       [4, 0],
-      [3, 1],
-      [3, 2],
-      [3, 3],
+      [5, 1],
+      [5, 2],
+      [5, 3],
       [4, 4],
     ];
 

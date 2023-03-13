@@ -72,6 +72,7 @@ class PathData {
         buffer: buffer.buffer,
         costs: this.pathfinder.costs,
         costMultiplier: this.pathfinder.costMultipliers,
+        scale: this.pathfinder.scale,
         startPoints: this.startPoints.map((tile) => tile.serialize()),
         target: this.target.serialize(),
       };

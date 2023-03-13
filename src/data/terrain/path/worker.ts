@@ -10,19 +10,29 @@ export interface WorkerEvent {
   buffer: ArrayBuffer;
   costMultiplier: Partial<Record<TileType, number>>;
   costs: Partial<Record<TileType, number>>;
+  scale: number;
   startPoints: SerializedTile[];
   target: SerializedTile;
 }
 
 onmessage = ({
-  data: { width, height, buffer, costMultiplier, costs, startPoints, target },
+  data: {
+    width,
+    height,
+    buffer,
+    costMultiplier,
+    costs,
+    scale,
+    startPoints,
+    target,
+  },
 }: MessageEvent<WorkerEvent>) => {
   const surface = new Surface({
     width,
     height,
     buffer: new Uint8Array(buffer),
   });
-  const pathfinder = new Pathfinder(surface, costMultiplier, costs);
+  const pathfinder = new Pathfinder(surface, costMultiplier, costs, scale);
 
   const startTiles = startPoints.map(({ x, y }) => surface.getTile(x, y)!);
   const targetTile = surface.getTile(target.x, target.y)!;

@@ -117,7 +117,8 @@ class SpawnGroup {
           new Pathfinder(
             this.surface,
             this.unit.pathMultipliers,
-            this.unit.pathCosts
+            this.unit.pathCosts,
+            this.unit.scale
           ),
           this.spawnPoints,
           this.target
