@@ -69,11 +69,29 @@ class EnemyAI {
 
   private getTargeted(tile: Tile, dt: number) {
     if (this.predictedHp > 0 && this.enemy.isVisible()) {
-      for (let tower of tile.getAvailableTowers()) {
-        this.predictedHp -= tower.fire(this.enemy, dt);
+      if (this.enemy.getScale() === 1) {
+        for (let tower of tile.getAvailableTowers()) {
+          this.predictedHp -= tower.fire(this.enemy, dt);
 
-        if (this.predictedHp <= 0) {
-          break;
+          if (this.predictedHp <= 0) {
+            return;
+          }
+        }
+        return;
+      }
+
+      const tiles = Manager.Instance.getSurface().getEntityTiles(
+        tile.getX(),
+        tile.getY(),
+        this.enemy.getScale()
+      );
+      for (let tile of tiles) {
+        for (let tower of tile.getAvailableTowers()) {
+          this.predictedHp -= tower.fire(this.enemy, dt);
+
+          if (this.predictedHp <= 0) {
+            return;
+          }
         }
       }
     }
