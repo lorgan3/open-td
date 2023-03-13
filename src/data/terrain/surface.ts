@@ -46,6 +46,7 @@ class Surface {
   private height: number;
 
   private dirty = false;
+  private _version = 0;
   private changedTiles = new Set<Tile>();
   private addedAgents = new Set<StaticAgent>();
   private removedAgents = new Set<StaticAgent>();
@@ -137,7 +138,7 @@ class Surface {
   getEntityTiles(agentOrx: StaticAgent | number, y?: number, scale?: number) {
     let x: number;
 
-    if (y) {
+    if (y !== undefined) {
       x = agentOrx as number;
     } else {
       const agent = agentOrx as StaticAgent;
@@ -179,6 +180,7 @@ class Surface {
 
   private setTileInternal(tile: Tile) {
     this.dirty = true;
+    this._version++;
 
     const originalTile = this.map[tile.getY() * this.width + tile.getX()];
 
@@ -535,6 +537,10 @@ class Surface {
 
   public isDirty() {
     return this.dirty;
+  }
+
+  public get version() {
+    return this._version;
   }
 }
 
