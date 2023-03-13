@@ -1,4 +1,4 @@
-import { aim, Projectile } from ".";
+import { aim, hitTest, Projectile } from ".";
 import Manager from "../../controllers/manager";
 import { lerp } from "../../util/math";
 import { IEnemy } from "../enemies";
@@ -49,11 +49,9 @@ class Rocket extends Projectile implements Agent {
           AgentCategory.Enemy
         ),
       ]
-        .filter((enemy) => {
-          const diffX = enemy.getX() - this.entity.getX();
-          const diffY = enemy.getY() - this.entity.getY();
-          return diffX * diffX + diffY * diffY < RANGE_SQUARED;
-        })
+        .filter((enemy) =>
+          hitTest.call(this, enemy.getAgent() as IEnemy, RANGE_SQUARED)
+        )
         .forEach((enemy) => {
           (enemy.getAgent() as IEnemy).AI.hit(this.damage);
           if (enemy.getAgent() === this.target) {

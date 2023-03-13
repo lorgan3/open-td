@@ -23,8 +23,8 @@ class Rail implements Agent {
     const [x, y] = getCenter(source);
     this.entity = new Entity(x, y, this);
     const direction = Math.atan2(
-      target.entity.getY() + 0.5 - this.entity.getY(),
-      target.entity.getX() + 0.5 - this.entity.getX()
+      target.getOffsetY() + 0.5 - this.entity.getY(),
+      target.getOffsetX() + 0.5 - this.entity.getX()
     );
     this.entity.setRotation((direction * 180) / Math.PI);
     this.source.entity.setRotation(this.entity.getRotation() + 90);

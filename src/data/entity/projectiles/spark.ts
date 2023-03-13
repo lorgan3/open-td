@@ -49,8 +49,8 @@ class Spark extends Projectile implements Agent {
     }
 
     const target = this.chain[this.index];
-    this.targetX = target.entity.getX();
-    this.targetY = target.entity.getY();
+    this.targetX = target.getOffsetX();
+    this.targetY = target.getOffsetY();
 
     this.travelTime =
       Math.sqrt(

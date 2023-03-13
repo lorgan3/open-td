@@ -33,8 +33,8 @@ class Flame implements Agent {
     this.time = 0;
 
     const direction = Math.atan2(
-      enemy.entity.getX() + 0.5 - this.sourceX,
-      enemy.entity.getY() + 0.5 - this.sourceY
+      enemy.getOffsetX() + 0.5 - this.sourceX,
+      enemy.getOffsetY() + 0.5 - this.sourceY
     );
     this.entity.setRotation((direction * 180) / Math.PI);
     this.source.entity.setRotation(-this.entity.getRotation() + 180);

@@ -1,3 +1,4 @@
+import { hitTest } from ".";
 import Manager from "../../controllers/manager";
 import Tile from "../../terrain/tile";
 import { lerp } from "../../util/math";
@@ -40,11 +41,7 @@ class Shockwave implements Agent {
           AgentCategory.Enemy
         ),
       ]
-        .filter(
-          (enemy) =>
-            enemy.getAlignedX() === this.target.getX() &&
-            enemy.getAlignedY() === this.target.getY()
-        )
+        .filter((enemy) => hitTest.call(this, enemy.getAgent() as IEnemy, 1))
         .forEach((enemy) => {
           (enemy.getAgent() as IEnemy).AI.hit(this.damage);
         });

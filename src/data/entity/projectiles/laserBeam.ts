@@ -28,8 +28,8 @@ class LaserBeam implements Agent {
 
     this.time = 0;
 
-    this.targetX = enemy.entity.getX() + 0.5;
-    this.targetY = enemy.entity.getY() + 0.5;
+    this.targetX = enemy.getOffsetX() + 0.5;
+    this.targetY = enemy.getOffsetY() + 0.5;
     const direction = Math.atan2(
       this.targetY - this.entity.getY(),
       this.targetX - this.entity.getX()
