@@ -25,6 +25,7 @@ class Tank implements IEnemy {
   public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
   public static readonly type = EntityType.Tank;
   public static readonly cost = 20;
+  public static readonly scale = 1;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
@@ -62,6 +63,10 @@ class Tank implements IEnemy {
     return Tank.type;
   }
 
+  getScale() {
+    return Tank.scale;
+  }
+
   getPath() {
     return this.path;
   }
@@ -95,6 +100,14 @@ class Tank implements IEnemy {
   stun() {
     this.status = Status.Stunned;
     this.statusDuration = STUN_TIME;
+  }
+
+  getOffsetX() {
+    return this.entity.getX();
+  }
+
+  getOffsetY() {
+    return this.entity.getY();
   }
 }
 

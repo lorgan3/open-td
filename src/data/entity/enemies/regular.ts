@@ -26,6 +26,7 @@ class Regular implements IEnemy {
   public static readonly pathMultipliers = DEFAULT_LAND_BASED_MULTIPLIERS;
   public static readonly type = EntityType.Slime;
   public static readonly cost = 7;
+  public static readonly scale = 1;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
@@ -64,6 +65,10 @@ class Regular implements IEnemy {
     return Regular.type;
   }
 
+  getScale() {
+    return Regular.scale;
+  }
+
   getPath() {
     return this.path;
   }
@@ -97,6 +102,14 @@ class Regular implements IEnemy {
   stun() {
     this.status = Status.Stunned;
     this.statusDuration = STUN_TIME;
+  }
+
+  getOffsetX() {
+    return this.entity.getX();
+  }
+
+  getOffsetY() {
+    return this.entity.getY();
   }
 }
 

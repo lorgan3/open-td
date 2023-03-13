@@ -13,6 +13,9 @@ export interface IEnemy extends Agent {
   getStatus(): Status;
   lightOnFire?: () => void;
   stun?: () => void;
+  getScale: () => number;
+  getOffsetX(): number;
+  getOffsetY(): number;
 }
 
 export interface IEnemyStatics {
@@ -20,6 +23,7 @@ export interface IEnemyStatics {
   readonly pathMultipliers: PathMap;
   readonly type: EntityType;
   readonly cost: number;
+  readonly scale: number;
   new (tile: Tile, path: Path): IEnemy;
 }
 

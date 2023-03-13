@@ -35,6 +35,7 @@ class Runner implements IEnemy {
   );
   public static readonly type = EntityType.Runner;
   public static readonly cost = 5;
+  public static readonly scale = 1;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
@@ -64,6 +65,10 @@ class Runner implements IEnemy {
 
   getType(): EntityType {
     return Runner.type;
+  }
+
+  getScale() {
+    return Runner.scale;
   }
 
   getPath() {
@@ -99,6 +104,14 @@ class Runner implements IEnemy {
   stun() {
     this.status = Status.Stunned;
     this.statusDuration = STUN_TIME;
+  }
+
+  getOffsetX() {
+    return this.entity.getX();
+  }
+
+  getOffsetY() {
+    return this.entity.getY();
   }
 }
 

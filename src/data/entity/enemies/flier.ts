@@ -23,6 +23,7 @@ class Flier implements IEnemy {
   public static readonly pathMultipliers = DEFAULT_SKY_BASED_MULTIPLIERS;
   public static readonly type = EntityType.Flier;
   public static readonly cost = 12;
+  public static readonly scale = 1;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
@@ -52,6 +53,10 @@ class Flier implements IEnemy {
 
   getType(): EntityType {
     return Flier.type;
+  }
+
+  getScale() {
+    return Flier.scale;
   }
 
   getPath() {
@@ -87,6 +92,14 @@ class Flier implements IEnemy {
   stun() {
     this.status = Status.Stunned;
     this.statusDuration = STUN_TIME;
+  }
+
+  getOffsetX() {
+    return this.entity.getX();
+  }
+
+  getOffsetY() {
+    return this.entity.getY();
   }
 }
 
