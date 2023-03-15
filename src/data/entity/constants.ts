@@ -40,6 +40,7 @@ export enum EntityType {
   Barracks,
   Tesla,
   Spark,
+  Behemoth,
 
   // These are not entities.
   // @TODO use a different reference so this is not necessary?

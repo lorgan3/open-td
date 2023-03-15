@@ -28,8 +28,10 @@ const render: RenderFn<IEnemy> = (renderer, enemy, htmlElement) => {
   }
 
   htmlElement.style.transform = `translate(${
-    (entity.getX() + xOffset) * renderer.xStep
-  }px, ${(entity.getY() + yOffset) * renderer.yStep}px) rotate(${rotation}deg)`;
+    (enemy.getOffsetX() + xOffset) * renderer.xStep
+  }px, ${
+    (enemy.getOffsetY() + yOffset) * renderer.yStep
+  }px) rotate(${rotation}deg) scale(${enemy.getScale()})`;
 };
 
 export default render;

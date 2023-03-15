@@ -5,6 +5,7 @@ import { FLOOR } from "../layer";
 export enum ShadowSize {
   small = 8,
   medium = 16,
+  large = 32,
 }
 
 export const createShadow = (size: ShadowSize) => {

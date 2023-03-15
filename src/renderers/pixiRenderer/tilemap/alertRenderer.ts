@@ -15,6 +15,7 @@ class AlertRenderer {
     [EntityType.Slime, AtlasTile.Regular],
     [EntityType.Tank, AtlasTile.Tank],
     [EntityType.Flier, AtlasTile.Flier],
+    [EntityType.Behemoth, AtlasTile.Runner],
   ]);
 
   private container: Container;

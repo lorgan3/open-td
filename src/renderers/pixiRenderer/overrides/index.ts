@@ -17,6 +17,7 @@ import { Wall } from "./wall";
 import { Foliage } from "./foliage";
 import { Stump } from "./stump";
 import { Base } from "./base";
+import { Behemoth } from "./behemoth";
 
 export const spriteOverrideAssets = {
   runner: `${import.meta.env.BASE_URL}animations/runner.json`,
@@ -37,6 +38,7 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Slime]: Regular,
   [EntityType.Flier]: Flier,
   [EntityType.Tank]: Tank,
+  [EntityType.Behemoth]: Behemoth,
   [EntityType.Tower]: Tower,
   [EntityType.Flamethrower]: Tower,
   [EntityType.Laser]: Tower,
