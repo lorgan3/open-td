@@ -52,9 +52,11 @@ class EnemyAI {
 
   attack(target: Agent) {
     if (target.hit && this.cooldown === 0) {
-      target.hit!(
-        this.enemy.getDamage() * Manager.Instance.getDamageMultiplier()
-      );
+      this.callback = () => {
+        target.hit!(
+          this.enemy.getDamage() * Manager.Instance.getDamageMultiplier()
+        );
+      };
       this.cooldown = this.enemy.isVisible() ? COOLDOWN : 0;
     }
   }
