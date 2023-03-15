@@ -1,6 +1,6 @@
 import { IEnemy, Status } from ".";
 import { combineCheckpoints, maybe } from "../../terrain/checkpoint";
-import { getDirtCheckpoints } from "../../terrain/checkpoint/dirt";
+import { dirtCheckpointFactory } from "../../terrain/checkpoint/dirt";
 import { staticCheckpointFactory } from "../../terrain/checkpoint/staticEntity";
 import { getWaterCheckpoints } from "../../terrain/checkpoint/water";
 import {
@@ -14,6 +14,7 @@ import Entity from "../entity";
 import EnemyAI from "./enemyAI";
 
 const getStaticEntityCheckpoints = staticCheckpointFactory();
+const getDirtCheckpoints = dirtCheckpointFactory();
 
 const ON_FIRE_TIME = 3000;
 const STUN_TIME = 1000;
