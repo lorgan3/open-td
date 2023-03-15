@@ -465,11 +465,6 @@ class Renderer implements IRenderer {
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("dominant-baseline", "middle");
         text.classList.add("alert");
-        if (angle > 270 || angle < 90) {
-          text.setAttribute("direction", "rtl");
-        }
-        text.innerHTML =
-          "⚠️" + range.getUnits().map(this.getEntityTypeEmoji).join("");
 
         htmlElement.appendChild(text);
 
@@ -485,6 +480,14 @@ class Renderer implements IRenderer {
       (
         htmlElement.children[1] as SVGElement
       ).style.transform = `translate(90%, 50%) rotate(-${angle}deg)`;
+
+      (htmlElement.children[1] as SVGElement).setAttribute(
+        "direction",
+        angle > 270 || angle < 90 ? "rtl" : "ltr"
+      );
+
+      (htmlElement.children[1] as SVGElement).innerHTML =
+        "⚠️" + range.getUnits().map(this.getEntityTypeEmoji).join("");
 
       const circumference = width * 0.9 * Math.PI;
       htmlElement.children[0].setAttribute(
@@ -784,6 +787,10 @@ class Renderer implements IRenderer {
         return "🪙";
       case EntityType.Spark:
         return "⚡️";
+      case EntityType.Behemoth:
+        return "🦎";
+      case EntityType.Bore:
+        return "🐙";
       default:
         return "";
     }
