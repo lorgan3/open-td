@@ -1,5 +1,6 @@
 import Base from "../entity/base";
 import { AgentCategory } from "../entity/constants";
+import { IEnemyStatics } from "../entity/enemies";
 import WavePoint from "../entity/wavePoint";
 import { GameEvent, SurfaceChange } from "../events";
 import EventSystem from "../eventSystem";
@@ -25,6 +26,7 @@ class WaveController {
   private nextSpawnGroup: SpawnGroup | undefined;
   private initialNextSpawnGroup: SpawnGroup | undefined;
   private direction = Math.random() * Math.PI * 2;
+  private nextUnit?: IEnemyStatics;
 
   private wave?: Wave;
   private timeSinceLastExpansion = 0;
@@ -56,14 +58,6 @@ class WaveController {
       spawnGroup.grow();
       spawnGroup.rePath();
     });
-
-    this.direction +=
-      (Math.random() > 0.5 ? 1 : -1) *
-      Math.max(
-        (Math.PI / 6) *
-          normalDistributionRandom() *
-          Math.min(Math.PI * 2, level + 1)
-      );
 
     const spawnGroups: SpawnGroup[] = [];
     const nextSpawnGroup = this.getNextSpawnGroup();
@@ -99,6 +93,7 @@ class WaveController {
 
     this.cleanupSpawnGroups();
 
+    this.nextUnit = undefined;
     this.nextSpawnGroup = undefined;
     this.initialNextSpawnGroup = undefined;
     this.wave = Wave.fromSpawnGroups(level, [...this.spawnGroups]);
@@ -202,6 +197,19 @@ class WaveController {
       return this.nextSpawnGroup;
     }
 
+    const level = Manager.Instance.getLevel();
+    if (!this.nextUnit) {
+      this.nextUnit = Wave.getUnitForLevel(level);
+    }
+
+    this.direction +=
+      (Math.random() > 0.5 ? 1 : -1) *
+      Math.max(
+        (Math.PI / 6) *
+          normalDistributionRandom() *
+          Math.min(Math.PI * 2, level + 1)
+      );
+
     let spawned = false;
     let backOff = 3;
     for (let i = 0; i < 20; i++) {
@@ -241,9 +249,7 @@ class WaveController {
             this.base.getTile(),
             this.surface
           );
-          this.nextSpawnGroup.setUnit(
-            Wave.getUnitForLevel(Manager.Instance.getLevel())
-          );
+          this.nextSpawnGroup.setUnit(this.nextUnit!);
 
           spawned = true;
           return false;
