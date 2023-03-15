@@ -2,7 +2,6 @@ import { Checkpoint, CheckpointFn } from ".";
 import Manager from "../../controllers/manager";
 import { DESTRUCTIBLE_ENTITIES } from "../../entity/constants";
 import { IEnemy } from "../../entity/enemies";
-import { Agent } from "../../entity/entity";
 import Tile from "../tile";
 
 export class StaticEntityCheckpoint implements Checkpoint {
