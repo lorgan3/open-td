@@ -28,4 +28,5 @@ export const OVERRIDES: Partial<Record<EntityType, RenderFn<any>>> = {
   [EntityType.Rocket]: renderProjectile,
   [EntityType.Shockwave]: renderProjectile,
   [EntityType.Behemoth]: renderEnemy,
+  [EntityType.Bore]: renderEnemy,
 };

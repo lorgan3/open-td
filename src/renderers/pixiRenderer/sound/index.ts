@@ -17,6 +17,8 @@ export enum Sound {
   Sonar = "sonarSnd",
   Thunder = "thunderSnd",
   Bush = "bushSnd",
+  Tank = "tankSnd",
+  Drill = "drillSnd",
 }
 
 export const soundAssets = {
@@ -34,6 +36,8 @@ export const soundAssets = {
   [Sound.Sonar]: `${import.meta.env.BASE_URL}sounds/sonar.wav`,
   [Sound.Thunder]: `${import.meta.env.BASE_URL}sounds/thunder.wav`,
   [Sound.Bush]: `${import.meta.env.BASE_URL}sounds/bush.mp3`,
+  [Sound.Tank]: `${import.meta.env.BASE_URL}sounds/tank.wav`,
+  [Sound.Drill]: `${import.meta.env.BASE_URL}sounds/drill.wav`,
 };
 
 const updateVolume = (alias: Sound, volume: number) => {
@@ -50,6 +54,7 @@ export const init = () => {
   updateVolume(Sound.Destroy, 0.7);
   updateVolume(Sound.Sonar, 0.7);
   updateVolume(Sound.Thunder, 0.7);
+  updateVolume(Sound.Tank, 0.4);
 };
 
 export const playSoundOnEvent = (

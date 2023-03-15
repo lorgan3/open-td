@@ -183,7 +183,9 @@ class DefaultManager extends Manager {
     this.triggerStatUpdate();
     EventSystem.Instance.triggerEvent(GameEvent.EndWave);
 
-    if (WaveController.Instance.shouldAddSpawnGroup()) {
+    if (this.level === 9) {
+      this.showMessage("Something is rumbling in the distance.");
+    } else if (WaveController.Instance.shouldAddSpawnGroup()) {
       EventSystem.Instance.triggerEvent(GameEvent.Spawn);
       this.showMessage("Another spawn point has appeared!");
     }

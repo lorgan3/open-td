@@ -7,6 +7,9 @@ import Tank from "../entity/enemies/tank";
 import Manager from "../controllers/manager";
 import SpawnGroup from "./spawnGroup";
 import { normalDistributionRandom, splitNumber } from "./util";
+import Behemoth from "../entity/enemies/behemoth";
+import Bore from "../entity/enemies/bore";
+import { EntityType } from "../entity/constants";
 
 const MAX_SPAWN_DELAY = 4000;
 const MIN_SPAWN_INTERVAL = 150;
@@ -27,6 +30,8 @@ const UNIT_SPAWN_SPEED_MULTIPLIERS: Partial<Record<EntityType, number>> = {
   [EntityType.Slime]: 1,
   [EntityType.Flier]: 1,
   [EntityType.Tank]: 1.2,
+  [EntityType.Behemoth]: 1.4,
+  [EntityType.Bore]: 10,
 };
 
 class Wave {
@@ -88,17 +93,24 @@ class Wave {
       return Runner;
     }
 
-    const random = Math.random();
+    if (level !== 1 && (level + 1) % 10 === 0) {
+      return Bore;
+    }
 
-    if (random < Math.min(0.2, 0.75 - level ** 2 / 100)) {
+    const random = Math.random();
+    if (random < 0.2 - level / 200) {
       return Runner;
     }
 
-    if (level >= 3 && random > Math.max(0.7, 1 - level / 50)) {
+    if (level >= 3 && random < 0.3) {
       return Flier;
     }
 
-    return random > 0.1 + level / 25 ? Regular : Tank;
+    if (level >= 8 && random < 0.6) {
+      return Behemoth;
+    }
+
+    return Math.random() > Math.min(0.7, 0.1 + level / 30) ? Regular : Tank;
   }
 }
 

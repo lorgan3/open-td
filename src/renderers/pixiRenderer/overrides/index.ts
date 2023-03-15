@@ -18,6 +18,7 @@ import { Foliage } from "./foliage";
 import { Stump } from "./stump";
 import { Base } from "./base";
 import { Behemoth } from "./behemoth";
+import { Bore } from "./bore";
 
 export const spriteOverrideAssets = {
   runner: `${import.meta.env.BASE_URL}animations/runner.json`,
@@ -31,6 +32,7 @@ export const spriteOverrideAssets = {
   railgun: `${import.meta.env.BASE_URL}animations/railgun.json`,
   explosion: `${import.meta.env.BASE_URL}animations/explosion.json`,
   tesla: `${import.meta.env.BASE_URL}animations/tesla.json`,
+  bore: `${import.meta.env.BASE_URL}animations/bore.json`,
 };
 
 export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
@@ -39,6 +41,7 @@ export const OVERRIDES: Partial<Record<EntityType, Constructor | null>> = {
   [EntityType.Flier]: Flier,
   [EntityType.Tank]: Tank,
   [EntityType.Behemoth]: Behemoth,
+  [EntityType.Bore]: Bore,
   [EntityType.Tower]: Tower,
   [EntityType.Flamethrower]: Tower,
   [EntityType.Laser]: Tower,

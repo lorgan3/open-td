@@ -96,7 +96,10 @@ class WaveController {
     this.nextUnit = undefined;
     this.nextSpawnGroup = undefined;
     this.initialNextSpawnGroup = undefined;
-    this.wave = Wave.fromSpawnGroups(level, [...this.spawnGroups]);
+    this.wave = Wave.fromSpawnGroups(
+      level,
+      level === 9 ? [this.spawnGroups[0]] : [...this.spawnGroups]
+    );
   }
 
   processWave() {
@@ -145,6 +148,10 @@ class WaveController {
       if (nextSpawnGroup) {
         activeSpawnGroups.push(nextSpawnGroup);
       }
+    }
+
+    if (Manager.Instance.getLevel() === 9 + (this.isWaveInProgress() ? 1 : 0)) {
+      return [activeSpawnGroups[0]];
     }
 
     return activeSpawnGroups;
