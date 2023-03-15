@@ -22,6 +22,13 @@ const SPAWN_GROUP_AGE_BONUSES: Record<Difficulty, number> = {
   [Difficulty.Hard]: 3 * Runner.cost,
 };
 
+const UNIT_SPAWN_SPEED_MULTIPLIERS: Partial<Record<EntityType, number>> = {
+  [EntityType.Runner]: 0.8,
+  [EntityType.Slime]: 1,
+  [EntityType.Flier]: 1,
+  [EntityType.Tank]: 1.2,
+};
+
 class Wave {
   constructor(private spawnGroups: SpawnGroup[]) {}
 
@@ -63,9 +70,10 @@ class Wave {
 
       spawnGroup.setParameters(
         energy,
-        (normalDistributionRandom() * SPAWN_DISTRIBUTION) /
+        ((normalDistributionRandom() * SPAWN_DISTRIBUTION) /
           Math.max(1, level / 3) +
-          MIN_SPAWN_INTERVAL,
+          MIN_SPAWN_INTERVAL) *
+          UNIT_SPAWN_SPEED_MULTIPLIERS[spawnGroup.getUnitType()]!,
         spawnDelay,
         burstSize,
         normalDistributionRandom() * BURST_DISTRIBUTION + MIN_BURST_INTERVAL
