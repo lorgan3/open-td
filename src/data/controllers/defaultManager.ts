@@ -99,7 +99,10 @@ class DefaultManager extends Manager {
   }
 
   getIsStarted() {
-    return WaveController.Instance.isWaveInProgress();
+    return (
+      WaveController.Instance.isWaveInProgress() ||
+      WaveController.Instance.getSpawnGroups().length === 0
+    );
   }
 
   canBuy(placeable: Placeable, amount = 1) {
@@ -183,7 +186,12 @@ class DefaultManager extends Manager {
     this.triggerStatUpdate();
     EventSystem.Instance.triggerEvent(GameEvent.EndWave);
 
-    if (this.level === 9) {
+    if (WaveController.Instance.getSpawnGroups().length === 0) {
+      this.showMessage("World conquered. You win!", {
+        closable: false,
+        expires: 0,
+      });
+    } else if (this.level === 9) {
       this.showMessage("Something is rumbling in the distance.");
     } else if (WaveController.Instance.shouldAddSpawnGroup()) {
       EventSystem.Instance.triggerEvent(GameEvent.Spawn);
