@@ -30,6 +30,7 @@ const renderer = ref(
 );
 const showTutorial = ref(storedData?.showTutorial ?? true);
 const volume = ref(storedData?.volume ?? 50);
+const simulation = ref(storedData?.simulation ?? 1);
 
 const submit = () => {
   return {
@@ -37,6 +38,7 @@ const submit = () => {
     renderer: renderer.value.value,
     showTutorial: showTutorial.value,
     volume: volume.value,
+    simulation: simulation.value,
   };
 };
 
@@ -59,6 +61,10 @@ setSubmitter(submit);
   <label class="horizontal">
     Volume
     <input type="range" min="0" max="100" v-model="volume" />
+  </label>
+  <label class="horizontal">
+    Simulation speed
+    <input type="range" min="1" max="3" v-model="simulation" />
   </label>
 </template>
 

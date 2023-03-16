@@ -7,7 +7,11 @@ import { Constructor } from "../../renderers/api";
 const { visible, mainMenu, resume } = defineProps<{
   visible: boolean;
   mainMenu: () => void;
-  resume: (renderer?: Constructor, showTutorial?: boolean) => void;
+  resume: (
+    renderer?: Constructor,
+    showTutorial?: boolean,
+    newSpeed?: number
+  ) => void;
 }>();
 
 let getSettings: () => Partial<ISettings>;
@@ -16,7 +20,7 @@ const setSubmitter = (submit: typeof getSettings) => (getSettings = submit);
 const handleResume = () => {
   const settings = getSettings();
   set("settings", settings);
-  resume(settings.renderer, settings.showTutorial);
+  resume(settings.renderer, settings.showTutorial, settings.simulation);
 };
 </script>
 

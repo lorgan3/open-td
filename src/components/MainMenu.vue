@@ -16,7 +16,8 @@ const props = defineProps<{
     seed: string,
     difficulty: Difficulty,
     renderer: Constructor,
-    showTutorial: boolean
+    showTutorial: boolean,
+    simulationSpeed: number
   ) => void;
 }>();
 
@@ -67,7 +68,8 @@ const submit = (event: Event) => {
     seed.value,
     difficulty.value,
     settings.renderer!,
-    settings.showTutorial!
+    settings.showTutorial!,
+    settings.simulation!
   );
 };
 </script>

@@ -10,6 +10,7 @@ export interface Settings {
   difficulty: Difficulty;
   showTutorial: boolean;
   volume: number;
+  simulation: number;
 }
 
 // In an ideal world this returns `Settings[K]` but typescript doesn't understand
@@ -40,6 +41,10 @@ export const settingsReviver = <K extends keyof Settings>(
 
   if (key === "volume") {
     return assertNumber(value, 0, 100);
+  }
+
+  if (key === "simulation") {
+    return assertNumber(value, 1, 3);
   }
 
   return value;

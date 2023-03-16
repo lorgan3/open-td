@@ -15,18 +15,21 @@ const gameSeed = ref<string>();
 const gameDifficulty = ref<Difficulty>();
 const gameRenderer = ref<Constructor>();
 const gameShowTutorial = ref<boolean>();
+const gameSimulationSpeed = ref<number>();
 
 const startGame = (
   seed: string,
   difficulty: Difficulty,
   renderer: Constructor,
-  showTutorial: boolean
+  showTutorial: boolean,
+  simulationSpeed: number
 ) => {
   state.value = State.Game;
   gameSeed.value = seed;
   gameDifficulty.value = difficulty;
   gameRenderer.value = renderer;
   gameShowTutorial.value = showTutorial;
+  gameSimulationSpeed.value = simulationSpeed;
 };
 
 const mainMenu = () => (state.value = State.Menu);
@@ -40,6 +43,7 @@ const mainMenu = () => (state.value = State.Menu);
     :difficulty="gameDifficulty!"
     :renderer="gameRenderer!"
     :showTutorial="gameShowTutorial!"
+    :initialSpeed="gameSimulationSpeed!"
     :mainMenu="mainMenu"
   />
 </template>

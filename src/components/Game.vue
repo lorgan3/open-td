@@ -21,12 +21,14 @@ const props = defineProps<{
   difficulty: Difficulty;
   renderer: Constructor;
   showTutorial: boolean;
+  initialSpeed: number;
   mainMenu: () => void;
 }>();
 
 const canvas = ref<HTMLDivElement | null>(null);
 const isMenuVisible = ref(false);
 const isMarketplaceVisible = ref(false);
+const simulationSpeed = ref(props.initialSpeed);
 
 const surface = new Surface({
   width: 160,
@@ -113,7 +115,7 @@ onMounted(() => {
 
     const dt = oldTimestamp ? timestamp - oldTimestamp : 16;
     if (!isMenuVisible.value) {
-      manager.tick(dt);
+      manager.tick(dt * simulationSpeed.value);
     }
     renderer.rerender(dt);
     oldTimestamp = timestamp;
@@ -134,7 +136,11 @@ onUnmounted(() => {
   mounted = false;
 });
 
-const resume = (newRenderer?: Constructor, showTutorial?: boolean) => {
+const resume = (
+  newRenderer?: Constructor,
+  showTutorial?: boolean,
+  newSpeed?: number
+) => {
   if (newRenderer && !(renderer instanceof newRenderer)) {
     (renderer as IRenderer).unmount();
 
@@ -152,6 +158,10 @@ const resume = (newRenderer?: Constructor, showTutorial?: boolean) => {
 
   if (tutorialManager.isStarted && showTutorial === false) {
     tutorialManager.stop();
+  }
+
+  if (newSpeed) {
+    simulationSpeed.value = newSpeed;
   }
 
   isMenuVisible.value = false;
