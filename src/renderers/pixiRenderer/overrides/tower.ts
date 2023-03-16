@@ -78,7 +78,13 @@ class Tower extends Sprite implements EntityRenderer {
     };
 
     TOWERS.addChild(this.turret);
-    this.on("removed", () => TOWERS.removeChild(this.turret));
+    this.on("removed", () => {
+      TOWERS.removeChild(this.turret);
+
+      if (this.sound) {
+        this.sound.destroy();
+      }
+    });
   }
 
   sync(dt: number, full: boolean) {
