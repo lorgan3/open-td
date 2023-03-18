@@ -9,11 +9,24 @@ export const COOLDOWN = 600;
 class EnemyAI {
   private predictedHp;
   private cooldown = 0;
+  private visibilities: boolean[] = [];
 
   private callback?: () => void;
 
   constructor(private enemy: IEnemy, public hp: number) {
     this.predictedHp = hp;
+
+    const surface = Manager.Instance.getSurface();
+    this.visibilities = enemy
+      .getPath()
+      .getTiles()
+      .map((tile) =>
+        enemy.getScale() === 1
+          ? tile.isDiscovered()
+          : surface
+              .getEntityTiles(tile.getX(), tile.getY(), enemy.getScale())
+              .some((tile) => tile.isDiscovered())
+      );
   }
 
   tick(dt: number) {
@@ -38,7 +51,7 @@ class EnemyAI {
     if (this.isBusy()) {
       this.getTargeted(this.enemy.getPath().getCurrentTile(), dt);
     } else {
-      if (!this.enemy.isVisible()) {
+      if (!this.isVisible()) {
         this.enemy.getPath().fastForward(this.enemy);
       }
 
@@ -57,20 +70,20 @@ class EnemyAI {
           this.enemy.getDamage() * Manager.Instance.getDamageMultiplier()
         );
       };
-      this.cooldown = this.enemy.isVisible() ? COOLDOWN : 0;
+      this.cooldown = this.isVisible() ? COOLDOWN : 0;
     }
   }
 
   interact(callback?: () => void, cooldown = COOLDOWN) {
     this.callback = callback;
 
-    if (this.cooldown === 0 && this.enemy.isVisible()) {
+    if (this.cooldown === 0 && this.isVisible()) {
       this.cooldown = cooldown;
     }
   }
 
   private getTargeted(tile: Tile, dt: number) {
-    if (this.predictedHp > 0 && this.enemy.isVisible()) {
+    if (this.predictedHp > 0 && this.isVisible()) {
       if (this.enemy.getScale() === 1) {
         for (let tower of tile.getAvailableTowers()) {
           this.predictedHp -= tower.fire(this.enemy, dt);
@@ -140,6 +153,10 @@ class EnemyAI {
     }
 
     return index;
+  }
+
+  isVisible() {
+    return this.visibilities[this.enemy.getPath().getIndex() | 0] ?? true;
   }
 }
 

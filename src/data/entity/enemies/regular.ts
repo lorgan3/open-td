@@ -92,7 +92,7 @@ class Regular implements IEnemy {
   }
 
   isVisible() {
-    return this.path.getTile().isDiscovered();
+    return this.ai.isVisible();
   }
 
   lightOnFire() {
