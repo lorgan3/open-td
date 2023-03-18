@@ -12,6 +12,8 @@ export enum AtlasTile {
   Regular = "atlas8.png",
   Flier = "atlas9.png",
   Tank = "atlas10.png",
+  Behemoth = "atlas11.png",
+  Bore = "atlas12.png",
   Fence = "fence-00000000",
   ElectricFence = "fence-00000000",
   Wall = "wall-00000000",
@@ -51,5 +53,5 @@ export enum AtlasTile {
   RailgunBlueprint = "buildings20.png",
   TeslaBlueprint = "buildings21.png",
   WallBlueprint = "buildings22.png",
-  FenceBlueprint = "atlas11.png",
+  FenceBlueprint = "atlas13.png",
 }
