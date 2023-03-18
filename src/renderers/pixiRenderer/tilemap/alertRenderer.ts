@@ -116,8 +116,8 @@ class AlertRenderer {
     }
 
     if (
-      !this.permanent &&
-      (this.time > AlertRenderer.displayDuration || isStarted)
+      isStarted ||
+      (!this.permanent && this.time > AlertRenderer.displayDuration)
     ) {
       this.container.alpha -= dt / 500;
     }
