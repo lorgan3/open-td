@@ -82,6 +82,11 @@ class EnemyAI {
     }
   }
 
+  cancel() {
+    this.cooldown = 0;
+    this.callback = undefined;
+  }
+
   private getTargeted(tile: Tile, dt: number) {
     if (this.predictedHp > 0 && this.isVisible()) {
       if (this.enemy.getScale() === 1) {

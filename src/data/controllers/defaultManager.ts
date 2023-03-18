@@ -1,7 +1,7 @@
 import { MessageFn } from "../../renderers/api";
 import BuildController from "./buildController";
 import { Difficulty } from "../difficulty";
-import { IEnemy } from "../entity/enemies";
+import { IEnemy, isEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
 import { GameEvent, Unlock } from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
@@ -37,6 +37,9 @@ class DefaultManager extends Manager {
 
     EventSystem.Instance.addEventListener(GameEvent.Unlock, this.onUnlock);
     EventSystem.Instance.addEventListener(GameEvent.Discover, this.onDiscover);
+    EventSystem.Instance.addEventListener(GameEvent.Lose, () =>
+      window.setTimeout(this.onLose, 0)
+    );
 
     console.log(this);
   }
@@ -235,6 +238,18 @@ class DefaultManager extends Manager {
 
   private onDiscover = () => {
     UnlocksController.Instance.addPoint();
+  };
+
+  private onLose = () => {
+    this.surface
+      .getEntitiesForCategory(AgentCategory.Enemy)
+      .forEach((entity) => {
+        const agent = entity.getAgent();
+
+        if (isEnemy(agent)) {
+          agent.AI.cancel();
+        }
+      });
   };
 }
 

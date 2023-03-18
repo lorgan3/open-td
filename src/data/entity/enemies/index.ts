@@ -18,6 +18,10 @@ export interface IEnemy extends Agent {
   getOffsetY(): number;
 }
 
+export const isEnemy = (agent: Agent): agent is IEnemy => {
+  return "AI" in agent;
+};
+
 export interface IEnemyStatics {
   readonly pathCosts: PathMap;
   readonly pathMultipliers: PathMap;
