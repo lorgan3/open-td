@@ -63,7 +63,7 @@ class SpawnGroup {
     this.burstInterval = burstInterval;
 
     this.burst = 0;
-    this.timer = 0;
+    this.timer = spawnInterval;
   }
 
   getEnergy() {
