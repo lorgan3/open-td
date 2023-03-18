@@ -32,6 +32,7 @@ class Tree implements StaticAgent {
     this.hp -= damage;
 
     if (this.hp <= 0) {
+      this.renderData.chopped = true;
       Manager.Instance.getSurface().despawnStatic(this);
     }
   }
