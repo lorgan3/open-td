@@ -33,15 +33,19 @@ const HP = 1000;
 class Bore implements IEnemy {
   public static readonly pathCosts = mapWithOverrides(
     DEFAULT_LAND_BASED_COSTS,
-    { [TileType.Fence]: 1 }
+    {
+      [TileType.Fence]: 1,
+      [TileType.Freezer]: 8,
+    }
   );
   public static readonly pathMultipliers = mapWithOverrides(
     DEFAULT_LAND_BASED_MULTIPLIERS,
     {
-      [TileType.Obstructed]: 2,
+      [TileType.Obstructed]: 4,
       [TileType.Wall]: 30,
       [TileType.Fence]: 1,
       [TileType.Water]: 5,
+      [TileType.Freezer]: 0.375,
     }
   );
   public static readonly type = EntityType.Bore;

@@ -30,7 +30,7 @@ const UNIT_SPAWN_SPEED_MULTIPLIERS: Partial<Record<EntityType, number>> = {
   [EntityType.Slime]: 1,
   [EntityType.Flier]: 1,
   [EntityType.Tank]: 1.2,
-  [EntityType.Behemoth]: 1.4,
+  [EntityType.Behemoth]: 1.6,
   [EntityType.Bore]: 10,
 };
 
