@@ -10,6 +10,7 @@ import AchievementsList from "./achievements/AchievementsList.vue";
 import { version } from "../../package.json";
 import { getAssets } from "../renderers/pixiRenderer/assets";
 import { Settings as ISettings } from "../util/localStorage/settings";
+import { getWord } from "../util/word";
 
 const props = defineProps<{
   onPlay: (
@@ -30,8 +31,8 @@ enum SubMenu {
 }
 
 const openSubMenu = ref(SubMenu.None);
-const seed = ref("");
-const seedInput = ref<HTMLElement | null>(null);
+const seed = ref(getWord());
+const seedInput = ref<HTMLInputElement | null>(null);
 
 const storedData = get("settings");
 const difficulty = ref(storedData?.difficulty || Difficulty.Easy);
@@ -50,7 +51,7 @@ const onClick = (subMenu: SubMenu) => {
   openSubMenu.value = subMenu;
 
   if (openSubMenu.value === SubMenu.Play) {
-    seedInput.value?.focus();
+    seedInput.value?.select();
   }
 };
 
