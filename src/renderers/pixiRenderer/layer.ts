@@ -1,23 +1,31 @@
-import { Container } from "pixi.js";
+import { Container, ParticleContainer } from "pixi.js";
 
 export const FLOOR = new Container();
 FLOOR.name = "Floor";
 
 /**
- * Container should only contain sprites directly, I might make this a particle container.
  * Intended for simple static entities only.
  */
-export const STATIC = new Container();
+export const STATIC = new ParticleContainer(
+  undefined,
+  { position: false },
+  undefined,
+  true
+);
 STATIC.name = "Static";
 
 export const BASE = new Container();
 BASE.name = "Base";
 
 /**
- * Container should only contain sprites directly, I might make this a particle container.
  * Intended for simple static entities that should overlap the static layer only.
  */
-export const FOLIAGE = new Container();
+export const FOLIAGE = new ParticleContainer(
+  undefined,
+  { position: false },
+  undefined,
+  true
+);
 FOLIAGE.name = "Foliage";
 
 export const PROJECTILES = new Container();

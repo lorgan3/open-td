@@ -196,14 +196,16 @@ class Renderer implements IRenderer {
     const entities = full
       ? this.surface.getEntities()
       : this.surface.getTickingEntities();
+    const deletedEntities = [...this.surface.getDeletedEntities()];
 
     for (let entity of entities) {
       let sprite = this.sprites.get(entity.getId());
+      const isVisible = entity.getAgent().isVisible() || revealEverything;
 
       if (!sprite) {
         const override = OVERRIDES[entity.getAgent().getType()];
 
-        if (override === null) {
+        if (override === null || !isVisible) {
           continue;
         }
 
@@ -215,23 +217,13 @@ class Renderer implements IRenderer {
         this.sprites.set(entity.getId(), sprite);
       }
 
-      if (entity.getAgent().isVisible() || revealEverything) {
+      if (isVisible) {
         sprite.sync(dt, full);
-        sprite.visible = true;
-
-        if (sprite.shadow) {
-          sprite.shadow.visible = true;
-        }
       } else {
-        sprite.visible = false;
-
-        if (sprite.shadow) {
-          sprite.shadow.visible = false;
-        }
+        deletedEntities.push(entity);
       }
     }
 
-    const deletedEntities = this.surface.getDeletedEntities();
     deletedEntities.forEach((entity) => {
       const sprite = this.sprites.get(entity.getId());
       if (sprite) {
