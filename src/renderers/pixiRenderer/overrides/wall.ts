@@ -58,7 +58,6 @@ class Wall extends Sprite implements EntityRenderer {
       this._x * SCALE - Wall.padding * this.entityScale,
       this._y * SCALE - Wall.padding * this.entityScale
     );
-    this.updateTexture();
   }
 
   sync(_: number, full: boolean) {
