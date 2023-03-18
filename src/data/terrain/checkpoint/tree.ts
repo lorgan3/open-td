@@ -5,7 +5,7 @@ import { IEnemy } from "../../entity/enemies";
 import Tile from "../tile";
 
 export class TreeCheckpoint implements Checkpoint {
-  public readonly isBlocking = true;
+  public readonly isBlocking = false;
 
   constructor(public index: number) {}
 
