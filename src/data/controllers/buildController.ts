@@ -6,7 +6,7 @@ import Surface from "../terrain/surface";
 import { ensureBaseIsContinuous } from "../util/floodFill";
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import { GameEvent } from "../events";
-import { EntityType } from "../entity/constants";
+import { AgentCategory, EntityType } from "../entity/constants";
 import { FREE_TILES, TileType } from "../terrain/constants";
 import EventSystem from "../eventSystem";
 import MoneyController from "./moneyController";
@@ -82,6 +82,28 @@ class BuildController {
       } else {
         this.sellEntities(selection);
       }
+      return;
+    }
+
+    if (
+      !Manager.Instance.getIsStarted() &&
+      placeable.entityType === EntityType.Terraform &&
+      UnlocksController.Instance.isUnlocked(placeable)
+    ) {
+      const newTiles = selection.map((tile) => {
+        const agent = tile.getStaticEntity()?.getAgent();
+        if (agent && agent.category !== AgentCategory.Player) {
+          Manager.Instance.getSurface().despawnStatic(agent);
+
+          if (agent.getType() === EntityType.Tree) {
+            agent.renderData.chopped = true;
+          }
+        }
+
+        return new Tile(tile.getX(), tile.getY(), TileType.Stone);
+      });
+
+      Manager.Instance.getSurface().setTiles(newTiles);
       return;
     }
 
