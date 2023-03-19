@@ -25,6 +25,8 @@ const props = defineProps<{
   mainMenu: () => void;
 }>();
 
+console.log(`Seed: ${props.seed}`);
+
 const canvas = ref<HTMLDivElement | null>(null);
 const isMenuVisible = ref(false);
 const isMarketplaceVisible = ref(false);
