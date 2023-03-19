@@ -230,7 +230,8 @@ class DefaultManager extends Manager {
 
     if (placeable.entityType === EntityType.EmergencyRepair) {
       this.base.hp +=
-        2 * this.base.getParts().size * (inProgress ? 1 : WAVE_OVER_MULTIPLIER);
+        (Base.baseEmergencyRepair + this.base.getParts().size) *
+        (inProgress ? 1 : WAVE_OVER_MULTIPLIER);
 
       this.triggerStatUpdate();
     }

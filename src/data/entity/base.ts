@@ -43,6 +43,7 @@ const CORNERS = [
 
 class Base implements StaticAgent {
   public static scale = 2;
+  public static baseEmergencyRepair = 15;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;

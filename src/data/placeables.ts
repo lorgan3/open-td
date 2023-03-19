@@ -18,6 +18,8 @@ import Tile from "./terrain/tile";
 import { EntityType } from "./entity/constants";
 import Barracks from "./entity/barracks";
 import Tesla from "./entity/towers/tesla";
+import PowerController from "./controllers/powerController";
+import Base from "./entity/base";
 
 export interface Placeable {
   name: string;
@@ -226,7 +228,7 @@ export const CONVERT: Placeable = {
 export const WAVE_OVER_MULTIPLIER = 1.5;
 export const EMERGENCY_RECHARGE: Placeable = {
   name: "Emerg. recharge",
-  description: `Generate power for every base tile built. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
+  description: `Generate power ${PowerController.baseEmergencyRegenerate} power + ${PowerController.emergencyRegenerateMultiplier} power for every base tile built. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
   entityType: EntityType.EmergencyRecharge,
   htmlElement: "🔌",
   isRepeatable: true,
@@ -235,7 +237,7 @@ export const EMERGENCY_RECHARGE: Placeable = {
 
 export const EMERGENCY_REPAIR: Placeable = {
   name: "Emerg. repair",
-  description: `Regenerate health for every base tile built. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
+  description: `Regenerate ${Base.baseEmergencyRepair} health + 1 health for every base tile built. This can also be done during a wave, but doing it between waves is ${WAVE_OVER_MULTIPLIER} as efficient.`,
   entityType: EntityType.EmergencyRepair,
   htmlElement: "🛠",
   isRepeatable: true,

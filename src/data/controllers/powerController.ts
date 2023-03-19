@@ -18,6 +18,8 @@ class PowerController {
 
   private static instance: PowerController;
   private static powerMultiplier = 5;
+  public static baseEmergencyRegenerate = 30;
+  public static emergencyRegenerateMultiplier = 2;
 
   private generators = new Set<Agent>();
 
@@ -89,8 +91,9 @@ class PowerController {
   emergencyRegenerate(multiplier = 1) {
     this.power =
       this.power +
-      Manager.Instance.getBase().getParts().size *
-        PowerController.powerMultiplier *
+      (PowerController.baseEmergencyRegenerate +
+        Manager.Instance.getBase().getParts().size *
+          PowerController.emergencyRegenerateMultiplier) *
         multiplier;
     this.blackout = false;
   }
