@@ -73,9 +73,15 @@ export interface Unlock {
   placeable: Placeable;
 }
 
+export enum DiscoveryMethod {
+  Base,
+  Radar,
+}
+
 export interface Discover {
   x: number;
   y: number;
+  method: DiscoveryMethod;
 }
 
 export interface Buy {

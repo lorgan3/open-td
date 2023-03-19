@@ -6,9 +6,11 @@ import { DiscoveryStatus, TileType } from "../terrain/constants";
 import { EntityType } from "../entity/constants";
 import Manager from "./manager";
 import EventSystem from "../eventSystem";
-import { GameEvent } from "../events";
+import { DiscoveryMethod, GameEvent } from "../events";
 import SpawnGroup from "../wave/spawnGroup";
 import WaveController from "./waveController";
+import { getSquareDistance } from "../util/distance";
+import { getCenter } from "../entity/staticEntity";
 
 const isBase = (agent: Agent): agent is Base => {
   return agent.getType() === EntityType.Base;
@@ -184,9 +186,16 @@ class VisibilityController {
       });
     });
 
+    const baseRadius = this.getVisibilityRange(this.base!) / 2;
+    const [baseX, baseY] = getCenter(this.base!);
+    const isCoveredByBase =
+      getSquareDistance(x, y, baseX, baseY) <
+      (baseRadius + SpawnGroup.size / 2) ** 2;
+
     EventSystem.Instance.triggerEvent(GameEvent.Discover, {
       x,
       y,
+      method: isCoveredByBase ? DiscoveryMethod.Base : DiscoveryMethod.Radar,
     });
   }
 
