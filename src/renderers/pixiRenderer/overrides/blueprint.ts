@@ -2,7 +2,7 @@ import { Sprite } from "pixi.js";
 import BlueprintData from "../../../data/entity/blueprint";
 import { EntityType } from "../../../data/entity/constants";
 import { ATLAS, AtlasTile } from "../atlas";
-import { BASE } from "../layer";
+import { FOLIAGE } from "../layer";
 import { SCALE } from "../constants";
 import { EntityRenderer } from "./types";
 import { AssetsContainer } from "../assets/container";
@@ -29,7 +29,7 @@ const BLUEPRINT_MAP = new Map<EntityType, [string, string]>([
 ]);
 
 class Blueprint extends Sprite implements EntityRenderer {
-  public static readonly layer = BASE;
+  public static readonly layer = FOLIAGE;
 
   constructor(private data: BlueprintData, container: AssetsContainer) {
     const type = data.getPlaceable().entityType;
