@@ -3,7 +3,7 @@ import BuildController from "./buildController";
 import { Difficulty } from "../difficulty";
 import { IEnemy, isEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
-import { GameEvent, Unlock } from "../events";
+import { Discover, DiscoveryMethod, GameEvent, Unlock } from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable, WAVE_OVER_MULTIPLIER } from "../placeables";
 import PowerController, { POWER_CONSUMPTIONS } from "./powerController";
@@ -236,8 +236,10 @@ class DefaultManager extends Manager {
     }
   };
 
-  private onDiscover = () => {
-    UnlocksController.Instance.addPoint();
+  private onDiscover = (event: Discover) => {
+    UnlocksController.Instance.addPoints(
+      event.method === DiscoveryMethod.Base ? 2 : 1
+    );
   };
 
   private onLose = () => {

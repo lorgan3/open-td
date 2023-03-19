@@ -48,8 +48,8 @@ class UnlocksController {
     });
   }
 
-  addPoint() {
-    this.points++;
+  addPoints(points = 1) {
+    this.points += points;
   }
 
   getPoints() {
