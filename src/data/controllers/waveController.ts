@@ -75,7 +75,7 @@ class WaveController {
 
       const [x, y] = spawnGroup.getCenter();
       const tilesToUpdate: Tile[] = [];
-      this.surface.forCircle(x, y, SpawnGroup.Radius, (tile) => {
+      this.surface.forCircle(x, y, SpawnGroup.size, (tile) => {
         if (FREE_TILES_INCLUDING_WATER.has(tile.getType())) {
           tilesToUpdate.push(
             new Tile(tile.getX(), tile.getY(), TileType.Spore)

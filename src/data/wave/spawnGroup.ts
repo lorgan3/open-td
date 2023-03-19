@@ -9,7 +9,7 @@ import { EntityType } from "../entity/constants";
 import { DiscoveryStatus } from "../terrain/constants";
 
 class SpawnGroup {
-  static Radius = 5;
+  static size = 5;
 
   private index = 0;
   private pathData = new Map<EntityType, PathData>();
@@ -172,7 +172,7 @@ class SpawnGroup {
     this.surface.forCircle(
       this.centerX,
       this.centerY,
-      SpawnGroup.Radius,
+      SpawnGroup.size,
       (tile) => {
         tiles++;
         if (tile.getDiscoveryStatus() !== DiscoveryStatus.Undiscovered) {

@@ -127,7 +127,7 @@ class VisibilityController {
     // @TODO: figure out a way to not have to undo discovering overlapping spawn points
     others.forEach((spawnGroup) => {
       const [x, y] = spawnGroup.getCenter();
-      this.surface.forCircle(x, y, SpawnGroup.Radius, (tile) => {
+      this.surface.forCircle(x, y, SpawnGroup.size, (tile) => {
         if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
           return;
         }
@@ -170,12 +170,12 @@ class VisibilityController {
     this.discoveredSpawnGroups.add(spawnGroup);
 
     const [x, y] = spawnGroup.getCenter();
-    this.updateVisibility(x, y, SpawnGroup.Radius, DiscoveryStatus.Discovered);
+    this.updateVisibility(x, y, SpawnGroup.size, DiscoveryStatus.Discovered);
 
     // Make sure other spawngroups are not discovered automatically.
     others.forEach((spawnGroup) => {
       const [x, y] = spawnGroup.getCenter();
-      this.surface.forCircle(x, y, SpawnGroup.Radius, (tile) => {
+      this.surface.forCircle(x, y, SpawnGroup.size, (tile) => {
         if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
           return;
         }
