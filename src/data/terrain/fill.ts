@@ -1,7 +1,7 @@
 import { getScale, StaticAgent } from "../entity/staticEntity";
 import Manager from "../controllers/manager";
 import Tile from "./tile";
-import { AgentCategory } from "../entity/constants";
+import { AgentCategory, EntityType } from "../entity/constants";
 import { FREE_TILES_INCLUDING_WATER, TileType } from "./constants";
 
 export const createStoneSurface = (agent: StaticAgent, radius: number) => {
@@ -15,14 +15,13 @@ export const createStoneSurface = (agent: StaticAgent, radius: number) => {
     radius * scale,
     (localTile) => {
       if (FREE_TILES_INCLUDING_WATER.has(localTile.getBaseType())) {
-        if (
-          localTile.hasStaticEntity() &&
-          localTile.getStaticEntity().getAgent().category !==
-            AgentCategory.Player
-        ) {
-          Manager.Instance.getSurface().despawnStatic(
-            localTile.getStaticEntity().getAgent()
-          );
+        const localAgent = localTile.getStaticEntity()?.getAgent();
+        if (localAgent && localAgent.category !== AgentCategory.Player) {
+          Manager.Instance.getSurface().despawnStatic(localAgent);
+
+          if (localAgent.getType() === EntityType.Tree) {
+            localAgent.renderData.chopped = true;
+          }
         }
 
         const newTile = new Tile(

@@ -38,21 +38,24 @@ class BuildController {
 
   private freeTiles: Set<TileType>;
   private ignoredEntities: Set<EntityType>;
+  private clearableEntities: Set<EntityType>;
 
   constructor(private surface: Surface) {
     BuildController.instance = this;
 
     this.freeTiles = new Set(FREE_TILES);
     this.ignoredEntities = new Set();
+    this.clearableEntities = new Set(placeableEntityTypes);
 
     EventSystem.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
       if (placeable.entityType === EntityType.Excavator) {
-        this.freeTiles.add(TileType.Tree);
-        this.freeTiles.add(TileType.Rock);
-
         this.ignoredEntities.add(EntityType.Tree);
         this.ignoredEntities.add(EntityType.Rock);
         this.ignoredEntities.add(EntityType.Stump);
+
+        this.clearableEntities.add(EntityType.Tree);
+        this.clearableEntities.add(EntityType.Rock);
+        this.clearableEntities.add(EntityType.Stump);
       }
 
       if (placeable.entityType === EntityType.Terraform) {
@@ -70,7 +73,10 @@ class BuildController {
   }
 
   build(selection: Tile[], placeable: Placeable) {
-    if (placeable.entityType === EntityType.None) {
+    if (
+      placeable.entityType === EntityType.None ||
+      placeable.entityType === EntityType.Excavator
+    ) {
       if (Manager.Instance.getIsStarted()) {
         this.sellBlueprints(selection);
       } else {
@@ -112,6 +118,10 @@ class BuildController {
         const agent = tile.getStaticEntity().getAgent();
         MoneyController.Instance.sell(agent);
         this.surface.despawnStatic(agent);
+
+        if (agent.getType() === EntityType.Tree) {
+          agent.renderData.chopped = true;
+        }
       });
 
       if (blueprint.isDelete()) {
@@ -250,7 +260,7 @@ class BuildController {
 
       if (
         tile.hasStaticEntity() &&
-        placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
+        this.clearableEntities.has(tile.getStaticEntity().getAgent().getType())
       ) {
         return true;
       }
@@ -390,7 +400,12 @@ class BuildController {
 
       this.surface.getEntityTiles(agent).forEach((tile) => {
         if (tile.hasStaticEntity()) {
-          this.surface.despawnStatic(tile.getStaticEntity().getAgent());
+          const tileAgent = tile.getStaticEntity().getAgent();
+          if (tileAgent.getType() === EntityType.Tree) {
+            tileAgent.renderData.chopped = true;
+          }
+
+          this.surface.despawnStatic(tileAgent);
         }
       });
 
@@ -408,7 +423,7 @@ class BuildController {
     let validTiles = selection.filter((tile) => {
       if (
         tile.hasStaticEntity() &&
-        placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
+        this.clearableEntities.has(tile.getStaticEntity().getAgent().getType())
       ) {
         return true;
       }
@@ -445,6 +460,10 @@ class BuildController {
         const agent = tile.getStaticEntity().getAgent();
         this.surface.despawnStatic(agent);
         MoneyController.Instance.sell(agent);
+
+        if (agent.getType() === EntityType.Tree) {
+          agent.renderData.chopped = true;
+        }
       }
     });
 
@@ -547,7 +566,9 @@ class BuildController {
       ) {
         if (
           !canOverwrite ||
-          !placeableEntityTypes.has(tile.getStaticEntity().getAgent().getType())
+          !this.clearableEntities.has(
+            tile.getStaticEntity().getAgent().getType()
+          )
         ) {
           return true;
         }
