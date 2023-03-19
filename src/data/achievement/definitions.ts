@@ -3,7 +3,7 @@ import UnlocksController from "../controllers/unlocksController";
 import VisibilityController from "../controllers/visibilityController";
 import { Difficulty } from "../difficulty";
 import { EntityType } from "../entity/constants";
-import { Buy, GameEvent } from "../events";
+import { Buy, GameEvent, Hit } from "../events";
 import { TileType } from "../terrain/constants";
 import { getStructureSize } from "../util/floodFill";
 import { AchievementDefinition } from "./achievement";
@@ -74,7 +74,7 @@ export const achievements: AchievementDefinition[] = [
 
       return newProgress;
     },
-    triggers: [GameEvent.StatUpdate],
+    triggers: [GameEvent.Kill],
   },
 
   {
@@ -156,7 +156,6 @@ export const achievements: AchievementDefinition[] = [
     getProgress: () => Manager.Instance.getBase().getParts().size,
     triggers: [GameEvent.Buy],
   },
-
   {
     description: "Unlock new technologies.",
     thresholds: {
@@ -167,5 +166,29 @@ export const achievements: AchievementDefinition[] = [
     },
     getProgress: () => UnlocksController.Instance.getUnlockAmount(),
     triggers: [GameEvent.Unlock],
+  },
+  {
+    description: "Hit enemies using a single mortar shell.",
+    thresholds: {
+      5: "Bomberman",
+    },
+    getProgress: (data) => (data as Hit).amount,
+    triggers: [GameEvent.Bomb],
+  },
+  {
+    description: "Hit enemies using a single tesla coil discharge.",
+    thresholds: {
+      10: "Thunderstruck",
+    },
+    getProgress: (data) => (data as Hit).amount,
+    triggers: [GameEvent.Stun],
+  },
+  {
+    description: "Pierce enemies using a single railgun shot.",
+    thresholds: {
+      15: "Penetrator",
+    },
+    getProgress: (data) => (data as Hit).amount,
+    triggers: [GameEvent.Pierce],
   },
 ];

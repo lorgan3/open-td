@@ -6,6 +6,9 @@ import Entity, { Agent } from "../entity";
 import { AgentCategory, EntityType } from "../constants";
 import { getCenter } from "../staticEntity";
 import { ITower } from "../towers";
+import Railgun from "../towers/railgun";
+import EventSystem from "../../eventSystem";
+import { GameEvent } from "../../events";
 
 export const LIFETIME = 1500;
 
@@ -52,7 +55,7 @@ class Rail implements Agent {
       this.targetY
     );
 
-    [
+    const targets = [
       ...Manager.Instance.getSurface().getEntitiesForCategory(
         AgentCategory.Enemy
       ),
@@ -77,10 +80,18 @@ class Rail implements Agent {
         );
 
         return dist <= 0.5;
-      })
-      .forEach((enemy) => {
-        (enemy.getAgent() as IEnemy).AI.hit(this.damage);
       });
+
+    targets.forEach((enemy) => {
+      (enemy.getAgent() as IEnemy).AI.hit(this.damage);
+    });
+
+    if (targets.length > Railgun.maxPierceEnemies) {
+      Railgun.maxPierceEnemies = targets.length;
+      EventSystem.Instance.triggerEvent(GameEvent.Pierce, {
+        amount: targets.length,
+      });
+    }
   }
 
   tick(dt: number) {

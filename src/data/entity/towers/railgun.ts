@@ -19,6 +19,7 @@ const DAMAGE = 70;
 class Railgun implements ITower {
   public static readonly scale = 2;
   public static readonly range = 30;
+  public static maxPierceEnemies = 0;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;

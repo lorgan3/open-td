@@ -5,6 +5,9 @@ import { IEnemy } from "../enemies";
 import Entity, { Agent } from "../entity";
 import { AgentCategory, EntityType } from "../constants";
 import { ITower } from "../towers";
+import Mortar from "../towers/mortar";
+import EventSystem from "../../eventSystem";
+import { GameEvent } from "../../events";
 
 const SPEED = 0.01;
 const ARC_HEIGHT = 5;
@@ -44,20 +47,27 @@ class Rocket extends Projectile implements Agent {
       Manager.Instance.getSurface().despawn(this);
 
       let hitTarget = false;
-      [
+      const targets = [
         ...Manager.Instance.getSurface().getEntitiesForCategory(
           AgentCategory.Enemy
         ),
-      ]
-        .filter((enemy) =>
-          hitTest.call(this, enemy.getAgent() as IEnemy, RANGE_SQUARED)
-        )
-        .forEach((enemy) => {
-          (enemy.getAgent() as IEnemy).AI.hit(this.damage);
-          if (enemy.getAgent() === this.target) {
-            hitTarget = true;
-          }
+      ].filter((enemy) =>
+        hitTest.call(this, enemy.getAgent() as IEnemy, RANGE_SQUARED)
+      );
+
+      targets.forEach((enemy) => {
+        (enemy.getAgent() as IEnemy).AI.hit(this.damage);
+        if (enemy.getAgent() === this.target) {
+          hitTarget = true;
+        }
+      });
+
+      if (targets.length > Mortar.maxBombedEnemies) {
+        Mortar.maxBombedEnemies = targets.length;
+        EventSystem.Instance.triggerEvent(GameEvent.Bomb, {
+          amount: targets.length,
         });
+      }
 
       if (!hitTarget) {
         this.target.AI.miss(this.damage);

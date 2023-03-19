@@ -18,6 +18,7 @@ import VisibilityController from "./visibilityController";
 
 class DefaultManager extends Manager {
   private killedEnemies = 0;
+  private lastKilledEnemies = 0;
 
   constructor(
     difficulty: Difficulty,
@@ -57,6 +58,11 @@ class DefaultManager extends Manager {
     }
 
     WaveController.Instance.tick(dt);
+
+    if (this.lastKilledEnemies !== this.killedEnemies) {
+      this.lastKilledEnemies = this.killedEnemies;
+      EventSystem.Instance.triggerEvent(GameEvent.Kill);
+    }
   }
 
   triggerStatUpdate() {
@@ -82,7 +88,6 @@ class DefaultManager extends Manager {
 
   spawnEnemy(enemy: IEnemy) {
     this.surface.spawn(enemy);
-    this.triggerStatUpdate();
   }
 
   despawnEnemy(enemy: IEnemy) {
@@ -91,8 +96,6 @@ class DefaultManager extends Manager {
     if (this.surface.despawn(enemy)) {
       if (WaveController.Instance.processWave()) {
         this.end();
-      } else {
-        this.triggerStatUpdate();
       }
     }
   }

@@ -19,6 +19,10 @@ export enum GameEvent {
   Sell,
   HitBase,
   Lose,
+  Kill,
+  Pierce,
+  Bomb,
+  Stun,
 }
 
 export interface EventParamsMap {
@@ -38,6 +42,10 @@ export interface EventParamsMap {
   [GameEvent.Sell]: [];
   [GameEvent.HitBase]: [];
   [GameEvent.Lose]: [];
+  [GameEvent.Kill]: [];
+  [GameEvent.Pierce]: [Hit];
+  [GameEvent.Bomb]: [Hit];
+  [GameEvent.Stun]: [Hit];
 }
 
 export type EventHandler<E extends keyof EventParamsMap> = (
@@ -86,4 +94,8 @@ export interface Discover {
 
 export interface Buy {
   tiles: TileWithStaticEntity[];
+}
+
+export interface Hit {
+  amount: number;
 }

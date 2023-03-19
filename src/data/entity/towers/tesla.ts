@@ -13,6 +13,8 @@ import { AgentCategory, EntityType } from "../constants";
 import StaticEntity, { getCenter, StaticAgent } from "../staticEntity";
 import { getSquareDistance } from "../../util/distance";
 import Spark from "../projectiles/spark";
+import EventSystem from "../../eventSystem";
+import { GameEvent } from "../../events";
 
 const COOLDOWN = 4000;
 const CHARGE_TIME = 700;
@@ -21,6 +23,7 @@ const DAMAGE = 50;
 class Tesla implements ITower {
   public static readonly scale = 2;
   public static readonly range = 8;
+  private static maxStunnedEnemies = 0;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
@@ -58,6 +61,13 @@ class Tesla implements ITower {
           surface.getTile(enemy.getAlignedX(), enemy.getAlignedY())!
         )
       );
+
+      if (targets.length > Tesla.maxStunnedEnemies) {
+        Tesla.maxStunnedEnemies = targets.length;
+        EventSystem.Instance.triggerEvent(GameEvent.Stun, {
+          amount: targets.length,
+        });
+      }
 
       const distances = new Map<number, number>();
       targets.forEach((target) =>

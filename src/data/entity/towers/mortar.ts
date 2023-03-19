@@ -18,6 +18,7 @@ const DAMAGE = 50;
 class Mortar implements ITower {
   public static readonly scale = 2;
   public static readonly range = 30;
+  public static maxBombedEnemies = 0;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
