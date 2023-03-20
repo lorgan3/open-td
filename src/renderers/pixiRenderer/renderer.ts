@@ -8,7 +8,6 @@ import {
   BaseTexture,
   FederatedPointerEvent,
   SCALE_MODES,
-  settings,
   SimplePlane,
   Texture,
 } from "pixi.js";
@@ -20,7 +19,7 @@ import { init as initSound, playSoundOnEvent, Sound } from "./sound";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
-import { LAYERS } from "./layer";
+import { FOLIAGE, LAYERS } from "./layer";
 import { EntityRenderer, EntityRendererStatics } from "./overrides/types";
 import {
   DEFAULT_SCALE,
@@ -198,6 +197,7 @@ class Renderer implements IRenderer {
       : this.surface.getTickingEntities();
     const deletedEntities = [...this.surface.getDeletedEntities()];
 
+    let shouldSortFoliage = false;
     for (let entity of entities) {
       let sprite = this.sprites.get(entity.getId());
       const isVisible = entity.getAgent().isVisible() || revealEverything;
@@ -212,7 +212,12 @@ class Renderer implements IRenderer {
         const constructor = override || Default;
 
         sprite = new constructor(entity.getAgent(), this.assets);
+        sprite.zIndex = entity.getAlignedY();
         constructor.layer.addChild(sprite);
+
+        if (constructor.layer === FOLIAGE) {
+          shouldSortFoliage = true;
+        }
 
         this.sprites.set(entity.getId(), sprite);
       }
@@ -234,6 +239,10 @@ class Renderer implements IRenderer {
         layer.removeChild(sprite);
       }
     });
+
+    if (shouldSortFoliage) {
+      FOLIAGE.sortChildren();
+    }
 
     this.cursorRenderer!.render();
     this.coverageRenderer!.update();
