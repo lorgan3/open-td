@@ -1,5 +1,5 @@
 import { splitNumber } from "../util";
-import { vi } from "vitest";
+import { vi, describe, it, expect, afterEach } from "vitest";
 
 describe("Wave utils", () => {
   it("returns the original number if there is only 1 part", () => {

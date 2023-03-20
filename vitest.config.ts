@@ -7,7 +7,7 @@ const vitestConfig: VitestUserConfigInterface = {
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: ["./setupJestAfterEnv.ts"],
+    setupFiles: ["./setupAfterEnv.ts"],
   },
 };
 

@@ -2,7 +2,7 @@ import Rock from "../../../../data/entity/rock";
 import Tile from "../../../../data/terrain/tile";
 import { DEFAULT_SCALE, SCALE } from "../../constants";
 import { ControllableSound } from "../controllableSound";
-import { vi } from "vitest";
+import { vi, describe, beforeAll, afterAll, it, expect } from "vitest";
 
 let getViewport = vi.fn();
 describe("ControllableSound", () => {

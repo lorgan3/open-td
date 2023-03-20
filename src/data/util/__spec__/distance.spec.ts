@@ -1,4 +1,5 @@
 import { getRayDistance, getSquareDistance } from "../distance";
+import { describe, it, expect } from "vitest";
 
 describe("distance", () => {
   const table = [

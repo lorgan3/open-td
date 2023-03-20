@@ -1,7 +1,7 @@
 import { TileType } from "../constants";
 import Surface from "../surface";
 import Tile from "../tile";
-import { vi } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 
 describe("surface", () => {
   const surface = new Surface({ width: 10, height: 5 });

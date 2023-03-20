@@ -6,7 +6,7 @@ import Blueprint from "../entity/blueprint";
 import { ARMORY, DEMOLISH, TOWER } from "../placeables";
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
-import { vi } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 
 describe("buildController", () => {
   const emptySet = new Set<Tile>();

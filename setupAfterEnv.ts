@@ -1,3 +1,5 @@
+import { expect } from "vitest";
+
 expect.extend({
   toApproximate(expected: number, actual: number) {
     return {

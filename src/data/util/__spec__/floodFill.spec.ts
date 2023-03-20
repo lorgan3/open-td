@@ -8,6 +8,7 @@ import { TileType } from "../../terrain/constants";
 import Base from "../../entity/base";
 import { vi } from "vitest";
 import { EntityType } from "../../entity/constants";
+import { describe, it, expect } from "vitest";
 
 describe("floodFill", () => {
   const surface = new Surface({ width: 8, height: 8 });

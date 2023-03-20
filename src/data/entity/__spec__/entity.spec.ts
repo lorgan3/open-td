@@ -2,6 +2,7 @@ import Tile from "../../terrain/tile";
 import Base from "../base";
 import Entity from "../entity";
 import Tower from "../towers/tower";
+import { describe, it, expect } from "vitest";
 
 describe("entity", () => {
   describe("move", () => {

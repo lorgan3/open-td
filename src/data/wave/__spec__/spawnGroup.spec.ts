@@ -2,6 +2,7 @@ import { DiscoveryStatus } from "../../terrain/constants";
 import Surface from "../../terrain/surface";
 import Tile from "../../terrain/tile";
 import SpawnGroup from "../spawnGroup";
+import { describe, it, expect } from "vitest";
 
 describe("SpawnGroup", () => {
   const surface = new Surface({

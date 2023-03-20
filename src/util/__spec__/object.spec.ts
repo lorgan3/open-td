@@ -1,4 +1,5 @@
 import { assertValue, getKey } from "../object";
+import { describe, it, expect } from "vitest";
 
 describe("object", () => {
   const object = { foo: 1, bar: 2, baz: 3 };

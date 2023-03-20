@@ -1,4 +1,5 @@
 import { assertNumber } from "../number";
+import { describe, it, expect } from "vitest";
 
 describe("number", () => {
   describe("assertNumber", () => {

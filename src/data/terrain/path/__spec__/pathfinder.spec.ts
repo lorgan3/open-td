@@ -2,6 +2,7 @@ import Pathfinder from "../pathfinder";
 import Surface from "../../surface";
 import Tile from "../../tile";
 import { TileType } from "../../constants";
+import { describe, it, expect } from "vitest";
 
 describe("pathfinder", () => {
   /* XX_XXX

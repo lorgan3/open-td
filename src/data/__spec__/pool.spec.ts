@@ -1,6 +1,6 @@
 import Pool, { PoolType } from "../pool";
 
-import { vi } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 
 describe("pool", () => {
   it("initializes a growing pool", () => {

@@ -1,4 +1,5 @@
 import { clamp, clampDegrees, lerp } from "../math";
+import { describe, it, expect } from "vitest";
 
 describe("lerp", () => {
   it("returns start position at 0", () => {

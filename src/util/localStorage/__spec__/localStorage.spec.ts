@@ -1,6 +1,6 @@
 import { get, set } from "..";
 import renderer from "../../../renderers/pixiRenderer/renderer";
-import { vi } from "vitest";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 
 vi.mock("../../../renderers/pixiRenderer/renderer", () => ({
   default: vi.fn(),

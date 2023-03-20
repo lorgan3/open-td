@@ -12,7 +12,7 @@ import { DirtCheckpoint } from "../../checkpoint/dirt";
 import { DiscoveryStatus, TileType } from "../../constants";
 import { Difficulty } from "../../../difficulty";
 import TestManager from "../../../controllers/__spec__/testManager";
-import { vi } from "vitest";
+import { vi, describe, it, expect, test } from "vitest";
 
 describe("path", () => {
   const speed = 1;
