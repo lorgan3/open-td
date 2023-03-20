@@ -167,7 +167,7 @@ class VisibilityController {
     return this.pendingAgents.size > 0;
   }
 
-  uncoverSpawnGroup(spawnGroup: SpawnGroup) {
+  uncoverSpawnGroup(spawnGroup: SpawnGroup, method: DiscoveryMethod) {
     const others = WaveController.Instance.getSpawnGroups();
     this.discoveredSpawnGroups.add(spawnGroup);
 
@@ -186,16 +186,10 @@ class VisibilityController {
       });
     });
 
-    const baseRadius = this.getVisibilityRange(this.base!) / 2;
-    const [baseX, baseY] = getCenter(this.base!);
-    const isCoveredByBase =
-      getSquareDistance(x, y, baseX, baseY) <
-      (baseRadius + SpawnGroup.size / 2) ** 2;
-
     EventSystem.Instance.triggerEvent(GameEvent.Discover, {
       x,
       y,
-      method: isCoveredByBase ? DiscoveryMethod.Base : DiscoveryMethod.Radar,
+      method,
     });
   }
 

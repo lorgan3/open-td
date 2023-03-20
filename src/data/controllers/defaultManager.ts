@@ -15,6 +15,7 @@ import EventSystem from "../eventSystem";
 import Base from "../entity/base";
 import WaveController from "./waveController";
 import VisibilityController from "./visibilityController";
+import WavePoint from "../entity/wavePoint";
 
 class DefaultManager extends Manager {
   private killedEnemies = 0;
@@ -186,7 +187,7 @@ class DefaultManager extends Manager {
   private end() {
     BuildController.Instance.commit();
     VisibilityController.Instance.commit();
-    WaveController.Instance.cleanupSpawnGroups();
+    WaveController.Instance.cleanupSpawnGroups(DiscoveryMethod.Base);
     this.base.regenerate();
 
     this.triggerStatUpdate();
@@ -241,9 +242,15 @@ class DefaultManager extends Manager {
   };
 
   private onDiscover = (event: Discover) => {
-    UnlocksController.Instance.addPoints(
-      event.method === DiscoveryMethod.Base ? 2 : 1
+    const amount = event.method === DiscoveryMethod.Base ? 2 : 1;
+    UnlocksController.Instance.addPoints(amount);
+
+    const wavePoint = new WavePoint(
+      this.surface.getTile(event.x, event.y)!,
+      amount
     );
+    this.surface.spawn(wavePoint);
+    wavePoint.discover();
   };
 
   private onLose = () => {

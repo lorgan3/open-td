@@ -18,7 +18,7 @@ class WavePoint implements Agent {
   sourceX = 0;
   sourceY = 0;
 
-  constructor(private tile: Tile) {
+  constructor(private tile: Tile, public amount = 1) {
     this.entity = new Entity(tile.getX() + 0.5, tile.getY() + 0.5, this);
     this.sourceX = this.entity.getX();
     this.sourceY = this.entity.getY();

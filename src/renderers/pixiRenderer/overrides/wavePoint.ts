@@ -31,6 +31,14 @@ class WavePoint extends Container implements EntityRenderer {
     );
     this.sprite.anchor.set(0.5);
 
+    if (data.amount > 1) {
+      const subSprite = new Sprite(
+        container.assets![ATLAS]!.textures[AtlasTile.Coin]
+      );
+      subSprite.anchor.set(0.25);
+      this.sprite.addChild(subSprite);
+    }
+
     this.container = new ParticleContainer(PARTICLE_COUNT, { alpha: true });
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const particle = new SmokeParticle(
