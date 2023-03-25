@@ -320,4 +320,39 @@ describe("path", () => {
     expect(clone).toEqual(path);
     expect(clone).not.toBe(path);
   });
+
+  it("merges paths", () => {
+    const paths = [
+      Path.fromTiles(pathfinder, [
+        surface.getTile(0, 0)!,
+        surface.getTile(0, 1)!,
+      ]),
+      Path.fromTiles(pathfinder, [
+        surface.getTile(0, 1)!,
+        surface.getTile(0, 2)!,
+        surface.getTile(0, 3)!,
+      ]),
+      Path.fromTiles(pathfinder, [
+        surface.getTile(0, 3)!,
+        surface.getTile(1, 3)!,
+      ]),
+    ];
+    paths[1].setCheckpoints([new DirtCheckpoint(2)]);
+    paths[2].setCheckpoints([new DirtCheckpoint(0)]);
+
+    const expectedPath = Path.fromTiles(
+      pathfinder,
+      [
+        surface.getTile(0, 0)!,
+        surface.getTile(0, 1)!,
+        surface.getTile(0, 2)!,
+        surface.getTile(0, 3)!,
+        surface.getTile(1, 3)!,
+      ],
+      speed
+    );
+    expectedPath.setCheckpoints([new DirtCheckpoint(4)]);
+
+    expect(Path.fromPaths(pathfinder, paths)).toEqual(expectedPath);
+  });
 });

@@ -305,6 +305,38 @@ class Path {
 
     return this.fromTiles(pathfinder, tiles.reverse(), speed);
   }
+
+  static fromPaths(pathfinder: Pathfinder, paths: Path[]) {
+    const tileArrays = paths.map((path) => path.getTiles());
+    const checkpointArrays = paths.map((path) => path.getCheckpoints());
+
+    const pathTiles = tileArrays[0];
+    const pathCheckpoints = checkpointArrays[0];
+    for (let i = 1; i < tileArrays.length; i++) {
+      const tiles = tileArrays[i];
+      if (pathTiles[pathTiles.length - 1] !== tiles[0]) {
+        console.log(pathTiles[pathTiles.length - 1], tiles[0]);
+        throw new Error(
+          "Cannot merge paths because they don't start and end at the same point"
+        );
+      }
+
+      const filteredCheckpoints = checkpointArrays[i].filter(
+        (checkpoint) => checkpoint.index !== 0
+      );
+      filteredCheckpoints.forEach(
+        (checkpoint) => (checkpoint.index += pathTiles.length)
+      );
+      pathCheckpoints.push(...filteredCheckpoints);
+
+      tiles.shift();
+      pathTiles.push(...tiles);
+    }
+
+    const path = Path.fromTiles(pathfinder, pathTiles, paths[0].getSpeed());
+    path.setCheckpoints(pathCheckpoints);
+    return path;
+  }
 }
 
 export default Path;

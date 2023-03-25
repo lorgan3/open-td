@@ -199,6 +199,16 @@ class Pathfinder {
     }, []);
   }
 
+  getWaypointPath(waypoints: Tile[]) {
+    const paths: Path[] = [];
+
+    for (let i = 0; i < waypoints.length - 1; i++) {
+      paths.push(this.getPath(waypoints[i], waypoints[i + 1])!);
+    }
+
+    return Path.fromPaths(this, paths);
+  }
+
   // From and to should be 1 tile apart
   getCost(from: Tile, to?: Tile) {
     if (this.computedVersion !== this.surface.version) {

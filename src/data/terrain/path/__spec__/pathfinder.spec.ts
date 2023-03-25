@@ -191,4 +191,27 @@ describe("pathfinder", () => {
       }
     );
   });
+
+  it("finds a path for waypoints", () => {
+    const path = pathfinder
+      .getWaypointPath([
+        surface.getTile(0, 3)!,
+        surface.getTile(0, 5)!,
+        surface.getTile(2, 5)!,
+      ])
+      .getTiles();
+
+    const steps = [
+      [0, 3],
+      [0, 4],
+      [0, 5],
+      [1, 5],
+      [2, 5],
+    ];
+
+    expect(path).toHaveLength(steps.length);
+    steps.forEach(([x, y], i) =>
+      expect(path[i]).toEqual(expect.objectContaining({ x, y }))
+    );
+  });
 });
