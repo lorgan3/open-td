@@ -220,6 +220,10 @@ class Path {
   }
 
   getCurrentTile() {
+    if (this.index < 0) {
+      return this.tiles[0];
+    }
+
     return this.tiles[this.index | 0];
   }
 

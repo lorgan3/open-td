@@ -38,7 +38,7 @@ class EnemyAI {
     this.cooldown = Math.max(0, this.cooldown - dt);
 
     if (this.enemy.getPath().isPaused(this.enemy) && !this.isBusy()) {
-      const to = this.enemy.getPath().getTile();
+      const to = this.enemy.getPath().getCurrentTile();
       this.enemy.entity.setX(to.getX());
       this.enemy.entity.setY(to.getY());
 
@@ -58,8 +58,11 @@ class EnemyAI {
       const { from, to, step } = this.enemy
         .getPath()
         .performStep(this.enemy, dt);
-      this.enemy.entity.move(from, to, step);
-      this.getTargeted(from, dt);
+      this.enemy.entity.move(from ?? to, to, step);
+
+      if (from) {
+        this.getTargeted(from, dt);
+      }
     }
   }
 
