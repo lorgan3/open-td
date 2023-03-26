@@ -16,6 +16,7 @@ import Base from "../entity/base";
 import WaveController from "./waveController";
 import VisibilityController from "./visibilityController";
 import WavePoint from "../entity/wavePoint";
+import timeline from "../../util/timeline";
 
 class DefaultManager extends Manager {
   private killedEnemies = 0;
@@ -44,6 +45,30 @@ class DefaultManager extends Manager {
     );
 
     console.log(this);
+
+    EventSystem.Instance.addEventListener(
+      GameEvent.SurfaceChange,
+      ({ affectedTiles }) => {
+        surface
+          .getEntitiesForCategory(AgentCategory.Enemy)
+          .forEach((entity) => {
+            const enemy = entity.getAgent() as IEnemy;
+            if (enemy.getPath().isAffectedByTiles(affectedTiles)) {
+              enemy.getPath().recompute();
+            }
+          });
+      }
+    );
+
+    window.addEventListener("keydown", (event) => {
+      if (event.repeat) {
+        return;
+      }
+
+      if (event.key === "x") {
+        timeline.play();
+      }
+    });
   }
 
   tick(dt: number) {
@@ -95,9 +120,9 @@ class DefaultManager extends Manager {
     this.killedEnemies++;
 
     if (this.surface.despawn(enemy)) {
-      if (WaveController.Instance.processWave()) {
-        this.end();
-      }
+      // if (WaveController.Instance.processWave()) {
+      //   this.end();
+      // }
     }
   }
 

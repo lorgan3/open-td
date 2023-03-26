@@ -69,14 +69,14 @@ const getGenerator = (seed: string, mapWidth: number, mapHeight: number) => {
   }
 
   const generate: Generator = (x, y) => {
-    if (
-      y < edges.top[x] ||
-      y > mapHeight - edges.bottom[x] ||
-      x < edges.left[y] ||
-      x > mapWidth - edges.right[y]
-    ) {
-      return new Tile(x, y, TileType.Void);
-    }
+    // if (
+    //   y < edges.top[x] ||
+    //   y > mapHeight - edges.bottom[x] ||
+    //   x < edges.left[y] ||
+    //   x > mapWidth - edges.right[y]
+    // ) {
+    //   return new Tile(x, y, TileType.Void);
+    // }
 
     const x1 = x + xOffset;
     const y1 = y + yOffset;

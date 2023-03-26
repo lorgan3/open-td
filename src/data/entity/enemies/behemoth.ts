@@ -31,7 +31,7 @@ class Behemoth implements IEnemy {
   public static readonly pathCosts = DEFAULT_LAND_BASED_COSTS;
   public static readonly pathMultipliers = mapWithOverrides(
     DEFAULT_LAND_BASED_MULTIPLIERS,
-    { [TileType.Water]: 2 }
+    { [TileType.Water]: 2, [TileType.Bridge]: 2 }
   );
   public static readonly type = EntityType.Behemoth;
   public static readonly cost = 32;

@@ -36,6 +36,7 @@ class Bore implements IEnemy {
     {
       [TileType.Fence]: 1,
       [TileType.Freezer]: 8,
+      [TileType.Bridge]: 20,
     }
   );
   public static readonly pathMultipliers = mapWithOverrides(

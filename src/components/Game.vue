@@ -15,6 +15,8 @@ import UnlocksController from "../data/controllers/unlocksController";
 import { GameEvent } from "../data/events";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import AchievementController from "../data/controllers/achievementController";
+import Tile from "../data/terrain/tile";
+import { TileType } from "../data/terrain/constants";
 
 const props = defineProps<{
   seed: string;
@@ -32,15 +34,23 @@ const isMenuVisible = ref(false);
 const isMarketplaceVisible = ref(false);
 const simulationSpeed = ref(props.initialSpeed);
 
+// const surface = new Surface({
+//   width: 160,
+//   height: 160,
+//   generate: getGenerator(props.seed, 160, 160),
+// });
+
 const surface = new Surface({
-  width: 160,
-  height: 160,
-  generate: getGenerator(props.seed, 160, 160),
+  width: 50,
+  height: 50,
+  generate: getGenerator(props.seed, 50, 50),
 });
+
 const controller = new Controller(surface);
 let renderer = new props.renderer(surface, controller);
 
-const targetTile = surface.getTile(80, 80)!;
+// const targetTile = surface.getTile(80, 80)!;
+const targetTile = surface.getTile(45, 45)!;
 const manager = init(
   props.difficulty,
   targetTile,
@@ -188,7 +198,7 @@ const returnToMainMenu = () => {
       </defs>
     </svg>
 
-    <Hud :renderer="renderer" :controller="Controller.Instance" />
+    <!-- <Hud :renderer="renderer" :controller="Controller.Instance" /> -->
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
       <Marketplace
@@ -218,7 +228,7 @@ const returnToMainMenu = () => {
 
     .render-target {
       max-width: 100vw;
-      max-height: calc(100vh - 32px);
+      max-height: calc(100vh - 0px);
       overflow: auto;
 
       -ms-overflow-style: none;

@@ -26,7 +26,7 @@ class PowerController {
   private consumption = 0;
   private blackout = false;
 
-  private power = 0;
+  private power = 1000;
 
   constructor() {
     PowerController.instance = this;

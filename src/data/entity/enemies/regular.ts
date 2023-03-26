@@ -49,7 +49,7 @@ class Regular implements IEnemy {
         this.path.getTiles(),
         getStaticEntityCheckpoints,
         maybe(0.5, getDirtCheckpoints),
-        maybe(0.1, getWaterCheckpoints)
+        maybe(1, getWaterCheckpoints)
       )
     );
   }

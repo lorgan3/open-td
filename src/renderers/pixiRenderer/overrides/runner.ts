@@ -66,14 +66,18 @@ class Runner extends AnimatedSprite implements EntityRenderer {
       this.oldOffset = offset;
     }
 
-    if (this.data.AI.isBusy() === this.playing) {
-      if (this.playing) {
-        this.stop();
-      } else {
-        this.play();
-        this.oldOffset = 0;
-      }
+    if (this.data.getPath().isDone()) {
+      this.stop();
     }
+
+    // if (this.data.AI.isBusy() === this.playing) {
+    //   if (this.playing) {
+    //     this.stop();
+    //   } else {
+    //     this.play();
+    //     this.oldOffset = 0;
+    //   }
+    // }
 
     const offset = SCALE / 2;
     this.flames.forEach((flame) => {

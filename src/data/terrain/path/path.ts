@@ -60,7 +60,10 @@ class Path {
       this.index + (this.speed * dt) / multiplier,
       this.tiles.length - 1
     );
-    while (this.index > this.sections[this.sectionIndex].to) {
+    while (
+      this.sections[this.sectionIndex] &&
+      this.index > this.sections[this.sectionIndex].to
+    ) {
       this.sectionIndex++;
     }
 

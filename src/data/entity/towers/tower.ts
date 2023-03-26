@@ -18,7 +18,7 @@ const DAMAGE = 10;
 
 class Tower implements ITower {
   public static readonly scale = 2;
-  public static readonly range = 10;
+  public static readonly range = 12;
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;

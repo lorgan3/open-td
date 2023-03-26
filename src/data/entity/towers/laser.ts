@@ -15,7 +15,7 @@ import StaticEntity, { StaticAgent } from "../staticEntity";
 
 const COOLDOWN = 1;
 const DAMAGE = 0.06;
-const CHARGE_TIME = 500;
+const CHARGE_TIME = 100;
 
 class Laser implements ITower {
   public static readonly scale = 2;

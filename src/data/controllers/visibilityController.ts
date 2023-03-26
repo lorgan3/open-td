@@ -201,7 +201,7 @@ class VisibilityController {
     switch (agent.getType()) {
       case EntityType.Base:
         return (
-          35 +
+          135 +
           (Manager.Instance.getLevel() - (this.pendingRadius > 0 ? 1 : 0)) * 2
         );
       case EntityType.Radar:

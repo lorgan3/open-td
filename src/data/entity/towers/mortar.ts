@@ -22,7 +22,7 @@ class Mortar implements ITower {
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
-  private cooldown = 0;
+  private cooldown = 500;
   private cleanupEventListener?: () => void;
   private hp = 80;
   private isEnabled = true;

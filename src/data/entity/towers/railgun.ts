@@ -23,7 +23,7 @@ class Railgun implements ITower {
 
   public entity: StaticEntity;
   public category = AgentCategory.Player;
-  private cooldown = 0;
+  private cooldown = 750;
   private cleanupEventListener?: () => void;
   private hp = 80;
   private isEnabled = true;
