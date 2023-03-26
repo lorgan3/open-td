@@ -4,7 +4,7 @@
 
 Some sort of tower defense game ever so slightly inspired by [Rogue Tower](https://store.steampowered.com/app/1843760/Rogue_Tower/).
 
-This is now in a semi-playable state! [Try it out!](https://lorgan3.github.io/open-td/)
+This is now in a playable state! [Try it out](https://lorgan3.github.io/open-td/) or [Watch the trailer](https://www.youtube.com/watch?v=K3L1v3RezDY)
 
 ## Why
 
