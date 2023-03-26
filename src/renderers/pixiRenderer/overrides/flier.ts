@@ -36,11 +36,14 @@ class Flier extends AnimatedSprite implements EntityRenderer {
 
     this.on("removed", () => {
       deleteShadow(this.shadow);
-      new Explosion(
-        container,
-        data.entity.getX() + 0.5,
-        data.entity.getY() + 0.5
-      );
+
+      if (data.AI.hp <= 0) {
+        new Explosion(
+          container,
+          data.entity.getX() + 0.5,
+          data.entity.getY() + 0.5
+        );
+      }
     });
   }
 

@@ -33,7 +33,15 @@ class Behemoth extends AnimatedSprite implements EntityRenderer {
 
     this.on("removed", () => {
       deleteShadow(this.shadow);
-      new Explosion(container, data.entity.getX() + 1, data.entity.getY() + 1);
+
+      if (data.AI.hp <= 0) {
+        new Explosion(
+          container,
+          data.entity.getX() + 1,
+          data.entity.getY() + 1,
+          2
+        );
+      }
     });
 
     this.play();
