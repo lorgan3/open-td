@@ -20,12 +20,7 @@ BASE.name = "Base";
 /**
  * Intended for simple static entities that should overlap the static layer only.
  */
-export const FOLIAGE = new ParticleContainer(
-  undefined,
-  { position: false },
-  undefined,
-  true
-);
+export const FOLIAGE = new Container();
 FOLIAGE.name = "Foliage";
 
 export const PROJECTILES = new Container();
