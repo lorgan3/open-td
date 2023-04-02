@@ -1,3 +1,4 @@
+import { SurfaceSchema } from "../surfaceSchema";
 import Tile, { SerializedTile } from "../tile";
 import Path from "./path";
 import Pathfinder from "./pathfinder";
@@ -64,11 +65,9 @@ class PathData {
   private createPromise() {
     this.promise = new Promise((resolve) => {
       const surface = this.pathfinder.getSurface();
-      const { width, height, buffer } = surface.serialize();
+      const buffer = SurfaceSchema.serializeSurface(surface, false);
 
       const event: WorkerEvent = {
-        width,
-        height,
         buffer: buffer.buffer,
         costs: this.pathfinder.costs,
         costMultiplier: this.pathfinder.costMultipliers,

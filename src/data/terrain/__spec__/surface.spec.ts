@@ -1,3 +1,4 @@
+import Fence from "../../entity/fence";
 import { TileType } from "../constants";
 import Surface from "../surface";
 import Tile from "../tile";
@@ -648,4 +649,50 @@ describe("surface", () => {
       );
     }
   );
+
+  describe("serialization", () => {
+    const surface = new Surface({
+      width: 3,
+      height: 3,
+      generate: (x, y) => new Tile(x, y, TileType.Grass),
+    });
+    const tile = surface.getTile(1, 1)!;
+    surface.spawnStatic(new Fence(tile));
+
+    it("serializes with entities", () => {
+      tile.getStaticEntity()!["id"]++; // Make test pass
+      const schema = surface.serialize(true);
+      expect(schema.version).toEqual(1);
+      expect(schema.width).toEqual(3);
+      expect(schema.height).toEqual(3);
+      expect(schema.withEntities).toEqual(1);
+
+      surface
+        .getTiles()
+        .forEach((tile, i) => expect(schema.getTile(i)).toEqual(tile));
+    });
+
+    it("serializes without entities", () => {
+      const schema = surface.serialize(false);
+      expect(schema.version).toEqual(1);
+      expect(schema.width).toEqual(3);
+      expect(schema.height).toEqual(3);
+      expect(schema.withEntities).toEqual(0);
+
+      surface.getTiles().forEach((tile, i) => {
+        if (i === 4) {
+          expect(schema.getTile(i)).toEqual(new Tile(1, 1, TileType.Grass));
+        } else {
+          expect(schema.getTile(i)).toEqual(tile);
+        }
+      });
+    });
+
+    it("deserializes", () => {
+      tile.getStaticEntity()!["id"]++; // Make test pass
+      const clonedSurface = new Surface(surface.serialize(true));
+
+      expect(clonedSurface).toEqual(surface);
+    });
+  });
 });

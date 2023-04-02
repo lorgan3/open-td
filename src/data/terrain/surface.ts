@@ -6,17 +6,12 @@ import StaticEntity, { getScale, StaticAgent } from "../entity/staticEntity";
 import { AgentCategory } from "../entity/constants";
 import EventSystem from "../eventSystem";
 import { getRange, isTower, ITower } from "../entity/towers";
+import { SurfaceSchema } from "./surfaceSchema";
 
 export interface GeneratorParams {
   width: number;
   height: number;
   generate?: Generator;
-}
-
-export interface CopyParams {
-  width: number;
-  height: number;
-  buffer: Uint8Array;
 }
 
 const ADJACENT_COORDINATES: Array<[number, number]> = [
@@ -51,35 +46,23 @@ class Surface {
   private addedAgents = new Set<StaticAgent>();
   private removedAgents = new Set<StaticAgent>();
 
-  constructor(params: GeneratorParams | CopyParams) {
+  constructor(params: GeneratorParams | SurfaceSchema) {
     this.width = params.width;
     this.height = params.height;
 
-    const generatorOrBuffer =
-      "buffer" in params ? params.buffer : params.generate;
+    const generatorOrSchema =
+      params instanceof SurfaceSchema ? params : params.generate;
 
-    this.initialize(generatorOrBuffer ?? ((x, y) => new Tile(x, y)));
+    this.initialize(generatorOrSchema ?? ((x, y) => new Tile(x, y)));
   }
 
-  serialize(): CopyParams {
-    const buffer = new Uint8Array(this.map.length * 3);
-    for (let i = 0; i < this.map.length; i++) {
-      const tile = this.map[i];
-      const index = i * 3;
-
-      buffer[index] = tile.getX();
-      buffer[index + 1] = tile.getY();
-      buffer[index + 2] = tile.getType();
-    }
-
-    return {
-      width: this.width,
-      height: this.height,
-      buffer,
-    };
+  serialize(withEntities: boolean): SurfaceSchema {
+    return new SurfaceSchema(
+      SurfaceSchema.serializeSurface(this, withEntities)
+    );
   }
 
-  private initialize(generateOrBuffer: Generator | Uint8Array) {
+  private initialize(generateOrSchema: Generator | SurfaceSchema) {
     this.entities = [];
     this.deletedEntities = [];
     this.entitiesMap.clear();
@@ -89,20 +72,19 @@ class Surface {
       .forEach((category) => this.entitiesMap.set(category, new Set()));
     this.map = new Array(this.width * this.height);
 
-    if (generateOrBuffer instanceof Uint8Array) {
+    const staticEntities: StaticEntity[] = [];
+    if (generateOrSchema instanceof SurfaceSchema) {
       for (let i = 0; i < this.map.length; i++) {
-        const index = i * 3;
-        this.map[i] = new Tile(
-          generateOrBuffer[index],
-          generateOrBuffer[index + 1],
-          generateOrBuffer[index + 2]
-        );
+        const tile = generateOrSchema.getTile(i);
+        this.map[i] = tile;
+        if (tile.hasStaticEntity()) {
+          staticEntities.push(tile.getStaticEntity());
+        }
       }
     } else {
-      const staticEntities: StaticEntity[] = [];
       for (let j = 0; j < this.height; j++) {
         for (let i = 0; i < this.width; i++) {
-          const tile = generateOrBuffer(i, j);
+          const tile = generateOrSchema(i, j);
           this.map[j * this.width + i] = tile;
 
           if (tile.hasStaticEntity()) {
@@ -110,10 +92,10 @@ class Surface {
           }
         }
       }
+    }
 
-      for (let entity of staticEntities) {
-        this.spawnStatic(entity.getAgent());
-      }
+    for (let entity of staticEntities) {
+      this.spawnStatic(entity.getAgent());
     }
   }
 
