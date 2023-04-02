@@ -53,7 +53,7 @@ export class SurfaceSchema {
 
   private tileBufferSize;
   constructor(private buffer: Uint8Array) {
-    this.tileBufferSize = this.withEntities ? 4 : 3;
+    this.tileBufferSize = this.withEntities ? 2 : 1;
   }
 
   get version() {
@@ -75,15 +75,15 @@ export class SurfaceSchema {
   getTile(index: number) {
     const offset = SurfaceSchema.propertyCount + index * this.tileBufferSize;
     const tile = new Tile(
-      this.buffer[offset],
-      this.buffer[offset + 1],
-      this.buffer[offset + 2]
+      index % this.width,
+      Math.floor(index / this.width),
+      this.buffer[offset]
     );
 
     if (this.withEntities) {
       const constructor =
         SurfaceSchema.tileTypeMap[
-          this.buffer[offset + 3] as keyof typeof SurfaceSchema.tileTypeMap
+          this.buffer[offset + 1] as keyof typeof SurfaceSchema.tileTypeMap
         ];
 
       if (constructor) {
@@ -95,7 +95,7 @@ export class SurfaceSchema {
   }
 
   static serializeSurface(surface: Surface, withEntities: boolean) {
-    const tileBufferSize = withEntities ? 4 : 3;
+    const tileBufferSize = withEntities ? 2 : 1;
 
     const buffer = new Uint8Array(
       SurfaceSchema.propertyCount + surface.map.length * tileBufferSize
@@ -109,12 +109,10 @@ export class SurfaceSchema {
       const tile = surface.map[i];
       const index = i * tileBufferSize + SurfaceSchema.propertyCount;
 
-      buffer[index] = tile.getX();
-      buffer[index + 1] = tile.getY();
-      buffer[index + 2] = tile.getAltType();
+      buffer[index] = tile.getAltType();
 
       if (withEntities) {
-        buffer[index + 3] =
+        buffer[index + 1] =
           tile.getStaticEntity()?.getAgent().getType() ?? EntityType.None;
       }
     }
