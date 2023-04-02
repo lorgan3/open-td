@@ -45,6 +45,7 @@ class Surface {
   private changedTiles = new Set<Tile>();
   private addedAgents = new Set<StaticAgent>();
   private removedAgents = new Set<StaticAgent>();
+  private initialized = false;
 
   constructor(params: GeneratorParams | SurfaceSchema) {
     this.width = params.width;
@@ -54,6 +55,7 @@ class Surface {
       params instanceof SurfaceSchema ? params : params.generate;
 
     this.initialize(generatorOrSchema ?? ((x, y) => new Tile(x, y)));
+    this.initialized = true;
   }
 
   serialize(withEntities: boolean): SurfaceSchema {
@@ -424,7 +426,7 @@ class Surface {
       this.dirty = true;
     }
 
-    if (agent.spawn) {
+    if (agent.spawn && this.initialized) {
       agent.spawn();
     }
   }
