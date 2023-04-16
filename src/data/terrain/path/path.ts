@@ -319,7 +319,6 @@ class Path {
     for (let i = 1; i < tileArrays.length; i++) {
       const tiles = tileArrays[i];
       if (pathTiles[pathTiles.length - 1] !== tiles[0]) {
-        console.log(pathTiles[pathTiles.length - 1], tiles[0]);
         throw new Error(
           "Cannot merge paths because they don't start and end at the same point"
         );
