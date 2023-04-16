@@ -15,7 +15,9 @@ class Freezer implements StaticAgent {
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
+  }
 
+  spawn() {
     const tiles: Tile[] = [];
     Manager.Instance.getSurface()
       .getEntityTiles(this)
