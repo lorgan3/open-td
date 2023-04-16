@@ -22,54 +22,55 @@ import DamageBeacon from "../entity/damageBeacon";
 import Laser from "../entity/towers/laser";
 import Barracks from "../entity/barracks";
 import Tesla from "../entity/towers/tesla";
+import { StaticAgent } from "../entity/staticEntity";
+import { StaticAgentStatics } from "../entity/staticEntity";
 
 export class SurfaceSchema {
-  static currentVersion = 1;
-  private static propertyCount = 4;
+  private static propertyCount = 3;
 
-  private static tileTypeMap = {
-    [EntityType.Tower]: Tower,
-    [EntityType.Base]: Base,
-    [EntityType.Wall]: Wall,
-    [EntityType.Mortar]: Mortar,
-    [EntityType.Flamethrower]: Flamethrower,
-    [EntityType.Railgun]: Railgun,
-    [EntityType.ElectricFence]: ElectricFence,
-    [EntityType.Fence]: Fence,
-    [EntityType.Freezer]: Freezer,
-    [EntityType.Tree]: Tree,
-    [EntityType.Stump]: Stump,
-    [EntityType.Rock]: Rock,
-    [EntityType.Radar]: Radar,
-    [EntityType.PowerPlant]: PowerPlant,
-    [EntityType.Armory]: Armory,
-    [EntityType.Market]: Market,
-    [EntityType.SpeedBeacon]: SpeedBeacon,
-    [EntityType.DamageBeacon]: DamageBeacon,
-    [EntityType.Laser]: Laser,
-    [EntityType.Barracks]: Barracks,
-    [EntityType.Tesla]: Tesla,
-  };
+  private static tileTypeMap: Partial<
+    Record<EntityType, (new (tile: Tile) => StaticAgent) & StaticAgentStatics>
+  >;
 
   private tileBufferSize;
-  constructor(private buffer: Uint8Array) {
+  constructor(public readonly buffer: Uint8Array) {
     this.tileBufferSize = this.withEntities ? 2 : 1;
-  }
 
-  get version() {
-    return this.buffer[0];
+    SurfaceSchema.tileTypeMap = {
+      [EntityType.Tower]: Tower,
+      [EntityType.Base]: Base,
+      [EntityType.Wall]: Wall,
+      [EntityType.Mortar]: Mortar,
+      [EntityType.Flamethrower]: Flamethrower,
+      [EntityType.Railgun]: Railgun,
+      [EntityType.ElectricFence]: ElectricFence,
+      [EntityType.Fence]: Fence,
+      [EntityType.Freezer]: Freezer,
+      [EntityType.Tree]: Tree,
+      [EntityType.Stump]: Stump,
+      [EntityType.Rock]: Rock,
+      [EntityType.Radar]: Radar,
+      [EntityType.PowerPlant]: PowerPlant,
+      [EntityType.Armory]: Armory,
+      [EntityType.Market]: Market,
+      [EntityType.SpeedBeacon]: SpeedBeacon,
+      [EntityType.DamageBeacon]: DamageBeacon,
+      [EntityType.Laser]: Laser,
+      [EntityType.Barracks]: Barracks,
+      [EntityType.Tesla]: Tesla,
+    };
   }
 
   get width() {
-    return this.buffer[1];
+    return this.buffer[0];
   }
 
   get height() {
-    return this.buffer[2];
+    return this.buffer[1];
   }
 
   get withEntities() {
-    return this.buffer[3];
+    return this.buffer[2];
   }
 
   getTile(index: number) {
@@ -101,19 +102,23 @@ export class SurfaceSchema {
       SurfaceSchema.propertyCount + surface.map.length * tileBufferSize
     );
 
-    buffer[0] = SurfaceSchema.currentVersion;
-    buffer[1] = surface.getWidth();
-    buffer[2] = surface.getHeight();
-    buffer[3] = withEntities ? 1 : 0;
+    buffer[0] = surface.getWidth();
+    buffer[1] = surface.getHeight();
+    buffer[2] = withEntities ? 1 : 0;
     for (let i = 0; i < surface.map.length; i++) {
       const tile = surface.map[i];
       const index = i * tileBufferSize + SurfaceSchema.propertyCount;
 
-      buffer[index] = tile.getAltType();
+      buffer[index] = withEntities ? tile.getAltType() : tile.getType();
 
       if (withEntities) {
-        buffer[index + 1] =
-          tile.getStaticEntity()?.getAgent().getType() ?? EntityType.None;
+        const agent =
+          tile.hasStaticEntity() &&
+          tile.getStaticEntity().getAgent().getTile() === tile
+            ? tile.getStaticEntity().getAgent()
+            : null;
+
+        buffer[index + 1] = agent?.getType() ?? EntityType.None;
       }
     }
 

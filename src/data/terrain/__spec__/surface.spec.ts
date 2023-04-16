@@ -662,7 +662,6 @@ describe("surface", () => {
     it("serializes with entities", () => {
       tile.getStaticEntity()!["id"]++; // Make test pass
       const schema = surface.serialize(true);
-      expect(schema.version).toEqual(1);
       expect(schema.width).toEqual(3);
       expect(schema.height).toEqual(3);
       expect(schema.withEntities).toEqual(1);
@@ -674,14 +673,13 @@ describe("surface", () => {
 
     it("serializes without entities", () => {
       const schema = surface.serialize(false);
-      expect(schema.version).toEqual(1);
       expect(schema.width).toEqual(3);
       expect(schema.height).toEqual(3);
       expect(schema.withEntities).toEqual(0);
 
       surface.getTiles().forEach((tile, i) => {
         if (i === 4) {
-          expect(schema.getTile(i)).toEqual(new Tile(1, 1, TileType.Grass));
+          expect(schema.getTile(i)).toEqual(new Tile(1, 1, TileType.Fence));
         } else {
           expect(schema.getTile(i)).toEqual(tile);
         }
