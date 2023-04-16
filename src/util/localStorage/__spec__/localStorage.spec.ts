@@ -1,4 +1,4 @@
-import { get, set } from "..";
+import { get, has, remove, set } from "..";
 import renderer from "../../../renderers/pixiRenderer/renderer";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
@@ -12,6 +12,7 @@ vi.mock("../../../renderers/emojiRenderer/renderer", () => ({
 describe("localStorage", () => {
   vi.spyOn(window.localStorage.__proto__, "setItem");
   const getItem = vi.spyOn(window.localStorage.__proto__, "getItem");
+  const removeItem = vi.spyOn(window.localStorage.__proto__, "removeItem");
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -93,5 +94,23 @@ describe("localStorage", () => {
     expect(get("settings")).toEqual({
       renderer,
     });
+  });
+
+  it("Checks if values are present", () => {
+    getItem.mockReturnValue(JSON.stringify({ difficulty: "easy" }));
+
+    expect(has("settings")).toBeTruthy();
+  });
+
+  it("Checks if values are not present", () => {
+    getItem.mockReturnValue("");
+
+    expect(has("settings")).toBeFalsy();
+  });
+
+  it("removes values", () => {
+    remove("settings");
+
+    expect(removeItem).toHaveBeenCalledWith("settings");
   });
 });

@@ -57,3 +57,7 @@ export const set = <K extends keyof Items>(
 export const has = (key: keyof Items) => {
   return !!localStorage.getItem(key);
 };
+
+export const remove = (key: keyof Items) => {
+  localStorage.removeItem(key);
+};

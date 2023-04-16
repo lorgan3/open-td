@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { difficulties, Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
 import { get, set, has } from "../util/localStorage";
@@ -33,8 +33,14 @@ enum SubMenu {
 const openSubMenu = ref(SubMenu.None);
 const seed = ref(getWord());
 const seedInput = ref<HTMLInputElement | null>(null);
+const hasSave = ref(false);
 
-const hasSave = has("save");
+onMounted(() => {
+  window.setTimeout(() => {
+    hasSave.value = has("save");
+  }, 0);
+});
+
 const storedData = get("settings");
 const difficulty = ref(storedData?.difficulty || Difficulty.Easy);
 

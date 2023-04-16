@@ -15,8 +15,9 @@ import UnlocksController from "../data/controllers/unlocksController";
 import { GameEvent } from "../data/events";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import AchievementController from "../data/controllers/achievementController";
-import { get } from "../util/localStorage";
+import { get, remove } from "../util/localStorage";
 import DefaultManager from "../data/controllers/defaultManager";
+import Manager from "../data/controllers/manager";
 
 const props = defineProps<{
   seed: string | null;
@@ -144,6 +145,10 @@ onUnmounted(() => {
   removeOpenMenuEventListener();
   removeCloseMenuEventListener();
   mounted = false;
+
+  if (Manager.Instance.getBase().isDestroyed()) {
+    remove("save");
+  }
 });
 
 const resume = (
