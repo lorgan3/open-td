@@ -266,6 +266,7 @@ class Renderer implements IRenderer {
       this.app.destroy(true);
       this.removeEventListeners!();
       LAYERS.forEach((layer) => layer.removeChildren());
+      this.alertRenderer!.unmount();
     }
   }
 

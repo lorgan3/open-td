@@ -24,12 +24,15 @@ class AlertRenderer {
   private time = 0;
   private permanent = false;
 
+  private removeEndWaveEventListener: () => void;
+
   constructor(private assetsContainer: AssetsContainer) {
     this.container = new Container();
     UI.addChild(this.container);
 
-    EventSystem.Instance.addEventListener(GameEvent.EndWave, () =>
-      this.reset()
+    this.removeEndWaveEventListener = EventSystem.Instance.addEventListener(
+      GameEvent.EndWave,
+      () => this.reset()
     );
   }
 
@@ -127,6 +130,10 @@ class AlertRenderer {
     });
 
     this.time += dt;
+  }
+
+  unmount() {
+    this.removeEndWaveEventListener();
   }
 }
 
