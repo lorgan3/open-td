@@ -11,16 +11,19 @@ import EventSystem from "../../data/eventSystem";
 const props = defineProps<{
   renderer: IRenderer;
   controller: Controller;
+  restart: () => void;
 }>();
 
 const level = ref(0);
 const inProgress = ref(false);
 const showCoverage = ref(false);
 const expansion = ref(false);
+const integrity = ref(0);
 
 const eventHandler = (stats: StatUpdate) => {
   level.value = stats.level;
-  inProgress.value = stats.inProgress;
+  inProgress.value = stats.inProgress && stats.integrity > 0;
+  integrity.value = stats.integrity;
 };
 
 onMounted(() => {
@@ -33,7 +36,11 @@ onUnmounted(() => {
 });
 
 function start() {
-  Manager.Instance.start();
+  if (integrity.value > 0) {
+    Manager.Instance.start();
+  } else {
+    props.restart();
+  }
 }
 
 function toggleExpand() {
@@ -61,7 +68,12 @@ function toggleCoverage() {
           @click="start"
         >
           <span class="emoji">⚔️</span>
-          <span v-if="!inProgress">Start wave {{ level + 1 }}</span>
+          <span v-if="!inProgress && integrity > 0"
+            >Start wave {{ level + 1 }}</span
+          >
+          <span v-if="!inProgress && integrity <= 0"
+            >Restart wave {{ level }}</span
+          >
           <span v-if="inProgress">Wave {{ level }}</span>
         </button>
         <button class="toggle" @click="props.controller.toggleBuildMenu">

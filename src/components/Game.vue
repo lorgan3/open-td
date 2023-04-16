@@ -178,6 +178,15 @@ const resume = (
   controller.unpause();
 };
 
+const restart = () => {
+  manager = deserialize(renderer.showMessage, get("save")!);
+  surface = manager.getSurface();
+
+  controller.initialize(surface);
+  renderer.unmount();
+  renderer.mount(surface, canvas.value as HTMLDivElement);
+};
+
 const returnToMainMenu = () => {
   AchievementController.Instance.unRegister();
   props.mainMenu();
@@ -196,7 +205,11 @@ const returnToMainMenu = () => {
       </defs>
     </svg>
 
-    <Hud :renderer="renderer" :controller="Controller.Instance" />
+    <Hud
+      :renderer="renderer"
+      :controller="Controller.Instance"
+      :restart="restart"
+    />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
       <Marketplace
