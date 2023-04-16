@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { difficulties, Difficulty } from "../data/difficulty";
 import { Constructor } from "../renderers/api";
-import { get, set } from "../util/localStorage";
+import { get, set, has } from "../util/localStorage";
 import ControlsList from "./ControlsList.vue";
 import Settings from "./Settings.vue";
 import AchievementsList from "./achievements/AchievementsList.vue";
@@ -14,7 +14,7 @@ import { getWord } from "../util/word";
 
 const props = defineProps<{
   onPlay: (
-    seed: string,
+    seed: string | null,
     difficulty: Difficulty,
     renderer: Constructor,
     showTutorial: boolean,
@@ -34,6 +34,7 @@ const openSubMenu = ref(SubMenu.None);
 const seed = ref(getWord());
 const seedInput = ref<HTMLInputElement | null>(null);
 
+const hasSave = has("save");
 const storedData = get("settings");
 const difficulty = ref(storedData?.difficulty || Difficulty.Easy);
 
@@ -73,6 +74,20 @@ const submit = (event: Event) => {
     settings.simulation!
   );
 };
+
+const loadSave = (event: Event) => {
+  event.preventDefault();
+
+  const settings = getSettings();
+
+  props.onPlay(
+    null,
+    difficulty.value,
+    settings.renderer!,
+    settings.showTutorial!,
+    settings.simulation!
+  );
+};
 </script>
 
 <template>
@@ -82,6 +97,7 @@ const submit = (event: Event) => {
     <div class="menu">
       <div class="menu-main">
         <div class="menu-main-inner">
+          <button v-if="hasSave" @click="loadSave">Continue</button>
           <button @click="onClick(SubMenu.Play)">Play</button>
           <button @click="onClick(SubMenu.Controls)">Controls</button>
           <button @click="onClick(SubMenu.Achievements)">Achievements</button>

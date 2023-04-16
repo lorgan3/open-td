@@ -11,14 +11,14 @@ enum State {
 }
 
 const state = ref(State.Menu);
-const gameSeed = ref<string>();
+const gameSeed = ref<string | null>();
 const gameDifficulty = ref<Difficulty>();
 const gameRenderer = ref<Constructor>();
 const gameShowTutorial = ref<boolean>();
 const gameSimulationSpeed = ref<number>();
 
 const startGame = (
-  seed: string,
+  seed: string | null,
   difficulty: Difficulty,
   renderer: Constructor,
   showTutorial: boolean,

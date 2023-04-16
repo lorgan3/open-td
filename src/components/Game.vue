@@ -9,23 +9,23 @@ import IngameMenu from "./hud/IngameMenu.vue";
 import Hud from "./hud/Hud.vue";
 import { Difficulty } from "../data/difficulty";
 import { Constructor, IRenderer } from "../renderers/api";
-import { init } from "../data/controllers";
+import { deserialize, init } from "../data/controllers";
 import EventSystem from "../data/eventSystem";
 import UnlocksController from "../data/controllers/unlocksController";
 import { GameEvent } from "../data/events";
 import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import AchievementController from "../data/controllers/achievementController";
+import { get } from "../util/localStorage";
+import DefaultManager from "../data/controllers/defaultManager";
 
 const props = defineProps<{
-  seed: string;
+  seed: string | null;
   difficulty: Difficulty;
   renderer: Constructor;
   showTutorial: boolean;
   initialSpeed: number;
   mainMenu: () => void;
 }>();
-
-console.log(`Seed: ${props.seed}`);
 
 const canvas = ref<HTMLDivElement | null>(null);
 const isMenuVisible = ref(false);
@@ -37,16 +37,23 @@ let renderer = new props.renderer(controller);
 let manager: DefaultManager;
 let surface: Surface;
 
-console.log(`Seed: ${props.seed}`);
+if (props.seed) {
+  console.log(`Seed: ${props.seed}`);
 
-surface = new Surface({
-  width: 160,
-  height: 160,
-  generate: getGenerator(props.seed, 160, 160),
-});
+  surface = new Surface({
+    width: 160,
+    height: 160,
+    generate: getGenerator(props.seed, 160, 160),
+  });
 
-const targetTile = surface.getTile(80, 80)!;
-manager = init(props.difficulty, targetTile, surface, renderer.showMessage);
+  const targetTile = surface.getTile(80, 80)!;
+  manager = init(props.difficulty, targetTile, surface, renderer.showMessage);
+} else {
+  console.log("Loading save");
+
+  manager = deserialize(renderer.showMessage, get("save")!);
+  surface = manager.getSurface();
+}
 
 const tutorialManager = new TutorialManager();
 if (props.showTutorial) {
@@ -61,7 +68,8 @@ let removeCloseMenuEventListener: () => void;
 
 onMounted(() => {
   mounted = true;
-  renderer.mount(canvas.value as HTMLDivElement);
+  controller.initialize(surface);
+  renderer.mount(surface, canvas.value as HTMLDivElement);
 
   removeKeyListener = controller.addKeyListener(Key.Escape, () => {
     if (isMarketplaceVisible.value) {
