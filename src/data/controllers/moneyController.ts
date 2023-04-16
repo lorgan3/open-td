@@ -38,15 +38,24 @@ class MoneyController {
 
   private recentlyBought = new Set<Agent>();
 
+  private removeUnlockEventListener: () => void;
+
   constructor(private money = 0, private multiplier = () => 1) {
+    if (MoneyController.instance) {
+      MoneyController.instance.removeUnlockEventListener();
+    }
+
     MoneyController.instance = this;
 
-    EventSystem.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
-      if (placeable.entityType === EntityType.Convert) {
-        this.addMoney(CONVERT_MONEY_AMOUNT);
-        Manager.Instance.triggerStatUpdate();
+    this.removeUnlockEventListener = EventSystem.Instance.addEventListener(
+      GameEvent.Unlock,
+      ({ placeable }) => {
+        if (placeable.entityType === EntityType.Convert) {
+          this.addMoney(CONVERT_MONEY_AMOUNT);
+          Manager.Instance.triggerStatUpdate();
+        }
       }
-    });
+    );
   }
 
   setMoney(amount: number) {

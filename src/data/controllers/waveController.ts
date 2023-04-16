@@ -36,13 +36,20 @@ class WaveController {
   private wave?: Wave;
   private timeSinceLastExpansion = 0;
 
+  private removeSurfaceChangeEventListener: () => void;
+
   constructor(private base: Base, private surface: Surface) {
+    if (WaveController.instance) {
+      WaveController.instance.removeSurfaceChangeEventListener();
+    }
+
     WaveController.instance = this;
 
-    EventSystem.Instance.addEventListener(
-      GameEvent.SurfaceChange,
-      this.onSurfaceChange
-    );
+    this.removeSurfaceChangeEventListener =
+      EventSystem.Instance.addEventListener(
+        GameEvent.SurfaceChange,
+        this.onSurfaceChange
+      );
   }
 
   tick(dt: number) {

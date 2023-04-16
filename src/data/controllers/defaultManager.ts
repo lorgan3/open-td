@@ -31,6 +31,10 @@ class DefaultManager extends Manager {
   private killedEnemies = 0;
   private lastKilledEnemies = 0;
 
+  private removeUnlockEventListener: () => void;
+  private removeDiscoverEventListener: () => void;
+  private removeLostEventListener: () => void;
+
   constructor(
     difficulty: Difficulty,
     base: Base | null,
@@ -49,13 +53,26 @@ class DefaultManager extends Manager {
       surface.spawnStatic(this.base);
     }
 
-    EventSystem.Instance.addEventListener(GameEvent.Unlock, this.onUnlock);
-    EventSystem.Instance.addEventListener(GameEvent.Discover, this.onDiscover);
-    EventSystem.Instance.addEventListener(GameEvent.Lose, () =>
-      window.setTimeout(this.onLose, 0)
+    this.removeUnlockEventListener = EventSystem.Instance.addEventListener(
+      GameEvent.Unlock,
+      this.onUnlock
+    );
+    this.removeDiscoverEventListener = EventSystem.Instance.addEventListener(
+      GameEvent.Discover,
+      this.onDiscover
+    );
+    this.removeLostEventListener = EventSystem.Instance.addEventListener(
+      GameEvent.Lose,
+      () => window.setTimeout(this.onLose, 0)
     );
 
     console.log(this);
+  }
+
+  cleanup() {
+    this.removeUnlockEventListener();
+    this.removeDiscoverEventListener();
+    this.removeLostEventListener();
   }
 
   tick(dt: number) {

@@ -46,31 +46,40 @@ class BuildController {
   private ignoredEntities: Set<EntityType>;
   private clearableEntities: Set<EntityType>;
 
+  private removeUnlockEventListener: () => void;
+
   constructor(private surface: Surface) {
+    if (BuildController.instance) {
+      BuildController.instance.removeUnlockEventListener();
+    }
+
     BuildController.instance = this;
 
     this.freeTiles = new Set(FREE_TILES);
     this.ignoredEntities = new Set();
     this.clearableEntities = new Set(placeableEntityTypes);
 
-    EventSystem.Instance.addEventListener(GameEvent.Unlock, ({ placeable }) => {
-      if (placeable.entityType === EntityType.Excavator) {
-        this.ignoredEntities.add(EntityType.Tree);
-        this.ignoredEntities.add(EntityType.Rock);
-        this.ignoredEntities.add(EntityType.Stump);
+    this.removeUnlockEventListener = EventSystem.Instance.addEventListener(
+      GameEvent.Unlock,
+      ({ placeable }) => {
+        if (placeable.entityType === EntityType.Excavator) {
+          this.ignoredEntities.add(EntityType.Tree);
+          this.ignoredEntities.add(EntityType.Rock);
+          this.ignoredEntities.add(EntityType.Stump);
 
-        this.clearableEntities.add(EntityType.Tree);
-        this.clearableEntities.add(EntityType.Rock);
-        this.clearableEntities.add(EntityType.Stump);
-      }
+          this.clearableEntities.add(EntityType.Tree);
+          this.clearableEntities.add(EntityType.Rock);
+          this.clearableEntities.add(EntityType.Stump);
+        }
 
-      if (placeable.entityType === EntityType.Terraform) {
-        this.freeTiles.add(TileType.Water);
-        this.freeTiles.add(TileType.Ice);
-        this.freeTiles.add(TileType.Spore);
-        this.freeTiles.add(TileType.Bridge);
+        if (placeable.entityType === EntityType.Terraform) {
+          this.freeTiles.add(TileType.Water);
+          this.freeTiles.add(TileType.Ice);
+          this.freeTiles.add(TileType.Spore);
+          this.freeTiles.add(TileType.Bridge);
+        }
       }
-    });
+    );
   }
 
   getMaxTowers() {

@@ -3,6 +3,7 @@ import { Difficulty } from "../../difficulty";
 import Base from "../../entity/base";
 import { IEnemy } from "../../entity/enemies";
 import { Agent } from "../../entity/entity";
+import EventSystem from "../../eventSystem";
 import { Placeable } from "../../placeables";
 import Surface from "../../terrain/surface";
 import Manager from "../manager";
@@ -18,11 +19,14 @@ class TestManager extends Manager {
   ) {
     super(difficulty, base, surface, messageFn);
 
+    new EventSystem();
     new VisibilityController(surface);
     new WaveController(base, surface);
 
     surface.spawnStatic(base);
   }
+
+  cleanup() {}
 
   tick(dt: number): void {
     throw new Error("Method not implemented.");

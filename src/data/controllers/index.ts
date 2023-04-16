@@ -22,6 +22,8 @@ export const init = (
   messageFn: MessageFn
 ) => {
   new EventSystem();
+  new AchievementController();
+
   new VisibilityController(surface);
 
   const base = new Base(basePoint);
@@ -32,8 +34,6 @@ export const init = (
   new MoneyController(100, () => base.getMoneyFactor());
   new BuildController(surface);
   new UnlocksController();
-
-  new AchievementController();
 
   return manager;
 };
@@ -56,6 +56,10 @@ export const deserialize = (messageFn: MessageFn, data: Save) => {
     new EventSystem();
   }
 
+  if (!AchievementController.Instance) {
+    new AchievementController();
+  }
+
   const manager = DefaultManager.deserialize(messageFn, data.manager);
   const surface = manager.getSurface();
   const base = manager.getBase();
@@ -70,8 +74,6 @@ export const deserialize = (messageFn: MessageFn, data: Save) => {
   );
   BuildController.deserialize(surface, data.buildController);
   UnlocksController.deserialize(data.unlocksController);
-
-  new AchievementController();
 
   // Recompute visibility for all tiles.
   VisibilityController.Instance.commit();

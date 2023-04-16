@@ -4,7 +4,6 @@ import { Difficulty } from "../difficulty";
 import Base from "../entity/base";
 import { IEnemy } from "../entity/enemies";
 import { Agent } from "../entity/entity";
-import EventSystem from "../eventSystem";
 import { Placeable } from "../placeables";
 import Surface from "../terrain/surface";
 
@@ -19,9 +18,14 @@ abstract class Manager {
     protected surface: Surface,
     protected messageFn: MessageFn
   ) {
+    if (Manager.instance) {
+      Manager.instance.cleanup();
+    }
+
     Manager.instance = this;
-    new EventSystem();
   }
+
+  abstract cleanup(): void;
 
   abstract tick(dt: number): void;
 
