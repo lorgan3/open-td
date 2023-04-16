@@ -34,6 +34,7 @@ class Renderer implements IRenderer {
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
   private removeEventListeners?: () => void;
+  private surface!: Surface;
 
   public xStep = 0;
   public yStep = 0;
@@ -55,7 +56,7 @@ class Renderer implements IRenderer {
   private coverageMap: HTMLDivElement | null = null;
   private coverageRows: HTMLDivElement[] = [];
 
-  constructor(private surface: Surface, private controller: Controller) {
+  constructor(private controller: Controller) {
     this.pool = new Pool(
       (active, original, entity) => {
         if (original) {
@@ -167,7 +168,8 @@ class Renderer implements IRenderer {
     };
   }
 
-  mount(target: HTMLDivElement): void {
+  mount(surface: Surface, target: HTMLDivElement): void {
+    this.surface = surface;
     this.target = target;
 
     this.appContainer = target.appendChild(document.createElement("div"));

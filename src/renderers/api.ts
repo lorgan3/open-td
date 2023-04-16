@@ -2,7 +2,7 @@ import Controller from "../data/controllers/controller";
 import Surface from "../data/terrain/surface";
 
 export interface IRenderer {
-  mount(target: HTMLDivElement): void;
+  mount(surface: Surface, target: HTMLDivElement): void;
   unmount(): void;
   rerender(dt: number): void;
   showCoverage(): void;
@@ -11,10 +11,7 @@ export interface IRenderer {
   move(params: { x?: number; y?: number; zoom?: number }): void;
 }
 
-export type Constructor = new (
-  surface: Surface,
-  controller: Controller
-) => IRenderer;
+export type Constructor = new (controller: Controller) => IRenderer;
 
 export type MessageFn = (
   content: string,

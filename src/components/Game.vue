@@ -32,21 +32,21 @@ const isMenuVisible = ref(false);
 const isMarketplaceVisible = ref(false);
 const simulationSpeed = ref(props.initialSpeed);
 
-const surface = new Surface({
+const controller = new Controller();
+let renderer = new props.renderer(controller);
+let manager: DefaultManager;
+let surface: Surface;
+
+console.log(`Seed: ${props.seed}`);
+
+surface = new Surface({
   width: 160,
   height: 160,
   generate: getGenerator(props.seed, 160, 160),
 });
-const controller = new Controller(surface);
-let renderer = new props.renderer(surface, controller);
 
 const targetTile = surface.getTile(80, 80)!;
-const manager = init(
-  props.difficulty,
-  targetTile,
-  surface,
-  renderer.showMessage
-);
+manager = init(props.difficulty, targetTile, surface, renderer.showMessage);
 
 const tutorialManager = new TutorialManager();
 if (props.showTutorial) {
@@ -147,8 +147,8 @@ const resume = (
     (renderer as IRenderer).unmount();
 
     surface.forceRerender();
-    renderer = new newRenderer(surface, controller);
-    renderer.mount(canvas.value as HTMLDivElement);
+    renderer = new newRenderer(controller);
+    renderer.mount(surface, canvas.value as HTMLDivElement);
     manager.update(renderer.showMessage);
   } else if (renderer instanceof PixiRenderer) {
     renderer.updateSettings();

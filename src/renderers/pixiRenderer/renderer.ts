@@ -47,6 +47,7 @@ class Renderer implements IRenderer {
   private resolveMessageFn!: (fn: MessageFn) => void;
   private removeEventListeners?: () => void;
 
+  private surface!: Surface;
   private target?: HTMLElement;
   private app?: Application<HTMLCanvasElement>;
   private viewport?: Viewport;
@@ -59,7 +60,7 @@ class Renderer implements IRenderer {
   private alertRenderer?: AlertRenderer;
   private cursorRenderer?: CursorRenderer;
 
-  private worldShader: WorldShader;
+  private worldShader!: WorldShader;
 
   public x = 0;
   public y = 0;
@@ -73,7 +74,7 @@ class Renderer implements IRenderer {
     return this.instance;
   }
 
-  constructor(private surface: Surface, private controller: Controller) {
+  constructor(private controller: Controller) {
     Renderer.instance = this;
 
     this.messageFn = new Promise(
@@ -81,8 +82,6 @@ class Renderer implements IRenderer {
     );
 
     this.assets = new AssetsContainer();
-    this.worldShader = new WorldShader(this.surface, true, true);
-
     initSound();
 
     window.debug = () => {
@@ -92,9 +91,11 @@ class Renderer implements IRenderer {
     };
   }
 
-  mount(target: HTMLDivElement): void {
+  mount(surface: Surface, target: HTMLDivElement): void {
+    this.surface = surface;
     this.target = target;
 
+    this.worldShader = new WorldShader(surface, true, true);
     this.app = new Application({
       resizeTo: window,
     });

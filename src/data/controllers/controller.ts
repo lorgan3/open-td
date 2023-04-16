@@ -51,14 +51,19 @@ class Controller {
   private pressedKeys: Partial<Record<Key, boolean>> = {};
   private _isMouseDown = false;
   private eventHandlers = new Map<Key, Set<() => void>>();
+  private surface!: Surface;
 
   private selectedPlacable: Placeable = DEMOLISH;
   private previousSelectedPlacable: Placeable = TOWER;
   private buildMenuOpen = false;
   private isPaused = false;
 
-  constructor(private surface: Surface) {
+  constructor() {
     Controller.instance = this;
+  }
+
+  public initialize(surface: Surface) {
+    this.surface = surface;
   }
 
   public getPlacable() {
