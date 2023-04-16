@@ -7,10 +7,18 @@ import { EntityType } from "../entity/constants";
 import Manager from "./manager";
 import EventSystem from "../eventSystem";
 import { DiscoveryMethod, GameEvent } from "../events";
-import SpawnGroup from "../wave/spawnGroup";
+import SpawnGroup, { SpawnGroupData } from "../wave/spawnGroup";
 import WaveController from "./waveController";
-import { getSquareDistance } from "../util/distance";
-import { getCenter } from "../entity/staticEntity";
+import { StaticAgent } from "../entity/staticEntity";
+
+export interface VisibilityControllerData {
+  tiles: Array<{
+    x: number;
+    y: number;
+    edge: [number, number];
+  }>;
+  discoveredSpawnGroups: SpawnGroupData[];
+}
 
 const isBase = (agent: Agent): agent is Base => {
   return agent.getType() === EntityType.Base;
@@ -20,9 +28,9 @@ class VisibilityController {
   private static instance: VisibilityController;
 
   private discoveredSpawnGroups = new Set<SpawnGroup>();
-  private agents = new Set<Agent>();
+  private agents = new Set<StaticAgent>();
   private edgeMap = new Map<number, [number, number]>();
-  private pendingAgents = new Set<Agent>();
+  private pendingAgents = new Set<StaticAgent>();
   private base?: Base;
   private pendingRadius = 0;
   private discoveredEdge = false;
@@ -36,7 +44,7 @@ class VisibilityController {
     VisibilityController.instance = this;
   }
 
-  registerAgent(agent: Agent) {
+  registerAgent(agent: StaticAgent) {
     this.agents.add(agent);
 
     let status = DiscoveryStatus.Pending;
@@ -54,7 +62,7 @@ class VisibilityController {
     this.updateVisibility(...coords, range, status);
   }
 
-  removeAgent(agent: Agent) {
+  removeAgent(agent: StaticAgent) {
     if (!this.agents.has(agent)) {
       return;
     }
@@ -79,6 +87,106 @@ class VisibilityController {
     this.pendingAgents.clear();
     this.pendingRadius = 0;
     this.update();
+  }
+
+  updateBaseRange() {
+    if (!this.base) {
+      throw new Error("Updating base range without a base");
+    }
+
+    this.pendingRadius = this.getVisibilityRange(this.base);
+    this.updateVisibility(
+      ...this.getVisibilityEdge(this.base),
+      this.pendingRadius,
+      DiscoveryStatus.Pending
+    );
+  }
+
+  getBBox() {
+    return [
+      [this.minX!, this.minY!],
+      [this.maxX!, this.maxY!],
+    ];
+  }
+
+  hasPendingAgents() {
+    return this.pendingAgents.size > 0;
+  }
+
+  uncoverSpawnGroup(spawnGroup: SpawnGroup, method: DiscoveryMethod) {
+    const others = WaveController.Instance.getSpawnGroups();
+    this.discoveredSpawnGroups.add(spawnGroup);
+
+    const [x, y] = spawnGroup.getCenter();
+    this.updateVisibility(x, y, SpawnGroup.size, DiscoveryStatus.Discovered);
+
+    // Make sure other spawngroups are not discovered automatically.
+    others.forEach((spawnGroup) => {
+      const [x, y] = spawnGroup.getCenter();
+      this.surface.forCircle(x, y, SpawnGroup.size, (tile) => {
+        if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
+          return;
+        }
+
+        tile.setDiscoveryStatus(DiscoveryStatus.Undiscovered);
+      });
+    });
+
+    EventSystem.Instance.triggerEvent(GameEvent.Discover, {
+      x,
+      y,
+      method,
+    });
+  }
+
+  isEdgeDiscovered() {
+    return this.discoveredEdge;
+  }
+
+  serialize(): VisibilityControllerData {
+    const tiles = [...this.agents].map((agent) => {
+      const tile = agent.getTile();
+      const edge = this.edgeMap.get(agent.entity.getId())!;
+
+      return { x: tile.getX(), y: tile.getY(), edge };
+    });
+
+    return {
+      tiles,
+      discoveredSpawnGroups: [...this.discoveredSpawnGroups].map((spawnGroup) =>
+        spawnGroup.serialize()
+      ),
+    };
+  }
+
+  static deserialize(surface: Surface, data: VisibilityControllerData) {
+    const visibilityController = new VisibilityController(surface);
+
+    for (let tile of data.tiles) {
+      const agent = surface
+        .getTile(tile.x, tile.y)!
+        .getStaticEntity()!
+        .getAgent();
+
+      if (isBase(agent)) {
+        visibilityController.base = agent;
+      }
+
+      visibilityController.agents.add(agent);
+      visibilityController.edgeMap.set(agent.entity.getId(), tile.edge);
+    }
+
+    for (let spawnGroupData of data.discoveredSpawnGroups) {
+      visibilityController.discoveredSpawnGroups.add(
+        SpawnGroup.deserialize(
+          surface,
+          visibilityController.base!.getTile(),
+          spawnGroupData
+        )
+      );
+    }
+
+    return visibilityController;
   }
 
   private update() {
@@ -141,60 +249,6 @@ class VisibilityController {
     removedSpawnGroups.forEach((spawnGroup) =>
       this.discoveredSpawnGroups.delete(spawnGroup)
     );
-  }
-
-  updateBaseRange() {
-    if (!this.base) {
-      throw new Error("Updating base range without a base");
-    }
-
-    this.pendingRadius = this.getVisibilityRange(this.base);
-    this.updateVisibility(
-      ...this.getVisibilityEdge(this.base),
-      this.pendingRadius,
-      DiscoveryStatus.Pending
-    );
-  }
-
-  getBBox() {
-    return [
-      [this.minX!, this.minY!],
-      [this.maxX!, this.maxY!],
-    ];
-  }
-
-  hasPendingAgents() {
-    return this.pendingAgents.size > 0;
-  }
-
-  uncoverSpawnGroup(spawnGroup: SpawnGroup, method: DiscoveryMethod) {
-    const others = WaveController.Instance.getSpawnGroups();
-    this.discoveredSpawnGroups.add(spawnGroup);
-
-    const [x, y] = spawnGroup.getCenter();
-    this.updateVisibility(x, y, SpawnGroup.size, DiscoveryStatus.Discovered);
-
-    // Make sure other spawngroups are not discovered automatically.
-    others.forEach((spawnGroup) => {
-      const [x, y] = spawnGroup.getCenter();
-      this.surface.forCircle(x, y, SpawnGroup.size, (tile) => {
-        if (tile.getDiscoveryStatus() === DiscoveryStatus.Undiscovered) {
-          return;
-        }
-
-        tile.setDiscoveryStatus(DiscoveryStatus.Undiscovered);
-      });
-    });
-
-    EventSystem.Instance.triggerEvent(GameEvent.Discover, {
-      x,
-      y,
-      method,
-    });
-  }
-
-  isEdgeDiscovered() {
-    return this.discoveredEdge;
   }
 
   private getVisibilityRange(agent: Agent) {

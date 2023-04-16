@@ -16,26 +16,38 @@ import Base from "../entity/base";
 import WaveController from "./waveController";
 import VisibilityController from "./visibilityController";
 import WavePoint from "../entity/wavePoint";
+import { SurfaceSchema } from "../terrain/surfaceSchema";
+export interface DefaultManagerData {
+  killedEnemies: number;
+  difficulty: Difficulty;
+  base: { x: number; y: number; hp: number };
+  level: number;
+  surface: string;
+}
 
 class DefaultManager extends Manager {
+  private static serializeStartChar = "À".charCodeAt(0);
+
   private killedEnemies = 0;
   private lastKilledEnemies = 0;
 
   constructor(
     difficulty: Difficulty,
-    base: Base,
+    base: Base | null,
     surface: Surface,
     messageFn: MessageFn
   ) {
-    super(difficulty, base, surface, messageFn);
+    super(difficulty, base!, surface, messageFn);
 
-    this.surface.getEntityTiles(this.base).map((tile) => {
-      if (tile.hasStaticEntity()) {
-        this.surface.despawnStatic(tile.getStaticEntity().getAgent());
-      }
-    });
+    if (base) {
+      this.surface.getEntityTiles(this.base).map((tile) => {
+        if (tile.hasStaticEntity()) {
+          this.surface.despawnStatic(tile.getStaticEntity().getAgent());
+        }
+      });
 
-    surface.spawnStatic(this.base);
+      surface.spawnStatic(this.base);
+    }
 
     EventSystem.Instance.addEventListener(GameEvent.Unlock, this.onUnlock);
     EventSystem.Instance.addEventListener(GameEvent.Discover, this.onDiscover);
@@ -184,6 +196,35 @@ class DefaultManager extends Manager {
     return this.base.isDestroyed();
   }
 
+  getDamageMultiplier() {
+    let multiplier = 1;
+    switch (this.difficulty) {
+      case Difficulty.Hard:
+        multiplier += 0.2;
+      case Difficulty.Normal:
+        multiplier += 0.2;
+    }
+
+    return multiplier;
+  }
+
+  serialize(): DefaultManagerData {
+    const baseTile = this.base.getTile();
+    const schema = this.surface.serialize(true);
+
+    return {
+      killedEnemies: this.killedEnemies,
+      difficulty: this.difficulty,
+      base: { x: baseTile.getX(), y: baseTile.getY(), hp: this.base.getHp() },
+      level: this.level,
+      surface: [...schema.buffer]
+        .map((value) =>
+          String.fromCharCode(value + DefaultManager.serializeStartChar)
+        )
+        .join(""),
+    };
+  }
+
   private end() {
     BuildController.Instance.commit();
     VisibilityController.Instance.commit();
@@ -207,18 +248,6 @@ class DefaultManager extends Manager {
 
     // Spawn group paths might have changed
     Manager.Instance.getSurface().forceRerender();
-  }
-
-  getDamageMultiplier() {
-    let multiplier = 1;
-    switch (this.difficulty) {
-      case Difficulty.Hard:
-        multiplier += 0.2;
-      case Difficulty.Normal:
-        multiplier += 0.2;
-    }
-
-    return multiplier;
   }
 
   private onUnlock = ({ placeable }: Unlock) => {
@@ -264,6 +293,32 @@ class DefaultManager extends Manager {
         }
       });
   };
+
+  static deserialize(messageFn: MessageFn, data: DefaultManagerData) {
+    const schema = new SurfaceSchema(
+      Uint8Array.from(
+        data.surface
+          .split("")
+          .map((char) => char.charCodeAt(0) - DefaultManager.serializeStartChar)
+      )
+    );
+    const surface = new Surface(schema);
+    const manager = new DefaultManager(
+      data.difficulty,
+      null,
+      surface,
+      messageFn
+    );
+    manager.level = data.level;
+
+    manager.base = surface
+      .getTile(data.base.x, data.base.y)!
+      .getStaticEntity()!
+      .getAgent() as Base;
+    manager.base.hp = data.base.hp;
+
+    return manager;
+  }
 }
 
 export default DefaultManager;

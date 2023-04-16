@@ -26,6 +26,10 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Tesla]: 50,
 };
 
+export interface MoneyControllerData {
+  money: number;
+}
+
 class MoneyController {
   private static waveBudget = 20;
   private static sellMultiplier = 0.5;
@@ -131,8 +135,20 @@ class MoneyController {
     );
   }
 
+  serialize(): MoneyControllerData {
+    return {
+      money: this.money,
+    };
+  }
+
   static get Instance() {
     return this.instance;
+  }
+
+  static deserialize(multiplier: () => number, data: MoneyControllerData) {
+    const moneyController = new MoneyController(data.money, multiplier);
+
+    return moneyController;
   }
 }
 

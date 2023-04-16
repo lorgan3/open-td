@@ -1,7 +1,8 @@
 import { EntityType } from "../entity/constants";
-import { Agent } from "../entity/entity";
+import { StaticAgent } from "../entity/staticEntity";
 import { GameEvent } from "../events";
 import EventSystem from "../eventSystem";
+import Surface from "../terrain/surface";
 import Manager from "./manager";
 
 export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
@@ -12,6 +13,12 @@ export const POWER_CONSUMPTIONS: Partial<Record<EntityType, number>> = {
   [EntityType.Mortar]: 2,
 };
 
+export interface PowerControllerData {
+  power: number;
+  consumption: number;
+  generators: Array<{ x: number; y: number }>;
+}
+
 class PowerController {
   public static speedBeaconConsumption = 1.1;
   public static damageBeaconConsumption = 1.2;
@@ -21,7 +28,7 @@ class PowerController {
   public static baseEmergencyRegenerate = 30;
   public static emergencyRegenerateMultiplier = 2;
 
-  private generators = new Set<Agent>();
+  private generators = new Set<StaticAgent>();
 
   private consumption = 0;
   private blackout = false;
@@ -32,11 +39,11 @@ class PowerController {
     PowerController.instance = this;
   }
 
-  registerGenerator(agent: Agent) {
+  registerGenerator(agent: StaticAgent) {
     this.generators.add(agent);
   }
 
-  removeGenerator(agent: Agent) {
+  removeGenerator(agent: StaticAgent) {
     this.generators.delete(agent);
   }
 
@@ -102,8 +109,31 @@ class PowerController {
     return this.power;
   }
 
+  serialize(): PowerControllerData {
+    return {
+      power: this.power,
+      consumption: this.consumption,
+      generators: [...this.generators].map((agent) => {
+        const tile = agent.getTile();
+        return { x: tile.getX(), y: tile.getY() };
+      }),
+    };
+  }
+
   static get Instance() {
     return this.instance;
+  }
+
+  static deserialize(surface: Surface, data: PowerControllerData) {
+    const powerController = new PowerController();
+
+    powerController.power = data.power;
+    powerController.consumption = data.consumption;
+    powerController.generators = new Set(
+      data.generators.map(({ x, y }) =>
+        surface.getTile(x, y)!.getStaticEntity()!.getAgent()
+      )
+    );
   }
 }
 

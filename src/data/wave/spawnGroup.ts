@@ -8,6 +8,10 @@ import Tile from "../terrain/tile";
 import { EntityType } from "../entity/constants";
 import { DiscoveryStatus } from "../terrain/constants";
 
+export interface SpawnGroupData {
+  spawnPoints: Array<{ x: number; y: number }>;
+}
+
 class SpawnGroup {
   static size = 5;
 
@@ -109,26 +113,6 @@ class SpawnGroup {
     return [this.centerX, this.centerY];
   }
 
-  private getPathData(type: EntityType) {
-    if (!this.pathData.has(type)) {
-      this.pathData.set(
-        type,
-        new PathData(
-          new Pathfinder(
-            this.surface,
-            this.unit.pathMultipliers,
-            this.unit.pathCosts,
-            this.unit.scale
-          ),
-          this.spawnPoints,
-          this.target
-        )
-      );
-    }
-
-    return this.pathData.get(type)!;
-  }
-
   isReady() {
     return !!this.getPathData(this.unit.type).getPaths().length;
   }
@@ -186,6 +170,43 @@ class SpawnGroup {
 
   rePath() {
     this.pathData.forEach((pathData) => pathData.update());
+  }
+
+  serialize(): SpawnGroupData {
+    return {
+      spawnPoints: this.spawnPoints.map((tile) => ({
+        x: tile.getX(),
+        y: tile.getY(),
+      })),
+    };
+  }
+
+  static deserialize(surface: Surface, target: Tile, data: SpawnGroupData) {
+    return new SpawnGroup(
+      data.spawnPoints.map(({ x, y }) => surface.getTile(x, y)!),
+      target,
+      surface
+    );
+  }
+
+  private getPathData(type: EntityType) {
+    if (!this.pathData.has(type)) {
+      this.pathData.set(
+        type,
+        new PathData(
+          new Pathfinder(
+            this.surface,
+            this.unit.pathMultipliers,
+            this.unit.pathCosts,
+            this.unit.scale
+          ),
+          this.spawnPoints,
+          this.target
+        )
+      );
+    }
+
+    return this.pathData.get(type)!;
   }
 
   static fromTiles(spawnPoints: Tile[], target: Tile, surface: Surface) {

@@ -12,11 +12,17 @@ import {
 import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import SpawnAlert from "../util/spawnAlert";
-import SpawnGroup from "../wave/spawnGroup";
+import SpawnGroup, { SpawnGroupData } from "../wave/spawnGroup";
 import { normalDistributionRandom } from "../wave/util";
 import Wave from "../wave/wave";
 import Manager from "./manager";
 import VisibilityController from "./visibilityController";
+
+export interface WaveControllerData {
+  spawnGroups: SpawnGroupData[];
+  direction: number;
+  timeSinceLastExpansion: number;
+}
 
 class WaveController {
   private static instance: WaveController;
@@ -181,6 +187,26 @@ class WaveController {
         .length === 0 || time >= timeToExpansion;
 
     return shouldHaveNextSpawnGroup;
+  }
+
+  serialize(): WaveControllerData {
+    return {
+      spawnGroups: this.spawnGroups.map((spawnGroup) => spawnGroup.serialize()),
+      direction: this.direction,
+      timeSinceLastExpansion: this.timeSinceLastExpansion,
+    };
+  }
+
+  static deserialize(surface: Surface, base: Base, data: WaveControllerData) {
+    const waveController = new WaveController(base, surface);
+
+    waveController.spawnGroups = data.spawnGroups.map((spawnGroup) =>
+      SpawnGroup.deserialize(surface, base.getTile(), spawnGroup)
+    );
+    waveController.direction = data.direction;
+    waveController.timeSinceLastExpansion = data.timeSinceLastExpansion;
+
+    return waveController;
   }
 
   private getNextSpawnGroup() {

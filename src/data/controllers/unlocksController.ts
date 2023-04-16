@@ -3,6 +3,13 @@ import { Group, Placeable, SECTIONS } from "../placeables";
 import { EntityType } from "../entity/constants";
 import EventSystem from "../eventSystem";
 
+export interface UnlocksControllerData {
+  points: number;
+  unlockedAmount: number;
+  unlockedTowers: EntityType[];
+  availableUnlocks: EntityType[];
+}
+
 class UnlocksController {
   private static instance: UnlocksController;
 
@@ -82,10 +89,18 @@ class UnlocksController {
     EventSystem.Instance.triggerEvent(GameEvent.Unlock, { placeable });
   }
 
-  private makeAvailable(placeable: Placeable) {
-    this.unlockedTowers.add(placeable.entityType);
+  serialize(): UnlocksControllerData {
+    return {
+      points: this.points,
+      unlockedAmount: this.unlockedAmount,
+      unlockedTowers: [...this.unlockedTowers],
+      availableUnlocks: [...this.availableUnlocks],
+    };
+  }
 
+  private makeAvailable(placeable: Placeable) {
     if (!placeable.isRepeatable) {
+      this.unlockedTowers.add(placeable.entityType);
       this.availableUnlocks.delete(placeable.entityType);
       this.unlockedAmount++;
     }
@@ -102,6 +117,14 @@ class UnlocksController {
 
   static get Instance() {
     return this.instance;
+  }
+
+  static deserialize(data: UnlocksControllerData) {
+    const unlocksController = new UnlocksController();
+    unlocksController.points = data.points;
+    unlocksController.unlockedAmount = data.unlockedAmount;
+    unlocksController.availableUnlocks = new Set(data.availableUnlocks);
+    unlocksController.unlockedTowers = new Set(data.unlockedTowers);
   }
 }
 

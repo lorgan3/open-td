@@ -13,6 +13,12 @@ import MoneyController from "./moneyController";
 import UnlocksController from "./unlocksController";
 import { ITowerStatics } from "../entity/towers";
 
+export interface BuildControllerData {
+  freeTiles: TileType[];
+  ignoredEntities: EntityType[];
+  clearableEntities: EntityType[];
+}
+
 class BuildController {
   private static instance: BuildController;
   public static readonly towersPerPart = 2;
@@ -172,6 +178,69 @@ class BuildController {
         tiles: boughtTiles as TileWithStaticEntity[],
       });
     }
+  }
+
+  getPendingTiles(selectedTiles: Tile[], isDelete = false) {
+    const pendingBaseAdditions = new Set(
+      this.pendingBaseAdditions.map(
+        (blueprint) =>
+          this.surface.getTile(
+            blueprint.entity.getAlignedX(),
+            blueprint.entity.getAlignedY()
+          )!
+      )
+    );
+    const pendingBaseRemovals = new Set(
+      this.pendingBaseRemovals.map(
+        (blueprint) =>
+          this.surface.getTile(
+            blueprint.entity.getAlignedX(),
+            blueprint.entity.getAlignedY()
+          )!
+      )
+    );
+
+    let remove = (tile: Tile) => {
+      if (pendingBaseAdditions.delete(tile)) {
+        return;
+      }
+
+      if (pendingBaseRemovals.delete(tile)) {
+        return;
+      }
+
+      pendingBaseRemovals.add(tile);
+    };
+
+    selectedTiles.forEach((tile) => {
+      if (isDelete) {
+        remove(tile);
+        return;
+      }
+
+      const blueprint = this.blueprints.get(tile.getHash());
+      if (blueprint) {
+        if (blueprint.isDelete()) {
+          pendingBaseRemovals.delete(tile);
+          return;
+        }
+
+        pendingBaseAdditions.add(tile);
+        return;
+      }
+
+      pendingBaseAdditions.add(tile);
+    });
+
+    return { pendingBaseAdditions, pendingBaseRemovals };
+  }
+
+  serialize(): BuildControllerData {
+    return {
+      freeTiles: [...this.freeTiles],
+      ignoredEntities: [...this.ignoredEntities],
+      clearableEntities: [...this.clearableEntities],
+    };
   }
 
   private placeBlueprints(selection: Tile[], placeable: Placeable) {
@@ -520,61 +589,6 @@ class BuildController {
     return { baseTiles: [...baseTiles], otherTiles };
   }
 
-  getPendingTiles(selectedTiles: Tile[], isDelete = false) {
-    const pendingBaseAdditions = new Set(
-      this.pendingBaseAdditions.map(
-        (blueprint) =>
-          this.surface.getTile(
-            blueprint.entity.getAlignedX(),
-            blueprint.entity.getAlignedY()
-          )!
-      )
-    );
-    const pendingBaseRemovals = new Set(
-      this.pendingBaseRemovals.map(
-        (blueprint) =>
-          this.surface.getTile(
-            blueprint.entity.getAlignedX(),
-            blueprint.entity.getAlignedY()
-          )!
-      )
-    );
-
-    let remove = (tile: Tile) => {
-      if (pendingBaseAdditions.delete(tile)) {
-        return;
-      }
-
-      if (pendingBaseRemovals.delete(tile)) {
-        return;
-      }
-
-      pendingBaseRemovals.add(tile);
-    };
-
-    selectedTiles.forEach((tile) => {
-      if (isDelete) {
-        remove(tile);
-        return;
-      }
-
-      const blueprint = this.blueprints.get(tile.getHash());
-      if (blueprint) {
-        if (blueprint.isDelete()) {
-          pendingBaseRemovals.delete(tile);
-          return;
-        }
-
-        pendingBaseAdditions.add(tile);
-        return;
-      }
-
-      pendingBaseAdditions.add(tile);
-    });
-
-    return { pendingBaseAdditions, pendingBaseRemovals };
-  }
-
   private checkIsFree(tile: Tile, scale: number, canOverwrite = false) {
     const tiles = this.surface.getEntityTiles(tile.getX(), tile.getY(), scale);
     return !tiles!.find((tile) => {
@@ -630,6 +644,15 @@ class BuildController {
 
   static get Instance() {
     return this.instance;
+  }
+
+  static deserialize(surface: Surface, data: BuildControllerData) {
+    const buildController = new BuildController(surface);
+    buildController.freeTiles = new Set(data.freeTiles);
+    buildController.ignoredEntities = new Set(data.ignoredEntities);
+    buildController.clearableEntities = new Set(data.clearableEntities);
+
+    return buildController;
   }
 }
 
