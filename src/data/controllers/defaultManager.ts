@@ -17,6 +17,9 @@ import WaveController from "./waveController";
 import VisibilityController from "./visibilityController";
 import WavePoint from "../entity/wavePoint";
 import { SurfaceSchema } from "../terrain/surfaceSchema";
+import { set } from "../../util/localStorage";
+import { serialize } from ".";
+
 export interface DefaultManagerData {
   killedEnemies: number;
   difficulty: Difficulty;
@@ -265,6 +268,7 @@ class DefaultManager extends Manager {
 
     // Spawn group paths might have changed
     Manager.Instance.getSurface().forceRerender();
+    set("save", serialize());
   }
 
   private onUnlock = ({ placeable }: Unlock) => {

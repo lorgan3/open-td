@@ -1,15 +1,18 @@
 import { achievementsReplacer, achievementsReviver } from "./achievements";
+import { saveReplacer, saveReviver } from "./save";
 import { settingsReplacer, settingsReviver } from "./settings";
 import { Items, Replacer, Reviver } from "./types";
 
 const REVIVERS_MAP: Record<keyof Items, Reviver> = {
   settings: settingsReviver,
   achievements: achievementsReviver,
+  save: saveReviver,
 };
 
 const REPLACER_MAP: Record<keyof Items, Replacer> = {
   settings: settingsReplacer,
   achievements: achievementsReplacer,
+  save: saveReplacer,
 };
 
 export const get = <K extends keyof Items>(key: K): Items[K] | null => {
@@ -49,4 +52,8 @@ export const set = <K extends keyof Items>(
   } catch (error) {
     console.warn("Failed to store data", error);
   }
+};
+
+export const has = (key: keyof Items) => {
+  return !!localStorage.getItem(key);
 };
