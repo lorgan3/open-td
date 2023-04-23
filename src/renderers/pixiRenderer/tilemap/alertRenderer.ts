@@ -67,9 +67,9 @@ class AlertRenderer {
 
       range.lineStyle({
         width: 10,
-        color: 0xff00000,
+        color: 0xff0000,
         cap: LINE_CAP.ROUND,
-        alpha: 0.8,
+        alpha: 0.6,
         alignment: 0.5,
       });
       range.arc(

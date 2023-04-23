@@ -1,8 +1,8 @@
 import fragment from "./outline.frag?raw";
 import { Filter } from "@pixi/core";
-import { rgb2hex, hex2rgb } from "@pixi/utils";
 import type { FilterSystem, RenderTexture } from "@pixi/core";
 import type { CLEAR_MODES } from "@pixi/constants";
+import { Color } from "pixi.js";
 
 // https://github.com/pixijs/filters/tree/9da22187ec13b8224ff6cc00dfaed029695a9d87/filters/outline
 // https://stackoverflow.com/questions/72056609/pixi-js-how-to-draw-outline-of-container-while-keeping-its-content-transparent
@@ -65,10 +65,10 @@ class OutlineFilter extends Filter {
    * The color of the glow.
    */
   get color(): number {
-    return rgb2hex(this.uniforms.outlineColor);
+    return new Color(this.uniforms.outlineColor).toNumber();
   }
   set color(value: number) {
-    hex2rgb(value, this.uniforms.outlineColor);
+    this.uniforms.outlineColor = new Color(value).toRgbArray();
   }
 
   /**
