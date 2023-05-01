@@ -96,7 +96,7 @@ export const achievements: AchievementDefinition[] = [
       Manager.Instance.getDifficulty() === Difficulty.Easy
         ? Manager.Instance.getLevel()
         : 0,
-    triggers: [GameEvent.StartWave],
+    triggers: [GameEvent.EndWave],
   },
 
   {
@@ -108,7 +108,7 @@ export const achievements: AchievementDefinition[] = [
       Manager.Instance.getDifficulty() === Difficulty.Normal
         ? Manager.Instance.getLevel()
         : 0,
-    triggers: [GameEvent.StartWave],
+    triggers: [GameEvent.EndWave],
   },
 
   {
@@ -120,7 +120,7 @@ export const achievements: AchievementDefinition[] = [
       Manager.Instance.getDifficulty() === Difficulty.Hard
         ? Manager.Instance.getLevel()
         : 0,
-    triggers: [GameEvent.StartWave],
+    triggers: [GameEvent.EndWave],
   },
 
   {
