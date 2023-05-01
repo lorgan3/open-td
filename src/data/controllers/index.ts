@@ -78,9 +78,19 @@ export const deserialize = (messageFn: MessageFn, data: Save) => {
   // Recompute visibility for all tiles.
   VisibilityController.Instance.commit();
 
-  // recompute all tower sight lines.
-  for (let tower of surface.getTowers()) {
-    tower.spawn!();
+  const playerBuildings = surface.getEntitiesForCategory(AgentCategory.Player);
+  for (const building of playerBuildings) {
+    const agent = building.getAgent();
+    if (isTower(agent)) {
+      // Recompute tower sight lines.
+      agent.spawn!();
+      continue;
+    }
+
+    if (BuildController.baseParts.has(agent.getType())) {
+      // Reconstruct the base.
+      base.addPart(agent as StaticAgent);
+    }
   }
 
   manager.triggerStatUpdate();
