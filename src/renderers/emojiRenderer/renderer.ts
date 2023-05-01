@@ -517,6 +517,10 @@ class Renderer implements IRenderer {
       this.target!.removeChild(this.appContainer!);
       this.target!.removeChild(this.world!);
       this.removeEventListeners!();
+
+      this.messageFn = new Promise(
+        (resolve) => (this.resolveMessageFn = resolve)
+      );
     }
   }
 

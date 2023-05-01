@@ -268,6 +268,10 @@ class Renderer implements IRenderer {
       this.removeEventListeners!();
       LAYERS.forEach((layer) => layer.removeChildren());
       this.alertRenderer!.unmount();
+
+      this.messageFn = new Promise(
+        (resolve) => (this.resolveMessageFn = resolve)
+      );
     }
   }
 
