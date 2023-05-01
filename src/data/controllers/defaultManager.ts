@@ -145,6 +145,10 @@ class DefaultManager extends Manager {
   }
 
   canBuy(placeable: Placeable, amount = 1) {
+    if (this.difficulty === Difficulty.Practice) {
+      return true;
+    }
+
     const cost = (TOWER_PRICES[placeable.entityType] ?? 0) * amount;
     if (cost > MoneyController.Instance.getMoney()) {
       this.showMessage(`You do not have enough money. This costs 🪙 ${cost}`);

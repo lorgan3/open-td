@@ -139,7 +139,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   renderer.unmount();
-  AchievementController.Instance.unRegister();
+  AchievementController.Instance?.unRegister();
 
   removeKeyListener();
   removeOpenMenuEventListener();
@@ -193,7 +193,7 @@ const restart = () => {
 };
 
 const returnToMainMenu = () => {
-  AchievementController.Instance.unRegister();
+  AchievementController.Instance?.unRegister();
   props.mainMenu();
 };
 </script>

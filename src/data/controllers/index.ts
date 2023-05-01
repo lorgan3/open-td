@@ -14,6 +14,10 @@ import UnlocksController from "./unlocksController";
 import VisibilityController from "./visibilityController";
 import WaveController from "./waveController";
 import { version } from "../../../package.json";
+import Manager from "./manager";
+import { AgentCategory } from "../entity/constants";
+import { isTower } from "../entity/towers";
+import { StaticAgent } from "../entity/staticEntity";
 
 export const init = (
   difficulty: Difficulty,
@@ -22,7 +26,10 @@ export const init = (
   messageFn: MessageFn
 ) => {
   new EventSystem();
-  new AchievementController();
+
+  if (difficulty !== Difficulty.Practice) {
+    new AchievementController();
+  }
 
   new VisibilityController(surface);
 
@@ -31,7 +38,10 @@ export const init = (
 
   new WaveController(base, surface);
   new PowerController();
-  new MoneyController(100, () => base.getMoneyFactor());
+  new MoneyController(
+    difficulty === Difficulty.Practice ? Number.POSITIVE_INFINITY : 100,
+    () => base.getMoneyFactor()
+  );
   new BuildController(surface);
   new UnlocksController();
 
@@ -56,13 +66,19 @@ export const deserialize = (messageFn: MessageFn, data: Save) => {
     new EventSystem();
   }
 
-  if (!AchievementController.Instance) {
-    new AchievementController();
-  }
-
   const manager = DefaultManager.deserialize(messageFn, data.manager);
   const surface = manager.getSurface();
   const base = manager.getBase();
+
+  if (Manager.Instance.getDifficulty() === Difficulty.Practice) {
+    if (AchievementController.Instance) {
+      AchievementController.Instance.cleanup();
+    }
+  } else {
+    if (!AchievementController.Instance) {
+      new AchievementController();
+    }
+  }
 
   VisibilityController.deserialize(surface, data.visibilityController);
   WaveController.deserialize(surface, base, data.waveController);

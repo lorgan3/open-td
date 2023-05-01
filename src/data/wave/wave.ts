@@ -20,6 +20,7 @@ const MIN_BURST_SIZE = 3;
 const BURST_SIZE_DISTRIBUTION = 12;
 const SPAWN_GROUP_BONUS = 1.1; // More active spawn groups means harder waves
 const SPAWN_GROUP_AGE_BONUSES: Record<Difficulty, number> = {
+  [Difficulty.Practice]: 0,
   [Difficulty.Easy]: 0,
   [Difficulty.Normal]: 1.5 * Runner.cost,
   [Difficulty.Hard]: 3 * Runner.cost,

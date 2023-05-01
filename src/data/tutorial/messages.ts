@@ -83,7 +83,9 @@ export const CHECK_COVERAGE: TutorialMessage = (override) =>
     continueAfterEvents(
       Manager.Instance.showMessage(
         `If you're new to the game you can click the {key: 🎯} button to view tower sight lines${
-          difficulty === Difficulty.Easy ? " and enemy paths" : " "
+          difficulty === Difficulty.Easy || difficulty === Difficulty.Practice
+            ? " and enemy paths"
+            : " "
         } to check how effective your layout is.`,
         { override, expires: 0 }
       ),

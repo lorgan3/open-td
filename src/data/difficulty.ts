@@ -1,4 +1,5 @@
 export enum Difficulty {
+  Practice = "practice",
   Easy = "easy",
   Normal = "normal",
   Hard = "hard",
@@ -8,6 +9,11 @@ export const difficulties: Record<
   Difficulty,
   { label: string; description: string }
 > = {
+  [Difficulty.Practice]: {
+    label: "Practice",
+    description:
+      "Like easy mode but with infinite money. Great for getting to know the game mechanics but achievements are disabled.",
+  },
   [Difficulty.Easy]: {
     label: "Easy",
     description:

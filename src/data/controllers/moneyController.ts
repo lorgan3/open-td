@@ -5,6 +5,7 @@ import Manager from "./manager";
 import { CONVERT_MONEY_AMOUNT } from "../placeables";
 import { EntityType } from "../entity/constants";
 import EventSystem from "../eventSystem";
+import { Difficulty } from "../difficulty";
 
 export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
   [EntityType.Fence]: 1,
@@ -27,7 +28,7 @@ export const TOWER_PRICES: Partial<Record<EntityType, number>> = {
 };
 
 export interface MoneyControllerData {
-  money: number;
+  money: number | null;
 }
 
 class MoneyController {
@@ -66,14 +67,6 @@ class MoneyController {
     this.money += amount;
   }
 
-  removeMoney(amount: number) {
-    if (amount > this.money) {
-      throw new Error("Not enough money!");
-    }
-
-    this.money -= amount;
-  }
-
   addWaveBudget(level: number) {
     this.addMoney(
       Math.ceil(
@@ -85,6 +78,10 @@ class MoneyController {
   }
 
   buy(agent: Agent) {
+    if (Manager.Instance.getDifficulty() === Difficulty.Practice) {
+      return;
+    }
+
     let type = agent.getType();
     if (isBlueprint(agent)) {
       type = agent.getPlaceable().entityType;
@@ -96,7 +93,7 @@ class MoneyController {
       throw new Error("Not enough money!");
     }
 
-    this.removeMoney(cost);
+    this.money -= cost;
     this.recentlyBought.add(agent);
   }
 
@@ -108,6 +105,10 @@ class MoneyController {
   }
 
   sell(agent: Agent) {
+    if (Manager.Instance.getDifficulty() === Difficulty.Practice) {
+      return;
+    }
+
     if (agent instanceof Blueprint) {
       this.addMoney(TOWER_PRICES[agent.getPlaceable().entityType] ?? 0);
     } else {
@@ -155,7 +156,10 @@ class MoneyController {
   }
 
   static deserialize(multiplier: () => number, data: MoneyControllerData) {
-    const moneyController = new MoneyController(data.money, multiplier);
+    const moneyController = new MoneyController(
+      data.money === null ? Number.POSITIVE_INFINITY : data.money,
+      multiplier
+    );
 
     return moneyController;
   }

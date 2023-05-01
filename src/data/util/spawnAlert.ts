@@ -52,6 +52,7 @@ class SpawnAlert {
 
     switch (Manager.Instance.getDifficulty()) {
       case Difficulty.Easy:
+      case Difficulty.Practice:
         return new SpawnAlert(
           Math.floor(direction / 15) * 15,
           Math.floor(direction / 15) * 15 + 15,

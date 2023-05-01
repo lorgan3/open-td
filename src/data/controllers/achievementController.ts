@@ -28,6 +28,11 @@ class AchievementController {
     set("achievements", data, true);
   };
 
+  cleanup() {
+    window.removeEventListener("beforeunload", this.unRegister);
+    AchievementController.instance = null!;
+  }
+
   static get Instance() {
     return this.instance;
   }
