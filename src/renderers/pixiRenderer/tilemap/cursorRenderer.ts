@@ -20,6 +20,7 @@ class CursorRenderer {
   private container: Graphics;
   private rangeGraphic: Graphics;
   private text: Text;
+  private containerFilter: OutlineFilter;
 
   private oldMousePosition = "";
   private oldMode = Mode.Line;
@@ -30,7 +31,8 @@ class CursorRenderer {
     this.rangeGraphic.filters = [new OutlineFilter(2, 0x000000, 0)];
 
     this.container = new Graphics();
-    this.container.filters = [new OutlineFilter(2, 0x000000, 0)];
+    this.containerFilter = new OutlineFilter(2, 0x000000, 0);
+    this.container.filters = [this.containerFilter];
 
     this.text = new Text("", {
       fontFamily: "JupiterCrash",
@@ -68,6 +70,9 @@ class CursorRenderer {
     this.rangeGraphic.clear();
     this.container.clear();
     this.container.fill.visible = true; // 🤷
+
+    this.containerFilter.color =
+      placeable.entityType === EntityType.None ? 0xff0000 : 0x0000000;
 
     const agents = new Set<Agent>();
     const tiles = new Set<Tile>();
