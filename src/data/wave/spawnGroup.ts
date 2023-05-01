@@ -7,13 +7,33 @@ import Surface from "../terrain/surface";
 import Tile from "../terrain/tile";
 import { EntityType } from "../entity/constants";
 import { DiscoveryStatus } from "../terrain/constants";
+import Regular from "../entity/enemies/regular";
+import Tank from "../entity/enemies/tank";
+import Flier from "../entity/enemies/flier";
+import Behemoth from "../entity/enemies/behemoth";
+import Bore from "../entity/enemies/bore";
 
 export interface SpawnGroupData {
   spawnPoints: Array<{ x: number; y: number }>;
+  unit: EntityType;
+  energy: number;
+  spawnInterval: number;
+  spawnDelay: number;
+  burstSize: number | null;
+  burstInterval: number;
 }
 
 class SpawnGroup {
   static size = 5;
+
+  private static unitMap = {
+    [EntityType.Runner]: Runner,
+    [EntityType.Slime]: Regular,
+    [EntityType.Tank]: Tank,
+    [EntityType.Flier]: Flier,
+    [EntityType.Behemoth]: Behemoth,
+    [EntityType.Bore]: Bore,
+  };
 
   private index = 0;
   private pathData = new Map<EntityType, PathData>();
@@ -178,15 +198,34 @@ class SpawnGroup {
         x: tile.getX(),
         y: tile.getY(),
       })),
+      unit: this.unit.type,
+      energy: this.energy,
+      spawnInterval: this.spawnInterval,
+      spawnDelay: this.spawnDelay,
+      burstSize: this.burstSize,
+      burstInterval: this.burstInterval,
     };
   }
 
   static deserialize(surface: Surface, target: Tile, data: SpawnGroupData) {
-    return new SpawnGroup(
+    const spawnGroup = new SpawnGroup(
       data.spawnPoints.map(({ x, y }) => surface.getTile(x, y)!),
       target,
       surface
     );
+
+    spawnGroup.setUnit(
+      SpawnGroup.unitMap[data.unit as keyof typeof SpawnGroup.unitMap]
+    );
+    spawnGroup.setParameters(
+      data.energy,
+      data.spawnInterval,
+      data.spawnDelay,
+      data.burstSize ?? Number.POSITIVE_INFINITY,
+      data.burstInterval
+    );
+
+    return spawnGroup;
   }
 
   private getPathData(type: EntityType) {
