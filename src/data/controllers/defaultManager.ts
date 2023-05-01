@@ -19,6 +19,7 @@ import WavePoint from "../entity/wavePoint";
 import { SurfaceSchema } from "../terrain/surfaceSchema";
 import { set } from "../../util/localStorage";
 import { serialize } from ".";
+import { logEvent } from "../../util/firebase";
 
 export interface DefaultManagerData {
   killedEnemies: number;
@@ -273,6 +274,8 @@ class DefaultManager extends Manager {
     // Spawn group paths might have changed
     Manager.Instance.getSurface().forceRerender();
     set("save", serialize());
+
+    logEvent("defeat_wave", { difficulty: this.difficulty, wave: this.level });
   }
 
   private onUnlock = ({ placeable }: Unlock) => {

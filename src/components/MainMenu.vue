@@ -11,6 +11,7 @@ import { version } from "../../package.json";
 import { getAssets } from "../renderers/pixiRenderer/assets";
 import { Settings as ISettings } from "../util/localStorage/settings";
 import { getWord } from "../util/word";
+import { logEvent } from "../util/firebase";
 
 const props = defineProps<{
   onPlay: (
@@ -79,6 +80,8 @@ const submit = (event: Event) => {
     settings.showTutorial!,
     settings.simulation!
   );
+
+  logEvent("play", { difficulty: difficulty.value });
 };
 
 const loadSave = (event: Event) => {
@@ -93,6 +96,8 @@ const loadSave = (event: Event) => {
     settings.showTutorial!,
     settings.simulation!
   );
+
+  logEvent("play_save");
 };
 </script>
 

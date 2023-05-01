@@ -4,6 +4,7 @@ import Game from "./components/Game.vue";
 import MainMenu from "./components/MainMenu.vue";
 import { Difficulty } from "./data/difficulty";
 import { Constructor } from "./renderers/api";
+import "./util/firebase";
 
 enum State {
   Menu,
