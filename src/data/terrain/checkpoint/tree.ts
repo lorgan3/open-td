@@ -7,6 +7,12 @@ import Tile from "../tile";
 export class TreeCheckpoint implements Checkpoint {
   public readonly isBlocking = false;
 
+  public static treeTypes = new Set([
+    EntityType.Tree,
+    EntityType.Pine,
+    EntityType.Cactus,
+  ]);
+
   constructor(public index: number) {}
 
   isCleared(tiles: Tile[], agent: IEnemy): boolean {
@@ -17,7 +23,9 @@ export class TreeCheckpoint implements Checkpoint {
       .some(
         (tile) =>
           tile.hasStaticEntity() &&
-          tile.getStaticEntity().getAgent().getType() === EntityType.Tree
+          TreeCheckpoint.treeTypes.has(
+            tile.getStaticEntity().getAgent().getType()
+          )
       );
   }
 
@@ -31,7 +39,9 @@ export class TreeCheckpoint implements Checkpoint {
     for (let tile of subTiles) {
       if (
         tile.hasStaticEntity() &&
-        tile.getStaticEntity().getAgent().getType() === EntityType.Tree
+        TreeCheckpoint.treeTypes.has(
+          tile.getStaticEntity().getAgent().getType()
+        )
       ) {
         tile.getStaticEntity().getAgent().hit!(100);
       }
@@ -53,7 +63,9 @@ export const getTreeCheckpoints: CheckpointFn = (tiles) => {
     for (let tile of subTiles) {
       if (
         tile.hasStaticEntity() &&
-        tile.getStaticEntity().getAgent().getType() === EntityType.Tree
+        TreeCheckpoint.treeTypes.has(
+          tile.getStaticEntity().getAgent().getType()
+        )
       ) {
         checkpoints.push(new TreeCheckpoint(i));
         break;
