@@ -24,6 +24,10 @@ import Barracks from "../entity/barracks";
 import Tesla from "../entity/towers/tesla";
 import { StaticAgent } from "../entity/staticEntity";
 import { StaticAgentStatics } from "../entity/staticEntity";
+import Pine from "../entity/pine";
+import Cactus from "../entity/cactus";
+import Rock2 from "../entity/rock2";
+import Rock3 from "../entity/rock3";
 
 export class SurfaceSchema {
   private static propertyCount = 3;
@@ -47,8 +51,12 @@ export class SurfaceSchema {
       [EntityType.Fence]: Fence,
       [EntityType.Freezer]: Freezer,
       [EntityType.Tree]: Tree,
+      [EntityType.Pine]: Pine,
+      [EntityType.Cactus]: Cactus,
       [EntityType.Stump]: Stump,
       [EntityType.Rock]: Rock,
+      [EntityType.Rock2]: Rock2,
+      [EntityType.Rock3]: Rock3,
       [EntityType.Radar]: Radar,
       [EntityType.PowerPlant]: PowerPlant,
       [EntityType.Armory]: Armory,

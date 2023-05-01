@@ -15,8 +15,12 @@ class Foliage extends Sprite implements EntityRenderer {
 
   private static entityMap = new Map<EntityType, string[]>([
     [EntityType.Tree, [AtlasTile.Tree, AtlasTile.Pine, AtlasTile.Cactus]],
+    [EntityType.Pine, [AtlasTile.Tree, AtlasTile.Pine, AtlasTile.Cactus]],
+    [EntityType.Cactus, [AtlasTile.Tree, AtlasTile.Pine, AtlasTile.Cactus]],
     [EntityType.Stump, [AtlasTile.Stump]],
     [EntityType.Rock, [AtlasTile.Rock, AtlasTile.RockAlt]],
+    [EntityType.Rock2, [AtlasTile.Rock, AtlasTile.RockAlt]],
+    [EntityType.Rock3, [AtlasTile.Rock, AtlasTile.RockAlt]],
   ]);
 
   static verticalOffset = -0.5;
