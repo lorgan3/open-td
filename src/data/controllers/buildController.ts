@@ -24,6 +24,7 @@ class BuildController {
   public static readonly towersPerPart = 2;
 
   public static readonly baseParts = new Set([
+    EntityType.Barracks,
     EntityType.Armory,
     EntityType.Radar,
     EntityType.Market,
