@@ -227,6 +227,10 @@ class Path {
     return this.tiles[this.index | 0];
   }
 
+  getScale() {
+    return this.pathfinder.scale;
+  }
+
   recompute() {
     const surface = this.pathfinder.getSurface();
 

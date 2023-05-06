@@ -23,7 +23,7 @@ class Marker extends Sprite {
   }
 
   move() {
-    this.offset += 0.1;
+    this.offset += 0.1 / this.path.getScale();
     const { x, y } = this.path.getCoordinates(
       this.offset % this.path.getLength()
     );
