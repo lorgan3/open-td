@@ -64,8 +64,8 @@ export enum TreeType {
 
 export enum RockType {
   Rock1,
-  Rock2,
-  Rock3,
+  Rock2 = 1,
+  Rock3 = 1,
 }
 
 export const BASE_ENTITIES = new Set([

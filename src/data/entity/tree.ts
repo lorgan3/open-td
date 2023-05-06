@@ -1,6 +1,6 @@
 import Manager from "../controllers/manager";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
-import { AgentCategory, EntityType } from "./constants";
+import { AgentCategory, EntityType, TreeType } from "./constants";
 import { RenderData } from "./entity";
 import StaticEntity, { StaticAgent } from "./staticEntity";
 
@@ -14,6 +14,7 @@ class Tree implements StaticAgent {
 
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
+    this.renderData.subType = TreeType.Simple;
   }
 
   getType(): EntityType {
