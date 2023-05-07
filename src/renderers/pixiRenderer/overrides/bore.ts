@@ -10,6 +10,7 @@ import { AssetsContainer } from "../assets/container";
 import { ATLAS, AtlasTile } from "../atlas";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
+import Renderer from "../renderer";
 
 const ANIMATION_SPEED = 0.075;
 const ONE_FOURTH = 1 / 4;
@@ -61,8 +62,20 @@ class Bore extends AnimatedSprite implements EntityRenderer {
     }
     this.wasAttacking = this.data.AI.isAttacking();
 
-    const xOffset = 1 + (this.data.entity.getId() % 13) / 26 - ONE_FOURTH;
-    const yOffset = 1 + ((this.data.entity.getId() + 5) % 17) / 34 - ONE_FOURTH;
+    const posOffset = this.data.AI.isAttacking()
+      ? Math.sin(((Renderer.Instance.getTime() % 200) / 200) * 5) * 0.05
+      : 0;
+
+    const xOffset =
+      1 +
+      (this.data.entity.getId() % 13) / 26 -
+      ONE_FOURTH +
+      Math.cos(this.rotation + Math.PI / 2) * posOffset;
+    const yOffset =
+      1 +
+      ((this.data.entity.getId() + 5) % 17) / 34 -
+      ONE_FOURTH +
+      Math.sin(this.rotation + Math.PI / 2) * posOffset;
 
     this.position.set(
       (this.data.entity.getX() + xOffset) * SCALE,

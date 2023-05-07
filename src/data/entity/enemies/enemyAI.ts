@@ -13,7 +13,11 @@ class EnemyAI {
 
   private callback?: () => void;
 
-  constructor(private enemy: IEnemy, public hp: number) {
+  constructor(
+    private enemy: IEnemy,
+    public hp: number,
+    private attackSpeed = COOLDOWN
+  ) {
     this.predictedHp = hp;
 
     const surface = Manager.Instance.getSurface();
@@ -73,11 +77,11 @@ class EnemyAI {
           this.enemy.getDamage() * Manager.Instance.getDamageMultiplier()
         );
       };
-      this.cooldown = this.isVisible() ? COOLDOWN : 0;
+      this.cooldown = this.isVisible() ? this.attackSpeed : 0;
     }
   }
 
-  interact(callback?: () => void, cooldown = COOLDOWN) {
+  interact(callback?: () => void, cooldown = this.attackSpeed) {
     this.callback = callback;
 
     if (this.cooldown === 0 && this.isVisible()) {

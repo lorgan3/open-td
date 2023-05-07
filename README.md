@@ -47,5 +47,5 @@ Check `package.json`, there are also commands available to run tests and check t
 - [sonar.wav](https://freesound.org/people/SamsterBirdies/sounds/371178/) by [SamsterBirdies](https://freesound.org/people/SamsterBirdies/).
 - [thunder.wav](https://freesound.org/people/doudar41/sounds/535952/) by [doudar41](https://freesound.org/people/doudar41/).
 - [bush.mp3](https://freesound.org/people/Herkules92/sounds/518799/) by [Herkules92](https://freesound.org/people/Herkules92/).
-- [tank.wav](https://freesound.org/people/rabbydaw/sounds/504182/) by [rabbydaw](https://freesound.org/people/rabbydaw/).
-- [drill.wav](https://freesound.org/people/JoelAudio/sounds/135849/) by [Joel Azzopardi](https://freesound.org/people/JoelAudio/).
+- tank.wav by ?
+- [drill.wav](https://freesound.org/people/rabbydaw/sounds/504182/) by [rabbydaw](https://freesound.org/people/rabbydaw/).

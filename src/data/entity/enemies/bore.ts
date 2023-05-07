@@ -29,6 +29,7 @@ const STUN_TIME = 500;
 const FIRE_DAMAGE = 0.01;
 const SPEED = 0.005;
 const HP = 1000;
+const COOLDOWN = 1000;
 
 class Bore implements IEnemy {
   public static readonly pathCosts = mapWithOverrides(
@@ -62,7 +63,7 @@ class Bore implements IEnemy {
 
   constructor(tile: Tile, private path: Path) {
     this.entity = new Entity(tile.getX(), tile.getY(), this);
-    this.ai = new EnemyAI(this, HP);
+    this.ai = new EnemyAI(this, HP, COOLDOWN);
   }
 
   initializePath() {
