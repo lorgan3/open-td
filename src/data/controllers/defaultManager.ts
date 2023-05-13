@@ -96,6 +96,7 @@ class DefaultManager extends Manager {
     if (this.lastKilledEnemies !== this.killedEnemies) {
       this.lastKilledEnemies = this.killedEnemies;
       EventSystem.Instance.triggerEvent(GameEvent.Kill);
+      this.triggerStatUpdate();
     }
   }
 
