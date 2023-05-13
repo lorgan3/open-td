@@ -65,6 +65,7 @@ class Tower extends Sprite implements EntityRenderer {
 
     this.on("removed", () => {
       if (data.renderData.destroyed) {
+        Renderer.Instance.shake();
         new Explosion(container, ...getCenter(data), 2);
       }
 

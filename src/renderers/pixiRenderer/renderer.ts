@@ -36,6 +36,10 @@ import { CursorRenderer } from "./tilemap/cursorRenderer";
 import { AssetsContainer } from "./assets/container";
 import { WorldShader } from "./shaders/worldShader";
 
+const SHAKE_AMOUNT = 10;
+const SHAKE_INTENSITY = 12;
+const SHAKE_INTERVAL = 25;
+
 let DEBUG = false;
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
@@ -46,6 +50,7 @@ class Renderer implements IRenderer {
   private messageFn: Promise<MessageFn>;
   private resolveMessageFn!: (fn: MessageFn) => void;
   private removeEventListeners?: () => void;
+  private intervalId = -1;
 
   private surface!: Surface;
   private target?: HTMLElement;
@@ -398,11 +403,39 @@ class Renderer implements IRenderer {
       this.y += (y * SCROLL_SPEED) / this.scale;
     }
 
+    window.clearInterval(this.intervalId);
     this.viewport!.animate({
       time: 200,
       position: { x: this.x, y: this.y },
       scale: this.scale,
     });
+  }
+
+  shake() {
+    window.clearInterval(this.intervalId);
+
+    let shakes = SHAKE_AMOUNT;
+    this.intervalId = window.setInterval(() => {
+      this.viewport!.animate({
+        time: SHAKE_INTERVAL,
+        position: {
+          x:
+            this.x +
+            Math.floor((Math.random() * SHAKE_INTENSITY) / 2) -
+            SHAKE_INTENSITY,
+          y:
+            this.y +
+            Math.floor((Math.random() * SHAKE_INTENSITY) / 2) -
+            SHAKE_INTENSITY,
+        },
+      });
+
+      shakes--;
+      if (shakes <= 0) {
+        window.clearInterval(this.intervalId);
+        this.intervalId = -1;
+      }
+    }, SHAKE_INTERVAL);
   }
 
   getViewport() {
