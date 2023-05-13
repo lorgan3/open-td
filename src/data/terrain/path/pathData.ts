@@ -3,7 +3,7 @@ import Tile, { SerializedTile } from "../tile";
 import Path from "./path";
 import Pathfinder from "./pathfinder";
 import { WorkerEvent } from "./worker";
-import Worker from "./worker?worker";
+import workerUrl from "./worker?url";
 
 class PathData {
   private paths?: Path[];
@@ -76,7 +76,7 @@ class PathData {
         target: this.target.serialize(),
       };
 
-      this.worker = new Worker();
+      this.worker = new Worker(workerUrl, { type: "module" });
       this.worker.postMessage(event, [event.buffer]);
       this.worker.onmessage = ({ data }: MessageEvent<SerializedTile[][]>) => {
         this.paths = data.map((serializedTiles) =>
