@@ -11,6 +11,7 @@ import { ATLAS, AtlasTile } from "../atlas";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
 import Renderer from "../renderer";
+import Manager from "../../../data/controllers/manager";
 import { HealthBar } from "./healthBar";
 
 const ANIMATION_SPEED = 0.075;
@@ -62,7 +63,17 @@ class Bore extends AnimatedSprite implements EntityRenderer {
     }
 
     if (this.data.AI.isAttacking() && !this.wasAttacking) {
+      this.sound?.destroy();
       ControllableSound.fromEntity(this.data.entity, Sound.Drill);
+    }
+    if (
+      !this.data.AI.isAttacking() &&
+      this.wasAttacking &&
+      !Manager.Instance.getIsBaseDestroyed()
+    ) {
+      this.sound = ControllableSound.fromEntity(this.data.entity, Sound.Tank, {
+        loop: true,
+      });
     }
     this.wasAttacking = this.data.AI.isAttacking();
 
