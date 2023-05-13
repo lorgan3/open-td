@@ -12,12 +12,12 @@ import Bore from "../entity/enemies/bore";
 import { EntityType } from "../entity/constants";
 
 const MAX_SPAWN_DELAY = 4000;
-const MIN_SPAWN_INTERVAL = 150;
+const MIN_SPAWN_INTERVAL = 100;
 const SPAWN_DISTRIBUTION = 550;
 const MIN_BURST_INTERVAL = 500;
 const BURST_DISTRIBUTION = 3000;
 const MIN_BURST_SIZE = 3;
-const BURST_SIZE_DISTRIBUTION = 12;
+const BURST_SIZE_DISTRIBUTION = 4;
 const SPAWN_GROUP_BONUS = 1.1; // More active spawn groups means harder waves
 const SPAWN_GROUP_AGE_BONUSES: Record<Difficulty, number> = {
   [Difficulty.Practice]: 0,
@@ -70,7 +70,9 @@ class Wave {
       // 50% will be continuous, 50% will happen in bursts
       const burstSize =
         Math.random() > 0.5
-          ? normalDistributionRandom() * BURST_SIZE_DISTRIBUTION +
+          ? normalDistributionRandom() *
+              BURST_SIZE_DISTRIBUTION *
+              Math.log(energy) +
             MIN_BURST_SIZE
           : Number.POSITIVE_INFINITY;
 
