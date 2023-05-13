@@ -68,13 +68,13 @@ function toggleCoverage() {
           @click="start"
         >
           <span class="emoji">⚔️</span>
-          <span v-if="!inProgress && integrity > 0"
+          <span class="wave-text" v-if="!inProgress && integrity > 0"
             >Start wave {{ level + 1 }}</span
           >
-          <span v-if="!inProgress && integrity <= 0"
+          <span class="wave-text" v-if="!inProgress && integrity <= 0"
             >Restart wave {{ level }}</span
           >
-          <span v-if="inProgress">Wave {{ level }}</span>
+          <span class="wave-text" v-if="inProgress">Wave {{ level }}</span>
         </button>
         <button class="toggle" @click="props.controller.toggleBuildMenu">
           🔧
@@ -153,6 +153,10 @@ function toggleCoverage() {
     .emoji {
       font-size: 32px;
       display: none;
+    }
+
+    .wave-text {
+      white-space: nowrap;
     }
 
     &--active {
