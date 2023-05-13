@@ -11,6 +11,7 @@ import { ATLAS, AtlasTile } from "../atlas";
 import { ControllableSound } from "../sound/controllableSound";
 import { Sound } from "../sound";
 import Renderer from "../renderer";
+import { HealthBar } from "./healthBar";
 
 const ANIMATION_SPEED = 0.075;
 const ONE_FOURTH = 1 / 4;
@@ -23,6 +24,7 @@ class Bore extends AnimatedSprite implements EntityRenderer {
   private flames: Sprite[] = [];
   private sound?: ControllableSound;
   private wasAttacking = false;
+  private healthBar?: HealthBar;
 
   constructor(private data: BoreData, private container: AssetsContainer) {
     super(Object.values(container.assets![Bore.atlas].textures) as any);
@@ -38,6 +40,8 @@ class Bore extends AnimatedSprite implements EntityRenderer {
     this.on("removed", () => {
       this.sound?.destroy();
       deleteShadow(this.shadow);
+
+      this.healthBar?.remove();
 
       if (data.AI.hp <= 0) {
         new Explosion(
@@ -114,6 +118,14 @@ class Bore extends AnimatedSprite implements EntityRenderer {
       this.tint = 0xffffff;
       this.removeChildren();
       this.flames = [];
+    }
+
+    if (this.data.AI.getHpPercent() < 1) {
+      if (!this.healthBar) {
+        this.healthBar = new HealthBar(this.data);
+      }
+
+      this.healthBar.update!(this.position.x, this.position.y);
     }
   }
 }
