@@ -10,6 +10,7 @@ class EnemyAI {
   private predictedHp;
   private cooldown = 0;
   private visibilities: boolean[] = [];
+  private maxHp: number;
 
   private callback?: () => void;
 
@@ -19,6 +20,7 @@ class EnemyAI {
     private attackSpeed = COOLDOWN
   ) {
     this.predictedHp = hp;
+    this.maxHp = hp;
 
     const surface = Manager.Instance.getSurface();
     this.visibilities = enemy
@@ -169,6 +171,10 @@ class EnemyAI {
 
   isVisible() {
     return this.visibilities[this.enemy.getPath().getIndex() | 0] ?? true;
+  }
+
+  getHpPercent() {
+    return this.hp / this.maxHp;
   }
 }
 
