@@ -14,6 +14,8 @@ import EnemyAI from "./enemyAI";
 
 const destructibleEntitiesCopy = new Set(DESTRUCTIBLE_ENTITIES);
 destructibleEntitiesCopy.delete(EntityType.Tree);
+destructibleEntitiesCopy.delete(EntityType.Pine);
+destructibleEntitiesCopy.delete(EntityType.Cactus);
 const getStaticEntityCheckpoints = staticCheckpointFactory(
   1,
   destructibleEntitiesCopy
