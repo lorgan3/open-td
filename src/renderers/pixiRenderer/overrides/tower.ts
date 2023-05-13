@@ -10,6 +10,8 @@ import { Sound } from "../sound";
 import { ControllableSound } from "../sound/controllableSound";
 import { AssetsContainer } from "../assets/container";
 import { ATLAS, AtlasTile } from "../atlas";
+import Renderer from "../renderer";
+import { Explosion } from "../explosion";
 
 const TOWER_TO_ATLAS_MAP = new Map<EntityType, string>([
   [EntityType.Tower, "turret"],
@@ -60,6 +62,18 @@ class Tower extends Sprite implements EntityRenderer {
     this.pivot = { x: SCALE, y: SCALE };
 
     this.createTurret();
+
+    this.on("removed", () => {
+      if (data.renderData.destroyed) {
+        new Explosion(container, ...getCenter(data), 2);
+      }
+
+      TOWERS.removeChild(this.turret);
+
+      if (this.sound) {
+        this.sound.destroy();
+      }
+    });
   }
 
   private createTurret() {
@@ -78,13 +92,6 @@ class Tower extends Sprite implements EntityRenderer {
     };
 
     TOWERS.addChild(this.turret);
-    this.on("removed", () => {
-      TOWERS.removeChild(this.turret);
-
-      if (this.sound) {
-        this.sound.destroy();
-      }
-    });
   }
 
   sync(dt: number, full: boolean) {

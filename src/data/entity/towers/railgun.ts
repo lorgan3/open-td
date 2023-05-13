@@ -94,6 +94,7 @@ class Railgun implements ITower {
     this.hp -= damage;
 
     if (this.hp <= 0) {
+      this.renderData.destroyed = true;
       Manager.Instance.getSurface().despawnStatic(this);
     }
   }
