@@ -1,5 +1,5 @@
 import Manager from "../controllers/manager";
-import { AltTileType, TileType } from "../terrain/constants";
+import { TileType } from "../terrain/constants";
 import Tile, { TileWithStaticEntity } from "../terrain/tile";
 import { AgentCategory, EntityType } from "./constants";
 import StaticEntity, { StaticAgent } from "./staticEntity";
@@ -11,8 +11,6 @@ class Freezer implements StaticAgent {
   public category = AgentCategory.Player;
   public renderData = {};
 
-  private originalTileTypes: Array<TileType | AltTileType> = [];
-
   constructor(private tile: Tile) {
     this.entity = new StaticEntity(tile.getX(), tile.getY(), this);
   }
@@ -23,7 +21,6 @@ class Freezer implements StaticAgent {
       .getEntityTiles(this)
       .forEach((tile) => {
         tiles.push(new Tile(tile.getX(), tile.getY(), TileType.Freezer));
-        this.originalTileTypes.push(tile.getAltType());
       });
     Manager.Instance.getSurface().setTiles(tiles);
   }
@@ -31,10 +28,7 @@ class Freezer implements StaticAgent {
   despawn() {
     const tiles: Tile[] = Manager.Instance.getSurface()
       .getEntityTiles(this)
-      .map(
-        (tile, i) =>
-          new Tile(tile.getX(), tile.getY(), this.originalTileTypes[i])
-      );
+      .map((tile, i) => new Tile(tile.getX(), tile.getY(), TileType.Dirt));
 
     Manager.Instance.getSurface().setTiles(tiles);
   }
