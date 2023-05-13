@@ -39,23 +39,39 @@ export const coverTilesWithTowerSightLines = (
   const coveredTiles = new Set<Tile>();
 
   const run = () => {
-    const towerTiles = new Set(surface.getEntityTiles(tower));
+    const towerTiles = surface.getEntityTiles(tower);
+    const towerTilesSet = new Set(towerTiles);
 
     surface.forCircle(
       tower.entity.getX() + 1,
       tower.entity.getY() + 1,
       range,
       (target) => {
+        let source: Tile;
+        if (target.getX() <= tower.entity.getAlignedX()) {
+          if (target.getY() <= tower.entity.getAlignedY()) {
+            source = towerTiles[0];
+          } else {
+            source = towerTiles[2];
+          }
+        } else {
+          if (target.getY() <= tower.entity.getAlignedY()) {
+            source = towerTiles[1];
+          } else {
+            source = towerTiles[3];
+          }
+        }
+
         surface.forLine(
-          tower.entity.getX(),
-          tower.entity.getY(),
+          source.getX(),
+          source.getY(),
           target.getX(),
           target.getY(),
           (tile) => {
             tile.addTower(tower);
             coveredTiles.add(tile);
 
-            if (towerTiles.has(tile)) {
+            if (towerTilesSet.has(tile)) {
               return;
             }
 
@@ -74,11 +90,16 @@ export const coverTilesWithTowerSightLines = (
     );
   };
 
-  run();
-
+  let firstRun = true;
   const removeEventListener = EventSystem.Instance.addEventListener(
     GameEvent.SurfaceChange,
     ({ affectedTiles }: SurfaceChange) => {
+      if (firstRun) {
+        firstRun = false;
+        run();
+        return;
+      }
+
       for (const tile of affectedTiles) {
         if (coveredTiles.has(tile)) {
           coveredTiles.forEach((tile) => tile.removeTower(tower));
