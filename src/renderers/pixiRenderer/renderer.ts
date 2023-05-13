@@ -35,10 +35,17 @@ import { get } from "../../util/localStorage";
 import { CursorRenderer } from "./tilemap/cursorRenderer";
 import { AssetsContainer } from "./assets/container";
 import { WorldShader } from "./shaders/worldShader";
+import EventSystem from "../../data/eventSystem";
+import { Explosion } from "./explosion";
+import { ControllableSound } from "./sound/controllableSound";
 
 const SHAKE_AMOUNT = 10;
 const SHAKE_INTENSITY = 12;
 const SHAKE_INTERVAL = 25;
+
+const END_SEQUENCE_FIXED_DELAY = 300;
+const END_SEQUENCE_VARIABLE_DELAY = 500;
+const END_SEQUENCE_EXPLOSIONS = 0.3;
 
 let DEBUG = false;
 
@@ -74,6 +81,8 @@ class Renderer implements IRenderer {
   private height = 0;
 
   private time = 0;
+  private nextExplosionTime = 0;
+  private explosions = 0;
 
   static get Instance() {
     return this.instance;
@@ -254,6 +263,25 @@ class Renderer implements IRenderer {
     this.coverageRenderer!.update();
     this.alertRenderer!.update(dt, Manager.Instance.getIsStarted());
     this.surface.markPristine();
+
+    if (
+      Manager.Instance.getIsBaseDestroyed() &&
+      this.time > this.nextExplosionTime &&
+      this.explosions <
+        END_SEQUENCE_EXPLOSIONS * Manager.Instance.getBase().getParts().size
+    ) {
+      const baseParts = [...Manager.Instance.getBase().getParts()];
+      const basePart = baseParts[Math.floor(Math.random() * baseParts.length)];
+      this.explosions++;
+      this.nextExplosionTime =
+        this.time +
+        END_SEQUENCE_FIXED_DELAY +
+        END_SEQUENCE_VARIABLE_DELAY / baseParts.length;
+
+      new Explosion(this.assets, ...getCenter(basePart), 2);
+      this.shake();
+      ControllableSound.fromEntity(basePart.entity, Sound.Explosion);
+    }
   }
 
   showCoverage(): void {
@@ -351,9 +379,12 @@ class Renderer implements IRenderer {
     );
     const removeBuySound = playSoundOnEvent(GameEvent.Buy, Sound.Place);
     const removeSellSound = playSoundOnEvent(GameEvent.Sell, Sound.Destroy);
-    const removeHitBaseSound = playSoundOnEvent(
+    const removeHitBaseSound = EventSystem.Instance.addEventListener(
       GameEvent.HitBase,
-      Sound.Destroy
+      () => {
+        sound.play(Sound.Destroy);
+        this.shake();
+      }
     );
 
     this.removeEventListeners = () => {
