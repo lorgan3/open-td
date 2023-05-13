@@ -20,6 +20,7 @@ import VisibilityController from "./visibilityController";
 
 export interface WaveControllerData {
   spawnGroups: SpawnGroupData[];
+  nextSpawnGroup: SpawnGroupData | null;
   direction: number;
   timeSinceLastExpansion: number;
 }
@@ -199,6 +200,9 @@ class WaveController {
   serialize(): WaveControllerData {
     return {
       spawnGroups: this.spawnGroups.map((spawnGroup) => spawnGroup.serialize()),
+      nextSpawnGroup: this.nextSpawnGroup
+        ? this.nextSpawnGroup.serialize()
+        : null,
       direction: this.direction,
       timeSinceLastExpansion: this.timeSinceLastExpansion,
     };
@@ -210,6 +214,16 @@ class WaveController {
     waveController.spawnGroups = data.spawnGroups.map((spawnGroup) =>
       SpawnGroup.deserialize(surface, base.getTile(), spawnGroup)
     );
+
+    if (data.nextSpawnGroup) {
+      waveController.nextSpawnGroup = SpawnGroup.deserialize(
+        surface,
+        base.getTile(),
+        data.nextSpawnGroup
+      );
+      waveController.initialNextSpawnGroup = waveController.nextSpawnGroup;
+    }
+
     waveController.direction = data.direction;
     waveController.timeSinceLastExpansion = data.timeSinceLastExpansion;
 
