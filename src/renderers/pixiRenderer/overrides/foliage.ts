@@ -40,8 +40,8 @@ class Foliage extends Sprite implements EntityRenderer {
     this.on("removed", () => {
       if (
         data.renderData.chopped &&
-        data.getType() === EntityType.Tree &&
-        data.renderData.subType !== TreeType.Cactus
+        (data.getType() === EntityType.Tree ||
+          data.getType() === EntityType.Pine)
       ) {
         ControllableSound.fromEntity(data.entity, Sound.Bush);
         new FallingTree(this.texture, data.entity.getX(), data.entity.getY());
