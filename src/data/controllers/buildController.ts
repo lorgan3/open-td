@@ -65,11 +65,19 @@ class BuildController {
       ({ placeable }) => {
         if (placeable.entityType === EntityType.Excavator) {
           this.ignoredEntities.add(EntityType.Tree);
+          this.ignoredEntities.add(EntityType.Pine);
+          this.ignoredEntities.add(EntityType.Cactus);
           this.ignoredEntities.add(EntityType.Rock);
+          this.ignoredEntities.add(EntityType.Rock2);
+          this.ignoredEntities.add(EntityType.Rock3);
           this.ignoredEntities.add(EntityType.Stump);
 
           this.clearableEntities.add(EntityType.Tree);
+          this.clearableEntities.add(EntityType.Pine);
+          this.clearableEntities.add(EntityType.Cactus);
           this.clearableEntities.add(EntityType.Rock);
+          this.clearableEntities.add(EntityType.Rock2);
+          this.clearableEntities.add(EntityType.Rock3);
           this.clearableEntities.add(EntityType.Stump);
         }
 
@@ -562,7 +570,10 @@ class BuildController {
         this.surface.despawnStatic(agent);
         MoneyController.Instance.sell(agent);
 
-        if (agent.getType() === EntityType.Tree) {
+        if (
+          agent.getType() === EntityType.Tree ||
+          agent.getType() === EntityType.Pine
+        ) {
           agent.renderData.chopped = true;
         }
       }
