@@ -3,10 +3,9 @@ import { Generator } from "./generator";
 import Tile from "./tile";
 import { GameEvent } from "../events";
 import StaticEntity, { getScale, StaticAgent } from "../entity/staticEntity";
-import { AgentCategory } from "../entity/constants";
+import { AgentCategory, EntityType } from "../entity/constants";
 import EventSystem from "../eventSystem";
 import { getRange, isTower, ITower } from "../entity/towers";
-import { SurfaceSchema } from "./surfaceSchema";
 
 export interface GeneratorParams {
   width: number;
@@ -28,6 +27,83 @@ const MATRIX_COORDINATES: Array<[number, number]> = [
   [-1, 1],
   [1, -1],
 ];
+
+export class SurfaceSchema {
+  private static propertyCount = 3;
+  private tileBufferSize;
+
+  constructor(
+    public readonly buffer: Uint8Array,
+    public staticEntityConstructor?: (
+      type: EntityType,
+      tile: Tile
+    ) => StaticEntity | null
+  ) {
+    this.tileBufferSize = this.withEntities ? 2 : 1;
+  }
+
+  get width() {
+    return this.buffer[0];
+  }
+
+  get height() {
+    return this.buffer[1];
+  }
+
+  get withEntities() {
+    return this.buffer[2];
+  }
+
+  getTile(index: number) {
+    const offset = SurfaceSchema.propertyCount + index * this.tileBufferSize;
+    const tile = new Tile(
+      index % this.width,
+      Math.floor(index / this.width),
+      this.buffer[offset]
+    );
+
+    if (this.withEntities && this.staticEntityConstructor) {
+      const entity = this.staticEntityConstructor(
+        this.buffer[offset + 1],
+        tile
+      );
+
+      if (entity) {
+        tile.setStaticEntity(entity);
+      }
+    }
+
+    return tile;
+  }
+
+  static serializeSurface(surface: Surface, withEntities: boolean) {
+    const tileBufferSize = withEntities ? 2 : 1;
+    const buffer = new Uint8Array(
+      SurfaceSchema.propertyCount + surface.map.length * tileBufferSize
+    );
+    buffer[0] = surface.getWidth();
+    buffer[1] = surface.getHeight();
+    buffer[2] = withEntities ? 1 : 0;
+
+    for (let i = 0; i < surface.map.length; i++) {
+      const tile = surface.map[i];
+      const index = i * tileBufferSize + SurfaceSchema.propertyCount;
+      buffer[index] = withEntities ? tile.getAltType() : tile.getType();
+
+      if (withEntities) {
+        const agent =
+          tile.hasStaticEntity() &&
+          tile.getStaticEntity().getAgent().getTile() === tile
+            ? tile.getStaticEntity().getAgent()
+            : null;
+
+        buffer[index + 1] = agent?.getType() ?? EntityType.None;
+      }
+    }
+
+    return buffer;
+  }
+}
 
 class Surface {
   public map!: Tile[];

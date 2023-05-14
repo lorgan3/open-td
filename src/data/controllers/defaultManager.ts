@@ -7,7 +7,7 @@ import { Discover, DiscoveryMethod, GameEvent, Unlock } from "../events";
 import MoneyController, { TOWER_PRICES } from "./moneyController";
 import { Placeable, WAVE_OVER_MULTIPLIER } from "../placeables";
 import PowerController, { POWER_CONSUMPTIONS } from "./powerController";
-import Surface from "../terrain/surface";
+import Surface, { SurfaceSchema } from "../terrain/surface";
 import UnlocksController from "./unlocksController";
 import Manager from "./manager";
 import { AgentCategory, EntityType } from "../entity/constants";
@@ -16,10 +16,10 @@ import Base from "../entity/base";
 import WaveController from "./waveController";
 import VisibilityController from "./visibilityController";
 import WavePoint from "../entity/wavePoint";
-import { SurfaceSchema } from "../terrain/surfaceSchema";
 import { set } from "../../util/localStorage";
 import { serialize } from ".";
 import { logEvent } from "../../util/firebase";
+import staticEntityConstructor from "../terrain/staticEntityConstructor";
 
 export interface DefaultManagerData {
   killedEnemies: number;
@@ -329,7 +329,8 @@ class DefaultManager extends Manager {
         data.surface
           .split("")
           .map((char) => char.charCodeAt(0) - DefaultManager.serializeStartChar)
-      )
+      ),
+      staticEntityConstructor
     );
     const surface = new Surface(schema);
     const manager = new DefaultManager(

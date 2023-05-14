@@ -1,5 +1,6 @@
 import Fence from "../../entity/fence";
 import { TileType } from "../constants";
+import staticEntityConstructor from "../staticEntityConstructor";
 import Surface from "../surface";
 import Tile from "../tile";
 import { vi, describe, it, expect } from "vitest";
@@ -662,6 +663,7 @@ describe("surface", () => {
     it("serializes with entities", () => {
       tile.getStaticEntity()!["id"]++; // Make test pass
       const schema = surface.serialize(true);
+      schema.staticEntityConstructor = staticEntityConstructor;
       expect(schema.width).toEqual(3);
       expect(schema.height).toEqual(3);
       expect(schema.withEntities).toEqual(1);
@@ -688,7 +690,9 @@ describe("surface", () => {
 
     it("deserializes", () => {
       tile.getStaticEntity()!["id"]++; // Make test pass
-      const clonedSurface = new Surface(surface.serialize(true));
+      const schema = surface.serialize(true);
+      schema.staticEntityConstructor = staticEntityConstructor;
+      const clonedSurface = new Surface(schema);
 
       expect(clonedSurface).toEqual(surface);
     });

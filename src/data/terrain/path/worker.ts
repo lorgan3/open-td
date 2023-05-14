@@ -1,6 +1,5 @@
 import { TileType } from "../constants";
-import Surface from "../surface";
-import { SurfaceSchema } from "../surfaceSchema";
+import Surface, { SurfaceSchema } from "../surface";
 import { SerializedTile } from "../tile";
 import Path from "./path";
 import Pathfinder from "./pathfinder";
