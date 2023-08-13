@@ -584,7 +584,7 @@ class Renderer implements IRenderer {
     };
     target.addEventListener("wheel", handleWheel, { passive: false });
 
-    const handleMousedown = (event: MouseEvent) => {
+    const handleMousedown = (event: PointerEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
@@ -594,9 +594,9 @@ class Renderer implements IRenderer {
 
       this.controller.mouseDown(x, y);
     };
-    target.addEventListener("mousedown", handleMousedown);
+    target.addEventListener("pointerdown", handleMousedown);
 
-    const handleMousemove = (event: MouseEvent) => {
+    const handleMousemove = (event: PointerEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
@@ -606,9 +606,9 @@ class Renderer implements IRenderer {
 
       this.controller.mouseMove(x, y);
     };
-    target.addEventListener("mousemove", handleMousemove);
+    target.addEventListener("pointermove", handleMousemove);
 
-    const handleMouseup = (event: MouseEvent) => {
+    const handleMouseup = (event: PointerEvent) => {
       const x = Math.floor(
         (event.pageX - this.offsetX + this.world!.scrollLeft) / this.xStep
       );
@@ -618,7 +618,7 @@ class Renderer implements IRenderer {
 
       this.controller.mouseUp(x, y);
     };
-    target.addEventListener("mouseup", handleMouseup);
+    target.addEventListener("pointerup", handleMouseup);
 
     const handleKeydown = (event: KeyboardEvent) => {
       this.controller.keyDown(event.key);

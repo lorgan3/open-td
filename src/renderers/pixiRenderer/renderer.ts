@@ -129,6 +129,7 @@ class Renderer implements IRenderer {
         underflow: "center",
       })
       .drag({ wheel: true, clampWheel: true, pressDrag: false })
+      .pinch()
       .addListener("moved", ({ type }: { type: string }) => {
         if (type !== "animate") {
           this.x = this.viewport!.center.x;
@@ -331,7 +332,7 @@ class Renderer implements IRenderer {
 
       this.controller.mouseDown(x, y);
     };
-    this.viewport!.addListener("mousedown", handleMousedown);
+    this.viewport!.addListener("pointerdown", handleMousedown);
 
     const handleMousemove = (event: FederatedPointerEvent) => {
       const x = Math.floor(
@@ -345,7 +346,7 @@ class Renderer implements IRenderer {
 
       this.controller.mouseMove(x, y);
     };
-    this.viewport!.addListener("mousemove", handleMousemove);
+    this.viewport!.addListener("pointermove", handleMousemove);
 
     const handleMouseup = (event: FederatedPointerEvent) => {
       const x = Math.floor(
@@ -359,7 +360,7 @@ class Renderer implements IRenderer {
 
       this.controller.mouseUp(x, y);
     };
-    this.viewport!.addListener("mouseup", handleMouseup);
+    this.viewport!.addListener("pointerup", handleMouseup);
 
     const handleKeydown = (event: KeyboardEvent) => {
       this.controller.keyDown(event.key);

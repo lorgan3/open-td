@@ -270,6 +270,7 @@ const returnToMainMenu = () => {
   &::-webkit-scrollbar {
     display: none;
   }
+  touch-action: pinch-zoom;
 }
 
 @keyframes blinker {
