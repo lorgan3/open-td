@@ -358,7 +358,7 @@ class Renderer implements IRenderer {
           SCALE
       );
 
-      this.controller.mouseUp(x, y);
+      this.controller.mouseUp(x, y, event.pointerType === "touch");
     };
     this.viewport!.addListener("pointerup", handleMouseup);
 

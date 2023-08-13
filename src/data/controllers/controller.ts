@@ -49,7 +49,8 @@ class Controller {
   private mouseX = 0;
   private mouseY = 0;
   private pressedKeys: Partial<Record<Key, boolean>> = {};
-  private _isMouseDown = false;
+  private touches = 0;
+  private canBuild = true;
   private eventHandlers = new Map<Key, Set<() => void>>();
   private surface!: Surface;
 
@@ -78,7 +79,13 @@ class Controller {
   public mouseDown(x: number, y: number) {
     this.mouseDownX = x;
     this.mouseDownY = y;
-    this._isMouseDown = true;
+    this.mouseX = x;
+    this.mouseY = y;
+    this.touches++;
+
+    if (this.touches > 1) {
+      this.canBuild = false;
+    }
   }
 
   public mouseMove(x: number, y: number) {
@@ -87,7 +94,7 @@ class Controller {
   }
 
   public getSelection() {
-    if (!this._isMouseDown) {
+    if (this.touches === 0 || !this.canBuild) {
       return [];
     }
 
@@ -141,16 +148,26 @@ class Controller {
     return tiles;
   }
 
-  public mouseUp(x: number, y: number) {
+  public mouseUp(x: number, y: number, clearSelection: boolean) {
     if (!this.selectedPlacable) {
-      this._isMouseDown = false;
+      this.touches--;
       return;
     }
 
-    const tiles = this.getSelection();
-    BuildController.Instance.build(tiles, this.selectedPlacable);
+    if (this.touches === 1) {
+      if (this.canBuild) {
+        const tiles = this.getSelection();
+        BuildController.Instance.build(tiles, this.selectedPlacable);
+      } else {
+        this.canBuild = true;
+      }
+    }
 
-    this._isMouseDown = false;
+    this.touches--;
+    if (clearSelection) {
+      this.mouseX = 0;
+      this.mouseY = 0;
+    }
   }
 
   public keyDown(key: string) {
@@ -215,7 +232,7 @@ class Controller {
   }
 
   isMouseDown() {
-    return this._isMouseDown;
+    return this.touches > 0;
   }
 
   getMouse(scaleOverride?: number): [number, number] {
@@ -227,7 +244,7 @@ class Controller {
   }
 
   getMode() {
-    if (!this._isMouseDown) {
+    if (this.touches === 0) {
       return Mode.Single;
     }
 

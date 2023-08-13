@@ -616,7 +616,7 @@ class Renderer implements IRenderer {
         (event.pageY - this.offsetY + this.world!.scrollTop) / this.yStep
       );
 
-      this.controller.mouseUp(x, y);
+      this.controller.mouseUp(x, y, event.pointerType === "touch");
     };
     target.addEventListener("pointerup", handleMouseup);
 
