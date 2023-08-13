@@ -390,9 +390,9 @@ class Renderer implements IRenderer {
 
     this.removeEventListeners = () => {
       window.removeEventListener("contextmenu", handleContextmenu);
-      this.viewport!.removeListener("mousedown", handleMousedown);
-      this.viewport!.removeListener("mousemove", handleMousemove);
-      this.viewport!.removeListener("mouseup", handleMouseup);
+      this.viewport!.removeListener("pointerdown", handleMousedown);
+      this.viewport!.removeListener("pointermove", handleMousemove);
+      this.viewport!.removeListener("pointerup", handleMouseup);
       window.removeEventListener("keydown", handleKeydown);
       window.removeEventListener("keyup", handleKeyup);
 
