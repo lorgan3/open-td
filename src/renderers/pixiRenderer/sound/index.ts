@@ -22,7 +22,7 @@ export enum Sound {
 }
 
 export const soundAssets = {
-  [Sound.Notification]: `${import.meta.env.BASE_URL}sounds/notification.ogg`,
+  [Sound.Notification]: `${import.meta.env.BASE_URL}sounds/notification.mp3`,
   [Sound.Shot]: `${import.meta.env.BASE_URL}sounds/shot.wav`,
   [Sound.Laser]: `${import.meta.env.BASE_URL}sounds/laser.mp3`,
   [Sound.Flamethrower]: `${import.meta.env.BASE_URL}sounds/flamethrower.wav`,
