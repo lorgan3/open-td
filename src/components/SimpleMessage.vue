@@ -113,11 +113,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .message-wrapper {
   position: absolute;
-  top: 30px;
+  bottom: 10px;
   left: 10px;
   z-index: 2;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 
 .message {
@@ -129,13 +129,20 @@ onMounted(() => {
   transform: translateX(-420px);
   max-height: 300px;
   overflow: hidden;
+  max-width: calc(100% - 28px);
 
   &-inner {
     position: relative;
     background: #fff;
     padding: 16px;
     border: 3px solid #000;
+    border-radius: 10px;
     margin-top: 8px;
+
+    &:hover {
+      opacity: 0.3;
+      transition: opacity 1s 1s linear;
+    }
   }
 
   &--visible {
