@@ -70,7 +70,38 @@ button {
   font-size: 24px;
 }
 
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/** Could not get media queries to work in the component */
+@media (max-aspect-ratio: 1/1) {
+  .marketplace {
+    .inner {
+      flex-direction: column-reverse;
+
+      .detail {
+        max-width: calc(100% - 24px);
+        min-height: 300px;
+        padding-left: 12px;
+
+        .detail-summary {
+          flex-direction: column;
+        }
+      }
+
+      .menu {
+        width: 100%;
+        border-top: 2px solid #fff;
+
+        .title {
+          max-width: 35%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
+
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
