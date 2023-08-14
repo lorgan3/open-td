@@ -258,12 +258,29 @@ const loadSave = (event: Event) => {
     flex-direction: row;
     height: calc(70vh - 84px);
     margin-bottom: 10vh;
+    max-width: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+
+    scrollbar-width: thin;
+    scrollbar-color: black transparent;
+
+    &::-webkit-scrollbar {
+      height: 5px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: black;
+    }
 
     > * {
+      scroll-snap-align: start;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
       gap: 20px;
 
       &:first-child {
