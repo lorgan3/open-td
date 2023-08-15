@@ -3,10 +3,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { GameEvent, StatUpdate } from "../../data/events";
 import Manager from "../../data/controllers/manager";
 import EventSystem from "../../data/eventSystem";
-
-const props = defineProps<{
-  expanded: boolean;
-}>();
+import UiElement from "./UiElement.vue";
 
 const naturalNumberFormatter = Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
@@ -31,6 +28,11 @@ const power = ref(0);
 const lastProduction = ref(0);
 const lastConsumption = ref(0);
 
+const expansion = ref(true);
+function toggleExpand() {
+  expansion.value = !expansion.value;
+}
+
 const eventHandler = (stats: StatUpdate) => {
   money.value = stats.money;
   moneyMultiplier.value = stats.moneyMultiplier;
@@ -47,8 +49,8 @@ const eventHandler = (stats: StatUpdate) => {
 
 const clazz = computed(() => {
   return {
-    stat: true,
-    "stat--expanded": props.expanded,
+    stats: true,
+    "stats--collapsed": !expansion.value,
   };
 });
 
@@ -63,8 +65,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="stats">
-    <span :class="clazz">
+  <div :class="clazz">
+    <UiElement @click="toggleExpand" :class-name="{ circle: true }">
       🪙 {{ naturalNumberFormatter.format(money) }}
       <span class="meta"
         >(<span class="positive">{{
@@ -72,8 +74,9 @@ onUnmounted(() => {
         }}</span
         >)</span
       >
-    </span>
-    <span :class="clazz">
+    </UiElement>
+
+    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 145deg">
       🔋 {{ naturalNumberFormatter.format(power) }}
       <span class="meta"
         >(<span class="positive"
@@ -82,72 +85,78 @@ onUnmounted(() => {
           >-{{ numberFormatter.format(lastConsumption) }}</span
         >)</span
       >
-    </span>
-    <span :class="clazz">
+    </UiElement>
+
+    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 90deg">
       🛡️ {{ naturalNumberFormatter.format(integrity) }}
       <span class="meta"
         >(<span class="positive"
           >+{{ numberFormatter.format(regeneration) }}</span
         >)</span
       >
-    </span>
-    <span :class="clazz">
+    </UiElement>
+
+    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 35deg">
       🗼 <span v-if="towers > maxTowers" class="negative">{{ towers }}</span
       ><span v-else>{{ towers }}</span> / {{ maxTowers }}
-    </span>
+    </UiElement>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.circle {
+  flex-direction: column;
+  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
+  transform: translate(0rem, 0rem) scale(1);
+  transition: transform 0.5s;
+}
+
+.minor-stat {
+  position: absolute;
+  top: 1.5rem;
+  left: 2.5rem;
+  transform: translate(
+      calc(3.5rem * sin(var(--i))),
+      calc(3.5rem * cos(var(--i)))
+    )
+    scale(1);
+  white-space: nowrap;
+  z-index: -1;
+  transform-origin: 0% 50%;
+  transition: transform 0.5s;
+}
+
 .stats {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
+  position: fixed;
+  top: 2rem;
+  left: 1rem;
+  font-size: 1.8rem;
+  z-index: 1;
   color: #fff;
-  width: 100%;
-  margin-right: 16px;
 
-  .stat {
-    border: 2px solid #000;
-    border-top: none;
-    background-color: rgb(44, 49, 120);
-    padding: 4px 8px;
-    overflow: hidden;
-    white-space: nowrap;
-    pointer-events: all;
-
-    .positive {
-      color: green;
+  &--collapsed {
+    .circle {
+      transform: translate(0rem, -2rem) scale(0.5);
     }
 
-    .negative {
-      color: red;
+    .minor-stat {
+      transform: translate(0rem, -2rem) scale(0);
     }
+  }
 
-    .meta {
-      opacity: 0;
-      display: none;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  .meta {
+    font-size: 1.1rem;
+    line-height: 0.5;
+  }
 
-    &:hover,
-    &--expanded {
-      .meta {
-        display: inline;
-        animation: 0.2s ease 0s 1 normal forwards fade-in;
-      }
-    }
+  .positive {
+    color: rgb(138, 220, 138);
+  }
 
-    @keyframes fade-in {
-      0% {
-        opacity: 0;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
+  .negative {
+    color: rgb(215, 135, 135);
   }
 }
 </style>

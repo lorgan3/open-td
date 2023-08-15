@@ -7,17 +7,18 @@ import Manager from "../../data/controllers/manager";
 import { IRenderer } from "../../renderers/api";
 import Stats from "./Stats.vue";
 import EventSystem from "../../data/eventSystem";
+import UiElement from "./UiElement.vue";
 
 const props = defineProps<{
   renderer: IRenderer;
   controller: Controller;
   restart: () => void;
+  toggleMenu: () => void;
 }>();
 
 const level = ref(0);
 const inProgress = ref(false);
 const showCoverage = ref(false);
-const expansion = ref(false);
 const integrity = ref(0);
 
 const eventHandler = (stats: StatUpdate) => {
@@ -43,10 +44,6 @@ function start() {
   }
 }
 
-function toggleExpand() {
-  expansion.value = !expansion.value;
-}
-
 function toggleCoverage() {
   showCoverage.value
     ? props.renderer.hideCoverage()
@@ -60,112 +57,63 @@ function toggleCoverage() {
 
 <template>
   <div class="hud">
-    <div class="hud-positioner">
-      <Stats :expanded="expansion" />
-      <div class="group">
-        <button
-          :class="{ 'wave-toggle': true, 'wave-toggle--active': !inProgress }"
-          @click="start"
+    <Stats />
+    <div class="group">
+      <UiElement @click="start" :active="inProgress">
+        <span class="emoji">⚔️</span>
+        <span class="wave-text" v-if="!inProgress && integrity > 0"
+          >Start wave {{ level + 1 }}</span
         >
-          <span class="emoji">⚔️</span>
-          <span class="wave-text" v-if="!inProgress && integrity > 0"
-            >Start wave {{ level + 1 }}</span
-          >
-          <span class="wave-text" v-if="!inProgress && integrity <= 0"
-            >Restart wave {{ level }}</span
-          >
-          <span class="wave-text" v-if="inProgress">Wave {{ level }}</span>
-        </button>
-        <button class="toggle" @click="props.controller.toggleBuildMenu">
-          🔧
-        </button>
-        <button
-          :class="{ toggle: true, 'toggle-toggled': expansion }"
-          @click="toggleExpand"
+        <span class="wave-text" v-if="!inProgress && integrity <= 0"
+          >Restart wave {{ level }}</span
         >
-          🔎
-        </button>
-        <button
+        <span class="wave-text" v-if="inProgress">Wave {{ level }}</span>
+      </UiElement>
+      <div class="sub-buttons">
+        <UiElement
+          @click="() => props.controller.toggleBuildMenu()"
+          :class-name="{ circle: true }"
+          >🔧</UiElement
+        >
+
+        <UiElement
           v-if="Manager.Instance.getDifficulty() !== Difficulty.Hard"
-          :class="{ toggle: true, 'toggle-toggled': showCoverage }"
           @click="toggleCoverage"
+          :active="showCoverage"
+          :class-name="{ circle: true }"
+          >🎯</UiElement
         >
-          🎯
-        </button>
+        <UiElement @click="props.toggleMenu" :class-name="{ circle: true }"
+          >⚙️</UiElement
+        >
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.hud {
-  height: 32px;
-  background-color: rgb(44, 49, 120);
-  border-bottom: 2px solid #000;
-  box-sizing: border-box;
-  z-index: 1;
-  position: relative;
-  padding: 0 16px;
+.circle {
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+}
 
-  &-positioner {
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: start;
-    pointer-events: none;
-  }
+.hud {
+  pointer-events: none;
 
   .group {
-    display: flex;
-    flex-direction: row;
-    align-items: start;
-    gap: 16px;
-  }
-
-  .toggle,
-  .wave-toggle {
-    border: 2px solid #000;
-    border-top: none;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-    background-color: rgb(44, 49, 120);
-    padding: 4px;
-    width: 41.5px;
-    pointer-events: all;
-    cursor: pointer;
-    color: #fff;
-
-    &-toggled {
-      padding-top: 8px;
-      background-color: rgb(59, 77, 152);
-    }
-  }
-
-  .wave-toggle {
-    height: 41.5px;
-    width: 140px;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    transition: height 0.2s;
+    gap: 0.3rem;
 
-    .emoji {
-      font-size: 32px;
-      display: none;
-    }
-
-    .wave-text {
-      white-space: nowrap;
-    }
-
-    &--active {
-      height: 77.5px;
-      background-color: rgb(59, 77, 152);
-
-      .emoji {
-        display: block;
-      }
+    .sub-buttons {
+      display: flex;
+      justify-content: space-around;
     }
   }
 }

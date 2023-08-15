@@ -67,6 +67,16 @@ let removeKeyListener: () => void;
 let removeOpenMenuEventListener: () => void;
 let removeCloseMenuEventListener: () => void;
 
+const toggleMenu = () => {
+  isMenuVisible.value = !isMenuVisible.value;
+
+  if (isMenuVisible.value) {
+    controller.pause();
+  } else {
+    controller.unpause();
+  }
+};
+
 onMounted(() => {
   mounted = true;
   controller.initialize(surface);
@@ -78,13 +88,7 @@ onMounted(() => {
       return;
     }
 
-    isMenuVisible.value = !isMenuVisible.value;
-
-    if (isMenuVisible.value) {
-      controller.pause();
-    } else {
-      controller.unpause();
-    }
+    toggleMenu();
   });
 
   removeOpenMenuEventListener = EventSystem.Instance.addEventListener(
@@ -214,6 +218,7 @@ const returnToMainMenu = () => {
       :renderer="renderer"
       :controller="Controller.Instance"
       :restart="restart"
+      :toggleMenu="toggleMenu"
     />
     <div class="canvas">
       <div class="render-target" ref="canvas"></div>
@@ -244,7 +249,7 @@ const returnToMainMenu = () => {
 
     .render-target {
       max-width: 100vw;
-      max-height: calc(100vh - 32px);
+      max-height: 100vh;
       overflow: auto;
 
       -ms-overflow-style: none;
