@@ -115,8 +115,8 @@ onUnmounted(() => {
 
 .minor-stat {
   position: absolute;
-  top: 1.5rem;
-  left: 2.5rem;
+  top: 1.3rem;
+  left: 1.5rem;
   transform: translate(
       calc(3.5rem * sin(var(--i))),
       calc(3.5rem * cos(var(--i)))
@@ -131,18 +131,18 @@ onUnmounted(() => {
 .stats {
   position: fixed;
   top: 2rem;
-  left: 1rem;
+  left: 0.5rem;
   font-size: 1.8rem;
   z-index: 1;
   color: #fff;
 
   &--collapsed {
     .circle {
-      transform: translate(0rem, -2rem) scale(0.5);
+      transform: translate(-1.3rem, -2.8rem) scale(0.5);
     }
 
     .minor-stat {
-      transform: translate(0rem, -2rem) scale(0);
+      transform: translate(-1.3rem, -2.8rem) scale(0);
     }
   }
 

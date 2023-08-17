@@ -103,8 +103,8 @@ function toggleCoverage() {
 
   .group {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
+    top: 0.4rem;
+    right: 0.5rem;
     font-size: 1.5rem;
     z-index: 1;
     display: flex;
