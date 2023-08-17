@@ -12,6 +12,7 @@ import { getAssets } from "../renderers/pixiRenderer/assets";
 import { Settings as ISettings } from "../util/localStorage/settings";
 import { getWord } from "../util/word";
 import { logEvent } from "../util/firebase";
+import logo from "../assets/logo.png";
 
 const props = defineProps<{
   onPlay: (
@@ -103,7 +104,9 @@ const loadSave = (event: Event) => {
 
 <template>
   <div class="wrapper">
-    <h1>Open Tower Defense 🗼</h1>
+    <h1 class="main-title">
+      <img :src="logo" alt="Open Tower Defense" /> Open Tower Defense
+    </h1>
 
     <div class="menu">
       <div class="menu-main">
@@ -201,11 +204,19 @@ const loadSave = (event: Event) => {
   flex-direction: column;
   align-items: center;
 
-  h1 {
+  .main-title {
     text-align: center;
     color: #fff;
     font-size: 84px;
-    margin: 10vh 0;
+    margin: 1vh 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 2em;
+      image-rendering: pixelated;
+    }
   }
 
   label {
