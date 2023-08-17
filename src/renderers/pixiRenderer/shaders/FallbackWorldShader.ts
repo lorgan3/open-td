@@ -1,9 +1,8 @@
-import fragment from "./world.frag?raw";
-import vertex from "./world.vert?raw";
+import fragment from "./fallbackWorld.frag?raw";
+import vertex from "./fallbackWorld.vert?raw";
 
 import { BaseTexture, MeshMaterial, Program, Texture } from "pixi.js";
 import Surface from "../../../data/terrain/surface";
-import { getAssets } from "../assets";
 import {
   AltTileType,
   DiscoveryStatus,
@@ -11,30 +10,25 @@ import {
 } from "../../../data/terrain/constants";
 import { SCALE } from "../constants";
 import Tile from "../../../data/terrain/tile";
+import { IWorldShader } from "./worldShader";
+import { getAssets } from "../assets";
 
-export interface IWorldShader extends MeshMaterial {
-  render(debug: boolean): void;
-  setTime(time: number): void;
-}
-
-// Inspired by https://godotshaders.com/shader/rimworld-style-tilemap-shader-with-tutorial-video/
-// This does not use any code from that nor does it do the same thing though.
-// This shader renders the same texture every tile and only blends adjacent tiles.
-
-class WorldShader extends MeshMaterial implements IWorldShader {
+class FallbackWorldShader extends MeshMaterial implements IWorldShader {
   private canvas: OffscreenCanvas;
   private context: OffscreenCanvasRenderingContext2D;
   private imageData: ImageData;
 
-  constructor(private surface: Surface, textured = true, blended = true) {
+  constructor(private surface: Surface) {
     super(Texture.EMPTY, {
       program: new Program(vertex, fragment),
       uniforms: {
         tileSize: SCALE,
         bridgeId: TileType.Bridge,
         time: 0,
-        textured,
-        blended,
+        // Can't get texture sizes in webgl 1.0... I think
+        worldSize: [surface.getWidth(), surface.getHeight()],
+        atlasSize: [160, 192],
+        maskSize: [192, 192],
       },
     });
 
@@ -71,14 +65,6 @@ class WorldShader extends MeshMaterial implements IWorldShader {
     this.uniforms.world.update();
   }
 
-  setBlended(blended: boolean) {
-    this.uniforms.blended = blended;
-  }
-
-  setTextured(textured: boolean) {
-    this.uniforms.textured = textured;
-  }
-
   setTime(time: number) {
     this.uniforms.time = time / 600;
   }
@@ -97,4 +83,4 @@ class WorldShader extends MeshMaterial implements IWorldShader {
   };
 }
 
-export { WorldShader };
+export { FallbackWorldShader };

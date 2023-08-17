@@ -34,10 +34,11 @@ import { GameEvent } from "../../data/events";
 import { get } from "../../util/localStorage";
 import { CursorRenderer } from "./tilemap/cursorRenderer";
 import { AssetsContainer } from "./assets/container";
-import { WorldShader } from "./shaders/worldShader";
+import { IWorldShader } from "./shaders/worldShader";
 import EventSystem from "../../data/eventSystem";
 import { Explosion } from "./explosion";
 import { ControllableSound } from "./sound/controllableSound";
+import { FallbackWorldShader } from "./shaders/FallbackWorldShader";
 
 const SHAKE_AMOUNT = 10;
 const SHAKE_INTENSITY = 12;
@@ -72,7 +73,7 @@ class Renderer implements IRenderer {
   private alertRenderer?: AlertRenderer;
   private cursorRenderer?: CursorRenderer;
 
-  private worldShader!: WorldShader;
+  private worldShader!: IWorldShader;
 
   public x = 0;
   public y = 0;
@@ -109,7 +110,7 @@ class Renderer implements IRenderer {
     this.surface = surface;
     this.target = target;
 
-    this.worldShader = new WorldShader(surface, true, true);
+    this.worldShader = new FallbackWorldShader(surface);
     this.app = new Application({
       resizeTo: window,
     });

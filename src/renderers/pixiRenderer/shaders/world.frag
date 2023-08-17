@@ -17,7 +17,7 @@ uniform int bridgeId; // Bridges should not get blended
 out vec4 fragmentColor;
 
 void main(){
-    // Get dimemsions of all textures.
+    // Get dimensions of all textures.
 	highp ivec2 worldSize = textureSize(world, 0);
     highp ivec2 maskSize = textureSize(mask, 0);
     highp ivec2 atlasSize = textureSize(atlas, 0);
