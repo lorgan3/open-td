@@ -22,8 +22,8 @@ class Marker extends Sprite {
     this.position.set(x * SCALE, y * SCALE);
   }
 
-  move() {
-    this.offset += 0.1 / this.path.getScale();
+  move(dt: number) {
+    this.offset += dt / 100 / this.path.getScale();
     const { x, y } = this.path.getCoordinates(
       this.offset % this.path.getLength()
     );
@@ -175,7 +175,7 @@ class CoverageRenderer {
     return path.slice(start!, end!);
   }
 
-  public update() {
+  public update(dt: number) {
     if (!this.visible) {
       return;
     }
@@ -184,7 +184,7 @@ class CoverageRenderer {
       this.pathContainer.removeChildren();
     } else {
       (this.pathContainer.children as Marker[]).forEach((marker) =>
-        marker.move()
+        marker.move(dt)
       );
     }
 

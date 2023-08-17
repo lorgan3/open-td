@@ -262,7 +262,7 @@ class Renderer implements IRenderer {
     }
 
     this.cursorRenderer!.render();
-    this.coverageRenderer!.update();
+    this.coverageRenderer!.update(dt);
     this.alertRenderer!.update(dt, Manager.Instance.getIsStarted());
     this.surface.markPristine();
 
