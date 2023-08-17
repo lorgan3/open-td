@@ -49,3 +49,4 @@ Check `package.json`, there are also commands available to run tests and check t
 - [bush.mp3](https://freesound.org/people/Herkules92/sounds/518799/) by [Herkules92](https://freesound.org/people/Herkules92/).
 - tank.wav by ?
 - [drill.wav](https://freesound.org/people/rabbydaw/sounds/504182/) by [rabbydaw](https://freesound.org/people/rabbydaw/).
+- [lock.mp3](https://freesound.org/people/LordForklift/sounds/448416/) by [LordForklift](https://freesound.org/people/LordForklift/).
