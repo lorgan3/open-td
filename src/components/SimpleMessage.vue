@@ -125,11 +125,13 @@ onMounted(() => {
   box-sizing: border-box;
   z-index: 1;
   box-shadow: 5px 5px 10px -5px;
+  border-radius: 10px;
   transition: transform 0.2s, max-height 0.5s ease 0.2s;
   transform: translateX(-420px);
   max-height: 300px;
   overflow: hidden;
-  max-width: calc(100% - 28px);
+  max-width: calc(100vw - 20px);
+  margin-top: 8px;
 
   &-inner {
     position: relative;
@@ -137,7 +139,6 @@ onMounted(() => {
     padding: 16px;
     border: 3px solid #000;
     border-radius: 10px;
-    margin-top: 8px;
 
     &:hover {
       opacity: 0.3;
