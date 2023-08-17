@@ -97,7 +97,7 @@ onUnmounted(() => {
     </UiElement>
 
     <UiElement :class-name="{ 'minor-stat': true }" style="--i: 35deg">
-      🗼 <span v-if="towers > maxTowers" class="negative">{{ towers }}</span
+      🗼 <span v-if="towers >= maxTowers" class="negative">{{ towers }}</span
       ><span v-else>{{ towers }}</span> / {{ maxTowers }}
     </UiElement>
   </div>

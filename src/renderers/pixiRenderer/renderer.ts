@@ -39,6 +39,7 @@ import EventSystem from "../../data/eventSystem";
 import { Explosion } from "./explosion";
 import { ControllableSound } from "./sound/controllableSound";
 import { FallbackWorldShader } from "./shaders/FallbackWorldShader";
+import BuildController from "../../data/controllers/buildController";
 
 const SHAKE_AMOUNT = 10;
 const SHAKE_INTENSITY = 12;
@@ -84,6 +85,7 @@ class Renderer implements IRenderer {
   private time = 0;
   private nextExplosionTime = 0;
   private explosions = 0;
+  private lockedTowers = false;
 
   static get Instance() {
     return this.instance;
@@ -109,6 +111,8 @@ class Renderer implements IRenderer {
   mount(surface: Surface, target: HTMLDivElement): void {
     this.surface = surface;
     this.target = target;
+    this.lockedTowers =
+      surface.getTowers().size >= BuildController.Instance.getMaxTowers();
 
     this.worldShader = new FallbackWorldShader(surface);
     this.app = new Application({
@@ -379,8 +383,38 @@ class Renderer implements IRenderer {
       GameEvent.StartWave,
       Sound.Sonar
     );
-    const removeBuySound = playSoundOnEvent(GameEvent.Buy, Sound.Place);
-    const removeSellSound = playSoundOnEvent(GameEvent.Sell, Sound.Destroy);
+    const removeBuySound = EventSystem.Instance.addEventListener(
+      GameEvent.Buy,
+      () => {
+        sound.play(Sound.Place);
+
+        const shouldLockTowers =
+          this.surface.getTowers().size >=
+          BuildController.Instance.getMaxTowers();
+
+        if (shouldLockTowers !== this.lockedTowers) {
+          window.setTimeout(() => sound.play(Sound.Lock), 150);
+          this.lockedTowers = shouldLockTowers;
+        }
+      }
+    );
+
+    const removeSellSound = EventSystem.Instance.addEventListener(
+      GameEvent.Sell,
+      () => {
+        sound.play(Sound.Destroy);
+
+        const shouldLockTowers =
+          this.surface.getTowers().size >=
+          BuildController.Instance.getMaxTowers();
+
+        if (shouldLockTowers !== this.lockedTowers) {
+          window.setTimeout(() => sound.play(Sound.Lock), 150);
+          this.lockedTowers = shouldLockTowers;
+        }
+      }
+    );
+
     const removeHitBaseSound = EventSystem.Instance.addEventListener(
       GameEvent.HitBase,
       () => {

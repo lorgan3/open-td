@@ -20,11 +20,13 @@ const level = ref(0);
 const inProgress = ref(false);
 const showCoverage = ref(false);
 const integrity = ref(0);
+const canStart = ref(false);
 
 const eventHandler = (stats: StatUpdate) => {
   level.value = stats.level;
   inProgress.value = stats.inProgress && stats.integrity > 0;
   integrity.value = stats.integrity;
+  canStart.value = stats.towers <= stats.maxTowers;
 };
 
 onMounted(() => {
@@ -59,15 +61,17 @@ function toggleCoverage() {
   <div class="hud">
     <Stats />
     <div class="group">
-      <UiElement @click="start" :active="inProgress">
-        <span class="emoji">⚔️</span>
+      <UiElement @click="start" :active="inProgress || !canStart">
+        <span v-if="canStart" class="emoji">⚔️</span>
+        <span v-else class="emoji">🔒</span>
+
         <span class="wave-text" v-if="!inProgress && integrity > 0"
           >Start wave {{ level + 1 }}</span
         >
-        <span class="wave-text" v-if="!inProgress && integrity <= 0"
+        <span class="wave-text" v-else-if="!inProgress && integrity <= 0"
           >Restart wave {{ level }}</span
         >
-        <span class="wave-text" v-if="inProgress">Wave {{ level }}</span>
+        <span class="wave-text" v-else>Wave {{ level }}</span>
       </UiElement>
       <div class="sub-buttons">
         <UiElement
