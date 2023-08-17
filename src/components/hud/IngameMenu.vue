@@ -77,12 +77,12 @@ const handleResume = () => {
   transition: transform 0.5s;
   transform: translateY(100vh);
   background: rgb(59, 77, 152);
-  border: 2px solid #000;
+  border: 2px solid #fff;
   border-radius: 3px;
   overflow: auto;
 
   scrollbar-width: thin;
-  scrollbar-color: black transparent;
+  scrollbar-color: #fff transparent;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -90,7 +90,7 @@ const handleResume = () => {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: black;
+    background: #fff;
   }
 
   h3 {

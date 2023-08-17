@@ -263,7 +263,7 @@ const loadSave = (event: Event) => {
     scroll-snap-type: x mandatory;
 
     scrollbar-width: thin;
-    scrollbar-color: black transparent;
+    scrollbar-color: #fff transparent;
 
     &::-webkit-scrollbar {
       height: 5px;
@@ -271,7 +271,7 @@ const loadSave = (event: Event) => {
     }
 
     &::-webkit-scrollbar-thumb {
-      background: black;
+      background: #fff;
     }
 
     > * {
@@ -284,9 +284,9 @@ const loadSave = (event: Event) => {
       gap: 20px;
 
       &:first-child {
-        border-left: 2px solid black;
+        border-left: 2px solid #fff;
       }
-      border-right: 2px solid black;
+      border-right: 2px solid #fff;
       transition: width 1s;
       width: 340px;
     }
@@ -306,7 +306,7 @@ const loadSave = (event: Event) => {
         overflow: auto;
 
         scrollbar-width: thin;
-        scrollbar-color: black transparent;
+        scrollbar-color: #fff transparent;
 
         &::-webkit-scrollbar {
           width: 5px;
@@ -314,7 +314,7 @@ const loadSave = (event: Event) => {
         }
 
         &::-webkit-scrollbar-thumb {
-          background: black;
+          background: #fff;
         }
 
         display: flex;
@@ -354,8 +354,8 @@ const loadSave = (event: Event) => {
       background: rgb(31, 34, 77);
       text-decoration: initial;
       border-radius: 6px;
-      border-bottom: 2px solid #000;
-      border-right: 2px solid #000;
+      border-bottom: 2px solid #fff;
+      border-right: 2px solid #fff;
 
       &:hover {
         background: rgb(44, 49, 120);
