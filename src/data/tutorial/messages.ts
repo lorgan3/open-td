@@ -64,7 +64,7 @@ export const BUILD_TOWERS: TutorialMessage = (override) =>
 
     continueAfterEvent(
       Manager.Instance.showMessage(
-        "Here you can choose which defenses to build. Consider picking the basic tower to beat the first wave. Towers in the 2nd and 3rd row can be unlocked later in the game.",
+        "Here you can choose which defenses to build. Consider picking the basic tower to beat the first wave. More towers can be unlocked later.",
         { override, expires: 0 }
       ),
       GameEvent.SurfaceChange,
@@ -110,16 +110,16 @@ export const START_WAVE: TutorialMessage = (override) =>
   });
 
 export const EXPAND_RADIUS = createTutorialMessage(
-  "Good job defeating the first wave! Things will quickly become more difficult from here on out! After every wave your visible radius will increase. When enemy spawn points are discovered they are disabled and you receive a point to unlock new technologies.",
+  "Good job defeating the first wave! Things will quickly become more difficult from here on out! After every wave your visible radius will increase. When enemy spawn points are discovered they are disabled and you receive points to unlock new technologies.",
   GameEvent.Discover
 );
 
 export const BUY_UPGRADE = createTutorialMessage(
-  "You gained a wave point by discovering a spawn point! Open the build menu in order to spend it.",
+  "You gained wave points by discovering a spawn point! Open the build menu in order to spend it.",
   GameEvent.OpenBuildMenu
 );
 
 export const CHOOSE_UPGRADE = createTutorialMessage(
-  "There are both defensive and offensive upgrades, read the descriptions to understand their strengths! You can also trade wave points for bonuses in the last column.",
+  "There are both defensive and offensive upgrades, read the descriptions to understand their strengths! You can also trade wave points for bonus abilities.",
   GameEvent.CloseBuildMenu
 );
