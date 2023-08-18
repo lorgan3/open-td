@@ -113,7 +113,7 @@ export class Achievement {
 
     if (this.highestProgress > oldProgress) {
       Manager.Instance.showMessage(
-        `🏆 Achievement unlocked!\n${this.title} - ${this.description}`
+        `{icon: Trophy} Achievement unlocked!\n${this.title} - ${this.description}`
       );
 
       set(

@@ -4,6 +4,8 @@ import { GameEvent, StatUpdate } from "../../data/events";
 import Manager from "../../data/controllers/manager";
 import EventSystem from "../../data/eventSystem";
 import UiElement from "./UiElement.vue";
+import { IconType } from "./constants";
+import Icon from "./Icon.vue";
 
 const naturalNumberFormatter = Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
@@ -67,7 +69,10 @@ onUnmounted(() => {
 <template>
   <div :class="clazz">
     <UiElement @click="toggleExpand" :class-name="{ circle: true }">
-      🪙 {{ naturalNumberFormatter.format(money) }}
+      <span class="money">
+        <Icon :type="IconType.Money" />
+        {{ naturalNumberFormatter.format(money) }}
+      </span>
       <span class="meta"
         >(<span class="positive">{{
           percentageFormatter.format(moneyMultiplier)
@@ -77,18 +82,8 @@ onUnmounted(() => {
     </UiElement>
 
     <UiElement :class-name="{ 'minor-stat': true }" style="--i: 145deg">
-      🔋 {{ naturalNumberFormatter.format(power) }}
-      <span class="meta"
-        >(<span class="positive"
-          >+{{ numberFormatter.format(lastProduction) }}</span
-        >/<span class="negative"
-          >-{{ numberFormatter.format(lastConsumption) }}</span
-        >)</span
-      >
-    </UiElement>
-
-    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 90deg">
-      🛡️ {{ naturalNumberFormatter.format(integrity) }}
+      <Icon :type="IconType.Shield" />
+      {{ naturalNumberFormatter.format(integrity) }}
       <span class="meta"
         >(<span class="positive"
           >+{{ numberFormatter.format(regeneration) }}</span
@@ -96,9 +91,22 @@ onUnmounted(() => {
       >
     </UiElement>
 
-    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 35deg">
-      🗼 <span v-if="towers >= maxTowers" class="negative">{{ towers }}</span
+    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 90deg">
+      <Icon :type="IconType.Turret" />
+      <span v-if="towers >= maxTowers" class="negative">{{ towers }}</span
       ><span v-else>{{ towers }}</span> / {{ maxTowers }}
+    </UiElement>
+
+    <UiElement :class-name="{ 'minor-stat': true }" style="--i: 35deg">
+      <Icon :type="IconType.Battery" />
+      {{ naturalNumberFormatter.format(power) }}
+      <span class="meta"
+        >(<span class="positive"
+          >+{{ numberFormatter.format(lastProduction) }}</span
+        >/<span class="negative"
+          >-{{ numberFormatter.format(lastConsumption) }}</span
+        >)</span
+      >
     </UiElement>
   </div>
 </template>
@@ -144,6 +152,12 @@ onUnmounted(() => {
     .minor-stat {
       transform: translate(-1.3rem, -2.8rem) scale(0);
     }
+  }
+
+  .money {
+    display: flex;
+    align-items: center;
+    gap: 3px;
   }
 
   .meta {

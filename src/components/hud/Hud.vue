@@ -8,6 +8,8 @@ import { IRenderer } from "../../renderers/api";
 import Stats from "./Stats.vue";
 import EventSystem from "../../data/eventSystem";
 import UiElement from "./UiElement.vue";
+import Icon from "./Icon.vue";
+import { IconType } from "./constants";
 
 const props = defineProps<{
   renderer: IRenderer;
@@ -62,8 +64,8 @@ function toggleCoverage() {
     <Stats />
     <div class="group">
       <UiElement @click="start" :active="inProgress || !canStart">
-        <span v-if="canStart" class="emoji">⚔️</span>
-        <span v-else class="emoji">🔒</span>
+        <Icon v-if="canStart" :type="IconType.Battle" />
+        <Icon v-else :type="IconType.Lock" />
 
         <span class="wave-text" v-if="!inProgress && integrity > 0"
           >Start wave {{ level + 1 }}</span
@@ -77,19 +79,18 @@ function toggleCoverage() {
         <UiElement
           @click="() => props.controller.toggleBuildMenu()"
           :class-name="{ circle: true }"
-          >🔧</UiElement
-        >
-
+          ><Icon :type="IconType.Hammer"
+        /></UiElement>
         <UiElement
           v-if="Manager.Instance.getDifficulty() !== Difficulty.Hard"
           @click="toggleCoverage"
           :active="showCoverage"
           :class-name="{ circle: true }"
-          >🎯</UiElement
-        >
+          ><Icon :type="IconType.Radar"
+        /></UiElement>
         <UiElement @click="props.toggleMenu" :class-name="{ circle: true }"
-          >⚙️</UiElement
-        >
+          ><Icon :type="IconType.Gear"
+        /></UiElement>
       </div>
     </div>
   </div>

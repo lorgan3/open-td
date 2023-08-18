@@ -67,6 +67,11 @@ const mainMenu = () => (state.value = State.Menu);
 button {
   font-family: JupiterCrash;
   font-size: 24px;
+  color: #000;
+
+  &:disabled {
+    color: rgba(16, 16, 16, 0.3);
+  }
 }
 
 /** Could not get media queries to work in the component */

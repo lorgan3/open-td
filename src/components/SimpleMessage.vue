@@ -2,6 +2,8 @@
 import { getCurrentInstance, onMounted, ref } from "vue";
 import { DEFAULT_EXPIRE_TIME, MessageFn } from "../renderers/api";
 import TextWithControls from "./controls/TextWithControls.vue";
+import Icon from "./hud/Icon.vue";
+import { IconType } from "./hud/constants";
 
 interface Message {
   id: number;
@@ -102,7 +104,7 @@ onMounted(() => {
           class="close-button"
           @click="() => close(message)"
         >
-          ✖
+          <Icon :type="IconType.Cross" />
         </button>
         <TextWithControls :text="message.content" />
       </div>
@@ -162,7 +164,7 @@ onMounted(() => {
     border: 0;
     background: 0;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 22px;
   }
 
   &-keyboard {

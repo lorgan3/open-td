@@ -14,6 +14,8 @@ import { TOWER_PRICES } from "../../data/controllers/moneyController";
 import { ITowerStatics } from "../../data/entity/towers";
 import { POWER_CONSUMPTIONS } from "../../data/controllers/powerController";
 import { get } from "../../util/localStorage";
+import { IconType } from "../hud/constants";
+import Icon from "../hud/Icon.vue";
 
 const props = defineProps<{
   controller: Controller;
@@ -46,28 +48,28 @@ const images: Partial<Record<EntityType, string>> = {
   [EntityType.Wall]: "wall.png",
 };
 
-const icons: Partial<Record<EntityType, string>> = {
-  [EntityType.Barracks]: "🏛️",
-  [EntityType.Convert]: "♻",
-  [EntityType.DamageBeacon]: "📈",
-  [EntityType.Excavator]: "⛏️",
-  [EntityType.Fence]: "🚧",
-  [EntityType.Flamethrower]: "🗼",
-  [EntityType.Laser]: "🗼",
-  [EntityType.Market]: "🏛️",
-  [EntityType.Mortar]: "🗼",
-  [EntityType.PowerPlant]: "🏛️",
-  [EntityType.Radar]: "🏛️",
-  [EntityType.Railgun]: "🗼",
-  [EntityType.EmergencyRecharge]: "♻",
-  [EntityType.EmergencyRepair]: "♻",
-  [EntityType.None]: "⛏️",
-  [EntityType.SpeedBeacon]: "📈",
-  [EntityType.Freezer]: "📉",
-  [EntityType.Terraform]: "⛏️",
-  [EntityType.Tesla]: "🗼",
-  [EntityType.Tower]: "🗼",
-  [EntityType.Wall]: "🚧",
+const icons: Partial<Record<EntityType, IconType>> = {
+  [EntityType.Barracks]: IconType.Castle,
+  [EntityType.Convert]: IconType.Recycle,
+  [EntityType.DamageBeacon]: IconType.Up,
+  [EntityType.Excavator]: IconType.Hammer,
+  [EntityType.Fence]: IconType.Wall,
+  [EntityType.Flamethrower]: IconType.Turret,
+  [EntityType.Laser]: IconType.Turret,
+  [EntityType.Market]: IconType.Castle,
+  [EntityType.Mortar]: IconType.Turret,
+  [EntityType.PowerPlant]: IconType.Castle,
+  [EntityType.Radar]: IconType.Castle,
+  [EntityType.Railgun]: IconType.Turret,
+  [EntityType.EmergencyRecharge]: IconType.Recycle,
+  [EntityType.EmergencyRepair]: IconType.Recycle,
+  [EntityType.None]: IconType.Hammer,
+  [EntityType.SpeedBeacon]: IconType.Up,
+  [EntityType.Freezer]: IconType.Down,
+  [EntityType.Terraform]: IconType.Hammer,
+  [EntityType.Tesla]: IconType.Turret,
+  [EntityType.Tower]: IconType.Turret,
+  [EntityType.Wall]: IconType.Wall,
 };
 
 const selected = ref(props.controller.getPlacable());
@@ -130,9 +132,11 @@ const toggleSimpleMode = () => {
     }"
   >
     <div class="marketplace">
-      <button @click="close" class="close-button">✖</button>
+      <button @click="close" class="close-button">
+        <Icon :type="IconType.Cross" />
+      </button>
       <button @click="toggleSimpleMode" class="view-mode-button">
-        {{ simpleMode ? "🍼" : "👓" }}
+        <Icon :type="simpleMode ? IconType.Pacifier : IconType.Binoculars" />
       </button>
 
       <div class="inner">
@@ -156,13 +160,13 @@ const toggleSimpleMode = () => {
                   }"
                   :onClick="() => onSelect(placeable)"
                 >
-                  <span>
-                    <span class="emoji">{{ icons[placeable.entityType] }}</span>
+                  <span class="truncate">
+                    <Icon :type="icons[placeable.entityType]!" />
                     {{ placeable.name }}</span
                   >
                   <span v-if="TOWER_PRICES[placeable.entityType]"
                     >{{ TOWER_PRICES[placeable.entityType] }}
-                    <span class="emoji">🪙</span>
+                    <Icon :type="IconType.Money" />
                   </span>
                 </button>
               </div>
@@ -176,18 +180,22 @@ const toggleSimpleMode = () => {
             <div class="hints">
               <span
                 v-if="selected.entity && (selected.entity as unknown as ITowerStatics).range"
-                >🎯 <strong>Ranged</strong> This building attacks enemies within
+              >
+                <Icon :type="IconType.Turret" /> <strong>Ranged</strong> This
+                building attacks enemies within
                 {{ (selected.entity as unknown as ITowerStatics).range }}
                 tiles.</span
               >
-              <span v-if="!!POWER_CONSUMPTIONS[selected.entityType]"
-                >⚡ <strong>Powered</strong> This building requires power to
-                function. Be sure to build some power plants first.</span
+              <span v-if="!!POWER_CONSUMPTIONS[selected.entityType]">
+                <Icon :type="IconType.Battery" /> <strong>Powered</strong> This
+                building requires power to function. Be sure to build some power
+                plants first.</span
               >
-              <span v-if="!!selected.isBasePart"
-                >🏛️ <strong>Base</strong> This building is part of your base and
-                must be built next to an adjacent base building. Be sure to
-                protect it from enemies!</span
+              <span v-if="!!selected.isBasePart">
+                <Icon :type="IconType.Castle" /> <strong>Base</strong> This
+                building is part of your base and must be built next to an
+                adjacent base building. Be sure to protect it from
+                enemies!</span
               >
             </div>
           </div>
@@ -313,6 +321,7 @@ const toggleSimpleMode = () => {
     display: flex;
     flex-direction: column;
     margin: -2px;
+    overflow: hidden;
 
     .item {
       border: 2px solid #fff;
@@ -324,6 +333,17 @@ const toggleSimpleMode = () => {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex: 1;
+      gap: 3px;
+
+      > * {
+        white-space: nowrap;
+      }
+
+      .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
       &:not(:first-child) {
         margin-top: -2px;
@@ -394,8 +414,13 @@ const toggleSimpleMode = () => {
     color: #fff;
     border: none;
     cursor: pointer;
-    height: 30px;
-    width: 30px;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    padding: 0px;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
 
     &:hover {
       background: #ffffff5f;
