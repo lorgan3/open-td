@@ -94,7 +94,7 @@ const loadSave = (event: Event) => {
     null,
     difficulty.value,
     settings.renderer!,
-    settings.showTutorial!,
+    false,
     settings.simulation!
   );
 
