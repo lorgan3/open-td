@@ -186,8 +186,14 @@ class Pathfinder {
 
       if (path && tiles.length > i - 1) {
         path.getTiles().forEach((tile) => {
-          if (tile.hasStaticEntity()) {
-            visitedTiles[tile.getHash()] = 0.85;
+          if (tile.getType() === TileType.Fence) {
+            visitedTiles[tile.getHash()] = 1.2; // Later paths avoid fences so you get a warning when your walls are too long.
+            return;
+          }
+
+          if (tile.getType() === TileType.Obstructed) {
+            visitedTiles[tile.getHash()] = 0.85; // Promote attacking the same tower.
+            return;
           }
 
           visitedTiles[tile.getHash()] =
