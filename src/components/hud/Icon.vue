@@ -24,7 +24,7 @@ const props = defineProps<{
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: url(/open-td/src/assets/icons.png) var(--column) var(--row);
+  background: url(../../assets/icons.png) var(--column) var(--row);
   image-rendering: pixelated;
 }
 </style>
