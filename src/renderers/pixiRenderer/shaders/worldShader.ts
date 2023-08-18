@@ -1,7 +1,7 @@
 import fragment from "./world.frag?raw";
 import vertex from "./world.vert?raw";
 
-import { BaseTexture, MeshMaterial, Program, Texture } from "pixi.js";
+import { MeshMaterial, Program, Texture } from "pixi.js";
 import Surface from "../../../data/terrain/surface";
 import { getAssets } from "../assets";
 import {
@@ -22,8 +22,8 @@ export interface IWorldShader extends MeshMaterial {
 // This shader renders the same texture every tile and only blends adjacent tiles.
 
 class WorldShader extends MeshMaterial implements IWorldShader {
-  private canvas: OffscreenCanvas;
-  private context: OffscreenCanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+  private context: CanvasRenderingContext2D;
   private imageData: ImageData;
 
   constructor(private surface: Surface, textured = true, blended = true) {
@@ -38,17 +38,17 @@ class WorldShader extends MeshMaterial implements IWorldShader {
       },
     });
 
-    this.canvas = new OffscreenCanvas(
-      this.surface.getWidth(),
-      this.surface.getHeight()
-    );
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = this.surface.getWidth();
+    this.canvas.height = this.surface.getHeight();
+
     this.context = this.canvas.getContext("2d")!;
     this.imageData = this.context.createImageData(
       this.surface.getWidth(),
       this.surface.getHeight()
     );
 
-    this.uniforms.world = new Texture(new BaseTexture(this.canvas));
+    this.uniforms.world = Texture.from(this.canvas);
 
     getAssets().then((assets) => {
       this.uniforms.atlas = assets.terrain.baseTexture;

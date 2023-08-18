@@ -5,7 +5,6 @@ import MainMenu from "./components/MainMenu.vue";
 import { Difficulty } from "./data/difficulty";
 import { Constructor } from "./renderers/api";
 import "./util/firebase";
-import "./util/offscreenCanvas";
 
 enum State {
   Menu,
