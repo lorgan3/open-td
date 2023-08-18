@@ -365,7 +365,10 @@ class Renderer implements IRenderer {
     }
 
     const tiles = new Set<Tile>();
-    if (Manager.Instance.getDifficulty() === Difficulty.Easy) {
+    if (
+      Manager.Instance.getDifficulty() === Difficulty.Easy ||
+      Manager.Instance.getDifficulty() === Difficulty.Practice
+    ) {
       paths.forEach((path) =>
         path.getTiles().forEach((tile) => tiles.add(tile))
       );
