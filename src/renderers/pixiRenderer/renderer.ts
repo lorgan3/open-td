@@ -34,12 +34,13 @@ import { GameEvent } from "../../data/events";
 import { get } from "../../util/localStorage";
 import { CursorRenderer } from "./tilemap/cursorRenderer";
 import { AssetsContainer } from "./assets/container";
-import { IWorldShader } from "./shaders/worldShader";
+import { IWorldShader, WorldShader } from "./shaders/worldShader";
 import EventSystem from "../../data/eventSystem";
 import { Explosion } from "./explosion";
 import { ControllableSound } from "./sound/controllableSound";
 import { FallbackWorldShader } from "./shaders/FallbackWorldShader";
 import BuildController from "../../data/controllers/buildController";
+import { isWebGL2Supported } from "../../util/webgl";
 
 const SHAKE_AMOUNT = 10;
 const SHAKE_INTENSITY = 12;
@@ -114,7 +115,10 @@ class Renderer implements IRenderer {
     this.lockedTowers =
       surface.getTowers().size >= BuildController.Instance.getMaxTowers();
 
-    this.worldShader = new FallbackWorldShader(surface);
+    this.worldShader = isWebGL2Supported()
+      ? new WorldShader(surface)
+      : new FallbackWorldShader(surface);
+
     this.app = new Application({
       resizeTo: window,
     });
