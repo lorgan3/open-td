@@ -1,4 +1,8 @@
+import TestManager from "../../controllers/__spec__/testManager";
+import { Difficulty } from "../../difficulty";
+import Base from "../../entity/base";
 import Fence from "../../entity/fence";
+import Tower from "../../entity/towers/tower";
 import { TileType } from "../constants";
 import staticEntityConstructor from "../staticEntityConstructor";
 import Surface from "../surface";
@@ -661,7 +665,7 @@ describe("surface", () => {
     surface.spawnStatic(new Fence(tile));
 
     it("serializes with entities", () => {
-      tile.getStaticEntity()!["id"]++; // Make test pass
+      tile.getStaticEntity()!["id"] += 2; // Make test pass
       const schema = surface.serialize(true);
       schema.staticEntityConstructor = staticEntityConstructor;
       expect(schema.width).toEqual(3);
@@ -695,6 +699,32 @@ describe("surface", () => {
       const clonedSurface = new Surface(schema);
 
       expect(clonedSurface).toEqual(surface);
+    });
+
+    describe("getTowerDirection", () => {
+      const surface = new Surface({ width: 10, height: 8 });
+      const origin = surface.getTile(4, 4)!;
+      new TestManager(Difficulty.Normal, new Base(origin), surface, vi.fn());
+
+      it("gets the direction when there are no towers", () => {
+        expect(surface.getTowerDirection(origin)).toEqual(0);
+      });
+
+      it("gets the direction with 1 tower", () => {
+        surface.spawnStatic(new Tower(surface.getTile(2, 6)!));
+        expect(surface.getTowerDirection(origin)).toEqual(2.356194490192345);
+      });
+
+      it("gets the direction with 2 opposite towers", () => {
+        surface.spawnStatic(new Tower(surface.getTile(6, 2)!));
+        expect(surface.getTowerDirection(origin)).toEqual(0);
+      });
+
+      it("gets the direction with many towers", () => {
+        surface.spawnStatic(new Tower(surface.getTile(8, 2)!));
+        surface.spawnStatic(new Tower(surface.getTile(8, 0)!));
+        expect(surface.getTowerDirection(origin)).toEqual(-0.6435011087932844);
+      });
     });
   });
 });
