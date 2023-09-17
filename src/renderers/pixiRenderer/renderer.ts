@@ -115,7 +115,7 @@ class Renderer implements IRenderer {
     this.lockedTowers =
       surface.getTowers().size >= BuildController.Instance.getMaxTowers();
 
-    this.worldShader = isWebGL2Supported()
+    this.worldShader = isWebGL2Supported
       ? new WorldShader(surface)
       : new FallbackWorldShader(surface);
 
