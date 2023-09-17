@@ -5,18 +5,28 @@ import MainMenu from "./components/MainMenu.vue";
 import { Difficulty } from "./data/difficulty";
 import { Constructor } from "./renderers/api";
 import "./util/firebase";
+import { get } from "./util/localStorage";
+import PixiRenderer from "./renderers/pixiRenderer/renderer";
 
 enum State {
-  Menu,
-  Game,
+  Menu = "menu",
+  Game = "game",
 }
 
-const state = ref(State.Menu);
+const url = new URL(window.location.href);
+const hash = url.hash.slice(1);
+const state = ref(
+  Object.values<string>(State).includes(hash) ? hash : State.Menu
+);
+const storedData = get("settings");
+
 const gameSeed = ref<string | null>();
-const gameDifficulty = ref<Difficulty>();
-const gameRenderer = ref<Constructor>();
-const gameShowTutorial = ref<boolean>();
-const gameSimulationSpeed = ref<number>();
+const gameDifficulty = ref<Difficulty>(
+  storedData?.difficulty || Difficulty.Easy
+);
+const gameRenderer = ref<Constructor>(storedData?.renderer || PixiRenderer);
+const gameShowTutorial = ref<boolean>(storedData?.showTutorial || true);
+const gameSimulationSpeed = ref<number>(storedData?.simulation || 1);
 
 const startGame = (
   seed: string | null,
