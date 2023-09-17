@@ -86,6 +86,17 @@ export const playSoundOnEvent = (
     }
   });
 
-export const isMusic = (alias: Sound) => {
-  return alias in musicAssets;
+export const fade = (alias: Sound, duration = 0.5) => {
+  const s = sound.find(alias);
+  const initialVolume = s.volume;
+  const step = initialVolume / duration / 20;
+
+  const timer = window.setInterval(() => {
+    s.volume -= step;
+
+    if (s.volume <= 0) {
+      s.stop();
+      window.clearInterval(timer);
+    }
+  }, 50);
 };

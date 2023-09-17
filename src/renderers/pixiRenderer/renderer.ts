@@ -16,6 +16,7 @@ import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
 import {
+  fade,
   musicAssets,
   playSoundOnEvent,
   Sound,
@@ -440,6 +441,24 @@ class Renderer implements IRenderer {
       }
     );
 
+    const removeBackgroundMusic = EventSystem.Instance.addEventListener(
+      GameEvent.StartWave,
+      ({ wave }) => {
+        if (wave === 1 || wave % 10 === 0) {
+          sound.play(Sound.BossMusic);
+        }
+      }
+    );
+
+    const removeEndBossMusic = EventSystem.Instance.addEventListener(
+      GameEvent.EndWave,
+      () => {
+        if (sound.find(Sound.BossMusic).isPlaying) {
+          fade(Sound.BossMusic);
+        }
+      }
+    );
+
     this.removeEventListeners = () => {
       window.removeEventListener("contextmenu", handleContextmenu);
       this.viewport!.removeListener("pointerdown", handleMousedown);
@@ -452,6 +471,8 @@ class Renderer implements IRenderer {
       removeBuySound();
       removeSellSound();
       removeHitBaseSound();
+      removeBackgroundMusic();
+      removeEndBossMusic();
     };
   }
 
