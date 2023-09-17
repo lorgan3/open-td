@@ -27,6 +27,7 @@ const props = defineProps<{
     showTutorial: boolean,
     simulationSpeed: number
   ) => void;
+  onCredits: () => void;
 }>();
 
 enum SubMenu {
@@ -133,6 +134,7 @@ const loadSave = (event: Event) => {
           <button @click="onClick(SubMenu.Controls)">Controls</button>
           <button @click="onClick(SubMenu.Achievements)">Achievements</button>
           <button @click="onClick(SubMenu.Settings)">Settings</button>
+          <button @click="onCredits()">Credits</button>
         </div>
       </div>
       <div

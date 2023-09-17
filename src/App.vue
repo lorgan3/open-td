@@ -5,6 +5,7 @@ import MainMenu from "./components/MainMenu.vue";
 import { Difficulty } from "./data/difficulty";
 import { Constructor } from "./renderers/api";
 import "./util/firebase";
+import Credits from "./components/Credits.vue";
 import { get } from "./util/localStorage";
 import PixiRenderer from "./renderers/pixiRenderer/renderer";
 import { sound } from "@pixi/sound";
@@ -19,6 +20,7 @@ import { getAssets } from "./renderers/pixiRenderer/assets";
 enum State {
   Menu = "menu",
   Game = "game",
+  Credits = "credits",
 }
 
 const url = new URL(window.location.href);
@@ -28,7 +30,7 @@ const state = ref(
 );
 const storedData = get("settings");
 
-if (state.value === State.Menu) {
+if (state.value === State.Menu || state.value === State.Credits) {
   getAssets().then(() => {
     Object.keys(musicAssets).forEach((alias) =>
       updateVolume(alias as Sound, (storedData?.musicVolume ?? 50) / 100)
@@ -59,13 +61,20 @@ const startGame = (
   gameRenderer.value = renderer;
   gameShowTutorial.value = showTutorial;
   gameSimulationSpeed.value = simulationSpeed;
+
+  fade(Sound.TitleMusic);
 };
 
 const mainMenu = () => (state.value = State.Menu);
+const credits = () => (state.value = State.Credits);
 </script>
 
 <template>
-  <MainMenu v-if="state == State.Menu" :onPlay="startGame" />
+  <MainMenu
+    v-if="state == State.Menu"
+    :onPlay="startGame"
+    :onCredits="credits"
+  />
   <Game
     v-if="state == State.Game"
     :seed="gameSeed!"
@@ -73,8 +82,9 @@ const mainMenu = () => (state.value = State.Menu);
     :renderer="gameRenderer!"
     :showTutorial="gameShowTutorial!"
     :initialSpeed="gameSimulationSpeed!"
-    :mainMenu="mainMenu"
+    :onMainMenu="mainMenu"
   />
+  <Credits v-if="state == State.Credits" :onMainMenu="mainMenu" />
 </template>
 
 <style>

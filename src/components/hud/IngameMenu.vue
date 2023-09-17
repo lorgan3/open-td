@@ -44,7 +44,7 @@ const updateMusic = (volume: number) => {
   >
     <div class="menu">
       <h3>Paused</h3>
-      <button @click="mainMenu">Main menu</button>
+      <button @click="onMainMenu">Main menu</button>
       <span class="divider"></span>
       <Settings :setSubmitter="setSubmitter" :updateMusic="updateMusic" />
       <button @click="handleResume">Save and resume</button>
