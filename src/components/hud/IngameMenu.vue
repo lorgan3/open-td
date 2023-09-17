@@ -3,10 +3,15 @@ import Settings from "./../Settings.vue";
 import { Settings as ISettings } from "../../util/localStorage/settings";
 import { set } from "../../util/localStorage";
 import { Constructor } from "../../renderers/api";
+import {
+  Sound,
+  musicAssets,
+  updateVolume,
+} from "../../renderers/pixiRenderer/sound";
 
-const { visible, mainMenu, resume } = defineProps<{
+const { visible, onMainMenu, resume } = defineProps<{
   visible: boolean;
-  mainMenu: () => void;
+  onMainMenu: () => void;
   resume: (
     renderer?: Constructor,
     showTutorial?: boolean,
@@ -24,6 +29,9 @@ const handleResume = () => {
 };
 
 const updateMusic = (volume: number) => {
+  Object.keys(musicAssets).forEach((alias) =>
+    updateVolume(alias as Sound, volume / 100)
+  );
 };
 </script>
 

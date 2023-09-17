@@ -13,6 +13,11 @@ import { Settings as ISettings } from "../util/localStorage/settings";
 import { getWord } from "../util/word";
 import { logEvent } from "../util/firebase";
 import logo from "../assets/logo.png";
+import {
+  Sound,
+  musicAssets,
+  updateVolume,
+} from "../renderers/pixiRenderer/sound";
 
 const props = defineProps<{
   onPlay: (
@@ -71,6 +76,9 @@ const updateMusic = (volume: number) => {
     return;
   }
 
+  Object.keys(musicAssets).forEach((alias) =>
+    updateVolume(alias as Sound, volume / 100)
+  );
 };
 
 const submit = (event: Event) => {

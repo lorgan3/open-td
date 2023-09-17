@@ -15,7 +15,13 @@ import { Viewport } from "pixi-viewport";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
-import { init as initSound, playSoundOnEvent, Sound } from "./sound";
+import {
+  musicAssets,
+  playSoundOnEvent,
+  Sound,
+  soundAssets,
+  updateVolume,
+} from "./sound";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
@@ -100,7 +106,6 @@ class Renderer implements IRenderer {
     );
 
     this.assets = new AssetsContainer();
-    initSound();
 
     window.debug = () => {
       DEBUG = !DEBUG;
@@ -167,7 +172,10 @@ class Renderer implements IRenderer {
     this.alertRenderer = new AlertRenderer(this.assets);
     this.cursorRenderer = new CursorRenderer();
 
-    this.assets.onComplete(() => this.renderWorld());
+    this.assets.onComplete(() => {
+      this.renderWorld();
+      this.updateSettings();
+    });
 
     const container = target.appendChild(document.createElement("div"));
     this.vueApp = createApp(SimpleMessage, {
@@ -184,12 +192,17 @@ class Renderer implements IRenderer {
     });
 
     this.registerEventHandlers();
-    this.updateSettings();
   }
 
   updateSettings() {
     const settings = get("settings");
-    sound.volumeAll = (settings?.volume ?? 100) / 100;
+
+    Object.keys(soundAssets).forEach((alias) =>
+      updateVolume(alias as Sound, (settings?.volume ?? 50) / 100)
+    );
+    Object.keys(musicAssets).forEach((alias) =>
+      updateVolume(alias as Sound, (settings?.musicVolume ?? 50) / 100)
+    );
   }
 
   private renderWorld() {
@@ -445,7 +458,9 @@ class Renderer implements IRenderer {
   showMessage: MessageFn = async (...args) => {
     const fn = await this.messageFn;
 
-    sound.play(Sound.Notification);
+    if (sound.exists(Sound.Notification)) {
+      sound.play(Sound.Notification);
+    }
     return fn(...args);
   };
 

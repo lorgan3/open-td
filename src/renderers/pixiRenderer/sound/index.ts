@@ -20,6 +20,8 @@ export enum Sound {
   Tank = "tankSnd",
   Drill = "drillSnd",
   Lock = "lockSnd",
+  TitleMusic = "titleMusic",
+  BossMusic = "bossMusic",
 }
 
 export const soundAssets = {
@@ -47,18 +49,30 @@ export const musicAssets = {
   [Sound.BossMusic]: `${import.meta.env.BASE_URL}music/boss.mp3`,
 };
 
-export const init = () => {
-  updateVolume(Sound.Shot, 0.7);
-  updateVolume(Sound.Laser, 0.5);
-  updateVolume(Sound.Flamethrower, 0.1);
-  updateVolume(Sound.Mortar, 0.7);
-  updateVolume(Sound.Railgun, 0.7);
-  updateVolume(Sound.Place, 0.7);
-  updateVolume(Sound.Destroy, 0.7);
-  updateVolume(Sound.Sonar, 0.7);
-  updateVolume(Sound.Thunder, 0.7);
-  updateVolume(Sound.Tank, 0.4);
-  updateVolume(Sound.Lock, 1);
+export const VOLUMES: Record<Sound, number> = {
+  [Sound.Shot]: 0.7,
+  [Sound.Laser]: 0.5,
+  [Sound.Flamethrower]: 0.1,
+  [Sound.Mortar]: 0.7,
+  [Sound.Railgun]: 0.7,
+  [Sound.Place]: 0.7,
+  [Sound.Destroy]: 0.7,
+  [Sound.Sonar]: 0.7,
+  [Sound.Thunder]: 0.7,
+  [Sound.Tank]: 0.1,
+  [Sound.Lock]: 1,
+  [Sound.TitleMusic]: 1,
+  [Sound.BossMusic]: 1,
+  [Sound.Notification]: 1,
+  [Sound.Firework]: 1,
+  [Sound.Explosion]: 1,
+  [Sound.Hit]: 1,
+  [Sound.Bush]: 1,
+  [Sound.Drill]: 1,
+};
+
+export const updateVolume = (alias: Sound, volume: number) => {
+  sound.volume(alias, VOLUMES[alias] * volume);
 };
 
 export const playSoundOnEvent = (
@@ -66,6 +80,12 @@ export const playSoundOnEvent = (
   alias: Sound,
   options?: PlayOptions
 ) =>
-  EventSystem.Instance.addEventListener(event, () =>
-    sound.play(alias, options)
-  );
+  EventSystem.Instance.addEventListener(event, () => {
+    if (sound.exists(alias)) {
+      sound.play(alias, options);
+    }
+  });
+
+export const isMusic = (alias: Sound) => {
+  return alias in musicAssets;
+};
