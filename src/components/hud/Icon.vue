@@ -26,5 +26,7 @@ const props = defineProps<{
   height: 16px;
   background: url(../../assets/icons.png) var(--column) var(--row);
   image-rendering: pixelated;
+  padding: 0;
+  margin: 0;
 }
 </style>
