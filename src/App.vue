@@ -7,6 +7,14 @@ import { Constructor } from "./renderers/api";
 import "./util/firebase";
 import { get } from "./util/localStorage";
 import PixiRenderer from "./renderers/pixiRenderer/renderer";
+import { sound } from "@pixi/sound";
+import {
+  Sound,
+  fade,
+  musicAssets,
+  updateVolume,
+} from "./renderers/pixiRenderer/sound";
+import { getAssets } from "./renderers/pixiRenderer/assets";
 
 enum State {
   Menu = "menu",
@@ -19,6 +27,16 @@ const state = ref(
   Object.values<string>(State).includes(hash) ? hash : State.Menu
 );
 const storedData = get("settings");
+
+if (state.value === State.Menu) {
+  getAssets().then(() => {
+    Object.keys(musicAssets).forEach((alias) =>
+      updateVolume(alias as Sound, (storedData?.musicVolume ?? 50) / 100)
+    );
+
+    sound.play(Sound.TitleMusic);
+  });
+}
 
 const gameSeed = ref<string | null>();
 const gameDifficulty = ref<Difficulty>(
