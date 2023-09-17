@@ -6,8 +6,9 @@ import PixiRenderer from "../renderers/pixiRenderer/renderer";
 import { get } from "../util/localStorage";
 import { Settings } from "../util/localStorage/settings";
 
-const { setSubmitter } = defineProps<{
+const { setSubmitter, updateMusic } = defineProps<{
   setSubmitter: (submitter: () => Partial<Settings>) => void;
+  updateMusic: (volume: number) => void;
 }>();
 
 const renderOptions: Array<{ label: string; value: Constructor }> = [
@@ -30,6 +31,7 @@ const renderer = ref(
 );
 const showTutorial = ref(storedData?.showTutorial ?? true);
 const volume = ref(storedData?.volume ?? 50);
+const musicVolume = ref(storedData?.musicVolume ?? 50);
 const simulation = ref(storedData?.simulation ?? 1);
 
 const submit = () => {
@@ -38,6 +40,7 @@ const submit = () => {
     renderer: renderer.value.value,
     showTutorial: showTutorial.value,
     volume: volume.value,
+    musicVolume: musicVolume.value,
     simulation: simulation.value,
   };
 };
@@ -61,6 +64,16 @@ setSubmitter(submit);
   <label class="horizontal">
     Volume
     <input type="range" min="0" max="100" v-model="volume" />
+  </label>
+  <label class="horizontal">
+    Music volume
+    <input
+      type="range"
+      min="0"
+      max="100"
+      v-model="musicVolume"
+      @change="(event: Event) => updateMusic((event.target as HTMLInputElement).valueAsNumber)"
+    />
   </label>
   <label class="horizontal">
     Simulation speed

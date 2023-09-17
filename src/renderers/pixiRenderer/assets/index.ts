@@ -1,12 +1,13 @@
 import { Assets } from "@pixi/assets";
 import { spriteOverrideAssets } from "../overrides";
-import { soundAssets } from "../sound";
+import { soundAssets, musicAssets } from "../sound";
 import { spriteAssets } from "../tilemap/constants";
 
 Assets.addBundle("assets", {
   ...soundAssets,
   ...spriteAssets,
   ...spriteOverrideAssets,
+  ...musicAssets,
 });
 
 let promise: Promise<any> | undefined;

@@ -42,8 +42,9 @@ export const soundAssets = {
   [Sound.Lock]: `${import.meta.env.BASE_URL}sounds/lock.mp3`,
 };
 
-const updateVolume = (alias: Sound, volume: number) => {
-  sound.volume(alias, volume);
+export const musicAssets = {
+  [Sound.TitleMusic]: `${import.meta.env.BASE_URL}music/title.mp3`,
+  [Sound.BossMusic]: `${import.meta.env.BASE_URL}music/boss.mp3`,
 };
 
 export const init = () => {
