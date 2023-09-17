@@ -79,7 +79,7 @@ class Rail implements Agent {
           enemy.getY() + 0.5
         );
 
-        return dist <= 0.5;
+        return dist <= (enemy.getAgent() as IEnemy).getScale() / 2;
       });
 
     targets.forEach((enemy) => {
