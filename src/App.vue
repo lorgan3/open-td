@@ -8,19 +8,19 @@ import "./util/firebase";
 import Credits from "./components/Credits.vue";
 import { get } from "./util/localStorage";
 import PixiRenderer from "./renderers/pixiRenderer/renderer";
-import { sound } from "@pixi/sound";
-import {
-  Sound,
-  fade,
-  musicAssets,
-  updateVolume,
-} from "./renderers/pixiRenderer/sound";
+
+import { Sound } from "./renderers/pixiRenderer/sound";
 import { getAssets } from "./renderers/pixiRenderer/assets";
+import MusicController from "./renderers/pixiRenderer/sound/musicController";
 
 enum State {
   Menu = "menu",
   Game = "game",
   Credits = "credits",
+}
+
+if (!MusicController.Instance) {
+  new MusicController();
 }
 
 const url = new URL(window.location.href);
@@ -32,11 +32,10 @@ const storedData = get("settings");
 
 if (state.value === State.Menu || state.value === State.Credits) {
   getAssets().then(() => {
-    Object.keys(musicAssets).forEach((alias) =>
-      updateVolume(alias as Sound, (storedData?.musicVolume ?? 50) / 100)
+    MusicController.Instance.updateVolume(
+      (storedData?.musicVolume ?? 66) / 100
     );
-
-    sound.play(Sound.TitleMusic);
+    MusicController.Instance.queue([Sound.TitleMusic]);
   });
 }
 
@@ -62,11 +61,18 @@ const startGame = (
   gameShowTutorial.value = showTutorial;
   gameSimulationSpeed.value = simulationSpeed;
 
-  fade(Sound.TitleMusic);
+  MusicController.Instance.queue([Sound.ForHonor]);
 };
 
-const mainMenu = () => (state.value = State.Menu);
-const credits = () => (state.value = State.Credits);
+const mainMenu = () => {
+  state.value = State.Menu;
+  MusicController.Instance.queue([Sound.TitleMusic]);
+};
+
+const credits = () => {
+  state.value = State.Credits;
+  MusicController.Instance.queue([Sound.TitleMusic]);
+};
 </script>
 
 <template>

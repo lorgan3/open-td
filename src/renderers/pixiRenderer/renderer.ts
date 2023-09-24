@@ -15,14 +15,7 @@ import { Viewport } from "pixi-viewport";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
-import {
-  fade,
-  musicAssets,
-  playSoundOnEvent,
-  Sound,
-  soundAssets,
-  updateVolume,
-} from "./sound";
+import { playSoundOnEvent, Sound, soundAssets, updateVolume } from "./sound";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
@@ -48,6 +41,7 @@ import { ControllableSound } from "./sound/controllableSound";
 import { FallbackWorldShader } from "./shaders/FallbackWorldShader";
 import BuildController from "../../data/controllers/buildController";
 import { isWebGL2Supported } from "../../util/webgl";
+import MusicController from "./sound/musicController";
 
 const SHAKE_AMOUNT = 10;
 const SHAKE_INTENSITY = 12;
@@ -201,9 +195,8 @@ class Renderer implements IRenderer {
     Object.keys(soundAssets).forEach((alias) =>
       updateVolume(alias as Sound, (settings?.volume ?? 50) / 100)
     );
-    Object.keys(musicAssets).forEach((alias) =>
-      updateVolume(alias as Sound, (settings?.musicVolume ?? 50) / 100)
-    );
+
+    MusicController.Instance.updateVolume((settings?.musicVolume ?? 66) / 100);
   }
 
   private renderWorld() {
@@ -445,7 +438,7 @@ class Renderer implements IRenderer {
       GameEvent.StartWave,
       ({ wave }) => {
         if (wave === 1 || wave % 10 === 0) {
-          sound.play(Sound.BossMusic);
+          MusicController.Instance.queue([Sound.BossMusic]);
         }
       }
     );
@@ -453,9 +446,7 @@ class Renderer implements IRenderer {
     const removeEndBossMusic = EventSystem.Instance.addEventListener(
       GameEvent.EndWave,
       () => {
-        if (sound.find(Sound.BossMusic).isPlaying) {
-          fade(Sound.BossMusic);
-        }
+        MusicController.Instance.queue([Sound.ForHonor]);
       }
     );
 

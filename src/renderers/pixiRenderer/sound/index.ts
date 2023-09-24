@@ -87,16 +87,19 @@ export const playSoundOnEvent = (
   });
 
 export const fade = (alias: Sound, duration = 0.5) => {
-  const s = sound.find(alias);
-  const initialVolume = s.volume;
-  const step = initialVolume / duration / 20;
+  return new Promise<void>((resolve) => {
+    const s = sound.find(alias);
+    const initialVolume = s.volume;
+    const step = initialVolume / duration / 20;
 
-  const timer = window.setInterval(() => {
-    s.volume -= step;
+    const timer = window.setInterval(() => {
+      s.volume -= step;
 
-    if (s.volume <= 0) {
-      s.stop();
-      window.clearInterval(timer);
-    }
-  }, 50);
+      if (s.volume <= 0) {
+        s.stop();
+        window.clearInterval(timer);
+        resolve();
+      }
+    }, 50);
+  });
 };

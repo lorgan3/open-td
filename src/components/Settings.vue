@@ -31,7 +31,7 @@ const renderer = ref(
 );
 const showTutorial = ref(storedData?.showTutorial ?? true);
 const volume = ref(storedData?.volume ?? 50);
-const musicVolume = ref(storedData?.musicVolume ?? 50);
+const musicVolume = ref(storedData?.musicVolume ?? 66);
 const simulation = ref(storedData?.simulation ?? 1);
 
 const submit = () => {
@@ -62,7 +62,7 @@ setSubmitter(submit);
     <input type="checkbox" v-model="showTutorial" />
   </label>
   <label class="horizontal">
-    Volume
+    SFX Volume
     <input type="range" min="0" max="100" v-model="volume" />
   </label>
   <label class="horizontal">
