@@ -52,6 +52,7 @@ class Bore implements IEnemy {
   public static readonly type = EntityType.Bore;
   public static readonly cost = 300;
   public static readonly scale = 2;
+  public static readonly maxDiagonalCost = 0;
 
   public entity: Entity;
   public category = AgentCategory.Enemy;
