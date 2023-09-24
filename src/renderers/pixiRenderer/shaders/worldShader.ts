@@ -50,6 +50,10 @@ class WorldShader extends MeshMaterial implements IWorldShader {
 
     this.uniforms.world = Texture.from(this.canvas);
 
+    // Initialize with a texture right away to prevent weird corruption if assets weren't loaded yet.
+    this.uniforms.atlas = Texture.from(this.canvas);
+    this.uniforms.mask = Texture.from(this.canvas);
+
     getAssets().then((assets) => {
       this.uniforms.atlas = assets.terrain.baseTexture;
       this.uniforms.mask = assets.mask.baseTexture;

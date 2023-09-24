@@ -5,18 +5,47 @@ import MainMenu from "./components/MainMenu.vue";
 import { Difficulty } from "./data/difficulty";
 import { Constructor } from "./renderers/api";
 import "./util/firebase";
+import Credits from "./components/Credits.vue";
+import { get } from "./util/localStorage";
+import PixiRenderer from "./renderers/pixiRenderer/renderer";
+
+import { Sound, levelMusic } from "./renderers/pixiRenderer/sound";
+import { getAssets } from "./renderers/pixiRenderer/assets";
+import MusicController from "./renderers/pixiRenderer/sound/musicController";
 
 enum State {
-  Menu,
-  Game,
+  Menu = "menu",
+  Game = "game",
+  Credits = "credits",
 }
 
-const state = ref(State.Menu);
+if (!MusicController.Instance) {
+  new MusicController();
+}
+
+const url = new URL(window.location.href);
+const hash = url.hash.slice(1);
+const state = ref(
+  Object.values<string>(State).includes(hash) ? hash : State.Menu
+);
+const storedData = get("settings");
+
+if (state.value === State.Menu || state.value === State.Credits) {
+  getAssets().then(() => {
+    MusicController.Instance.updateVolume(
+      (storedData?.musicVolume ?? 66) / 100
+    );
+    MusicController.Instance.queue([Sound.TitleMusic]);
+  });
+}
+
 const gameSeed = ref<string | null>();
-const gameDifficulty = ref<Difficulty>();
-const gameRenderer = ref<Constructor>();
-const gameShowTutorial = ref<boolean>();
-const gameSimulationSpeed = ref<number>();
+const gameDifficulty = ref<Difficulty>(
+  storedData?.difficulty || Difficulty.Easy
+);
+const gameRenderer = ref<Constructor>(storedData?.renderer || PixiRenderer);
+const gameShowTutorial = ref<boolean>(storedData?.showTutorial || true);
+const gameSimulationSpeed = ref<number>(storedData?.simulation || 1);
 
 const startGame = (
   seed: string | null,
@@ -31,13 +60,27 @@ const startGame = (
   gameRenderer.value = renderer;
   gameShowTutorial.value = showTutorial;
   gameSimulationSpeed.value = simulationSpeed;
+
+  MusicController.Instance.queue(levelMusic);
 };
 
-const mainMenu = () => (state.value = State.Menu);
+const mainMenu = () => {
+  state.value = State.Menu;
+  MusicController.Instance.queue([Sound.TitleMusic]);
+};
+
+const credits = () => {
+  state.value = State.Credits;
+  MusicController.Instance.queue([Sound.TitleMusic]);
+};
 </script>
 
 <template>
-  <MainMenu v-if="state == State.Menu" :onPlay="startGame" />
+  <MainMenu
+    v-if="state == State.Menu"
+    :onPlay="startGame"
+    :onCredits="credits"
+  />
   <Game
     v-if="state == State.Game"
     :seed="gameSeed!"
@@ -45,8 +88,9 @@ const mainMenu = () => (state.value = State.Menu);
     :renderer="gameRenderer!"
     :showTutorial="gameShowTutorial!"
     :initialSpeed="gameSimulationSpeed!"
-    :mainMenu="mainMenu"
+    :onMainMenu="mainMenu"
   />
+  <Credits v-if="state == State.Credits" :onMainMenu="mainMenu" />
 </template>
 
 <style>

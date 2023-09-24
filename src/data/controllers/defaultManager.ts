@@ -186,7 +186,9 @@ class DefaultManager extends Manager {
     this.level++;
     VisibilityController.Instance.updateBaseRange();
 
-    EventSystem.Instance.triggerEvent(GameEvent.StartWave);
+    EventSystem.Instance.triggerEvent(GameEvent.StartWave, {
+      wave: this.level,
+    });
 
     this.triggerStatUpdate();
     Manager.Instance.getSurface().forceRerender();

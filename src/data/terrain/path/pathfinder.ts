@@ -38,7 +38,8 @@ class Pathfinder {
       Record<TileType, number>
     > = DEFAULT_LAND_BASED_MULTIPLIERS,
     public costs: Partial<Record<TileType, number>> = DEFAULT_LAND_BASED_COSTS,
-    public scale = 1
+    public scale = 1,
+    public maxDiagonalCost = MAX_DIAGONAL_COST
   ) {
     this.neighbors = NEIGHBORS.map(([x, y]) => [x * scale, y * scale]);
   }
@@ -297,7 +298,7 @@ class Pathfinder {
     }
 
     const diagonalMultipliedCost = data[d1 * 2 + 1]! + data[d2 * 2 + 1]!;
-    if (diagonalMultipliedCost > MAX_DIAGONAL_COST) {
+    if (diagonalMultipliedCost > this.maxDiagonalCost) {
       return;
     }
 

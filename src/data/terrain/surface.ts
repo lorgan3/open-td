@@ -582,6 +582,17 @@ class Surface {
     return this.towers;
   }
 
+  public getTowerDirection(origin: Tile) {
+    let x = 0;
+    let y = 0;
+    this.towers.forEach((tower) => {
+      x += tower.entity.getX() - origin.getX();
+      y += tower.entity.getY() - origin.getY();
+    });
+
+    return Math.atan2(y, x);
+  }
+
   public getTiles() {
     return this.map;
   }

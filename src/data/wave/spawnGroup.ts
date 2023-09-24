@@ -237,7 +237,8 @@ class SpawnGroup {
             this.surface,
             this.unit.pathMultipliers,
             this.unit.pathCosts,
-            this.unit.scale
+            this.unit.scale,
+            this.unit.maxDiagonalCost
           ),
           this.spawnPoints,
           this.target

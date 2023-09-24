@@ -33,7 +33,7 @@ export interface EventParamsMap {
   [GameEvent.CloseBuildMenu]: [];
   [GameEvent.SelectPlaceable]: [SelectPlaceable];
   [GameEvent.ToggleShowCoverage]: [];
-  [GameEvent.StartWave]: [];
+  [GameEvent.StartWave]: [StartWave];
   [GameEvent.EndWave]: [];
   [GameEvent.Unlock]: [Unlock];
   [GameEvent.Discover]: [Discover];
@@ -98,4 +98,8 @@ export interface Buy {
 
 export interface Hit {
   amount: number;
+}
+
+export interface StartWave {
+  wave: number;
 }

@@ -32,21 +32,4 @@ Check `package.json`, there are also commands available to run tests and check t
 
 ## Credits
 
-- Most sprites and code made me ([@lorgan3](https://github.com/lorgan3)).
-- [Explosion animation](https://opengameart.org/content/explosion-3) by [sogomn](https://opengameart.org/users/sogomn).
-- [Various sprites](./credits.md) Many sprites from [opengameart](https://opengameart.org/) in LPC style. The attribution for this is very complicated so please see the credits file where I tried including everything.
-- [notification.mp3](https://freesound.org/people/zzwerty/sounds/315878/) by [zzwerty](https://freesound.org/people/zzwerty/).
-- [flamethrower.wav](https://freesound.org/people/deleted_user_13668154/sounds/616093/).
-- [laser.flac](https://freesound.org/people/unfa/sounds/584191/) by [Tobiasz 'unfa' Karoń](https://freesound.org/people/unfa/).
-- [mortar.wav](https://freesound.org/people/OGsoundFX/sounds/423108/) and [shot.wav](https://freesound.org/people/OGsoundFX/sounds/423114/) by [Olivier Girardot](https://freesound.org/people/OGsoundFX/).
-- [railgun.mp3](https://freesound.org/people/deleted_user_1941307/sounds/155790/).
-- [explosion.wav](https://freesound.org/people/EminYILDIRIM/sounds/553153/) by [Emin](https://freesound.org/people/EminYILDIRIM/).
-- [firework.wav](https://freesound.org/people/TimoSchmied/sounds/530972/) by [Timo Schmied](https://freesound.org/people/TimoSchmied/).
-- [place.wav](https://freesound.org/people/Robinhood76/sounds/254079/) and [destroy.wav](https://freesound.org/people/Robinhood76/sounds/503554/) by [FxProSound](https://freesound.org/people/Robinhood76/).
-- [hit.wav](https://freesound.org/people/BMacZero/sounds/96138/) by [BMacZero](https://freesound.org/people/BMacZero/).
-- [sonar.wav](https://freesound.org/people/SamsterBirdies/sounds/371178/) by [SamsterBirdies](https://freesound.org/people/SamsterBirdies/).
-- [thunder.wav](https://freesound.org/people/doudar41/sounds/535952/) by [doudar41](https://freesound.org/people/doudar41/).
-- [bush.mp3](https://freesound.org/people/Herkules92/sounds/518799/) by [Herkules92](https://freesound.org/people/Herkules92/).
-- tank.wav by ?
-- [drill.wav](https://freesound.org/people/rabbydaw/sounds/504182/) by [rabbydaw](https://freesound.org/people/rabbydaw/).
-- [lock.mp3](https://freesound.org/people/LordForklift/sounds/448416/) by [LordForklift](https://freesound.org/people/LordForklift/).
+See the credits [in game](https://lorgan3.github.io/open-td/#credits) or directly in [credits.json](./credits.json)

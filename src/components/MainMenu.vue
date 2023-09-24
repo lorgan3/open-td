@@ -14,6 +14,8 @@ import { getWord } from "../util/word";
 import { logEvent } from "../util/firebase";
 import logo from "../assets/logo.png";
 
+import MusicController from "../renderers/pixiRenderer/sound/musicController";
+
 const props = defineProps<{
   onPlay: (
     seed: string | null,
@@ -22,6 +24,7 @@ const props = defineProps<{
     showTutorial: boolean,
     simulationSpeed: number
   ) => void;
+  onCredits: () => void;
 }>();
 
 enum SubMenu {
@@ -47,7 +50,9 @@ const storedData = get("settings");
 const difficulty = ref(storedData?.difficulty || Difficulty.Easy);
 
 const assetsLoading = ref(true);
-getAssets().then(() => (assetsLoading.value = false));
+getAssets().then(() => {
+  assetsLoading.value = false;
+});
 
 let getSettings: () => Partial<ISettings>;
 const setSubmitter = (submit: typeof getSettings) => (getSettings = submit);
@@ -62,6 +67,14 @@ const onClick = (subMenu: SubMenu) => {
   if (openSubMenu.value === SubMenu.Play) {
     seedInput.value?.select();
   }
+};
+
+const updateMusic = (volume: number) => {
+  if (assetsLoading.value) {
+    return;
+  }
+
+  MusicController.Instance.updateVolume(volume / 100);
 };
 
 const submit = (event: Event) => {
@@ -90,6 +103,8 @@ const loadSave = (event: Event) => {
 
   const settings = getSettings();
 
+  set("settings", settings);
+
   props.onPlay(
     null,
     difficulty.value,
@@ -116,6 +131,7 @@ const loadSave = (event: Event) => {
           <button @click="onClick(SubMenu.Controls)">Controls</button>
           <button @click="onClick(SubMenu.Achievements)">Achievements</button>
           <button @click="onClick(SubMenu.Settings)">Settings</button>
+          <button @click="onCredits()">Credits</button>
         </div>
       </div>
       <div
@@ -170,7 +186,7 @@ const loadSave = (event: Event) => {
         }"
       >
         <div class="menu-settings-inner">
-          <Settings :setSubmitter="setSubmitter" />
+          <Settings :setSubmitter="setSubmitter" :updateMusic="updateMusic" />
         </div>
       </div>
     </div>
@@ -358,6 +374,8 @@ const loadSave = (event: Event) => {
     gap: 10px;
     align-items: center;
     height: 44px;
+    width: 100%;
+    background: #15162e;
 
     &-link {
       color: #fff;

@@ -9,15 +9,30 @@ export interface WorkerEvent {
   costMultiplier: Partial<Record<TileType, number>>;
   costs: Partial<Record<TileType, number>>;
   scale: number;
+  maxDiagonalCost?: number;
   startPoints: SerializedTile[];
   target: SerializedTile;
 }
 
 onmessage = ({
-  data: { buffer, costMultiplier, costs, scale, startPoints, target },
+  data: {
+    buffer,
+    costMultiplier,
+    costs,
+    scale,
+    maxDiagonalCost,
+    startPoints,
+    target,
+  },
 }: MessageEvent<WorkerEvent>) => {
   const surface = new Surface(new SurfaceSchema(new Uint8Array(buffer)));
-  const pathfinder = new Pathfinder(surface, costMultiplier, costs, scale);
+  const pathfinder = new Pathfinder(
+    surface,
+    costMultiplier,
+    costs,
+    scale,
+    maxDiagonalCost
+  );
 
   const startTiles = startPoints.map(({ x, y }) => surface.getTile(x, y)!);
   const targetTile = surface.getTile(target.x, target.y)!;

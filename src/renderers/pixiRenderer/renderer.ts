@@ -15,7 +15,13 @@ import { Viewport } from "pixi-viewport";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
-import { init as initSound, playSoundOnEvent, Sound } from "./sound";
+import {
+  levelMusic,
+  playSoundOnEvent,
+  Sound,
+  soundAssets,
+  updateVolume,
+} from "./sound";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
@@ -34,12 +40,14 @@ import { GameEvent } from "../../data/events";
 import { get } from "../../util/localStorage";
 import { CursorRenderer } from "./tilemap/cursorRenderer";
 import { AssetsContainer } from "./assets/container";
-import { IWorldShader } from "./shaders/worldShader";
+import { IWorldShader, WorldShader } from "./shaders/worldShader";
 import EventSystem from "../../data/eventSystem";
 import { Explosion } from "./explosion";
 import { ControllableSound } from "./sound/controllableSound";
 import { FallbackWorldShader } from "./shaders/FallbackWorldShader";
 import BuildController from "../../data/controllers/buildController";
+import { isWebGL2Supported } from "../../util/webgl";
+import MusicController from "./sound/musicController";
 
 const SHAKE_AMOUNT = 10;
 const SHAKE_INTENSITY = 12;
@@ -99,7 +107,6 @@ class Renderer implements IRenderer {
     );
 
     this.assets = new AssetsContainer();
-    initSound();
 
     window.debug = () => {
       DEBUG = !DEBUG;
@@ -114,7 +121,10 @@ class Renderer implements IRenderer {
     this.lockedTowers =
       surface.getTowers().size >= BuildController.Instance.getMaxTowers();
 
-    this.worldShader = new FallbackWorldShader(surface);
+    this.worldShader = isWebGL2Supported
+      ? new WorldShader(surface)
+      : new FallbackWorldShader(surface);
+
     this.app = new Application({
       resizeTo: window,
     });
@@ -163,7 +173,10 @@ class Renderer implements IRenderer {
     this.alertRenderer = new AlertRenderer(this.assets);
     this.cursorRenderer = new CursorRenderer();
 
-    this.assets.onComplete(() => this.renderWorld());
+    this.assets.onComplete(() => {
+      this.renderWorld();
+      this.updateSettings();
+    });
 
     const container = target.appendChild(document.createElement("div"));
     this.vueApp = createApp(SimpleMessage, {
@@ -180,12 +193,16 @@ class Renderer implements IRenderer {
     });
 
     this.registerEventHandlers();
-    this.updateSettings();
   }
 
   updateSettings() {
     const settings = get("settings");
-    sound.volumeAll = (settings?.volume ?? 100) / 100;
+
+    Object.keys(soundAssets).forEach((alias) =>
+      updateVolume(alias as Sound, (settings?.volume ?? 50) / 100)
+    );
+
+    MusicController.Instance.updateVolume((settings?.musicVolume ?? 66) / 100);
   }
 
   private renderWorld() {
@@ -423,6 +440,22 @@ class Renderer implements IRenderer {
       }
     );
 
+    const removeBackgroundMusic = EventSystem.Instance.addEventListener(
+      GameEvent.StartWave,
+      ({ wave }) => {
+        if (wave === 1 || wave % 10 === 0) {
+          MusicController.Instance.queue([Sound.BossMusic]);
+        }
+      }
+    );
+
+    const removeEndBossMusic = EventSystem.Instance.addEventListener(
+      GameEvent.EndWave,
+      () => {
+        MusicController.Instance.queue(levelMusic);
+      }
+    );
+
     this.removeEventListeners = () => {
       window.removeEventListener("contextmenu", handleContextmenu);
       this.viewport!.removeListener("pointerdown", handleMousedown);
@@ -435,13 +468,17 @@ class Renderer implements IRenderer {
       removeBuySound();
       removeSellSound();
       removeHitBaseSound();
+      removeBackgroundMusic();
+      removeEndBossMusic();
     };
   }
 
   showMessage: MessageFn = async (...args) => {
     const fn = await this.messageFn;
 
-    sound.play(Sound.Notification);
+    if (sound.exists(Sound.Notification)) {
+      sound.play(Sound.Notification);
+    }
     return fn(...args);
   };
 

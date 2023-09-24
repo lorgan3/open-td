@@ -20,6 +20,11 @@ export enum Sound {
   Tank = "tankSnd",
   Drill = "drillSnd",
   Lock = "lockSnd",
+  TitleMusic = "titleMusic",
+  BossMusic = "bossMusic",
+  FogOfWar = "fogOfWar",
+  MarchingOnward = "marchingOnward",
+  ForHonor = "forHonor",
 }
 
 export const soundAssets = {
@@ -42,22 +47,49 @@ export const soundAssets = {
   [Sound.Lock]: `${import.meta.env.BASE_URL}sounds/lock.mp3`,
 };
 
-const updateVolume = (alias: Sound, volume: number) => {
-  sound.volume(alias, volume);
+export const musicAssets = {
+  [Sound.TitleMusic]: `${import.meta.env.BASE_URL}music/Title.mp3`,
+  [Sound.BossMusic]: `${import.meta.env.BASE_URL}music/Boss.mp3`,
+  [Sound.FogOfWar]: `${import.meta.env.BASE_URL}music/Fog of War.mp3`,
+  [Sound.MarchingOnward]: `${
+    import.meta.env.BASE_URL
+  }music/Marching Onward.mp3`,
+  [Sound.ForHonor]: `${import.meta.env.BASE_URL}music/For Honor.mp3`,
 };
 
-export const init = () => {
-  updateVolume(Sound.Shot, 0.7);
-  updateVolume(Sound.Laser, 0.5);
-  updateVolume(Sound.Flamethrower, 0.1);
-  updateVolume(Sound.Mortar, 0.7);
-  updateVolume(Sound.Railgun, 0.7);
-  updateVolume(Sound.Place, 0.7);
-  updateVolume(Sound.Destroy, 0.7);
-  updateVolume(Sound.Sonar, 0.7);
-  updateVolume(Sound.Thunder, 0.7);
-  updateVolume(Sound.Tank, 0.4);
-  updateVolume(Sound.Lock, 1);
+export const levelMusic = [
+  Sound.FogOfWar,
+  Sound.MarchingOnward,
+  Sound.ForHonor,
+];
+
+export const VOLUMES: Record<Sound, number> = {
+  [Sound.Shot]: 0.7,
+  [Sound.Laser]: 0.5,
+  [Sound.Flamethrower]: 0.1,
+  [Sound.Mortar]: 0.7,
+  [Sound.Railgun]: 0.7,
+  [Sound.Place]: 0.7,
+  [Sound.Destroy]: 0.7,
+  [Sound.Sonar]: 0.7,
+  [Sound.Thunder]: 0.7,
+  [Sound.Tank]: 0.1,
+  [Sound.Lock]: 1,
+  [Sound.Notification]: 1,
+  [Sound.Firework]: 1,
+  [Sound.Explosion]: 1,
+  [Sound.Hit]: 1,
+  [Sound.Bush]: 1,
+  [Sound.Drill]: 1,
+  [Sound.TitleMusic]: 1,
+  [Sound.BossMusic]: 1,
+  [Sound.FogOfWar]: 1,
+  [Sound.MarchingOnward]: 1,
+  [Sound.ForHonor]: 1,
+};
+
+export const updateVolume = (alias: Sound, volume: number) => {
+  sound.volume(alias, VOLUMES[alias] * volume);
 };
 
 export const playSoundOnEvent = (
@@ -65,6 +97,26 @@ export const playSoundOnEvent = (
   alias: Sound,
   options?: PlayOptions
 ) =>
-  EventSystem.Instance.addEventListener(event, () =>
-    sound.play(alias, options)
-  );
+  EventSystem.Instance.addEventListener(event, () => {
+    if (sound.exists(alias)) {
+      sound.play(alias, options);
+    }
+  });
+
+export const fade = (alias: Sound, duration = 0.5) => {
+  return new Promise<void>((resolve) => {
+    const s = sound.find(alias);
+    const initialVolume = s.volume;
+    const step = initialVolume / duration / 20;
+
+    const timer = window.setInterval(() => {
+      s.volume -= step;
+
+      if (s.volume <= 0) {
+        s.stop();
+        window.clearInterval(timer);
+        resolve();
+      }
+    }, 50);
+  });
+};

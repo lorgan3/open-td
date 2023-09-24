@@ -10,6 +10,7 @@ export interface Settings {
   difficulty: Difficulty;
   showTutorial: boolean;
   volume: number;
+  musicVolume: number;
   simulation: number;
 }
 
@@ -40,6 +41,10 @@ export const settingsReviver = <K extends keyof Settings>(
   }
 
   if (key === "volume") {
+    return assertNumber(value, 0, 100);
+  }
+
+  if (key === "musicVolume") {
     return assertNumber(value, 0, 100);
   }
 

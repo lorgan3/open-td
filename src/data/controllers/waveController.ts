@@ -1,6 +1,7 @@
 import Base from "../entity/base";
 import { AgentCategory } from "../entity/constants";
 import { IEnemyStatics } from "../entity/enemies";
+import Bore from "../entity/enemies/bore";
 import { DiscoveryMethod, GameEvent, SurfaceChange } from "../events";
 import EventSystem from "../eventSystem";
 import {
@@ -249,13 +250,17 @@ class WaveController {
       this.nextUnit = Wave.getUnitForLevel(level);
     }
 
-    this.direction +=
-      (Math.random() > 0.5 ? 1 : -1) *
-      Math.max(
-        (Math.PI / 6) *
-          normalDistributionRandom() *
-          Math.min(Math.PI * 2, level + 1)
-      );
+    if (this.nextUnit === Bore) {
+      this.direction = this.surface.getTowerDirection(this.base.getTile());
+    } else {
+      this.direction +=
+        (Math.random() > 0.5 ? 1 : -1) *
+        Math.max(
+          (Math.PI / 6) *
+            normalDistributionRandom() *
+            Math.min(Math.PI * 2, level + 1)
+        );
+    }
 
     let spawned = false;
     let backOff = 3;

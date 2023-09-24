@@ -28,6 +28,7 @@ export interface IEnemyStatics {
   readonly type: EntityType;
   readonly cost: number;
   readonly scale: number;
+  readonly maxDiagonalCost?: number;
   new (tile: Tile, path: Path): IEnemy;
 }
 

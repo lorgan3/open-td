@@ -2,7 +2,7 @@ import { filters, IMediaInstance, PlayOptions, sound } from "@pixi/sound";
 import Entity from "../../../data/entity/entity";
 import { DEFAULT_SCALE, SCALE } from "../constants";
 import Renderer from "../renderer";
-import { Sound } from ".";
+import { Sound, VOLUMES } from ".";
 
 class ControllableSound {
   private ref?: IMediaInstance;
@@ -60,7 +60,7 @@ class ControllableSound {
     const { volume, pan } = ControllableSound.getSoundOptions(entity);
 
     // Sounds that are too quiet are not played.
-    if (volume < 0.25) {
+    if (volume < 0.25 * VOLUMES[alias]) {
       return;
     }
 
@@ -82,6 +82,7 @@ class ControllableSound {
     const promiseOrRef = sound.play(alias, {
       ...options,
       filters: [filter],
+      speed: 0.9 + Math.random() / 5,
       complete: () =>
         ControllableSound.soundInstanceCountMap.set(
           alias,
@@ -125,7 +126,7 @@ class ControllableSound {
 
     this.ref.volume -= (dt / duration) * 0.8;
 
-    if (this.ref.volume < 0.2) {
+    if (this.ref.volume < 0.2 * VOLUMES[this.alias]) {
       this.destroy();
       return true;
     }

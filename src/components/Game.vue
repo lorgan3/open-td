@@ -25,7 +25,7 @@ const props = defineProps<{
   renderer: Constructor;
   showTutorial: boolean;
   initialSpeed: number;
-  mainMenu: () => void;
+  onMainMenu: () => void;
 }>();
 
 const canvas = ref<HTMLDivElement | null>(null);
@@ -198,7 +198,7 @@ const restart = () => {
 
 const returnToMainMenu = () => {
   AchievementController.Instance?.unRegister();
-  props.mainMenu();
+  props.onMainMenu();
 };
 </script>
 
@@ -229,7 +229,7 @@ const returnToMainMenu = () => {
         :visible="isMarketplaceVisible"
       />
       <IngameMenu
-        :mainMenu="returnToMainMenu"
+        :onMainMenu="returnToMainMenu"
         :visible="isMenuVisible"
         :resume="resume"
       />
