@@ -49,7 +49,7 @@ class Flame extends ParticleContainer implements EntityRenderer {
     (this.children as FireParticle[]).forEach((particle) => {
       particle.x += Math.sin(particle.direction) * particle.speed * dt * SCALE;
       particle.y += Math.cos(particle.direction) * particle.speed * dt * SCALE;
-      particle.lifetime += 1;
+      particle.lifetime += dt / 16;
       if (particle.lifetime > 25) {
         if (this.data.renderData.update) {
           particle.lifetime = 0;
