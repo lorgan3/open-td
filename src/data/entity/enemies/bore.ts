@@ -42,8 +42,8 @@ class Bore implements IEnemy {
   public static readonly pathMultipliers = mapWithOverrides(
     DEFAULT_LAND_BASED_MULTIPLIERS,
     {
-      [TileType.Obstructed]: 4,
-      [TileType.Wall]: 30,
+      [TileType.Obstructed]: 3.5,
+      [TileType.Wall]: 25,
       [TileType.Fence]: 1,
       [TileType.Water]: 5,
       [TileType.Freezer]: 0.375,
