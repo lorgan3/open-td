@@ -103,6 +103,8 @@ const loadSave = (event: Event) => {
 
   const settings = getSettings();
 
+  set("settings", settings);
+
   props.onPlay(
     null,
     difficulty.value,
