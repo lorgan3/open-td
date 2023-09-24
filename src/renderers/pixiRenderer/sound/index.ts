@@ -22,6 +22,9 @@ export enum Sound {
   Lock = "lockSnd",
   TitleMusic = "titleMusic",
   BossMusic = "bossMusic",
+  FogOfWar = "fogOfWar",
+  MarchingOnward = "marchingOnward",
+  ForHonor = "forHonor",
 }
 
 export const soundAssets = {
@@ -45,9 +48,20 @@ export const soundAssets = {
 };
 
 export const musicAssets = {
-  [Sound.TitleMusic]: `${import.meta.env.BASE_URL}music/title.mp3`,
-  [Sound.BossMusic]: `${import.meta.env.BASE_URL}music/boss.mp3`,
+  [Sound.TitleMusic]: `${import.meta.env.BASE_URL}music/Title.mp3`,
+  [Sound.BossMusic]: `${import.meta.env.BASE_URL}music/Boss.mp3`,
+  [Sound.FogOfWar]: `${import.meta.env.BASE_URL}music/Fog of War.mp3`,
+  [Sound.MarchingOnward]: `${
+    import.meta.env.BASE_URL
+  }music/Marching Onward.mp3`,
+  [Sound.ForHonor]: `${import.meta.env.BASE_URL}music/For Honor.mp3`,
 };
+
+export const levelMusic = [
+  Sound.FogOfWar,
+  Sound.MarchingOnward,
+  Sound.ForHonor,
+];
 
 export const VOLUMES: Record<Sound, number> = {
   [Sound.Shot]: 0.7,
@@ -61,14 +75,17 @@ export const VOLUMES: Record<Sound, number> = {
   [Sound.Thunder]: 0.7,
   [Sound.Tank]: 0.1,
   [Sound.Lock]: 1,
-  [Sound.TitleMusic]: 1,
-  [Sound.BossMusic]: 1,
   [Sound.Notification]: 1,
   [Sound.Firework]: 1,
   [Sound.Explosion]: 1,
   [Sound.Hit]: 1,
   [Sound.Bush]: 1,
   [Sound.Drill]: 1,
+  [Sound.TitleMusic]: 1,
+  [Sound.BossMusic]: 1,
+  [Sound.FogOfWar]: 1,
+  [Sound.MarchingOnward]: 1,
+  [Sound.ForHonor]: 1,
 };
 
 export const updateVolume = (alias: Sound, volume: number) => {

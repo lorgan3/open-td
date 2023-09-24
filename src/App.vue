@@ -9,7 +9,7 @@ import Credits from "./components/Credits.vue";
 import { get } from "./util/localStorage";
 import PixiRenderer from "./renderers/pixiRenderer/renderer";
 
-import { Sound } from "./renderers/pixiRenderer/sound";
+import { Sound, levelMusic } from "./renderers/pixiRenderer/sound";
 import { getAssets } from "./renderers/pixiRenderer/assets";
 import MusicController from "./renderers/pixiRenderer/sound/musicController";
 
@@ -61,7 +61,7 @@ const startGame = (
   gameShowTutorial.value = showTutorial;
   gameSimulationSpeed.value = simulationSpeed;
 
-  MusicController.Instance.queue([Sound.ForHonor]);
+  MusicController.Instance.queue(levelMusic);
 };
 
 const mainMenu = () => {

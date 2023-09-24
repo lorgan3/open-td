@@ -15,7 +15,13 @@ import { Viewport } from "pixi-viewport";
 import Manager from "../../data/controllers/manager";
 import { Default } from "./overrides/default";
 import { OVERRIDES } from "./overrides";
-import { playSoundOnEvent, Sound, soundAssets, updateVolume } from "./sound";
+import {
+  levelMusic,
+  playSoundOnEvent,
+  Sound,
+  soundAssets,
+  updateVolume,
+} from "./sound";
 import { CoverageRenderer } from "./tilemap/coverageRenderer";
 import { AlertRenderer } from "./tilemap/alertRenderer";
 import { getCenter } from "../../data/entity/staticEntity";
@@ -446,7 +452,7 @@ class Renderer implements IRenderer {
     const removeEndBossMusic = EventSystem.Instance.addEventListener(
       GameEvent.EndWave,
       () => {
-        MusicController.Instance.queue([Sound.ForHonor]);
+        MusicController.Instance.queue(levelMusic);
       }
     );
 
