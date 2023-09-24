@@ -377,6 +377,8 @@ const loadSave = (event: Event) => {
     gap: 10px;
     align-items: center;
     height: 44px;
+    width: 100%;
+    background: #15162e;
 
     &-link {
       color: #fff;
