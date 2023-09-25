@@ -443,7 +443,7 @@ class Renderer implements IRenderer {
     const removeBackgroundMusic = EventSystem.Instance.addEventListener(
       GameEvent.StartWave,
       ({ wave }) => {
-        if (wave === 1 || wave % 10 === 0) {
+        if (wave % 10 === 0) {
           MusicController.Instance.queue([Sound.BossMusic]);
         }
       }
