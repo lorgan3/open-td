@@ -25,6 +25,7 @@ export enum Sound {
   FogOfWar = "fogOfWar",
   MarchingOnward = "marchingOnward",
   ForHonor = "forHonor",
+  Heroic = "heroic",
 }
 
 export const soundAssets = {
@@ -55,12 +56,14 @@ export const musicAssets = {
     import.meta.env.BASE_URL
   }music/Marching Onward.mp3`,
   [Sound.ForHonor]: `${import.meta.env.BASE_URL}music/For Honor.mp3`,
+  [Sound.Heroic]: `${import.meta.env.BASE_URL}music/Heroic.mp3`,
 };
 
 export const levelMusic = [
   Sound.FogOfWar,
   Sound.MarchingOnward,
   Sound.ForHonor,
+  Sound.Heroic,
 ];
 
 export const VOLUMES: Record<Sound, number> = {
@@ -86,6 +89,7 @@ export const VOLUMES: Record<Sound, number> = {
   [Sound.FogOfWar]: 1,
   [Sound.MarchingOnward]: 1,
   [Sound.ForHonor]: 1,
+  [Sound.Heroic]: 1,
 };
 
 export const updateVolume = (alias: Sound, volume: number) => {
