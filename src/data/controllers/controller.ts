@@ -150,7 +150,7 @@ class Controller {
 
   public mouseUp(x: number, y: number, clearSelection: boolean) {
     if (!this.selectedPlacable) {
-      this.touches--;
+      this.touches = Math.max(0, this.touches - 1);
       return;
     }
 
@@ -209,6 +209,7 @@ class Controller {
     if (this.buildMenuOpen) {
       EventSystem.Instance.triggerEvent(GameEvent.OpenBuildMenu);
     } else {
+      this.touches = 0; // Workaround for touches bug. It is possible for the touches counter to go out of sync, just reset the count when the build menu is closed.
       EventSystem.Instance.triggerEvent(GameEvent.CloseBuildMenu);
     }
   }
