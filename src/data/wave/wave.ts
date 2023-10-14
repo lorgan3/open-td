@@ -12,7 +12,7 @@ import Bore from "../entity/enemies/bore";
 import { EntityType } from "../entity/constants";
 
 const MAX_SPAWN_DELAY = 4000;
-const MIN_SPAWN_INTERVAL = 100;
+const MIN_SPAWN_INTERVAL = 20;
 const SPAWN_DISTRIBUTION = 550;
 const MIN_BURST_INTERVAL = 500;
 const BURST_DISTRIBUTION = 3000;
@@ -27,7 +27,7 @@ const SPAWN_GROUP_AGE_BONUSES: Record<Difficulty, number> = {
 };
 
 const UNIT_SPAWN_SPEED_MULTIPLIERS: Partial<Record<EntityType, number>> = {
-  [EntityType.Runner]: 0.8,
+  [EntityType.Runner]: 0.5,
   [EntityType.Slime]: 1,
   [EntityType.Flier]: 1,
   [EntityType.Tank]: 1.2,
@@ -78,8 +78,7 @@ class Wave {
 
       spawnGroup.setParameters(
         energy,
-        ((normalDistributionRandom() * SPAWN_DISTRIBUTION) /
-          Math.max(1, level / 3) +
+        ((normalDistributionRandom() * SPAWN_DISTRIBUTION) / (level * 0.1 + 1) +
           MIN_SPAWN_INTERVAL) *
           UNIT_SPAWN_SPEED_MULTIPLIERS[spawnGroup.getUnitType()]!,
         spawnDelay,
